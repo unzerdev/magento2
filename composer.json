@@ -1,0 +1,39 @@
+{
+    "name": "heidelpay/magento2",
+    "description": "This extension for Magento 2 provides a direct integration of the Heidelpay payment methods to your Magento 2 shop.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "require": {
+        "php": "~7.1.0|~7.2.0|~7.3.0",
+        "magento/framework": "^101.0.0|^102.0.0|^103.0.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.15",
+        "phpunit/phpunit": "~6.2.0"
+    },
+    "support": {
+        "email": "support@heidelpay.com"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Heidelpay\\Gateway2\\": ""
+        }
+    },
+    "homepage": "https://dev.heidelpay.com/magento2",
+    "keywords": [
+      "magento",
+      "magento2",
+      "payment",
+      "php",
+      "payment-gateway"
+    ]
+}
