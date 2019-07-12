@@ -2,9 +2,7 @@
     <default>
         <payment>
             <hpg2>
-                <global>
-                    <private_key>s-priv-2a102ZMq3gV4I3zJ888J7RR6u75oqK3n</private_key>
-                </global>
+                <private_key>s-priv-2a102ZMq3gV4I3zJ888J7RR6u75oqK3n</private_key>
             </hpg2>
         </payment>
     </default>

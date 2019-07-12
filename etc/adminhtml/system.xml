@@ -11,7 +11,7 @@
                     <label>HPG2_MAIN</label>
                     <field id="private_key" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Private Key</label>
-                        <config_path>payment/hpg2/global/private_key</config_path>
+                        <config_path>payment/hpg2/private_key</config_path>
                     </field>
                 </group>
             </group>
