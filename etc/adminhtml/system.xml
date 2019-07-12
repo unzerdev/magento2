@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../Magento/Config/etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="hpg2" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>HPG2_PAYMENT</label>
+                <comment>
+                    <![CDATA[HPG2_ABOUT_US]]>
+                </comment>
+                <group id="global" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>HPG2_MAIN</label>
+                    <field id="private_key" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Private Key</label>
+                        <config_path>payment/hpg2/global/private_key</config_path>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>
