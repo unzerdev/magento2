@@ -29,16 +29,26 @@
                         <label>Title</label>
                         <config_path>payment/hpg2_creditcard/title</config_path>
                     </field>
-                    <field id="min_order_total" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment from Applicable Countries</label>
+                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+                        <config_path>payment/hpg2_creditcard/allowspecific</config_path>
+                    </field>
+                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment from Specific Countries</label>
+                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                        <config_path>payment/hpg2_creditcard/specificcountry</config_path>
+                    </field>
+                    <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
                         <config_path>payment/hpg2_creditcard/min_order_total</config_path>
                     </field>
-                    <field id="max_order_total" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Maximum Order Total</label>
                         <config_path>payment/hpg2_creditcard/max_order_total</config_path>
                         <comment>Insert 0 to disable limit.</comment>
                     </field>
-                    <field id="sort_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Sort Order</label>
                         <config_path>payment/hpg2_creditcard/sort_order</config_path>
                     </field>

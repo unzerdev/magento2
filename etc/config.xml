@@ -10,6 +10,7 @@
             <hpg2_creditcard>
                 <active>0</active>
                 <title><![CDATA[Creditcard]]></title>
+                <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
                 <model>Heidelpay\Gateway2\Model\Method\Creditcard</model>
