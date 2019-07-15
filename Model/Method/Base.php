@@ -22,6 +22,38 @@ class Base extends AbstractMethod
     protected $_code = \Heidelpay\Gateway2\Config\Method\Creditcard::METHOD_CODE;
 
     /**
+     * Payment Method feature
+     *
+     * @var bool
+     */
+    protected $_isGateway = true;
+
+    /**
+     * @var boolean
+     */
+    protected $_canCapture = false;
+
+    /**
+     * @var boolean
+     */
+    protected $_canCapturePartial = false;
+
+    /**
+     * @var boolean
+     */
+    protected $_canRefund = false;
+
+    /**
+     * @var boolean
+     */
+    protected $_canRefundInvoicePartial = false;
+
+    /**
+     * @var boolean
+     */
+    protected $_canUseInternal = false;
+
+    /**
      * @var Heidelpay
      */
     protected $_client;
