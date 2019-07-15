@@ -9,6 +9,7 @@ class Module extends BaseConfig
 {
     const METHOD_CODE = 'hpg2';
 
+    const KEY_PUBLIC_KEY = 'public_key';
     const KEY_PRIVATE_KEY = 'private_key';
 
     /**
@@ -27,6 +28,16 @@ class Module extends BaseConfig
         }
 
         parent::__construct($scopeConfig, $methodCode, $pathPattern);
+    }
+
+    /**
+     * Returns the public key.
+     *
+     * @return string
+     */
+    public function getPublicKey()
+    {
+        return $this->getValue(self::KEY_PUBLIC_KEY);
     }
 
     /**

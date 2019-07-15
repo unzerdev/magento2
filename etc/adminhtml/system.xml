@@ -9,7 +9,11 @@
                 </comment>
                 <group id="global" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>HPG2_MAIN</label>
-                    <field id="private_key" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="public_key" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Public Key</label>
+                        <config_path>payment/hpg2/public_key</config_path>
+                    </field>
+                    <field id="private_key" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Private Key</label>
                         <config_path>payment/hpg2/private_key</config_path>
                     </field>
