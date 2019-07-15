@@ -5,7 +5,8 @@
     "license": "proprietary",
     "require": {
         "php": "~7.1.0|~7.2.0|~7.3.0",
-        "magento/framework": "^101.0.0|^102.0.0|^103.0.0"
+        "magento/framework": "^101.0.0|^102.0.0|^103.0.0",
+        "heidelpay/heidelpay-php": "^1.1"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.15",

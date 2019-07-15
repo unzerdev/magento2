@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e667e8a81a31acf06f8f07bc067fd5f",
+    "content-hash": "84e8efd009d0694da884f27669aa237f",
     "packages": [
         {
             "name": "colinmollenhour/credis",
@@ -415,6 +415,52 @@
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
             "time": "2017-02-14T19:40:03+00:00"
+        },
+        {
+            "name": "heidelpay/heidelpay-php",
+            "version": "1.1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/heidelpay/heidelpayPHP.git",
+                "reference": "809612388beedcdbc7ae65abc6beba3d10b72c7d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/heidelpay/heidelpayPHP/zipball/809612388beedcdbc7ae65abc6beba3d10b72c7d",
+                "reference": "809612388beedcdbc7ae65abc6beba3d10b72c7d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.0.0|^7.1.0|^7.2.0|^7.3.0"
+            },
+            "require-dev": {
+                "codacy/coverage": "^1.4",
+                "friendsofphp/php-cs-fixer": "^2.0",
+                "phpunit/phpunit": "^6.5"
+            },
+            "suggest": {
+                "ext-curl": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "heidelpayPHP\\": "src",
+                    "heidelpayPHP\\examples\\": "examples"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Simon Gabriel",
+                    "email": "development@heidelpay.com"
+                }
+            ],
+            "description": "This is the php sdk to connect to the heidelpay rest api.",
+            "time": "2019-07-08T13:29:26+00:00"
         },
         {
             "name": "justinrainbow/json-schema",

@@ -7,7 +7,7 @@ use \Magento\Payment\Gateway\Config\Config as BaseConfig;
 
 abstract class Base extends BaseConfig
 {
-    const METHOD_CODE = 'hpg2_';
+    const METHOD_CODE = 'hpg2';
 
     const KEY_ACTIVE = 'active';
     const KEY_TITLE = 'title';
