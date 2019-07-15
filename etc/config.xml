@@ -2,9 +2,18 @@
     <default>
         <payment>
             <hpg2>
+                <active>0</active>
                 <public_key>s-pub-2a10ifVINFAjpQJ9qW8jBe5OJPBx6Gxa</public_key>
                 <private_key>s-priv-2a102ZMq3gV4I3zJ888J7RR6u75oqK3n</private_key>
+                <model>Heidelpay\Gateway2\Model\Method\Base</model>
             </hpg2>
+            <hpg2_creditcard>
+                <active>0</active>
+                <title><![CDATA[Creditcard]]></title>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <model>Heidelpay\Gateway2\Model\Method\Creditcard</model>
+            </hpg2_creditcard>
         </payment>
     </default>
 </config>
