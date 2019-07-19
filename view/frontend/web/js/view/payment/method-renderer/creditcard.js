@@ -76,7 +76,7 @@ define(
                     'method': this.item.method,
                     'po_number': null,
                     'additional_data': {
-                        'resourceId': this.resourceId
+                        'resource_id': this.resourceId
                     }
                 };
             },

@@ -1,0 +1,6 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="payment_method_assign_data_hpg2_creditcard">
+        <observer name="hpg2_creditcard_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\CreditcardDataAssignObserver" />
+    </event>
+</config>

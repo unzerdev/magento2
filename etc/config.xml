@@ -9,6 +9,7 @@
             </hpg2>
             <hpg2_creditcard>
                 <active>0</active>
+                <payment_action>authorize</payment_action>
                 <title><![CDATA[Creditcard]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>

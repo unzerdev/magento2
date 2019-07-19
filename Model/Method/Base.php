@@ -4,6 +4,8 @@ namespace Heidelpay\Gateway2\Model\Method;
 
 use Heidelpay\Gateway2\Model\Config;
 use heidelpayPHP\Heidelpay;
+use heidelpayPHP\Resources\Basket;
+use heidelpayPHP\Resources\EmbeddedResources\BasketItem;
 use Magento\Directory\Helper\Data as DirectoryHelper;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
@@ -12,9 +14,11 @@ use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
+use Magento\Framework\UrlInterface;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
+use Magento\Sales\Model\Order;
 use Magento\Store\Api\Data\StoreInterface;
 
 class Base extends AbstractMethod
@@ -69,6 +73,11 @@ class Base extends AbstractMethod
     protected $_store;
 
     /**
+     * @var UrlInterface
+     */
+    protected $_urlBuilder;
+
+    /**
      * Base constructor.
      * @param Context $context
      * @param Registry $registry
@@ -94,6 +103,7 @@ class Base extends AbstractMethod
         Logger $logger,
         Config $moduleConfig,
         StoreInterface $store,
+        UrlInterface $urlBuilder,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = [],
@@ -116,6 +126,7 @@ class Base extends AbstractMethod
             $data,
             $directory
         );
+        $this->_urlBuilder = $urlBuilder;
     }
 
     /**
@@ -131,6 +142,38 @@ class Base extends AbstractMethod
     }
 
     /**
+     * Returns a Basket for the given Order.
+     *
+     * @param Order $order
+     *
+     * @return Basket
+     */
+    protected function _getBasketFromOrder(Order $order)
+    {
+        $basket = new Basket();
+        $basket->setAmountTotal($order->getGrandTotal());
+        $basket->setAmountTotalDiscount($order->getDiscountAmount());
+        $basket->setAmountTotalVat($order->getTaxAmount());
+        $basket->setCurrencyCode($order->getOrderCurrencyCode());
+        $basket->setOrderId($order->getIncrementId());
+
+        foreach ($order->getAllItems() as $orderItem) {
+            $basketItem = new BasketItem();
+            $basketItem->setAmountNet($orderItem->getRowTotal());
+            $basketItem->setAmountDiscount($orderItem->getDiscountAmount());
+            $basketItem->setAmountGross($orderItem->getRowTotalInclTax());
+            $basketItem->setAmountPerUnit($orderItem->getPrice());
+            $basketItem->setAmountVat($orderItem->getTaxAmount());
+            $basketItem->setQuantity($orderItem->getQtyOrdered());
+            $basketItem->setTitle($orderItem->getName());
+
+            $basket->addBasketItem($basketItem);
+        }
+
+        return $basket;
+    }
+
+    /**
      * Returns the gateway client.
      *
      * @return Heidelpay
@@ -142,5 +185,17 @@ class Base extends AbstractMethod
         }
 
         return $this->_client;
+    }
+
+    /**
+     * Returns an absolute URL for the given route.
+     *
+     * @param string $routePath
+     *
+     * @return string
+     */
+    protected function _getUrl($routePath)
+    {
+        return $this->_urlBuilder->getUrl($routePath);
     }
 }
