@@ -2,7 +2,7 @@
 
 namespace Heidelpay\Gateway2\Model\Method;
 
-use Heidelpay\Gateway2\Config\Module as ModuleConfig;
+use Heidelpay\Gateway2\Model\Config;
 use heidelpayPHP\Heidelpay;
 use Magento\Directory\Helper\Data as DirectoryHelper;
 use Magento\Framework\Api\AttributeValueFactory;
@@ -19,7 +19,7 @@ use Magento\Store\Api\Data\StoreInterface;
 
 class Base extends AbstractMethod
 {
-    protected $_code = \Heidelpay\Gateway2\Config\Method\Creditcard::METHOD_CODE;
+    protected $_code = Config::METHOD_BASE;
 
     /**
      * Payment Method feature
@@ -59,7 +59,7 @@ class Base extends AbstractMethod
     protected $_client;
 
     /**
-     * @var ModuleConfig
+     * @var Config
      */
     protected $_moduleConfig;
 
@@ -77,7 +77,7 @@ class Base extends AbstractMethod
      * @param Data $paymentData
      * @param ScopeConfigInterface $scopeConfig
      * @param Logger $logger
-     * @param ModuleConfig $moduleConfig
+     * @param Config $moduleConfig
      * @param StoreInterface $store
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
@@ -92,7 +92,7 @@ class Base extends AbstractMethod
         Data $paymentData,
         ScopeConfigInterface $scopeConfig,
         Logger $logger,
-        ModuleConfig $moduleConfig,
+        Config $moduleConfig,
         StoreInterface $store,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
@@ -116,6 +116,18 @@ class Base extends AbstractMethod
             $data,
             $directory
         );
+    }
+
+    /**
+     * Returns the configuration for the checkout page.
+     *
+     * @return array
+     */
+    public function getFrontendConfig()
+    {
+        return [
+            'publicKey' => $this->_moduleConfig->getPublicKey(),
+        ];
     }
 
     /**

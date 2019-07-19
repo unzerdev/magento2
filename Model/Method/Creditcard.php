@@ -2,7 +2,9 @@
 
 namespace Heidelpay\Gateway2\Model\Method;
 
+use Heidelpay\Gateway2\Model\Config;
+
 class Creditcard extends Base
 {
-    protected $_code = \Heidelpay\Gateway2\Config\Method\Creditcard::METHOD_CODE;
+    protected $_code = Config::METHOD_CREDITCARD;
 }
