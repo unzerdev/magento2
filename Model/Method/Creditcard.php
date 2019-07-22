@@ -4,6 +4,8 @@ namespace Heidelpay\Gateway2\Model\Method;
 
 use Heidelpay\Gateway2\Model\Config;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
+use heidelpayPHP\Resources\Payment;
+use heidelpayPHP\Resources\TransactionTypes\Authorization;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
@@ -11,7 +13,6 @@ use Magento\Sales\Model\Order;
 
 class Creditcard extends Base
 {
-    const KEY_PAYMENT_ID = 'payment_id';
     const KEY_RESOURCE_ID = 'resource_id';
 
     protected $_code = Config::METHOD_CREDITCARD;
@@ -51,7 +52,7 @@ class Creditcard extends Base
         $order = $payment->getOrder();
         $order->setState(Order::STATE_PENDING_PAYMENT);
 
-        $authorization = $this->_getClient()->authorize(
+        $this->_getClient()->authorize(
             $amount,
             $order->getOrderCurrencyCode(),
             $resourceId,
@@ -63,7 +64,6 @@ class Creditcard extends Base
             null
         );
 
-        $payment->setAdditionalInformation(self::KEY_PAYMENT_ID, $authorization->getPaymentId());
         return $this;
     }
 
@@ -85,36 +85,29 @@ class Creditcard extends Base
             throw new LocalizedException(__('The capture action is not available.'));
         }
 
-        /** @var string|null $paymentId */
-        $paymentId = $payment->getAdditionalInformation(self::KEY_PAYMENT_ID);
-
         /** @var Order $order */
         $order = $payment->getOrder();
         $order->setState(Order::STATE_PROCESSING);
 
-        if ($paymentId !== null) {
-            $this->_captureAuthorization($payment, $amount);
+        /** @var Payment $hpPayment */
+        $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
+
+        /** @var Authorization $hpAuthorization */
+        $hpAuthorization = null;
+
+        if ($hpPayment !== null &&
+            $hpPayment->getId() !== null) {
+            $hpAuthorization = $hpPayment->getAuthorization();
+        }
+
+        if ($hpAuthorization !== null &&
+            $hpAuthorization->getId() !== null) {
+            $hpAuthorization->charge($amount);
         } else {
             $this->_captureDirect($payment, $amount);
         }
 
         return $this;
-    }
-
-    /**
-     * Captures a payment from an existing authorization.
-     *
-     * @param InfoInterface $payment
-     * @param $amount
-     * @throws HeidelpayApiException
-     */
-    protected function _captureAuthorization(InfoInterface $payment, $amount)
-    {
-        /** @var string|null $paymentId */
-        $paymentId = $payment->getAdditionalInformation(self::KEY_PAYMENT_ID);
-
-        $client = $this->_getClient();
-        $client->chargeAuthorization($paymentId, $amount);
     }
 
     /**
@@ -132,20 +125,18 @@ class Creditcard extends Base
         /** @var string $resourceId */
         $resourceId = $payment->getAdditionalInformation(self::KEY_RESOURCE_ID);
 
-        $charge = $this->_getClient()->charge(
+        $this->_getClient()->charge(
             $amount,
             $order->getOrderCurrencyCode(),
             $resourceId,
             $this->_getUrl('checkout/onepage/success'),
             $order->getCustomerId(),
             $order->getIncrementId(),
-            $metadata = null,
+            null,
             $this->_getBasketFromOrder($order),
             null,
             null,
             null
         );
-
-        $payment->setAdditionalInformation(self::KEY_PAYMENT_ID, $charge->getPaymentId());
     }
 }
