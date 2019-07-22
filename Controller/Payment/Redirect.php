@@ -3,6 +3,7 @@
 namespace Heidelpay\Gateway2\Controller\Payment;
 
 use Heidelpay\Gateway2\Model\Config;
+use Heidelpay\Gateway2\Model\Method\Base;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Heidelpay;
 use heidelpayPHP\Resources\Payment;
@@ -13,6 +14,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Response\HttpInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order;
 
 class Redirect extends Action
@@ -21,16 +23,11 @@ class Redirect extends Action
      * @var Session
      */
     private $checkoutSession;
-    /**
-     * @var Config
-     */
-    private $moduleConfig;
 
-    public function __construct(Context $context, Session $checkoutSession, Config $moduleConfig)
+    public function __construct(Context $context, Session $checkoutSession)
     {
         parent::__construct($context);
         $this->checkoutSession = $checkoutSession;
-        $this->moduleConfig = $moduleConfig;
     }
 
     /**
@@ -43,34 +40,29 @@ class Redirect extends Action
      */
     public function execute()
     {
-        /** @var Order $lastOrder */
-        $lastOrder = $this->checkoutSession->getLastRealOrder();
+        /** @var Order $order */
+        $order = $this->checkoutSession->getLastRealOrder();
 
         /** @var HttpInterface $response */
         $response = $this->getResponse();
 
-        if ($lastOrder === null || $lastOrder->getId() === null) {
+        if ($order === null || $order->getId() === null) {
             $response->setHttpResponseCode(400);
             return $response;
         }
 
-        $client = new Heidelpay($this->moduleConfig->getPrivateKey());
+        /** @var OrderPaymentInterface $payment */
+        $payment = $order->getPayment();
 
-        /** @var Payment $payment */
-        $payment = $client->fetchPaymentByOrderId($lastOrder->getIncrementId());
-
-        /** @var Authorization $authorization */
-        $authorization = $payment->getAuthorization();
+        /** @var array $paymentData */
+        $paymentData = $payment->getAdditionalInformation();
 
         $redirect = $this->resultRedirectFactory->create();
 
-        if ($authorization->isPending()) {
-            $redirect->setUrl($authorization->getRedirectUrl());
-        } else if ($authorization->isSuccess()) {
-            $redirect->setPath('checkout/onepage/success');
+        if (isset($paymentData[Base::KEY_REDIRECT_URL])) {
+            $redirect->setUrl($paymentData[Base::KEY_REDIRECT_URL]);
         } else {
-            $response->setHttpResponseCode(400);
-            return $response;
+            $redirect->setPath('checkout/onepage/success');
         }
 
         return $redirect;

@@ -14,8 +14,6 @@ use Magento\Sales\Model\Order;
 
 class Creditcard extends Base
 {
-    const KEY_RESOURCE_ID = 'resource_id';
-
     protected $_code = Config::METHOD_CREDITCARD;
 
     /**
@@ -57,8 +55,8 @@ class Creditcard extends Base
             $amount,
             $order->getOrderCurrencyCode(),
             $resourceId,
-            $this->_getUrl('checkout/onepage/success'),
-            $order->getCustomerId(),
+            $this->_getAuthorizationCallbackUrl(),
+            null,
             $order->getIncrementId(),
             null,
             $this->_getBasketFromOrder($order),
@@ -68,6 +66,8 @@ class Creditcard extends Base
         if ($authorization->isError()) {
             throw new LocalizedException(__('Failed to authorize payment.'));
         }
+
+        $payment->setAdditionalInformation(self::KEY_REDIRECT_URL, $authorization->getRedirectUrl());
 
         return $this;
     }
@@ -92,7 +92,7 @@ class Creditcard extends Base
 
         /** @var Order $order */
         $order = $payment->getOrder();
-        $order->setState(Order::STATE_PROCESSING);
+        $order->setState(Order::STATE_PENDING_PAYMENT);
 
         /** @var Payment $hpPayment */
         $hpPayment = null;
@@ -112,6 +112,8 @@ class Creditcard extends Base
         if ($charge->isError()) {
             throw new LocalizedException(__('Failed to charge payment.'));
         }
+
+        $payment->setAdditionalInformation(self::KEY_REDIRECT_URL, $charge->getRedirectUrl());
 
         return $this;
     }
@@ -136,8 +138,8 @@ class Creditcard extends Base
             $amount,
             $order->getOrderCurrencyCode(),
             $resourceId,
-            $this->_getUrl('checkout/onepage/success'),
-            $order->getCustomerId(),
+            $this->_getChargeCallbackUrl(),
+            null,
             $order->getIncrementId(),
             null,
             $this->_getBasketFromOrder($order),
@@ -172,6 +174,8 @@ class Creditcard extends Base
         if ($cancellation->isError()) {
             throw new LocalizedException(__('Failed to cancel payment.'));
         }
+
+        $payment->setAdditionalInformation(self::KEY_REDIRECT_URL, $cancellation->getRedirectUrl());
 
         return $this;
     }

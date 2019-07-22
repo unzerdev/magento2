@@ -2,6 +2,7 @@
 
 namespace Heidelpay\Gateway2\Model;
 
+use heidelpayPHP\Heidelpay;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 
@@ -58,5 +59,16 @@ class Config
     public function getPrivateKey()
     {
         return $this->getValue(self::KEY_PRIVATE_KEY);
+    }
+
+    /**
+     * Returns an API client using the configured private key.
+     *
+     * @param null $locale
+     * @return Heidelpay
+     */
+    public function getHeidelpayClient($locale = null)
+    {
+        return new Heidelpay($this->getPrivateKey(), $locale);
     }
 }

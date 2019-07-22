@@ -54,7 +54,7 @@ class ShipmentObserver implements ObserverInterface
         $payments->addAttributeToFilter('method', ['in' => $this->paymentMethods]);
 
         if ($payments->count() > 0) {
-            $client = new Heidelpay($this->_moduleConfig->getPrivateKey());
+            $client = $this->_moduleConfig->getHeidelpayClient();
 
             /** @var Payment $payment */
             $payment = $client->fetchPaymentByOrderId($order->getIncrementId());

@@ -23,6 +23,9 @@ use Magento\Store\Api\Data\StoreInterface;
 
 class Base extends AbstractMethod
 {
+    const KEY_REDIRECT_URL = 'redirect_url';
+    const KEY_RESOURCE_ID = 'resource_id';
+
     protected $_code = Config::METHOD_BASE;
 
     /**
@@ -186,7 +189,7 @@ class Base extends AbstractMethod
     protected function _getClient()
     {
         if ($this->_client === null) {
-            $this->_client = new Heidelpay($this->_moduleConfig->getPrivateKey(), $this->_store->getLocaleCode());
+            $this->_client = $this->_moduleConfig->getHeidelpayClient($this->_store->getLocaleCode());
         }
 
         return $this->_client;
@@ -202,5 +205,21 @@ class Base extends AbstractMethod
     protected function _getUrl($routePath)
     {
         return $this->_urlBuilder->getUrl($routePath);
+    }
+
+    /**
+     * @return string
+     */
+    protected function _getAuthorizationCallbackUrl()
+    {
+        return $this->_getUrl('hpg2/payment/authorizationCallback');
+    }
+
+    /**
+     * @return string
+     */
+    protected function _getChargeCallbackUrl()
+    {
+        return $this->_getUrl('hpg2/payment/chargeCallback');
     }
 }
