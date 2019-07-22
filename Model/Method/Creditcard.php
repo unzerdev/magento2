@@ -29,11 +29,6 @@ class Creditcard extends Base
     protected $_canCapture = true;
 
     /**
-     * @var bool
-     */
-    protected $_canRefund = true;
-
-    /**
      * Authorize payment abstract method
      *
      * @param DataObject|InfoInterface $payment
@@ -153,10 +148,9 @@ class Creditcard extends Base
     }
 
     /**
-     * Refund specified amount for payment
+     * Cancel specified amount for payment
      *
      * @param DataObject|InfoInterface $payment
-     * @param float $amount
      * @return $this
      * @throws LocalizedException
      * @throws HeidelpayApiException
@@ -164,12 +158,8 @@ class Creditcard extends Base
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @deprecated 100.2.0
      */
-    public function refund(InfoInterface $payment, $amount)
+    public function cancel(InfoInterface $payment)
     {
-        if (!$this->canRefund()) {
-            throw new LocalizedException(__('The refund action is not available.'));
-        }
-
         /** @var Order $order */
         $order = $payment->getOrder();
 
@@ -177,7 +167,7 @@ class Creditcard extends Base
         $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
 
         /** @var Cancellation $refund */
-        $cancellation = $hpPayment->cancel($amount);
+        $cancellation = $hpPayment->cancel();
 
         if ($cancellation->isError()) {
             throw new LocalizedException(__('Failed to cancel payment.'));
