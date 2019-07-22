@@ -157,11 +157,16 @@ class Base extends AbstractMethod
         $basket->setCurrencyCode($order->getOrderCurrencyCode());
         $basket->setOrderId($order->getIncrementId());
 
-        foreach ($order->getAllItems() as $orderItem) {
+        foreach ($order->getAllVisibleItems() as $orderItem) {
+            $totalInclTax = $orderItem->getRowTotalInclTax();
+            if ($totalInclTax === null) {
+                $totalInclTax = $orderItem->getRowTotal();
+            }
+
             $basketItem = new BasketItem();
             $basketItem->setAmountNet($orderItem->getRowTotal());
             $basketItem->setAmountDiscount($orderItem->getDiscountAmount());
-            $basketItem->setAmountGross($orderItem->getRowTotalInclTax());
+            $basketItem->setAmountGross($totalInclTax);
             $basketItem->setAmountPerUnit($orderItem->getPrice());
             $basketItem->setAmountVat($orderItem->getTaxAmount());
             $basketItem->setQuantity($orderItem->getQtyOrdered());
