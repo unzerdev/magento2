@@ -114,7 +114,6 @@ abstract class AbstractCallback extends Action
      */
     protected function handleSuccess(Order $order)
     {
-        $order->setState(Order::STATE_PROCESSING);
         $this->orderRepository->save($order);
 
         $redirect = $this->resultRedirectFactory->create();

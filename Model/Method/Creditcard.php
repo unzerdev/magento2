@@ -49,7 +49,6 @@ class Creditcard extends Base
 
         /** @var Order $order */
         $order = $payment->getOrder();
-        $order->setState(Order::STATE_PENDING_PAYMENT);
 
         $authorization = $this->_getClient()->authorize(
             $amount,
@@ -92,7 +91,6 @@ class Creditcard extends Base
 
         /** @var Order $order */
         $order = $payment->getOrder();
-        $order->setState(Order::STATE_PENDING_PAYMENT);
 
         /** @var Payment $hpPayment */
         $hpPayment = null;
