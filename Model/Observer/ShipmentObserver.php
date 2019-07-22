@@ -3,8 +3,6 @@
 namespace Heidelpay\Gateway2\Model\Observer;
 
 use Heidelpay\Gateway2\Model\Config;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Heidelpay;
 use heidelpayPHP\Resources\Payment;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -15,7 +13,6 @@ use Magento\Sales\Model\ResourceModel\Order\Payment\Collection;
 class ShipmentObserver implements ObserverInterface
 {
     private $paymentMethods = [
-        Config::METHOD_CREDITCARD,
     ];
 
     /**
