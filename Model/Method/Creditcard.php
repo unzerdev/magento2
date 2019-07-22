@@ -27,6 +27,16 @@ class Creditcard extends Base
     protected $_canCapture = true;
 
     /**
+     * @var bool
+     */
+    protected $_canRefund = true;
+
+    /**
+     * @var bool
+     */
+    protected $_canRefundInvoicePartial = true;
+
+    /**
      * Authorize payment abstract method
      *
      * @param DataObject|InfoInterface $payment
@@ -168,6 +178,20 @@ class Creditcard extends Base
      */
     public function cancel(InfoInterface $payment)
     {
+        return $this->refund($payment, null);
+    }
+
+    /**
+     * Refund specified amount for payment
+     *
+     * @param InfoInterface $payment
+     * @param float $amount
+     * @return $this
+     * @throws HeidelpayApiException
+     * @throws LocalizedException
+     */
+    public function refund(InfoInterface $payment, $amount)
+    {
         /** @var Order $order */
         $order = $payment->getOrder();
 
@@ -175,10 +199,10 @@ class Creditcard extends Base
         $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
 
         /** @var Cancellation $refund */
-        $cancellation = $hpPayment->cancel();
+        $cancellation = $hpPayment->cancel($amount);
 
         if ($cancellation->isError()) {
-            throw new LocalizedException(__('Failed to cancel payment.'));
+            throw new LocalizedException(__('Failed to refund payment.'));
         }
 
         $payment->setAdditionalInformation(self::KEY_REDIRECT_URL, $cancellation->getRedirectUrl());
