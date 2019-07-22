@@ -66,6 +66,10 @@ class Creditcard extends Base
             throw new LocalizedException(__('Failed to authorize payment.'));
         }
 
+        $orderPayment = $order->getPayment();
+        $orderPayment->setLastTransId($authorization->getPaymentId());
+        $orderPayment->save();
+
         $payment->setAdditionalInformation(self::KEY_REDIRECT_URL, $authorization->getRedirectUrl());
 
         return $this;
@@ -110,6 +114,10 @@ class Creditcard extends Base
         if ($charge->isError()) {
             throw new LocalizedException(__('Failed to charge payment.'));
         }
+
+        $orderPayment = $order->getPayment();
+        $orderPayment->setLastTransId($charge->getPaymentId());
+        $orderPayment->save();
 
         $payment->setAdditionalInformation(self::KEY_REDIRECT_URL, $charge->getRedirectUrl());
 
