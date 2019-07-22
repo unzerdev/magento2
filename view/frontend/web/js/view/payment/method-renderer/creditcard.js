@@ -3,14 +3,19 @@ define(
         'jquery',
         'ko',
         'mage/translate',
+        'mage/url',
         'Magento_Checkout/js/action/place-order',
+        'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/view/payment/default',
         '//static.heidelpay.com/v1/heidelpay.js'
     ],
-    function ($, ko, $t, placeOrderAction, Component, heidelpay) {
+    function ($, ko, $t, url, placeOrderAction, fullScreenLoader, Component, heidelpay) {
         'use strict';
 
         return Component.extend({
+            redirectAfterPlaceOrder: false,
+            redirectUrl: 'hpg2/payment/redirect',
+
             defaults: {
                 card: null,
                 cardFields: {
@@ -59,6 +64,11 @@ define(
                         self.cardFields[event.type].valid("success" in event && event.success);
                     }
                 });
+            },
+
+            afterPlaceOrder: function () {
+                fullScreenLoader.startLoader();
+                window.location.replace(url.build(this.redirectUrl));
             },
 
             allInputsValid: function () {
