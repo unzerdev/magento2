@@ -5,7 +5,6 @@ namespace Heidelpay\Gateway2\Model\Method;
 use Heidelpay\Gateway2\Model\Config;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
-use heidelpayPHP\Resources\TransactionTypes\Authorization;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
@@ -95,19 +94,16 @@ class Creditcard extends Base
         $order->setState(Order::STATE_PROCESSING);
 
         /** @var Payment $hpPayment */
-        $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
+        $hpPayment = null;
 
-        /** @var Authorization $hpAuthorization */
-        $hpAuthorization = null;
-
-        if ($hpPayment !== null &&
-            $hpPayment->getId() !== null) {
-            $hpAuthorization = $hpPayment->getAuthorization();
+        try {
+            $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
+        } catch (HeidelpayApiException $e) {
+            $hpPayment = null;
         }
 
-        if ($hpAuthorization !== null &&
-            $hpAuthorization->getId() !== null) {
-            $hpAuthorization->charge($amount);
+        if ($hpPayment !== null) {
+            $this->_getClient()->chargeAuthorization($hpPayment->getId(), $amount);
         } else {
             $this->_captureDirect($payment, $amount);
         }
