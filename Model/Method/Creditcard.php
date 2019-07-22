@@ -5,6 +5,8 @@ namespace Heidelpay\Gateway2\Model\Method;
 use Heidelpay\Gateway2\Model\Config;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
+use heidelpayPHP\Resources\TransactionTypes\Cancellation;
+use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
@@ -56,7 +58,7 @@ class Creditcard extends Base
         $order = $payment->getOrder();
         $order->setState(Order::STATE_PENDING_PAYMENT);
 
-        $this->_getClient()->authorize(
+        $authorization = $this->_getClient()->authorize(
             $amount,
             $order->getOrderCurrencyCode(),
             $resourceId,
@@ -67,6 +69,10 @@ class Creditcard extends Base
             $this->_getBasketFromOrder($order),
             null
         );
+
+        if ($authorization->isError()) {
+            throw new LocalizedException(__('Failed to authorize payment.'));
+        }
 
         return $this;
     }
@@ -103,9 +109,13 @@ class Creditcard extends Base
         }
 
         if ($hpPayment !== null) {
-            $this->_getClient()->chargeAuthorization($hpPayment->getId(), $amount);
+            $charge = $this->_getClient()->chargeAuthorization($hpPayment->getId(), $amount);
         } else {
-            $this->_captureDirect($payment, $amount);
+            $charge = $this->_captureDirect($payment, $amount);
+        }
+
+        if ($charge->isError()) {
+            throw new LocalizedException(__('Failed to charge payment.'));
         }
 
         return $this;
@@ -116,6 +126,7 @@ class Creditcard extends Base
      *
      * @param InfoInterface $payment
      * @param $amount
+     * @return Charge
      * @throws HeidelpayApiException
      */
     protected function _captureDirect(InfoInterface $payment, $amount)
@@ -126,7 +137,7 @@ class Creditcard extends Base
         /** @var string $resourceId */
         $resourceId = $payment->getAdditionalInformation(self::KEY_RESOURCE_ID);
 
-        $this->_getClient()->charge(
+        return $this->_getClient()->charge(
             $amount,
             $order->getOrderCurrencyCode(),
             $resourceId,
@@ -164,7 +175,13 @@ class Creditcard extends Base
 
         /** @var Payment $hpPayment */
         $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
-        $hpPayment->cancel($amount);
+
+        /** @var Cancellation $refund */
+        $cancellation = $hpPayment->cancel($amount);
+
+        if ($cancellation->isError()) {
+            throw new LocalizedException(__('Failed to cancel payment.'));
+        }
 
         return $this;
     }
