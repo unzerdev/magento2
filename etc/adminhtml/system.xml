@@ -29,6 +29,11 @@
                         <label>Title</label>
                         <config_path>payment/hpg2_creditcard/title</config_path>
                     </field>
+                    <field id="payment_action" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1">
+                        <label>Payment Action</label>
+                        <config_path>payment/hpg2_creditcard/payment_action</config_path>
+                        <source_model>Heidelpay\Gateway2\Model\System\Config\Source\PaymentAction</source_model>
+                    </field>
                     <field id="allowspecific" translate="label" type="allowspecific" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Payment from Applicable Countries</label>
                         <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
