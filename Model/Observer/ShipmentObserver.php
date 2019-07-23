@@ -2,37 +2,56 @@
 
 namespace Heidelpay\Gateway2\Model\Observer;
 
+use Heidelpay\Gateway2\Helper\Order as OrderHelper;
 use Heidelpay\Gateway2\Model\Config;
+use Heidelpay\Gateway2\Model\PaymentInformation;
+use Heidelpay\Gateway2\Model\PaymentInformationFactory;
+use heidelpayPHP\Constants\ApiResponseCodes;
+use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\ResourceModel\Order\Payment\Collection;
 
 class ShipmentObserver implements ObserverInterface
 {
-    private $paymentMethods = [
-    ];
-
     /**
      * @var Config
      */
     protected $_moduleConfig;
 
     /**
+     * @var OrderHelper
+     */
+    protected $_orderHelper;
+
+    /**
+     * @var PaymentInformationFactory
+     */
+    protected $_paymentInformationFactory;
+
+    /**
      * ShipmentObserver constructor.
      * @param Config $moduleConfig
+     * @param OrderHelper $orderHelper
+     * @param PaymentInformationFactory $paymentInformationFactory
      */
-    public function __construct(Config $moduleConfig)
+    public function __construct(
+        Config $moduleConfig,
+        OrderHelper $orderHelper,
+        PaymentInformationFactory $paymentInformationFactory
+    )
     {
         $this->_moduleConfig = $moduleConfig;
+        $this->_orderHelper = $orderHelper;
+        $this->_paymentInformationFactory = $paymentInformationFactory;
     }
 
     /**
      * @param Observer $observer
      * @return void
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws HeidelpayApiException
      */
     public function execute(Observer $observer)
     {
@@ -46,16 +65,22 @@ class ShipmentObserver implements ObserverInterface
         /** @var Order $order */
         $order = $shipment->getOrder();
 
-        /** @var Collection $payments */
-        $payments = $order->getPaymentsCollection();
-        $payments->addAttributeToFilter('method', ['in' => $this->paymentMethods]);
+        /** @var PaymentInformation $paymentInformation */
+        $paymentInformation = $this->_paymentInformationFactory->create();
+        $paymentInformation->load($this->_orderHelper->getExternalId($order), 'external_id');
 
-        if ($payments->count() > 0) {
+        if ($paymentInformation->getId() !== null) {
             $client = $this->_moduleConfig->getHeidelpayClient();
 
-            /** @var Payment $payment */
-            $payment = $client->fetchPaymentByOrderId($order->getIncrementId());
-            $payment->ship();
+            try {
+                /** @var Payment $payment */
+                $payment = $client->fetchPayment($paymentInformation->getPaymentId());
+                $payment->ship();
+            } catch (HeidelpayApiException $e) {
+                if ($e->getCode() !== ApiResponseCodes::API_ERROR_TRANSACTION_SHIP_NOT_ALLOWED) {
+                    throw $e;
+                }
+            }
         }
     }
 }
