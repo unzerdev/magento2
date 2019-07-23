@@ -3,13 +3,16 @@
 namespace Heidelpay\Gateway2\Model\Method;
 
 use Heidelpay\Gateway2\Model\Config;
+use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Heidelpay;
 use heidelpayPHP\Resources\Basket;
+use heidelpayPHP\Resources\Customer as HpCustomer;
 use heidelpayPHP\Resources\EmbeddedResources\BasketItem;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Cancellation;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
+use Magento\Customer\Model\Customer;
 use Magento\Directory\Helper\Data as DirectoryHelper;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
@@ -203,6 +206,33 @@ class Base extends AbstractMethod
     }
 
     /**
+     * Returns the Heidelpay Customer object for the given order.
+     *
+     * @param Order $order
+     * @return HpCustomer
+     * @throws HeidelpayApiException
+     */
+    protected function _getCustomer(Order $order)
+    {
+        try {
+            return $this->_getClient()->fetchCustomerByExtCustomerId($order->getCustomerId());
+        } catch (HeidelpayApiException $e) {
+            if ($e->getCode() !== ApiResponseCodes::API_ERROR_CUSTOMER_DOES_NOT_EXIST) {
+                throw $e;
+            }
+        }
+
+        $hpCustomer = new HpCustomer();
+        $hpCustomer->setBirthDate($order->getCustomerDob());
+        $hpCustomer->setCustomerId($order->getCustomerId());
+        $hpCustomer->setEmail($order->getCustomerEmail());
+        $hpCustomer->setFirstname($order->getCustomerFirstname());
+        $hpCustomer->setLastname($order->getCustomerLastname());
+
+        return $this->_getClient()->createOrUpdateCustomer($hpCustomer);
+    }
+
+    /**
      * Returns an absolute URL for the given route.
      *
      * @param string $routePath
@@ -254,12 +284,14 @@ class Base extends AbstractMethod
         /** @var Order $order */
         $order = $payment->getOrder();
 
+        $customer = $order->getCustomerIsGuest() ? null : $this->_getCustomer($order);
+
         $authorization = $this->_getClient()->authorize(
             $amount,
             $order->getOrderCurrencyCode(),
             $resourceId,
             $this->_getAuthorizationCallbackUrl(),
-            null,
+            $customer,
             $order->getIncrementId(),
             null,
             $this->_getBasketFromOrder($order),
@@ -269,10 +301,6 @@ class Base extends AbstractMethod
         if ($authorization->isError()) {
             throw new LocalizedException(__('Failed to authorize payment.'));
         }
-
-        $orderPayment = $order->getPayment();
-        $orderPayment->setLastTransId($authorization->getPaymentId());
-        $orderPayment->save();
 
         $payment->setAdditionalInformation(self::KEY_REDIRECT_URL, $authorization->getRedirectUrl());
 
@@ -306,7 +334,9 @@ class Base extends AbstractMethod
         try {
             $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
         } catch (HeidelpayApiException $e) {
-            $hpPayment = null;
+            if ($e->getCode() !== ApiResponseCodes::API_ERROR_PAYMENT_NOT_FOUND) {
+                throw $e;
+            }
         }
 
         if ($hpPayment !== null) {
@@ -344,12 +374,14 @@ class Base extends AbstractMethod
         /** @var string $resourceId */
         $resourceId = $payment->getAdditionalInformation(self::KEY_RESOURCE_ID);
 
+        $customer = $order->getCustomerIsGuest() ? null : $this->_getCustomer($order);
+
         return $this->_getClient()->charge(
             $amount,
             $order->getOrderCurrencyCode(),
             $resourceId,
             $this->_getChargeCallbackUrl(),
-            null,
+            $customer,
             $order->getIncrementId(),
             null,
             $this->_getBasketFromOrder($order),
