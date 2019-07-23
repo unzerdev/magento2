@@ -2,88 +2,71 @@
 
 namespace Heidelpay\Gateway2\Controller\Payment;
 
+use Heidelpay\Gateway2\Helper\Order as OrderHelper;
 use Heidelpay\Gateway2\Model\Config;
+use Heidelpay\Gateway2\Model\PaymentInformation;
+use Heidelpay\Gateway2\Model\PaymentInformationFactory;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Heidelpay;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Traits\HasStates;
 use Magento\Checkout\Model\Session;
-use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\Response\HttpInterface;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\ResultInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 
-abstract class AbstractCallback extends Action
+abstract class AbstractCallback extends AbstractPaymentAction
 {
-    /**
-     * @var Session
-     */
-    protected $checkoutSession;
-
     /**
      * @var Config
      */
-    protected $moduleConfig;
+    protected $_moduleConfig;
 
     /**
      * @var OrderRepositoryInterface
      */
-    protected $orderRepository;
+    protected $_orderRepository;
 
     public function __construct(
         Context $context,
         Session $checkoutSession,
+        OrderHelper $orderHelper,
+        PaymentInformationFactory $paymentInformationFactory,
         Config $moduleConfig,
         OrderRepositoryInterface $orderRepository
     )
     {
-        parent::__construct($context);
-        $this->checkoutSession = $checkoutSession;
-        $this->moduleConfig = $moduleConfig;
-        $this->orderRepository = $orderRepository;
+        parent::__construct($context, $checkoutSession, $orderHelper, $paymentInformationFactory);
+        $this->_moduleConfig = $moduleConfig;
+        $this->_orderRepository = $orderRepository;
     }
 
     /**
-     * Execute action based on request and return result
-     *
-     * Note: Request will be added as operation argument in future
-     *
-     * @return ResultInterface|ResponseInterface
+     * @inheritDoc
      * @throws HeidelpayApiException
      */
-    public function execute()
+    public function executeWith(Order $order, PaymentInformation $paymentInformation)
     {
-        /** @var Order $order */
-        $order = $this->checkoutSession->getLastRealOrder();
-
-        /** @var HttpInterface $response */
-        $response = $this->getResponse();
-
-        if ($order === null || $order->getId() === null) {
-            $response->setHttpResponseCode(400);
-            return $response;
-        }
-
-        /** @var Heidelpay $client */
-        $client = $this->moduleConfig->getHeidelpayClient();
-
         /** @var Payment $payment */
-        $payment = $client->fetchPaymentByOrderId($order->getIncrementId());
+        $payment = $this->_moduleConfig
+            ->getHeidelpayClient()
+            ->fetchPayment($paymentInformation->getPaymentId());
 
         /** @var HasStates $result */
         $result = $this->getStateForPayment($order, $payment);
 
         if ($result->isError()) {
-            return $this->handleError($order);
-        } elseif ($result->isSuccess()) {
-            return $this->handleSuccess($order);
-        } else {
+            $response = $this->handleError($order);
+        } elseif ($result->isPending()) {
+            $response = $this->getResponse();
             $response->setHttpResponseCode(400);
-            return $response;
+        } else {
+            $response = $this->handleSuccess($order);
         }
+
+        $paymentInformation->setRedirectUrl(null);
+        $paymentInformation->save();
+
+        return $response;
     }
 
     /**
@@ -99,9 +82,9 @@ abstract class AbstractCallback extends Action
      */
     protected function handleError(Order $order)
     {
-        $this->checkoutSession->restoreQuote();
+        $this->_checkoutSession->restoreQuote();
         $order->cancel();
-        $this->orderRepository->save($order);
+        $this->_orderRepository->save($order);
 
         $redirect = $this->resultRedirectFactory->create();
         $redirect->setPath('checkout/cart');
@@ -114,7 +97,7 @@ abstract class AbstractCallback extends Action
      */
     protected function handleSuccess(Order $order)
     {
-        $this->orderRepository->save($order);
+        $this->_orderRepository->save($order);
 
         $redirect = $this->resultRedirectFactory->create();
         $redirect->setPath('checkout/onepage/success');

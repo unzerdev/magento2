@@ -2,23 +2,20 @@
 
 namespace Heidelpay\Gateway2\Model\Method;
 
+use Heidelpay\Gateway2\Helper\Order as OrderHelper;
 use Heidelpay\Gateway2\Model\Config;
-use heidelpayPHP\Constants\ApiResponseCodes;
+use Heidelpay\Gateway2\Model\PaymentInformation;
+use Heidelpay\Gateway2\Model\PaymentInformationFactory;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Heidelpay;
-use heidelpayPHP\Resources\Basket;
-use heidelpayPHP\Resources\Customer as HpCustomer;
-use heidelpayPHP\Resources\EmbeddedResources\BasketItem;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Cancellation;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
-use Magento\Customer\Model\Customer;
 use Magento\Directory\Helper\Data as DirectoryHelper;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
-use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
@@ -28,12 +25,12 @@ use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
+use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Api\Data\StoreInterface;
 
 class Base extends AbstractMethod
 {
-    const KEY_REDIRECT_URL = 'redirect_url';
     const KEY_RESOURCE_ID = 'resource_id';
 
     protected $_code = Config::METHOD_BASE;
@@ -81,6 +78,16 @@ class Base extends AbstractMethod
     protected $_moduleConfig;
 
     /**
+     * @var OrderHelper
+     */
+    protected $_orderHelper;
+
+    /**
+     * @var PaymentInformationFactory
+     */
+    protected $_paymentInformationFactory;
+
+    /**
      * @var StoreInterface
      */
     protected $_store;
@@ -115,6 +122,8 @@ class Base extends AbstractMethod
         ScopeConfigInterface $scopeConfig,
         Logger $logger,
         Config $moduleConfig,
+        OrderHelper $orderHelper,
+        PaymentInformationFactory $paymentInformationFactory,
         StoreInterface $store,
         UrlInterface $urlBuilder,
         AbstractResource $resource = null,
@@ -123,9 +132,6 @@ class Base extends AbstractMethod
         DirectoryHelper $directory = null
     )
     {
-        $this->_moduleConfig = $moduleConfig;
-        $this->_store = $store;
-
         parent::__construct(
             $context,
             $registry,
@@ -139,6 +145,11 @@ class Base extends AbstractMethod
             $data,
             $directory
         );
+
+        $this->_moduleConfig = $moduleConfig;
+        $this->_orderHelper = $orderHelper;
+        $this->_paymentInformationFactory = $paymentInformationFactory;
+        $this->_store = $store;
         $this->_urlBuilder = $urlBuilder;
     }
 
@@ -155,43 +166,6 @@ class Base extends AbstractMethod
     }
 
     /**
-     * Returns a Basket for the given Order.
-     *
-     * @param Order $order
-     *
-     * @return Basket
-     */
-    protected function _getBasketFromOrder(Order $order)
-    {
-        $basket = new Basket();
-        $basket->setAmountTotal($order->getGrandTotal());
-        $basket->setAmountTotalDiscount($order->getDiscountAmount());
-        $basket->setAmountTotalVat($order->getTaxAmount());
-        $basket->setCurrencyCode($order->getOrderCurrencyCode());
-        $basket->setOrderId($order->getIncrementId());
-
-        foreach ($order->getAllVisibleItems() as $orderItem) {
-            $totalInclTax = $orderItem->getRowTotalInclTax();
-            if ($totalInclTax === null) {
-                $totalInclTax = $orderItem->getRowTotal();
-            }
-
-            $basketItem = new BasketItem();
-            $basketItem->setAmountNet($orderItem->getRowTotal());
-            $basketItem->setAmountDiscount($orderItem->getDiscountAmount());
-            $basketItem->setAmountGross($totalInclTax);
-            $basketItem->setAmountPerUnit($orderItem->getPrice());
-            $basketItem->setAmountVat($orderItem->getTaxAmount());
-            $basketItem->setQuantity($orderItem->getQtyOrdered());
-            $basketItem->setTitle($orderItem->getName());
-
-            $basket->addBasketItem($basketItem);
-        }
-
-        return $basket;
-    }
-
-    /**
      * Returns the gateway client.
      *
      * @return Heidelpay
@@ -203,33 +177,6 @@ class Base extends AbstractMethod
         }
 
         return $this->_client;
-    }
-
-    /**
-     * Returns the Heidelpay Customer object for the given order.
-     *
-     * @param Order $order
-     * @return HpCustomer
-     * @throws HeidelpayApiException
-     */
-    protected function _getCustomer(Order $order)
-    {
-        try {
-            return $this->_getClient()->fetchCustomerByExtCustomerId($order->getCustomerId());
-        } catch (HeidelpayApiException $e) {
-            if ($e->getCode() !== ApiResponseCodes::API_ERROR_CUSTOMER_DOES_NOT_EXIST) {
-                throw $e;
-            }
-        }
-
-        $hpCustomer = new HpCustomer();
-        $hpCustomer->setBirthDate($order->getCustomerDob());
-        $hpCustomer->setCustomerId($order->getCustomerId());
-        $hpCustomer->setEmail($order->getCustomerEmail());
-        $hpCustomer->setFirstname($order->getCustomerFirstname());
-        $hpCustomer->setLastname($order->getCustomerLastname());
-
-        return $this->_getClient()->createOrUpdateCustomer($hpCustomer);
     }
 
     /**
@@ -261,16 +208,7 @@ class Base extends AbstractMethod
     }
 
     /**
-     * Authorize payment abstract method
-     *
-     * @param DataObject|InfoInterface $payment
-     * @param float $amount
-     * @return $this
-     * @throws LocalizedException
-     * @throws HeidelpayApiException
-     * @api
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @deprecated 100.2.0
+     * @inheritDoc
      */
     public function authorize(InfoInterface $payment, $amount)
     {
@@ -284,17 +222,15 @@ class Base extends AbstractMethod
         /** @var Order $order */
         $order = $payment->getOrder();
 
-        $customer = $order->getCustomerIsGuest() ? null : $this->_getCustomer($order);
-
         $authorization = $this->_getClient()->authorize(
             $amount,
             $order->getOrderCurrencyCode(),
             $resourceId,
             $this->_getAuthorizationCallbackUrl(),
-            $customer,
-            $order->getIncrementId(),
-            null,
-            $this->_getBasketFromOrder($order),
+            $this->_orderHelper->createOrUpdateCustomerForOrder($order),
+            $this->_orderHelper->getExternalId($order),
+            $this->_orderHelper->createMetadata($order),
+            $this->_orderHelper->createBasketForOrder($order),
             null
         );
 
@@ -302,22 +238,18 @@ class Base extends AbstractMethod
             throw new LocalizedException(__('Failed to authorize payment.'));
         }
 
-        $payment->setAdditionalInformation(self::KEY_REDIRECT_URL, $authorization->getRedirectUrl());
+        /** @var PaymentInformation $paymentInformation */
+        $paymentInformation = $this->_paymentInformationFactory->create();
+        $paymentInformation->load($authorization->getPaymentId(), 'payment_id');
+        $paymentInformation->setOrder($order);
+        $paymentInformation->setTransaction($authorization);
+        $paymentInformation->save();
 
         return $this;
     }
 
     /**
-     * Capture payment abstract method
-     *
-     * @param DataObject|InfoInterface $payment
-     * @param float $amount
-     * @return $this
-     * @throws LocalizedException
-     * @throws HeidelpayApiException
-     * @api
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @deprecated 100.2.0
+     * @inheritDoc
      */
     public function capture(InfoInterface $payment, $amount)
     {
@@ -328,19 +260,12 @@ class Base extends AbstractMethod
         /** @var Order $order */
         $order = $payment->getOrder();
 
-        /** @var Payment $hpPayment */
-        $hpPayment = null;
+        /** @var PaymentInformation $paymentInformation */
+        $paymentInformation = $this->_paymentInformationFactory->create();
+        $paymentInformation->load($this->_orderHelper->getExternalId($order), 'external_id');
 
-        try {
-            $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
-        } catch (HeidelpayApiException $e) {
-            if ($e->getCode() !== ApiResponseCodes::API_ERROR_PAYMENT_NOT_FOUND) {
-                throw $e;
-            }
-        }
-
-        if ($hpPayment !== null) {
-            $charge = $this->_getClient()->chargeAuthorization($hpPayment->getId(), $amount);
+        if ($paymentInformation->getPaymentId() !== null) {
+            $charge = $this->_getClient()->chargeAuthorization($paymentInformation->getPaymentId(), $amount);
         } else {
             $charge = $this->_captureDirect($payment, $amount);
         }
@@ -349,11 +274,12 @@ class Base extends AbstractMethod
             throw new LocalizedException(__('Failed to charge payment.'));
         }
 
-        $orderPayment = $order->getPayment();
-        $orderPayment->setLastTransId($charge->getPaymentId());
-        $orderPayment->save();
+        $paymentInformation->setOrder($order);
+        $paymentInformation->setTransaction($charge);
+        $paymentInformation->save();
 
-        $payment->setAdditionalInformation(self::KEY_REDIRECT_URL, $charge->getRedirectUrl());
+        /** @var OrderPaymentInterface $payment */
+        $payment->setLastTransId($paymentInformation->getId());
 
         return $this;
     }
@@ -374,17 +300,15 @@ class Base extends AbstractMethod
         /** @var string $resourceId */
         $resourceId = $payment->getAdditionalInformation(self::KEY_RESOURCE_ID);
 
-        $customer = $order->getCustomerIsGuest() ? null : $this->_getCustomer($order);
-
         return $this->_getClient()->charge(
             $amount,
             $order->getOrderCurrencyCode(),
             $resourceId,
             $this->_getChargeCallbackUrl(),
-            $customer,
-            $order->getIncrementId(),
-            null,
-            $this->_getBasketFromOrder($order),
+            $this->_orderHelper->createOrUpdateCustomerForOrder($order),
+            $this->_orderHelper->getExternalId($order),
+            $this->_orderHelper->createMetadata($order),
+            $this->_orderHelper->createBasketForOrder($order),
             null,
             null,
             null
@@ -392,15 +316,8 @@ class Base extends AbstractMethod
     }
 
     /**
-     * Cancel specified amount for payment
-     *
-     * @param DataObject|InfoInterface $payment
-     * @return $this
+     * @inheritDoc
      * @throws LocalizedException
-     * @throws HeidelpayApiException
-     * @api
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @deprecated 100.2.0
      */
     public function cancel(InfoInterface $payment)
     {
@@ -408,13 +325,7 @@ class Base extends AbstractMethod
     }
 
     /**
-     * Refund specified amount for payment
-     *
-     * @param InfoInterface $payment
-     * @param float $amount
-     * @return $this
-     * @throws HeidelpayApiException
-     * @throws LocalizedException
+     * @inheritDoc
      */
     public function refund(InfoInterface $payment, $amount)
     {
@@ -422,7 +333,7 @@ class Base extends AbstractMethod
         $order = $payment->getOrder();
 
         /** @var Payment $hpPayment */
-        $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
+        $hpPayment = $this->_getClient()->fetchPaymentByOrderId($this->_orderHelper->getExternalId($order));
 
         /** @var Cancellation $refund */
         $cancellation = $hpPayment->cancel($amount);
@@ -430,8 +341,6 @@ class Base extends AbstractMethod
         if ($cancellation->isError()) {
             throw new LocalizedException(__('Failed to refund payment.'));
         }
-
-        $payment->setAdditionalInformation(self::KEY_REDIRECT_URL, $cancellation->getRedirectUrl());
 
         return $this;
     }

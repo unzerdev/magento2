@@ -2,69 +2,37 @@
 
 namespace Heidelpay\Gateway2\Controller\Payment;
 
-use Heidelpay\Gateway2\Model\Config;
-use Heidelpay\Gateway2\Model\Method\Base;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Heidelpay;
-use heidelpayPHP\Resources\Payment;
-use heidelpayPHP\Resources\TransactionTypes\Authorization;
-use Magento\Checkout\Model\Session;
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\Response\HttpInterface;
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\ResultInterface;
-use Magento\Sales\Api\Data\OrderPaymentInterface;
+use Heidelpay\Gateway2\Helper\Order as OrderHelper;
+use Heidelpay\Gateway2\Model\PaymentInformation;
+use Heidelpay\Gateway2\Model\PaymentInformationFactory;
 use Magento\Sales\Model\Order;
 
-class Redirect extends Action
+class Redirect extends AbstractPaymentAction
 {
     /**
-     * @var Session
+     * @var OrderHelper
      */
-    private $checkoutSession;
-
-    public function __construct(Context $context, Session $checkoutSession)
-    {
-        parent::__construct($context);
-        $this->checkoutSession = $checkoutSession;
-    }
+    protected $_orderHelper;
 
     /**
-     * Execute action based on request and return result
-     *
-     * Note: Request will be added as operation argument in future
-     *
-     * @return ResultInterface|ResponseInterface
-     * @throws HeidelpayApiException
+     * @var PaymentInformationFactory
      */
-    public function execute()
+    protected $_paymentInformationFactory;
+
+    /**
+     * @inheritDoc
+     */
+    public function executeWith(Order $order, PaymentInformation $paymentInformation)
     {
-        /** @var Order $order */
-        $order = $this->checkoutSession->getLastRealOrder();
+        /** @var string|null $redirectUrl */
+        $redirectUrl = $paymentInformation->getRedirectUrl();
 
-        /** @var HttpInterface $response */
-        $response = $this->getResponse();
-
-        if ($order === null || $order->getId() === null) {
-            $response->setHttpResponseCode(400);
-            return $response;
-        }
-
-        /** @var OrderPaymentInterface $payment */
-        $payment = $order->getPayment();
-
-        /** @var array $paymentData */
-        $paymentData = $payment->getAdditionalInformation();
+        $paymentInformation->setOrder($order);
+        $paymentInformation->setRedirectUrl(null);
+        $paymentInformation->save();
 
         $redirect = $this->resultRedirectFactory->create();
-
-        if (isset($paymentData[Base::KEY_REDIRECT_URL])) {
-            $redirect->setUrl($paymentData[Base::KEY_REDIRECT_URL]);
-        } else {
-            $redirect->setPath('checkout/onepage/success');
-        }
-
+        $redirect->setUrl($redirectUrl);
         return $redirect;
     }
 }
