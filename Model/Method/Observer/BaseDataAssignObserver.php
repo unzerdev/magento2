@@ -2,20 +2,20 @@
 
 namespace Heidelpay\Gateway2\Model\Method\Observer;
 
-use Heidelpay\Gateway2\Model\Method\Creditcard;
+use Heidelpay\Gateway2\Model\Method\Base;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\Observer;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Quote\Api\Data\PaymentInterface;
 
-class CreditcardDataAssignObserver extends AbstractDataAssignObserver
+class BaseDataAssignObserver extends AbstractDataAssignObserver
 {
     /**
      * @var array
      */
     protected $additionalInformationList = [
-        Creditcard::KEY_RESOURCE_ID,
+        Base::KEY_RESOURCE_ID,
     ];
 
     /**
