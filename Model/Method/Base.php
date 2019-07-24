@@ -279,7 +279,7 @@ class Base extends AbstractMethod
         $paymentInformation->save();
 
         /** @var OrderPaymentInterface $payment */
-        $payment->setLastTransId($paymentInformation->getId());
+        $payment->setLastTransId($paymentInformation->getExternalId());
 
         return $this;
     }
