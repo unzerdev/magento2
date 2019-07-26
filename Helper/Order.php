@@ -27,7 +27,6 @@ class Order
         $this->_store = $store;
     }
 
-
     /**
      * Returns a Basket for the given Order.
      *

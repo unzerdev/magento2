@@ -41,8 +41,7 @@ class ShipmentObserver implements ObserverInterface
         Config $moduleConfig,
         OrderHelper $orderHelper,
         PaymentInformationFactory $paymentInformationFactory
-    )
-    {
+    ) {
         $this->_moduleConfig = $moduleConfig;
         $this->_orderHelper = $orderHelper;
         $this->_paymentInformationFactory = $paymentInformationFactory;

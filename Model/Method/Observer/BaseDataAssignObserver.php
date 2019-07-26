@@ -44,6 +44,5 @@ class BaseDataAssignObserver extends AbstractDataAssignObserver
                 );
             }
         }
-
     }
 }

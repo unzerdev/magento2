@@ -42,8 +42,7 @@ abstract class AbstractPaymentAction extends Action
         Session $checkoutSession,
         OrderHelper $_orderHelper,
         PaymentInformationFactory $paymentInformationFactory
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->_checkoutSession = $checkoutSession;
         $this->_orderHelper = $_orderHelper;
