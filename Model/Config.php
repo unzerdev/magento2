@@ -13,6 +13,7 @@ class Config
 
     const METHOD_BASE = 'hpg2';
     const METHOD_CREDITCARD = 'hpg2_creditcard';
+    const METHOD_DIRECT_DEBIT = 'hpg2_direct_debit';
     const METHOD_FLEXIPAY_DIRECT = 'hpg2_flexipay_direct';
     const METHOD_IDEAL = 'hpg2_ideal';
     const METHOD_INVOICE = 'hpg2_invoice';
