@@ -2,22 +2,27 @@
 
 namespace Heidelpay\Gateway2\Controller\Payment;
 
+use Exception;
 use Heidelpay\Gateway2\Helper\Order as OrderHelper;
 use Heidelpay\Gateway2\Model\Config;
 use Heidelpay\Gateway2\Model\PaymentInformation;
 use Heidelpay\Gateway2\Model\PaymentInformationFactory;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Resources\EmbeddedResources\Message;
 use heidelpayPHP\Resources\Payment;
-use heidelpayPHP\Resources\TransactionTypes\AbstractTransactionType;
-use heidelpayPHP\Traits\HasStates;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Authorization;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 
-abstract class AbstractCallback extends AbstractPaymentAction
+class Callback extends AbstractPaymentAction
 {
+    /**
+     * @var ManagerInterface
+     */
+    protected $_messageManager;
+
     /**
      * @var Config
      */
@@ -31,6 +36,7 @@ abstract class AbstractCallback extends AbstractPaymentAction
     public function __construct(
         Context $context,
         Session $checkoutSession,
+        ManagerInterface $messageManager,
         OrderHelper $orderHelper,
         PaymentInformationFactory $paymentInformationFactory,
         Config $moduleConfig,
@@ -38,6 +44,7 @@ abstract class AbstractCallback extends AbstractPaymentAction
     )
     {
         parent::__construct($context, $checkoutSession, $orderHelper, $paymentInformationFactory);
+        $this->_messageManager = $messageManager;
         $this->_moduleConfig = $moduleConfig;
         $this->_orderRepository = $orderRepository;
     }
@@ -53,16 +60,10 @@ abstract class AbstractCallback extends AbstractPaymentAction
             ->getHeidelpayClient()
             ->fetchPayment($paymentInformation->getPaymentId());
 
-        /** @var AbstractTransactionType $transaction */
-        $transaction = $this->getTransaction($order, $payment);
-
-        if ($transaction->isSuccess()) {
+        if ($payment->isPending() || $payment->isCompleted()) {
             $response = $this->handleSuccess($order);
-        } elseif ($transaction->isPending()) {
-            $response = $this->getResponse();
-            $response->setHttpResponseCode(400);
         } else {
-            $response = $this->handleError($order, $transaction->getMessage());
+            $response = $this->handleError($order, $payment);
         }
 
         $paymentInformation->setRedirectUrl(null);
@@ -73,21 +74,26 @@ abstract class AbstractCallback extends AbstractPaymentAction
 
     /**
      * @param Order $order
-     * @return HasStates
-     * @throws HeidelpayApiException
-     */
-    abstract protected function getTransaction(Order $order, Payment $payment);
-
-    /**
-     * @param Order $order
-     * @param Message|null $message
+     * @param Payment $payment
      * @return \Magento\Framework\Controller\Result\Redirect
      */
-    protected function handleError(Order $order, Message $message = null)
+    protected function handleError(Order $order, Payment $payment)
     {
         $this->_checkoutSession->restoreQuote();
         $order->cancel();
         $this->_orderRepository->save($order);
+
+        try {
+            $transaction = $payment->getAuthorization();
+            if (!$transaction instanceof Authorization) {
+                $transaction = $payment->getChargeByIndex(0);
+            }
+            $this->_messageManager->addError($transaction->getMessage()->getCustomer());
+        } catch (HeidelpayApiException $e) {
+            $this->_messageManager->addError($e->getMerchantMessage());
+        } catch (Exception $e) {
+            $this->_messageManager->addError($e->getMessage());
+        }
 
         $redirect = $this->resultRedirectFactory->create();
         $redirect->setPath('checkout/cart');
