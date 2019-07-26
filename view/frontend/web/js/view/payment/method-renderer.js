@@ -14,6 +14,10 @@ define(
                 component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/creditcard'
             },
             {
+                type: 'hpg2_flexipay_direct',
+                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/flexipay_direct'
+            },
+            {
                 type: 'hpg2_paypal',
                 component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/paypal'
             }

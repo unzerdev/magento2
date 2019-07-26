@@ -2,20 +2,28 @@
 
 namespace Heidelpay\Gateway2\Controller\Payment;
 
+use Exception;
 use Heidelpay\Gateway2\Helper\Order as OrderHelper;
 use Heidelpay\Gateway2\Model\Config;
 use Heidelpay\Gateway2\Model\PaymentInformation;
 use Heidelpay\Gateway2\Model\PaymentInformationFactory;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
-use heidelpayPHP\Traits\HasStates;
+use heidelpayPHP\Resources\PaymentTypes\PIS;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Authorization;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 
-abstract class AbstractCallback extends AbstractPaymentAction
+class Callback extends AbstractPaymentAction
 {
+    /**
+     * @var ManagerInterface
+     */
+    protected $_messageManager;
+
     /**
      * @var Config
      */
@@ -29,6 +37,7 @@ abstract class AbstractCallback extends AbstractPaymentAction
     public function __construct(
         Context $context,
         Session $checkoutSession,
+        ManagerInterface $messageManager,
         OrderHelper $orderHelper,
         PaymentInformationFactory $paymentInformationFactory,
         Config $moduleConfig,
@@ -36,6 +45,7 @@ abstract class AbstractCallback extends AbstractPaymentAction
     )
     {
         parent::__construct($context, $checkoutSession, $orderHelper, $paymentInformationFactory);
+        $this->_messageManager = $messageManager;
         $this->_moduleConfig = $moduleConfig;
         $this->_orderRepository = $orderRepository;
     }
@@ -51,16 +61,20 @@ abstract class AbstractCallback extends AbstractPaymentAction
             ->getHeidelpayClient()
             ->fetchPayment($paymentInformation->getPaymentId());
 
-        /** @var HasStates $result */
-        $result = $this->getStateForPayment($order, $payment);
-
-        if ($result->isError()) {
-            $response = $this->handleError($order);
-        } elseif ($result->isPending()) {
-            $response = $this->getResponse();
-            $response->setHttpResponseCode(400);
-        } else {
+        if ($payment->isCompleted()) {
             $response = $this->handleSuccess($order);
+        } elseif ($payment->isPending()) {
+            // Some methods report cancelled charges as pending, so we must manually check the transaction state.
+            $charge = $payment->getChargeByIndex(0);
+
+            // TODO(justin.nuss): How to check status for "broken" method reporting?
+            if ($charge === null || $charge->isSuccess()) {
+                $response = $this->handleSuccess($order);
+            } else {
+                $response = $this->handleError($order, $payment);
+            }
+        } else {
+            $response = $this->handleError($order, $payment);
         }
 
         $paymentInformation->setRedirectUrl(null);
@@ -71,20 +85,26 @@ abstract class AbstractCallback extends AbstractPaymentAction
 
     /**
      * @param Order $order
-     * @return HasStates
-     * @throws HeidelpayApiException
-     */
-    abstract protected function getStateForPayment(Order $order, Payment $payment);
-
-    /**
-     * @param Order $order
+     * @param Payment $payment
      * @return \Magento\Framework\Controller\Result\Redirect
      */
-    protected function handleError(Order $order)
+    protected function handleError(Order $order, Payment $payment)
     {
         $this->_checkoutSession->restoreQuote();
         $order->cancel();
         $this->_orderRepository->save($order);
+
+        try {
+            $transaction = $payment->getAuthorization();
+            if (!$transaction instanceof Authorization) {
+                $transaction = $payment->getChargeByIndex(0);
+            }
+            $this->_messageManager->addError($transaction->getMessage()->getCustomer());
+        } catch (HeidelpayApiException $e) {
+            $this->_messageManager->addError($e->getMerchantMessage());
+        } catch (Exception $e) {
+            $this->_messageManager->addError($e->getMessage());
+        }
 
         $redirect = $this->resultRedirectFactory->create();
         $redirect->setPath('checkout/cart');

@@ -45,26 +45,6 @@ class Base extends AbstractMethod
     /**
      * @var boolean
      */
-    protected $_canCapture = false;
-
-    /**
-     * @var boolean
-     */
-    protected $_canCapturePartial = false;
-
-    /**
-     * @var boolean
-     */
-    protected $_canRefund = false;
-
-    /**
-     * @var boolean
-     */
-    protected $_canRefundInvoicePartial = false;
-
-    /**
-     * @var boolean
-     */
     protected $_canUseInternal = false;
 
     /**
@@ -192,17 +172,9 @@ class Base extends AbstractMethod
     /**
      * @return string
      */
-    protected function _getAuthorizationCallbackUrl()
+    protected function _getCallbackUrl()
     {
-        return $this->_getUrl('hpg2/payment/authorizationCallback');
-    }
-
-    /**
-     * @return string
-     */
-    protected function _getChargeCallbackUrl()
-    {
-        return $this->_getUrl('hpg2/payment/chargeCallback');
+        return $this->_getUrl('hpg2/payment/callback');
     }
 
     /**
@@ -224,7 +196,7 @@ class Base extends AbstractMethod
             $amount,
             $order->getOrderCurrencyCode(),
             $resourceId,
-            $this->_getAuthorizationCallbackUrl(),
+            $this->_getCallbackUrl(),
             $this->_orderHelper->createOrUpdateCustomerForOrder($order),
             $this->_orderHelper->getExternalId($order),
             $this->_orderHelper->createMetadata($order),
@@ -302,7 +274,7 @@ class Base extends AbstractMethod
             $amount,
             $order->getOrderCurrencyCode(),
             $resourceId,
-            $this->_getChargeCallbackUrl(),
+            $this->_getCallbackUrl(),
             $this->_orderHelper->createOrUpdateCustomerForOrder($order),
             $this->_orderHelper->getExternalId($order),
             $this->_orderHelper->createMetadata($order),
