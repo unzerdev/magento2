@@ -15,6 +15,7 @@ class Config
     const METHOD_CREDITCARD = 'hpg2_creditcard';
     const METHOD_FLEXIPAY_DIRECT = 'hpg2_flexipay_direct';
     const METHOD_PAYPAL = 'hpg2_paypal';
+    const METHOD_SOFORT = 'hpg2_sofort';
 
     /**
      * @var ScopeConfigInterface
