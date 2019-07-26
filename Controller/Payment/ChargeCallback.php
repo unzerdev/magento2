@@ -14,7 +14,7 @@ class ChargeCallback extends AbstractCallback
      * @param Payment $payment
      * @return HasStates
      */
-    protected function getStateForPayment(Order $order, Payment $payment)
+    protected function getTransaction(Order $order, Payment $payment)
     {
         /** @var Charge[] $charges */
         $charges = $payment->getCharges();

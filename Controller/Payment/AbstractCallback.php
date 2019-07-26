@@ -7,7 +7,9 @@ use Heidelpay\Gateway2\Model\Config;
 use Heidelpay\Gateway2\Model\PaymentInformation;
 use Heidelpay\Gateway2\Model\PaymentInformationFactory;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
+use heidelpayPHP\Resources\EmbeddedResources\Message;
 use heidelpayPHP\Resources\Payment;
+use heidelpayPHP\Resources\TransactionTypes\AbstractTransactionType;
 use heidelpayPHP\Traits\HasStates;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
@@ -51,16 +53,16 @@ abstract class AbstractCallback extends AbstractPaymentAction
             ->getHeidelpayClient()
             ->fetchPayment($paymentInformation->getPaymentId());
 
-        /** @var HasStates $result */
-        $result = $this->getStateForPayment($order, $payment);
+        /** @var AbstractTransactionType $transaction */
+        $transaction = $this->getTransaction($order, $payment);
 
-        if ($result->isError()) {
-            $response = $this->handleError($order);
-        } elseif ($result->isPending()) {
+        if ($transaction->isSuccess()) {
+            $response = $this->handleSuccess($order);
+        } elseif ($transaction->isPending()) {
             $response = $this->getResponse();
             $response->setHttpResponseCode(400);
         } else {
-            $response = $this->handleSuccess($order);
+            $response = $this->handleError($order, $transaction->getMessage());
         }
 
         $paymentInformation->setRedirectUrl(null);
@@ -74,13 +76,14 @@ abstract class AbstractCallback extends AbstractPaymentAction
      * @return HasStates
      * @throws HeidelpayApiException
      */
-    abstract protected function getStateForPayment(Order $order, Payment $payment);
+    abstract protected function getTransaction(Order $order, Payment $payment);
 
     /**
      * @param Order $order
+     * @param Message|null $message
      * @return \Magento\Framework\Controller\Result\Redirect
      */
-    protected function handleError(Order $order)
+    protected function handleError(Order $order, Message $message = null)
     {
         $this->_checkoutSession->restoreQuote();
         $order->cancel();

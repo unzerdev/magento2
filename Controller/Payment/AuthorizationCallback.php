@@ -16,7 +16,7 @@ class AuthorizationCallback extends AbstractCallback
      * @return HasStates
      * @throws HeidelpayApiException
      */
-    protected function getStateForPayment(Order $order, Payment $payment)
+    protected function getTransaction(Order $order, Payment $payment)
     {
         return $payment->getAuthorization();
     }
