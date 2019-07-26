@@ -20,6 +20,10 @@ define(
             {
                 type: 'hpg2_paypal',
                 component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/paypal'
+            },
+            {
+                type: 'hpg2_sofort',
+                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/sofort'
             }
         );
         return Component.extend({});

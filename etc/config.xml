@@ -34,6 +34,15 @@
                 <max_order_total>0</max_order_total>
                 <model>Heidelpay\Gateway2\Model\Method\Paypal</model>
             </hpg2_paypal>
+            <hpg2_sofort>
+                <active>0</active>
+                <payment_action>authorize_capture</payment_action>
+                <title><![CDATA[SOFORT]]></title>
+                <allowspecific>0</allowspecific>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <model>Heidelpay\Gateway2\Model\Method\Sofort</model>
+            </hpg2_sofort>
         </payment>
     </default>
 </config>

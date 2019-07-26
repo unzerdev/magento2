@@ -14,6 +14,7 @@ class Provider implements ConfigProviderInterface
         Config::METHOD_CREDITCARD,
         Config::METHOD_FLEXIPAY_DIRECT,
         Config::METHOD_PAYPAL,
+        Config::METHOD_SOFORT,
     ];
 
     /**
