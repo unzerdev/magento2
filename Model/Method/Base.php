@@ -45,26 +45,6 @@ class Base extends AbstractMethod
     /**
      * @var boolean
      */
-    protected $_canCapture = false;
-
-    /**
-     * @var boolean
-     */
-    protected $_canCapturePartial = false;
-
-    /**
-     * @var boolean
-     */
-    protected $_canRefund = false;
-
-    /**
-     * @var boolean
-     */
-    protected $_canRefundInvoicePartial = false;
-
-    /**
-     * @var boolean
-     */
     protected $_canUseInternal = false;
 
     /**
