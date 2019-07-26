@@ -22,6 +22,10 @@ define(
                 component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/ideal'
             },
             {
+                type: 'hpg2_invoice',
+                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/invoice'
+            },
+            {
                 type: 'hpg2_paypal',
                 component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/paypal'
             },
