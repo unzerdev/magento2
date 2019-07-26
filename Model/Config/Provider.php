@@ -12,6 +12,7 @@ class Provider implements ConfigProviderInterface
 {
     protected $_methodCodes = [
         Config::METHOD_CREDITCARD,
+        Config::METHOD_DIRECT_DEBIT,
         Config::METHOD_FLEXIPAY_DIRECT,
         Config::METHOD_IDEAL,
         Config::METHOD_INVOICE,
