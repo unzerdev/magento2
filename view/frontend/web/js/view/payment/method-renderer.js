@@ -12,6 +12,10 @@ define(
             {
                 type: 'hpg2_creditcard',
                 component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/creditcard'
+            },
+            {
+                type: 'hpg2_paypal',
+                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/paypal'
             }
         );
         return Component.extend({});

@@ -13,6 +13,7 @@ class Config
 
     const METHOD_BASE = 'hpg2';
     const METHOD_CREDITCARD = 'hpg2_creditcard';
+    const METHOD_PAYPAL = 'hpg2_paypal';
 
     /**
      * @var ScopeConfigInterface

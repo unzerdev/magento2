@@ -16,6 +16,15 @@
                 <max_order_total>0</max_order_total>
                 <model>Heidelpay\Gateway2\Model\Method\Creditcard</model>
             </hpg2_creditcard>
+            <hpg2_paypal>
+                <active>0</active>
+                <payment_action>authorize</payment_action>
+                <title><![CDATA[Paypal]]></title>
+                <allowspecific>0</allowspecific>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <model>Heidelpay\Gateway2\Model\Method\Paypal</model>
+            </hpg2_paypal>
         </payment>
     </default>
 </config>
