@@ -44,7 +44,11 @@ class Provider implements ConfigProviderInterface
      */
     public function getConfig()
     {
-        $methodConfigs = [];
+        $methodConfigs = [
+            Config::METHOD_BASE => [
+                'publicKey' => $this->_moduleConfig->getPublicKey(),
+            ],
+        ];
 
         foreach ($this->_methodCodes as $methodCode) {
             /** @var MethodBase $model */
@@ -56,7 +60,7 @@ class Provider implements ConfigProviderInterface
         }
 
         return [
-            'payment' => $methodConfigs
+            'payment' => array_filter($methodConfigs),
         ];
     }
 }

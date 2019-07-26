@@ -160,9 +160,7 @@ class Base extends AbstractMethod
      */
     public function getFrontendConfig()
     {
-        return [
-            'publicKey' => $this->_moduleConfig->getPublicKey(),
-        ];
+        return [];
     }
 
     /**

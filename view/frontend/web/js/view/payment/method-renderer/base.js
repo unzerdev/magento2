@@ -15,10 +15,11 @@ define(
         return Component.extend({
             redirectAfterPlaceOrder: false,
             redirectUrl: 'hpg2/payment/redirect',
+            sdk: new heidelpay(window.checkoutConfig.payment.hpg2.publicKey),
+            sdkConfig: window.checkoutConfig.payment.hpg2,
 
             defaults: {
                 config: null,
-                heidelpay: null,
                 resourceId: null,
                 resourceProvider: null,
                 template: null
@@ -29,7 +30,6 @@ define(
              */
             initialize: function () {
                 this._super();
-                this.heidelpay = new heidelpay(this.config.publicKey);
                 this.initializeForm();
                 return this;
             },

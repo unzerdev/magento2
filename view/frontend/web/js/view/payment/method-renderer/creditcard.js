@@ -8,7 +8,6 @@ define(
 
         return Component.extend({
             defaults: {
-                config: window.checkoutConfig.payment.hpg2_creditcard,
                 fields: {
                     cvc: {valid: null},
                     expiry: {valid: null},
@@ -20,7 +19,7 @@ define(
             initializeForm: function () {
                 var self = this;
 
-                this.resourceProvider = this.heidelpay.Card();
+                this.resourceProvider = this.sdk.Card();
                 this.resourceProvider.create('number', {
                     containerId: 'card-element-id-number',
                     onlyIframe: false
