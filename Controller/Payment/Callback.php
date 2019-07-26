@@ -9,6 +9,7 @@ use Heidelpay\Gateway2\Model\PaymentInformation;
 use Heidelpay\Gateway2\Model\PaymentInformationFactory;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
+use heidelpayPHP\Resources\PaymentTypes\PIS;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Authorization;
@@ -60,8 +61,18 @@ class Callback extends AbstractPaymentAction
             ->getHeidelpayClient()
             ->fetchPayment($paymentInformation->getPaymentId());
 
-        if ($payment->isPending() || $payment->isCompleted()) {
+        if ($payment->isCompleted()) {
             $response = $this->handleSuccess($order);
+        } elseif ($payment->isPending()) {
+            // Some methods report cancelled charges as pending, so we must manually check the transaction state.
+            $charge = $payment->getChargeByIndex(0);
+
+            // TODO(justin.nuss): How to check status for "broken" method reporting?
+            if ($charge === null || $charge->isSuccess()) {
+                $response = $this->handleSuccess($order);
+            } else {
+                $response = $this->handleError($order, $payment);
+            }
         } else {
             $response = $this->handleError($order, $payment);
         }
