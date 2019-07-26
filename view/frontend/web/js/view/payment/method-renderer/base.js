@@ -25,15 +25,6 @@ define(
                 template: null
             },
 
-            /**
-             * @returns {exports.initialize}
-             */
-            initialize: function () {
-                this._super();
-                this.initializeForm();
-                return this;
-            },
-
             initializeForm: function () {
             },
 
