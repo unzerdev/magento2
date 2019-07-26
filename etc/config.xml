@@ -25,6 +25,15 @@
                 <max_order_total>0</max_order_total>
                 <model>Heidelpay\Gateway2\Model\Method\FlexipayDirect</model>
             </hpg2_flexipay_direct>
+            <hpg2_ideal>
+                <active>0</active>
+                <payment_action>authorize_capture</payment_action>
+                <title><![CDATA[iDEAL]]></title>
+                <allowspecific>0</allowspecific>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <model>Heidelpay\Gateway2\Model\Method\Ideal</model>
+            </hpg2_ideal>
             <hpg2_paypal>
                 <active>0</active>
                 <payment_action>authorize</payment_action>

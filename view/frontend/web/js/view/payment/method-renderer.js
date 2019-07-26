@@ -18,6 +18,10 @@ define(
                 component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/flexipay_direct'
             },
             {
+                type: 'hpg2_ideal',
+                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/ideal'
+            },
+            {
                 type: 'hpg2_paypal',
                 component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/paypal'
             },
