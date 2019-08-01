@@ -32,6 +32,7 @@ use Magento\Store\Api\Data\StoreInterface;
 
 class Base extends AbstractMethod
 {
+    const KEY_CUSTOMER_ID = 'customer_id';
     const KEY_RESOURCE_ID = 'resource_id';
 
     protected $_code = Config::METHOD_BASE;
@@ -193,6 +194,9 @@ class Base extends AbstractMethod
             throw new LocalizedException(__('The authorize action is not available.'));
         }
 
+        /** @var string|null $customerId */
+        $customerId = $payment->getAdditionalInformation(self::KEY_CUSTOMER_ID);
+
         /** @var string $resourceId */
         $resourceId = $payment->getAdditionalInformation(self::KEY_RESOURCE_ID);
 
@@ -204,7 +208,7 @@ class Base extends AbstractMethod
             $order->getOrderCurrencyCode(),
             $resourceId,
             $this->_getCallbackUrl(),
-            $this->_orderHelper->createOrUpdateCustomerForOrder($order),
+            $customerId,
             $this->_orderHelper->getExternalId($order),
             $this->_orderHelper->createMetadata($order),
             $this->_orderHelper->createBasketForOrder($order),
@@ -274,6 +278,9 @@ class Base extends AbstractMethod
         /** @var Order $order */
         $order = $payment->getOrder();
 
+        /** @var string|null $customerId */
+        $customerId = $payment->getAdditionalInformation(self::KEY_CUSTOMER_ID);
+
         /** @var string $resourceId */
         $resourceId = $payment->getAdditionalInformation(self::KEY_RESOURCE_ID);
 
@@ -282,7 +289,7 @@ class Base extends AbstractMethod
             $order->getOrderCurrencyCode(),
             $resourceId,
             $this->_getCallbackUrl(),
-            $this->_orderHelper->createOrUpdateCustomerForOrder($order),
+            $customerId,
             $this->_orderHelper->getExternalId($order),
             $this->_orderHelper->createMetadata($order),
             $this->_orderHelper->createBasketForOrder($order),

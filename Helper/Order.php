@@ -65,39 +65,6 @@ class Order
     }
 
     /**
-     * Returns the Heidelpay Customer object for the given order.
-     *
-     * @param \Magento\Sales\Model\Order $order
-     * @return HpCustomer|null
-     * @throws HeidelpayApiException
-     */
-    public function createOrUpdateCustomerForOrder(\Magento\Sales\Model\Order $order)
-    {
-        if ($order->getCustomerIsGuest()) {
-            return null;
-        }
-
-        $client = $this->_moduleConfig->getHeidelpayClient($this->_store->getLocaleCode());
-
-        try {
-            return $client->fetchCustomerByExtCustomerId($order->getCustomerId());
-        } catch (HeidelpayApiException $e) {
-            if ($e->getCode() !== ApiResponseCodes::API_ERROR_CUSTOMER_DOES_NOT_EXIST) {
-                throw $e;
-            }
-        }
-
-        $hpCustomer = new HpCustomer();
-        $hpCustomer->setBirthDate($order->getCustomerDob());
-        $hpCustomer->setCustomerId($order->getCustomerId());
-        $hpCustomer->setEmail($order->getCustomerEmail());
-        $hpCustomer->setFirstname($order->getCustomerFirstname());
-        $hpCustomer->setLastname($order->getCustomerLastname());
-
-        return $client->createOrUpdateCustomer($hpCustomer);
-    }
-
-    /**
      * Returns metadata for the given order.
      *
      * @param \Magento\Sales\Model\Order $order
@@ -106,6 +73,8 @@ class Order
     public function createMetadata(\Magento\Sales\Model\Order $order)
     {
         return [
+            'customer_id' => $order->getCustomerId(),
+            'customer_group_id' => $order->getCustomerGroupId(),
             'increment_id' => $order->getIncrementId(),
             'store_id' => $order->getStoreId(),
         ];

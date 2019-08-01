@@ -64,6 +64,11 @@ class ShipmentObserver implements ObserverInterface
         /** @var Order $order */
         $order = $shipment->getOrder();
 
+        /** @var Order\Invoice $invoice */
+        $invoice = $order
+            ->getInvoiceCollection()
+            ->getFirstItem();
+
         /** @var PaymentInformation $paymentInformation */
         $paymentInformation = $this->_paymentInformationFactory->create();
         $paymentInformation->load($this->_orderHelper->getExternalId($order), 'external_id');
@@ -74,7 +79,7 @@ class ShipmentObserver implements ObserverInterface
             try {
                 /** @var Payment $payment */
                 $payment = $client->fetchPayment($paymentInformation->getPaymentId());
-                $payment->ship();
+                $payment->ship($invoice->getId());
             } catch (HeidelpayApiException $e) {
                 if ($e->getCode() !== ApiResponseCodes::API_ERROR_TRANSACTION_SHIP_NOT_ALLOWED) {
                     throw $e;
