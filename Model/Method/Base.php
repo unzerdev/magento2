@@ -314,4 +314,16 @@ class Base extends AbstractMethod
 
         return $this;
     }
+
+    /**
+     * Returns additional payment information for the customer.
+     *
+     * @param Order $order
+     *
+     * @return string
+     */
+    public function getAdditionalPaymentInformation(Order $order)
+    {
+        return '';
+    }
 }
