@@ -1,0 +1,27 @@
+<?php
+/**
+ * @var $block \Heidelpay\Gateway2\Block\Checkout\Success
+ */
+
+/** @var string $additionalInformation */
+$additionalInformation = $block->getAdditionalPaymentInformation();
+if (!empty($additionalInformation)):
+    ?>
+    <div class="heidelpay-additional-payment-information">
+        <h3 class="heidelpay-additional-payment-information-title">
+            <?php echo __('Payment information'); ?>
+        </h3>
+
+        <p>
+            <?php echo $additionalInformation ?>
+        </p>
+    </div>
+<?php endif; ?>
+
+<script>
+    require([
+        'Magento_Customer/js/customer-data'
+    ], function (customerData) {
+        customerData.invalidate(['cart']);
+    })
+</script>
