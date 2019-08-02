@@ -9,7 +9,6 @@ use Heidelpay\Gateway2\Model\PaymentInformation;
 use Heidelpay\Gateway2\Model\PaymentInformationFactory;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
-use heidelpayPHP\Resources\PaymentTypes\PIS;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Authorization;
@@ -42,8 +41,7 @@ class Callback extends AbstractPaymentAction
         PaymentInformationFactory $paymentInformationFactory,
         Config $moduleConfig,
         OrderRepositoryInterface $orderRepository
-    )
-    {
+    ) {
         parent::__construct($context, $checkoutSession, $orderHelper, $paymentInformationFactory);
         $this->_messageManager = $messageManager;
         $this->_moduleConfig = $moduleConfig;

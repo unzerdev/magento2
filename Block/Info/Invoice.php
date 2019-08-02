@@ -35,8 +35,7 @@ class Invoice extends Info
         Config $moduleConfig,
         OrderHelper $orderHelper,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $data);
 
         $this->_moduleConfig = $moduleConfig;

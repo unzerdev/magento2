@@ -117,8 +117,7 @@ class Base extends AbstractMethod
         AbstractDb $resourceCollection = null,
         array $data = [],
         DirectoryHelper $directory = null
-    )
-    {
+    ) {
         parent::__construct(
             $context,
             $registry,

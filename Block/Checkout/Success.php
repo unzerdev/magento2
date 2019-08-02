@@ -8,7 +8,6 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderFactory;
 
-
 class Success extends \Magento\Checkout\Block\Success
 {
     protected $_template = 'Heidelpay_Gateway2::info/invoice.phtml';
@@ -23,8 +22,7 @@ class Success extends \Magento\Checkout\Block\Success
         OrderFactory $orderFactory,
         Session $checkoutSession,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $orderFactory, $data);
 
         $this->_checkoutSession = $checkoutSession;
