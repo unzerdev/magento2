@@ -7,9 +7,10 @@ define(
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/view/payment/default',
-        '//static.heidelpay.com/v1/heidelpay.js'
+        '//static.heidelpay.com/v1/heidelpay.js',
+        '//cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js'
     ],
-    function ($, ko, $t, url, placeOrderAction, fullScreenLoader, Component, heidelpay) {
+    function ($, ko, $t, url, placeOrderAction, fullScreenLoader, Component, heidelpay, Promise) {
         'use strict';
 
         return Component.extend({
@@ -20,6 +21,8 @@ define(
 
             defaults: {
                 config: null,
+                customerId: null,
+                customerProvider: null,
                 resourceId: null,
                 resourceProvider: null,
                 template: null
@@ -38,32 +41,43 @@ define(
                     'method': this.item.method,
                     'po_number': null,
                     'additional_data': {
+                        'customer_id': this.customerId,
                         'resource_id': this.resourceId
                     }
                 };
             },
 
             getPlaceOrderDeferredObject: function () {
-                var self = this;
-                var d = $.Deferred();
+                var deferred = $.Deferred(),
+                    promises = [],
+                    self = this;
 
-                this.resourceProvider.createResource()
-                    .then(function (data) {
-                        self.resourceId = data.id;
+                promises.push(this.resourceProvider.createResource());
+
+                if (this.customerProvider) {
+                    promises.push(this.customerProvider.createCustomer());
+                }
+
+                Promise.all(promises)
+                    .then(function (values) {
+                        self.resourceId = values[0].id;
+                        if (values.length > 1) {
+                            self.customerId = values[1].id;
+                        }
 
                         placeOrderAction(self.getData(), self.messageContainer)
                             .done(function () {
-                                d.resolve.apply(d, arguments);
+                                deferred.resolve.apply(deferred, arguments);
                             })
                             .fail(function () {
-                                d.reject.apply(d, arguments);
+                                deferred.reject.apply(deferred, arguments);
                             });
                     })
                     .catch(function (error) {
-                        d.reject($t("There was an error placing your order"));
+                        deferred.reject($t("There was an error placing your order"));
                     });
 
-                return $.when(d);
+                return $.when(deferred);
             },
         });
     }

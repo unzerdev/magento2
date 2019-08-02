@@ -15,6 +15,7 @@ class BaseDataAssignObserver extends AbstractDataAssignObserver
      * @var array
      */
     protected $additionalInformationList = [
+        Base::KEY_CUSTOMER_ID,
         Base::KEY_RESOURCE_ID,
     ];
 

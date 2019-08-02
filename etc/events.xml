@@ -15,6 +15,9 @@
     <event name="payment_method_assign_data_hpg2_invoice">
         <observer name="hpg2_invoice_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
+    <event name="payment_method_assign_data_hpg2_invoice_guaranteed">
+        <observer name="hpg2_invoice_guaranteed_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
+    </event>
     <event name="payment_method_assign_data_hpg2_paypal">
         <observer name="hpg2_paypal_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
     </event>

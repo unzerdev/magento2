@@ -1,0 +1,22 @@
+<?php
+/**
+ * @var $block \Heidelpay\Gateway2\Block\Info\InvoiceGuaranteed
+ */
+?>
+<?php echo $block->escapeHtml($block->getMethod()->getTitle()); ?>
+{{pdf_row_separator}}
+<?php echo $block->escapeHtml(__('Account Holder')); ?>
+<?php echo ': '; ?>
+<?php echo $block->escapeHtml($block->getAccountHolder()) ?>
+{{pdf_row_separator}}
+<?php echo $block->escapeHtml(__('IBAN')); ?>
+<?php echo ': '; ?>
+<?php echo $block->escapeHtml($block->getAccountIban()) ?>
+{{pdf_row_separator}}
+<?php echo $block->escapeHtml(__('BIC')); ?>
+<?php echo ': '; ?>
+<?php echo $block->escapeHtml($block->getAccountBic()) ?>
+{{pdf_row_separator}}
+<?php echo $block->escapeHtml(__('Identification Number')); ?>
+<?php echo ': '; ?>
+<?php echo $block->escapeHtml($block->getIdentificationNumber()) ?>

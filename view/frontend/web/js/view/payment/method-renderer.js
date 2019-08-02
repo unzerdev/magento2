@@ -30,6 +30,10 @@ define(
                 component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/invoice'
             },
             {
+                type: 'hpg2_invoice_guaranteed',
+                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/invoice_guaranteed'
+            },
+            {
                 type: 'hpg2_paypal',
                 component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/paypal'
             },

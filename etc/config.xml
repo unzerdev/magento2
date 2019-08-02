@@ -10,7 +10,7 @@
             <hpg2_creditcard>
                 <active>0</active>
                 <payment_action>authorize</payment_action>
-                <title><![CDATA[Creditcard]]></title>
+                <title><![CDATA[Credit Card]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
@@ -52,10 +52,19 @@
                 <max_order_total>0</max_order_total>
                 <model>Heidelpay\Gateway2\Model\Method\Invoice</model>
             </hpg2_invoice>
+            <hpg2_invoice_guaranteed>
+                <active>0</active>
+                <payment_action>authorize_capture</payment_action>
+                <title><![CDATA[Invoice Guaranteed]]></title>
+                <allowspecific>0</allowspecific>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <model>Heidelpay\Gateway2\Model\Method\InvoiceGuaranteed</model>
+            </hpg2_invoice_guaranteed>
             <hpg2_paypal>
                 <active>0</active>
                 <payment_action>authorize</payment_action>
-                <title><![CDATA[Paypal]]></title>
+                <title><![CDATA[PayPal]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
@@ -64,7 +73,7 @@
             <hpg2_sofort>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
-                <title><![CDATA[SOFORT]]></title>
+                <title><![CDATA[Sofort]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>

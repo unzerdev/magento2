@@ -1,0 +1,15 @@
+<?php
+/**
+ * @var $block \Heidelpay\Gateway2\Block\Info\InvoiceGuaranteed
+ */
+?>
+<dl class="payment-method invoice">
+    <dt class="title"><?php echo $block->escapeHtml($block->getMethod()->getTitle()) ?></dt>
+    <?php $additionalInformation = $block->getMethod()->getAdditionalPaymentInformation($this->getOrder()); ?>
+    <?php if (!empty($additionalInformation)): ?>
+    <dd class="content">
+        <strong><?php echo $block->escapeHtml(__('Payment information')) ?></strong><br />
+        <?php echo $additionalInformation ?>
+    </dd>
+    <?php endif; ?>
+</dl>
