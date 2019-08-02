@@ -3,10 +3,7 @@
 namespace Heidelpay\Gateway2\Helper;
 
 use Heidelpay\Gateway2\Model\Config;
-use heidelpayPHP\Constants\ApiResponseCodes;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Basket;
-use heidelpayPHP\Resources\Customer as HpCustomer;
 use heidelpayPHP\Resources\EmbeddedResources\BasketItem;
 use Magento\Store\Api\Data\StoreInterface;
 
