@@ -19,6 +19,7 @@ use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Framework\Registry;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Helper\Data;
@@ -68,6 +69,11 @@ class Base extends AbstractMethod
     protected $_paymentInformationFactory;
 
     /**
+     * @var PriceCurrencyInterface
+     */
+    protected $_priceCurrency;
+
+    /**
      * @var StoreInterface
      */
     protected $_store;
@@ -104,6 +110,7 @@ class Base extends AbstractMethod
         Config $moduleConfig,
         OrderHelper $orderHelper,
         PaymentInformationFactory $paymentInformationFactory,
+        PriceCurrencyInterface $priceCurrency,
         StoreInterface $store,
         UrlInterface $urlBuilder,
         AbstractResource $resource = null,
@@ -129,6 +136,7 @@ class Base extends AbstractMethod
         $this->_moduleConfig = $moduleConfig;
         $this->_orderHelper = $orderHelper;
         $this->_paymentInformationFactory = $paymentInformationFactory;
+        $this->_priceCurrency = $priceCurrency;
         $this->_store = $store;
         $this->_urlBuilder = $urlBuilder;
     }

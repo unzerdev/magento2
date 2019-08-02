@@ -79,8 +79,11 @@ class Invoice extends Info
             /** @var Heidelpay $client */
             $client = $this->_moduleConfig->getHeidelpayClient();
 
+            /** @var Order $order */
+            $order = $this->getInfo()->getOrder();
+
             $this->_payment = $client->fetchPayment(
-                $this->getInfo()->getAdditionalInformation('payment_id')
+                $this->_orderHelper->getExternalId($order)
             );
         }
 

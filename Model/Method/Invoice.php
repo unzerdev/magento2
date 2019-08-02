@@ -5,6 +5,7 @@ namespace Heidelpay\Gateway2\Model\Method;
 use Heidelpay\Gateway2\Model\Config;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Sales\Model\Order;
 
 class Invoice extends Base
@@ -40,13 +41,22 @@ class Invoice extends Base
             return '';
         }
 
+        $formattedAmount = $this->_priceCurrency->format(
+            $charge->getAmount(),
+            false,
+            PriceCurrencyInterface::DEFAULT_PRECISION,
+            $order->getStoreId(),
+            $order->getOrderCurrency()
+        );
+
         return __(
-            'Please transfer the amount of <strong>%1 %2</strong> '
-            . 'to the following account after your order has arrived:<br /><br />'
-            . 'Holder: %3<br/>IBAN: %4<br/>BIC: %5<br/><br/><i>'
-            . 'Please use only this identification number as the descriptor :</i><br/><strong>%6</strong>',
-            $charge->getAmount(), // TODO: format
-            $charge->getCurrency(),
+            'Please transfer the amount of %1 to the following account after your order has arrived:<br /><br />'
+            . 'Holder: %2<br/>'
+            . 'IBAN: %3<br/>'
+            . 'BIC: %4<br/><br/>'
+            . '<i>Please use only this identification number as the descriptor: </i><br/>'
+            . '%5',
+            $formattedAmount,
             $charge->getHolder(),
             $charge->getIban(),
             $charge->getBic(),

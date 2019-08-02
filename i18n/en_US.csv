@@ -19,4 +19,4 @@
 "Account Holder","Account Holder"
 "Payment information","Payment information"
 "Reference","Reference"
-"Please transfer the amount of <strong>%1 %2</strong> to the following account after your order has arrived:<br /><br />Holder: %3<br/>IBAN: %4<br/>BIC: %5<br/><br/><i>Please use only this identification number as the descriptor :</i><br/><strong>%6</strong>"," transfer the amount of <strong>%1 %2</strong> to the following account after your order has arrived:<br /><br />Holder: %3<br/>IBAN: %4<br/>BIC: %5<br/><br/><i>Please use only this identification number as the descriptor :</i><br/><strong>%6</strong>"
+"Please transfer the amount of %1 to the following account after your order has arrived:<br /><br />Holder: %2<br/>IBAN: %3<br/>BIC: %4<br/><br/><i>Please use only this identification number as the descriptor: </i><br/>%5","Please transfer the amount of %1 to the following account after your order has arrived:<br /><br />Holder: %2<br/>IBAN: %3<br/>BIC: %4<br/><br/><i>Please use only this identification number as the descriptor: </i><br/>%5"
