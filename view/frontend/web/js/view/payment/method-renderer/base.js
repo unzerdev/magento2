@@ -60,7 +60,6 @@ define(
 
                 Promise.all(promises)
                     .then(function (values) {
-                        debugger;
                         self.resourceId = values[0].id;
                         if (values.length > 1) {
                             self.customerId = values[1].id;
