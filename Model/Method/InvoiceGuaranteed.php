@@ -3,6 +3,7 @@
 namespace Heidelpay\Gateway2\Model\Method;
 
 use Heidelpay\Gateway2\Model\Config;
+use Magento\Quote\Api\Data\CartInterface;
 
 class InvoiceGuaranteed extends Invoice
 {
@@ -19,4 +20,16 @@ class InvoiceGuaranteed extends Invoice
      * @var bool
      */
     protected $_canRefund = true;
+
+    /**
+     * @inheritDoc
+     */
+    public function isAvailable(CartInterface $quote = null)
+    {
+        if ($quote !== null && !empty($quote->getBillingAddress()->getCompany())) {
+            return false;
+        }
+
+        return parent::isAvailable($quote);
+    }
 }
