@@ -25,6 +25,15 @@
                 <max_order_total>0</max_order_total>
                 <model>Heidelpay\Gateway2\Model\Method\DirectDebit</model>
             </hpg2_direct_debit>
+            <hpg2_direct_debit_guaranteed>
+                <active>0</active>
+                <payment_action>authorize_capture</payment_action>
+                <title><![CDATA[Direct Debit Guaranteed]]></title>
+                <allowspecific>0</allowspecific>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <model>Heidelpay\Gateway2\Model\Method\DirectDebitGuaranteed</model>
+            </hpg2_direct_debit_guaranteed>
             <hpg2_flexipay_direct>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>

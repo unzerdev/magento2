@@ -23,9 +23,25 @@ define(
                 config: null,
                 customerId: null,
                 customerProvider: null,
+                customerValid: null,
                 resourceId: null,
                 resourceProvider: null,
                 template: null
+            },
+
+            initializeCustomerForm: function (fieldId) {
+                var self = this;
+
+                this.customerProvider = this.sdk.Customer();
+                this.customerProvider.create({
+                    containerId: fieldId
+                });
+
+                this.customerValid = ko.observable(false);
+
+                this.customerProvider.addEventListener('validate', function (event) {
+                    self.customerValid("success" in event && event.success);
+                });
             },
 
             initializeForm: function () {

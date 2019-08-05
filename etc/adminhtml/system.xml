@@ -97,6 +97,45 @@
                         <config_path>payment/hpg2_direct_debit/sort_order</config_path>
                     </field>
                 </group>
+                <group id="direct_debit_guaranteed" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>HPG2_DIRECT_DEBIT_GUARANTEED</label>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/hpg2_direct_debit_guaranteed/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/hpg2_direct_debit_guaranteed/title</config_path>
+                    </field>
+                    <field id="merchant_name" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Merchant Name</label>
+                        <config_path>payment/hpg2_direct_debit_guaranteed/merchant_name</config_path>
+                    </field>
+                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment from Applicable Countries</label>
+                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+                        <config_path>payment/hpg2_direct_debit_guaranteed/allowspecific</config_path>
+                    </field>
+                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment from Specific Countries</label>
+                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                        <config_path>payment/hpg2_direct_debit_guaranteed/specificcountry</config_path>
+                    </field>
+                    <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Minimum Order Total</label>
+                        <config_path>payment/hpg2_direct_debit_guaranteed/min_order_total</config_path>
+                    </field>
+                    <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Maximum Order Total</label>
+                        <config_path>payment/hpg2_direct_debit_guaranteed/max_order_total</config_path>
+                        <comment>Insert 0 to disable limit.</comment>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sort Order</label>
+                        <config_path>payment/hpg2_direct_debit_guaranteed/sort_order</config_path>
+                    </field>
+                </group>
                 <group id="flexipay_direct" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>HPG2_FLEXIPAY_DIRECT</label>
                     <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
