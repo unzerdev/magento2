@@ -1,9 +1,10 @@
 define(
     [
         'ko',
+        'mage/translate',
         'Heidelpay_Gateway2/js/view/payment/method-renderer/base'
     ],
-    function (ko, Component) {
+    function (ko, $t, Component) {
         'use strict';
 
         return Component.extend({
@@ -36,6 +37,10 @@ define(
             validate: function () {
                 return this.allInputsValid()();
             },
+
+            translate: function (text) {
+                return $t(text).replace(/%1/g, window.checkoutConfig.payment.hpg2_direct_debit.merchantName);
+            }
         });
     }
 );
