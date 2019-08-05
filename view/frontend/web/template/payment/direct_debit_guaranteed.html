@@ -1,0 +1,43 @@
+<div class="payment-method" data-bind="
+    afterRender: initializeForm(),
+    css: {'_active': (getCode() == isChecked())}
+">
+    <div class="payment-method-title field choice">
+        <input class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"
+               name="payment[method]"
+               type="radio"/>
+        <label class="label" data-bind="attr: {'for': getCode()}"><span data-bind="text: getTitle()"></span></label>
+    </div>
+    <div class="payment-method-content">
+        <form class="heidelpayUI form" novalidate>
+            <div id="sepa-direct-debit-guaranteed-iban-field" class="field"></div>
+            <div id="sepa-direct-debit-guaranteed-customer" class="field"></div>
+            <div class="field">
+                <button class="heidelpayUI primary button fluid"
+                        data-bind="
+                        click: placeOrder,
+                        attr: {title: $t('Place Order')},
+                        css: {disabled: !isPlaceOrderActionAllowed()},
+                        enable: (getCode() == isChecked() && allInputsValid())
+                        "
+                        type="submit">
+                    <span data-bind="i18n: 'Place Order'"></span>
+                </button>
+            </div>
+            <div class="field">
+                <h3 data-bind="text: translate('SEPA Direct Debit Mandate')"></h3>
+                <p data-bind="text: translate('By signing this mandate form, you authorise %1 to send instructions to '
+                    + 'your bank to debit your account and your bank to debit your account in accordance with the '
+                    + 'instructions from %1.')"></p>
+                <p data-bind="text: translate('Note: As part of your rights, you are entitled to a refund from your '
+                    + 'bank under the terms and conditions of your agreement with your bank. A refund must be claimed '
+                    + 'within 8 weeks starting from the date on which your account was debited. Your rights regarding '
+                    + 'this SEPA mandate are explained in a statement that you can obtain from your bank.')"></p>
+                <p data-bind="text: translate('In case of refusal or rejection of direct debit payment I instruct my '
+                    + 'bank irrevocably to inform %1 or any third party upon request about my name, address and date '
+                    + 'of birth.')"></p>
+            </div>
+        </form>
+    </div>
+</div>

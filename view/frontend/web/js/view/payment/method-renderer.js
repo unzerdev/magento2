@@ -18,6 +18,10 @@ define(
                 component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/direct_debit'
             },
             {
+                type: 'hpg2_direct_debit_guaranteed',
+                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/direct_debit_guaranteed'
+            },
+            {
                 type: 'hpg2_flexipay_direct',
                 component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/flexipay_direct'
             },

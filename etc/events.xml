@@ -6,6 +6,9 @@
     <event name="payment_method_assign_data_hpg2_direct_debit">
         <observer name="hpg2_direct_debit_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
+    <event name="payment_method_assign_data_hpg2_direct_debit_guaranteed">
+        <observer name="hpg2_direct_debit_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
+    </event>
     <event name="payment_method_assign_data_hpg2_flexipay_direct">
         <observer name="hpg2_flexipay_direct_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
