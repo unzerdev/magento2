@@ -30,9 +30,7 @@ class Invoice extends Base
     public function getAdditionalPaymentInformation(Order $order)
     {
         /** @var Payment $payment */
-        $payment = $this->_getClient()->fetchPaymentByOrderId(
-            $this->_orderHelper->getExternalId($order)
-        );
+        $payment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
 
         /** @var Charge|null $charge */
         $charge = $payment->getChargeByIndex(0);

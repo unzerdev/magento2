@@ -17,4 +17,9 @@ class Sofort extends Base
      * @var bool
      */
     protected $_canRefund = true;
+
+    /**
+     * @var bool
+     */
+    protected $_isInitializeNeeded = true;
 }

@@ -27,4 +27,9 @@ class Creditcard extends Base
      * @var bool
      */
     protected $_canRefundInvoicePartial = true;
+
+    /**
+     * @var bool
+     */
+    protected $_isInitializeNeeded = true;
 }

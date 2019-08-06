@@ -4,13 +4,14 @@ namespace Heidelpay\Gateway2\Model\Method;
 
 use Heidelpay\Gateway2\Helper\Order as OrderHelper;
 use Heidelpay\Gateway2\Model\Config;
-use Heidelpay\Gateway2\Model\PaymentInformation;
-use Heidelpay\Gateway2\Model\PaymentInformationFactory;
+use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Heidelpay;
 use heidelpayPHP\Resources\Payment;
+use heidelpayPHP\Resources\TransactionTypes\Authorization;
 use heidelpayPHP\Resources\TransactionTypes\Cancellation;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Directory\Helper\Data as DirectoryHelper;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
@@ -55,6 +56,11 @@ class Base extends AbstractMethod
     protected $_client;
 
     /**
+     * @var CheckoutSession
+     */
+    protected $_checkoutSession;
+
+    /**
      * @var Config
      */
     protected $_moduleConfig;
@@ -65,9 +71,9 @@ class Base extends AbstractMethod
     protected $_orderHelper;
 
     /**
-     * @var PaymentInformationFactory
+     * @var Order\Payment\Processor
      */
-    protected $_paymentInformationFactory;
+    protected $_paymentProcessor;
 
     /**
      * @var PriceCurrencyInterface
@@ -93,8 +99,13 @@ class Base extends AbstractMethod
      * @param Data $paymentData
      * @param ScopeConfigInterface $scopeConfig
      * @param Logger $logger
+     * @param CheckoutSession $checkoutSession
      * @param Config $moduleConfig
+     * @param OrderHelper $orderHelper
+     * @param Order\Payment\Processor $paymentProcessor
+     * @param PriceCurrencyInterface $priceCurrency
      * @param StoreInterface $store
+     * @param UrlInterface $urlBuilder
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -108,9 +119,10 @@ class Base extends AbstractMethod
         Data $paymentData,
         ScopeConfigInterface $scopeConfig,
         Logger $logger,
+        CheckoutSession $checkoutSession,
         Config $moduleConfig,
         OrderHelper $orderHelper,
-        PaymentInformationFactory $paymentInformationFactory,
+        Order\Payment\Processor $paymentProcessor,
         PriceCurrencyInterface $priceCurrency,
         StoreInterface $store,
         UrlInterface $urlBuilder,
@@ -133,9 +145,10 @@ class Base extends AbstractMethod
             $directory
         );
 
+        $this->_checkoutSession = $checkoutSession;
         $this->_moduleConfig = $moduleConfig;
         $this->_orderHelper = $orderHelper;
-        $this->_paymentInformationFactory = $paymentInformationFactory;
+        $this->_paymentProcessor = $paymentProcessor;
         $this->_priceCurrency = $priceCurrency;
         $this->_store = $store;
         $this->_urlBuilder = $urlBuilder;
@@ -166,23 +179,35 @@ class Base extends AbstractMethod
     }
 
     /**
-     * Returns an absolute URL for the given route.
-     *
-     * @param string $routePath
-     *
-     * @return string
-     */
-    protected function _getUrl($routePath)
-    {
-        return $this->_urlBuilder->getUrl($routePath);
-    }
-
-    /**
      * @return string
      */
     protected function _getCallbackUrl()
     {
-        return $this->_getUrl('hpg2/payment/callback');
+        return $this->_urlBuilder->getUrl('hpg2/payment/callback');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function initialize($paymentAction, $stateObject)
+    {
+        /** @var OrderPaymentInterface $payment */
+        $payment = $this->getInfoInstance();
+
+        /** @var Order $order */
+        $order = $payment->getOrder();
+        $order->setCanSendNewEmailFlag(false);
+
+        switch ($paymentAction) {
+            case self::ACTION_AUTHORIZE:
+                $this->_paymentProcessor->authorize($payment, true, $order->getTotalDue());
+                break;
+            case self::ACTION_AUTHORIZE_CAPTURE:
+                $this->_paymentProcessor->capture($payment, null);
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -209,7 +234,7 @@ class Base extends AbstractMethod
             $resourceId,
             $this->_getCallbackUrl(),
             $customerId,
-            $this->_orderHelper->getExternalId($order),
+            $order->getIncrementId(),
             $this->_orderHelper->createMetadata($order),
             $this->_orderHelper->createBasketForOrder($order),
             null
@@ -219,18 +244,12 @@ class Base extends AbstractMethod
             throw new LocalizedException(__('Failed to authorize payment.'));
         }
 
-        /** @var PaymentInformation $paymentInformation */
-        $paymentInformation = $this->_paymentInformationFactory->create();
-        $paymentInformation->load($authorization->getPaymentId(), 'payment_id');
-        $paymentInformation->setOrder($order);
-        $paymentInformation->setTransaction($authorization);
-        $paymentInformation->save();
-
         return $this;
     }
 
     /**
      * @inheritDoc
+     * @throws HeidelpayApiException
      */
     public function capture(InfoInterface $payment, $amount)
     {
@@ -241,45 +260,67 @@ class Base extends AbstractMethod
         /** @var Order $order */
         $order = $payment->getOrder();
 
-        /** @var PaymentInformation $paymentInformation */
-        $paymentInformation = $this->_paymentInformationFactory->create();
-        $paymentInformation->load($this->_orderHelper->getExternalId($order), 'external_id');
+        try {
+            $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
+        } catch (HeidelpayApiException $e) {
+            if ($e->getCode() !== ApiResponseCodes::API_ERROR_PAYMENT_NOT_FOUND) {
+                throw $e;
+            }
 
-        if ($paymentInformation->getPaymentId() !== null) {
-            $charge = $this->_getClient()->chargeAuthorization($paymentInformation->getPaymentId(), $amount);
+            $hpPayment = null;
+        }
+
+        if ($hpPayment !== null) {
+            $charge = $this->_chargeExisting($hpPayment, $amount);
         } else {
-            $charge = $this->_captureDirect($payment, $amount);
+            $charge = $this->_chargeNew($payment, $amount);
         }
 
         if ($charge->isError()) {
             throw new LocalizedException(__('Failed to charge payment.'));
         }
 
-        $paymentInformation->setOrder($order);
-        $paymentInformation->setTransaction($charge);
-        $paymentInformation->save();
-
         /** @var OrderPaymentInterface $payment */
-        $payment->setLastTransId($paymentInformation->getExternalId());
+        $payment->setLastTransId($charge->getShortId());
 
         return $this;
     }
 
     /**
-     * Captures a payment with an direct charge.
+     * Charges an existing payment.
+     *
+     * @param Payment $payment
+     * @param $amount
+     * @return Charge
+     * @throws HeidelpayApiException
+     */
+    protected function _chargeExisting(Payment $payment, $amount)
+    {
+        /** @var Authorization|null $authorization */
+        $authorization = $payment->getAuthorization();
+
+        if ($authorization !== null) {
+            return $authorization->charge($amount);
+        }
+
+        return $payment->getChargeByIndex(0);
+    }
+
+    /**
+     * Charges a new payment.
      *
      * @param InfoInterface $payment
      * @param $amount
      * @return Charge
      * @throws HeidelpayApiException
      */
-    protected function _captureDirect(InfoInterface $payment, $amount)
+    protected function _chargeNew(InfoInterface $payment, $amount)
     {
-        /** @var Order $order */
-        $order = $payment->getOrder();
-
         /** @var string|null $customerId */
         $customerId = $payment->getAdditionalInformation(self::KEY_CUSTOMER_ID);
+
+        /** @var Order $order */
+        $order = $payment->getOrder();
 
         /** @var string $resourceId */
         $resourceId = $payment->getAdditionalInformation(self::KEY_RESOURCE_ID);
@@ -290,7 +331,7 @@ class Base extends AbstractMethod
             $resourceId,
             $this->_getCallbackUrl(),
             $customerId,
-            $this->_orderHelper->getExternalId($order),
+            $order->getIncrementId(),
             $this->_orderHelper->createMetadata($order),
             $this->_orderHelper->createBasketForOrder($order),
             null,
@@ -317,7 +358,7 @@ class Base extends AbstractMethod
         $order = $payment->getOrder();
 
         /** @var Payment $hpPayment */
-        $hpPayment = $this->_getClient()->fetchPaymentByOrderId($this->_orderHelper->getExternalId($order));
+        $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
 
         /** @var Cancellation $refund */
         $cancellation = $hpPayment->cancel($amount);
