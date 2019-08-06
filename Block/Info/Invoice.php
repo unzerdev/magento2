@@ -21,11 +21,6 @@ class Invoice extends Info
     protected $_moduleConfig;
 
     /**
-     * @var OrderHelper
-     */
-    protected $_orderHelper;
-
-    /**
      * @var Payment
      */
     protected $_payment = null;
@@ -39,7 +34,6 @@ class Invoice extends Info
         parent::__construct($context, $data);
 
         $this->_moduleConfig = $moduleConfig;
-        $this->_orderHelper = $orderHelper;
     }
 
     /**
