@@ -71,6 +71,11 @@ class Base extends AbstractMethod
     protected $_orderHelper;
 
     /**
+     * @var Order\Payment\Processor
+     */
+    protected $_paymentProcessor;
+
+    /**
      * @var PriceCurrencyInterface
      */
     protected $_priceCurrency;
@@ -96,7 +101,11 @@ class Base extends AbstractMethod
      * @param Logger $logger
      * @param CheckoutSession $checkoutSession
      * @param Config $moduleConfig
+     * @param OrderHelper $orderHelper
+     * @param Order\Payment\Processor $paymentProcessor
+     * @param PriceCurrencyInterface $priceCurrency
      * @param StoreInterface $store
+     * @param UrlInterface $urlBuilder
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -113,6 +122,7 @@ class Base extends AbstractMethod
         CheckoutSession $checkoutSession,
         Config $moduleConfig,
         OrderHelper $orderHelper,
+        Order\Payment\Processor $paymentProcessor,
         PriceCurrencyInterface $priceCurrency,
         StoreInterface $store,
         UrlInterface $urlBuilder,
@@ -138,6 +148,7 @@ class Base extends AbstractMethod
         $this->_checkoutSession = $checkoutSession;
         $this->_moduleConfig = $moduleConfig;
         $this->_orderHelper = $orderHelper;
+        $this->_paymentProcessor = $paymentProcessor;
         $this->_priceCurrency = $priceCurrency;
         $this->_store = $store;
         $this->_urlBuilder = $urlBuilder;
@@ -180,20 +191,19 @@ class Base extends AbstractMethod
      */
     public function initialize($paymentAction, $stateObject)
     {
-        /** @var InfoInterface $payment */
+        /** @var OrderPaymentInterface $payment */
         $payment = $this->getInfoInstance();
 
         /** @var Order $order */
         $order = $payment->getOrder();
         $order->setCanSendNewEmailFlag(false);
-        $order->setState(Order::STATE_NEW);
 
         switch ($paymentAction) {
             case self::ACTION_AUTHORIZE:
-                $this->authorize($payment, $order->getTotalDue());
+                $this->_paymentProcessor->authorize($payment, true, $order->getTotalDue());
                 break;
             case self::ACTION_AUTHORIZE_CAPTURE:
-                $this->capture($payment, $order->getTotalDue());
+                $this->_paymentProcessor->capture($payment, null);
                 break;
             default:
                 break;

@@ -59,8 +59,7 @@ class Callback extends AbstractPaymentAction
         Config $moduleConfig,
         OrderRepositoryInterface $orderRepository,
         OrderSender $orderSender
-    )
-    {
+    ) {
         parent::__construct($context, $checkoutSession, $moduleConfig);
         $this->_cartManagement = $cartManagement;
         $this->_messageManager = $messageManager;

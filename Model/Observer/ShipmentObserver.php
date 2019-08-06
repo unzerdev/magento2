@@ -3,7 +3,6 @@
 namespace Heidelpay\Gateway2\Model\Observer;
 
 use Heidelpay\Gateway2\Model\Config;
-use Heidelpay\Gateway2\Model\Method\Base;
 use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
@@ -23,7 +22,8 @@ class ShipmentObserver implements ObserverInterface
      * ShipmentObserver constructor.
      * @param Config $moduleConfig
      */
-    public function __construct(Config $moduleConfig) {
+    public function __construct(Config $moduleConfig)
+    {
         $this->_moduleConfig = $moduleConfig;
     }
 
