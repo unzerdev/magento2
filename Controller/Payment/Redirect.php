@@ -2,34 +2,25 @@
 
 namespace Heidelpay\Gateway2\Controller\Payment;
 
-use Heidelpay\Gateway2\Helper\Order as OrderHelper;
-use Heidelpay\Gateway2\Model\PaymentInformation;
-use Heidelpay\Gateway2\Model\PaymentInformationFactory;
+use heidelpayPHP\Resources\Payment;
+use heidelpayPHP\Resources\TransactionTypes\Authorization;
 use Magento\Sales\Model\Order;
 
 class Redirect extends AbstractPaymentAction
 {
     /**
-     * @var OrderHelper
-     */
-    protected $_orderHelper;
-
-    /**
-     * @var PaymentInformationFactory
-     */
-    protected $_paymentInformationFactory;
-
-    /**
      * @inheritDoc
      */
-    public function executeWith(Order $order, PaymentInformation $paymentInformation)
+    public function executeWith(Order $order, Payment $payment)
     {
-        /** @var string|null $redirectUrl */
-        $redirectUrl = $paymentInformation->getRedirectUrl();
+        $transaction = $payment->getAuthorization();
 
-        $paymentInformation->setOrder($order);
-        $paymentInformation->setRedirectUrl(null);
-        $paymentInformation->save();
+        if (!$transaction instanceof Authorization) {
+            $transaction = $payment->getChargeByIndex(0);
+        }
+
+        /** @var string|null $redirectUrl */
+        $redirectUrl = $transaction->getRedirectUrl();
 
         $redirect = $this->resultRedirectFactory->create();
         $redirect->setUrl($redirectUrl);

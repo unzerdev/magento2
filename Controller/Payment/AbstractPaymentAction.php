@@ -2,9 +2,10 @@
 
 namespace Heidelpay\Gateway2\Controller\Payment;
 
-use Heidelpay\Gateway2\Helper\Order as OrderHelper;
-use Heidelpay\Gateway2\Model\PaymentInformation;
-use Heidelpay\Gateway2\Model\PaymentInformationFactory;
+use Heidelpay\Gateway2\Model\Config;
+use heidelpayPHP\Constants\ApiResponseCodes;
+use heidelpayPHP\Exceptions\HeidelpayApiException;
+use heidelpayPHP\Resources\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -21,32 +22,24 @@ abstract class AbstractPaymentAction extends Action
     protected $_checkoutSession;
 
     /**
-     * @var OrderHelper
+     * @var Config
      */
-    protected $_orderHelper;
-
-    /**
-     * @var PaymentInformationFactory
-     */
-    protected $_paymentInformationFactory;
+    protected $_moduleConfig;
 
     /**
      * AbstractPaymentAction constructor.
      * @param Context $context
      * @param Session $checkoutSession
-     * @param OrderHelper $_orderHelper
-     * @param PaymentInformationFactory $paymentInformationFactory
+     * @param Config $moduleConfig
      */
     public function __construct(
         Context $context,
         Session $checkoutSession,
-        OrderHelper $_orderHelper,
-        PaymentInformationFactory $paymentInformationFactory
+        Config $moduleConfig
     ) {
         parent::__construct($context);
         $this->_checkoutSession = $checkoutSession;
-        $this->_orderHelper = $_orderHelper;
-        $this->_paymentInformationFactory = $paymentInformationFactory;
+        $this->_moduleConfig = $moduleConfig;
     }
 
     /**
@@ -64,27 +57,38 @@ abstract class AbstractPaymentAction extends Action
         /** @var HttpInterface $response */
         $response = $this->getResponse();
 
-        if ($order === null || $order->getId() === null) {
+        if (!$order || !$order->getId()) {
             $response->setHttpResponseCode(400);
             return $response;
         }
 
-        /** @var PaymentInformation $paymentInformation */
-        $paymentInformation = $this->_paymentInformationFactory->create();
-        $paymentInformation->load($this->_orderHelper->getExternalId($order), 'external_id');
+        try {
+            /** @var Payment $payment */
+            $payment = $this->_moduleConfig
+                ->getHeidelpayClient()
+                ->fetchPaymentByOrderId($order->getIncrementId());
+        } catch (HeidelpayApiException $e) {
+            if ($e->getCode() === ApiResponseCodes::API_ERROR_PAYMENT_NOT_FOUND) {
+                $response->setHttpResponseCode(404);
+            } else {
+                $response->setHttpResponseCode(500);
+            }
 
-        if ($paymentInformation->getId() === null) {
-            $response->setHttpResponseCode(400);
+            $response->setBody($e->getClientMessage());
+            return $response;
+        } catch (\Exception $e) {
+            $response->setHttpResponseCode(500);
+            $response->setBody('Internal server error');
             return $response;
         }
 
-        return $this->executeWith($order, $paymentInformation);
+        return $this->executeWith($order, $payment);
     }
 
     /**
      * @param Order $order
-     * @param PaymentInformation $paymentInformation
+     * @param Payment $Payment
      * @return ResultInterface|ResponseInterface
      */
-    abstract public function executeWith(Order $order, PaymentInformation $paymentInformation);
+    abstract public function executeWith(Order $order, Payment $Payment);
 }

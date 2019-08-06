@@ -81,9 +81,7 @@ class Invoice extends Info
             /** @var Order $order */
             $order = $this->getInfo()->getOrder();
 
-            $this->_payment = $client->fetchPayment(
-                $this->_orderHelper->getExternalId($order)
-            );
+            $this->_payment = $client->fetchPaymentByOrderId($order->getIncrementId());
         }
 
         return $this->_payment;

@@ -5,6 +5,7 @@ namespace Heidelpay\Gateway2\Helper;
 use Heidelpay\Gateway2\Model\Config;
 use heidelpayPHP\Resources\Basket;
 use heidelpayPHP\Resources\EmbeddedResources\BasketItem;
+use Magento\Sales\Model\Order as OrderModel;
 use Magento\Store\Api\Data\StoreInterface;
 
 class Order
@@ -27,20 +28,21 @@ class Order
     /**
      * Returns a Basket for the given Order.
      *
-     * @param \Magento\Sales\Model\Order $order
+     * @param OrderModel $order
      *
      * @return Basket
      */
-    public function createBasketForOrder(\Magento\Sales\Model\Order $order)
+    public function createBasketForOrder(OrderModel $order)
     {
         $basket = new Basket();
         $basket->setAmountTotal($order->getGrandTotal());
         $basket->setAmountTotalDiscount($order->getDiscountAmount());
-        $basket->setAmountTotalVat($order->getTaxAmount());
         $basket->setCurrencyCode($order->getOrderCurrencyCode());
-        $basket->setOrderId($this->getExternalId($order));
+        $basket->setOrderId($order->getIncrementId());
 
         foreach ($order->getAllVisibleItems() as $orderItem) {
+            /** @var OrderModel\Item $orderItem */
+
             $totalInclTax = $orderItem->getRowTotalInclTax();
             if ($totalInclTax === null) {
                 $totalInclTax = $orderItem->getRowTotal();
@@ -64,26 +66,15 @@ class Order
     /**
      * Returns metadata for the given order.
      *
-     * @param \Magento\Sales\Model\Order $order
+     * @param OrderModel $order
      * @return array
      */
-    public function createMetadata(\Magento\Sales\Model\Order $order)
+    public function createMetadata(OrderModel $order)
     {
         return [
             'customer_id' => $order->getCustomerId(),
             'customer_group_id' => $order->getCustomerGroupId(),
-            'increment_id' => $order->getIncrementId(),
             'store_id' => $order->getStoreId(),
         ];
-    }
-
-    /**
-     * Returns the external ID for the given order.
-     * @param \Magento\Sales\Model\Order $order
-     * @return string
-     */
-    public function getExternalId(\Magento\Sales\Model\Order $order)
-    {
-        return "{$order->getStoreId()}-{$order->getIncrementId()}";
     }
 }
