@@ -29,15 +29,15 @@
     </event>
 
     <event name="hpg2_authorize_failed">
-        <observer name="hpg2_payment_failed" instance="Heidelpay\Gateway2\Model\Method\Observer\PaymentFailedObserver" />
+        <observer name="hpg2_payment_failed" instance="Heidelpay\Gateway2\Model\Observer\PaymentFailedObserver" />
     </event>
     <event name="hpg2_authorize_expired">
-        <observer name="hpg2_payment_failed" instance="Heidelpay\Gateway2\Model\Method\Observer\PaymentFailedObserver" />
+        <observer name="hpg2_payment_failed" instance="Heidelpay\Gateway2\Model\Observer\PaymentFailedObserver" />
     </event>
     <event name="hpg2_charge_failed">
-        <observer name="hpg2_payment_failed" instance="Heidelpay\Gateway2\Model\Method\Observer\PaymentFailedObserver" />
+        <observer name="hpg2_payment_failed" instance="Heidelpay\Gateway2\Model\Observer\PaymentFailedObserver" />
     </event>
     <event name="hpg2_payment_payment_review">
-        <observer name="hpg2_payment_review" instance="Heidelpay\Gateway2\Model\Method\Observer\PaymentReviewObserver" />
+        <observer name="hpg2_payment_review" instance="Heidelpay\Gateway2\Model\Observer\PaymentReviewObserver" />
     </event>
 </config>
