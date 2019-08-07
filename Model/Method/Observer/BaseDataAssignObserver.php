@@ -23,7 +23,7 @@ class BaseDataAssignObserver extends AbstractDataAssignObserver
      * @param Observer $observer
      * @return void
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         /** @var DataObject $data */
         $data = $this->readDataArgument($observer);

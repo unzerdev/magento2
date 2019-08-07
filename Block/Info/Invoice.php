@@ -25,6 +25,13 @@ class Invoice extends Info
      */
     protected $_payment = null;
 
+    /**
+     * Invoice constructor.
+     * @param Template\Context $context
+     * @param Config $moduleConfig
+     * @param OrderHelper $orderHelper
+     * @param array $data
+     */
     public function __construct(
         Template\Context $context,
         Config $moduleConfig,
@@ -39,7 +46,7 @@ class Invoice extends Info
     /**
      * @inheritDoc
      */
-    public function toPdf()
+    public function toPdf(): string
     {
         $this->setTemplate('Heidelpay_Gateway2::info/pdf/invoice.phtml');
         return $this->toHtml();
@@ -51,7 +58,7 @@ class Invoice extends Info
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
      *
-     * @return \heidelpayPHP\Resources\AbstractHeidelpayResource|Charge|null
+     * @return Charge|null
      */
     protected function _getCharge()
     {
@@ -66,7 +73,7 @@ class Invoice extends Info
      *
      * @return Payment
      */
-    protected function _getPayment()
+    protected function _getPayment(): Payment
     {
         if ($this->_payment === null) {
             /** @var Heidelpay $client */
@@ -84,9 +91,9 @@ class Invoice extends Info
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
-     * @return string|null
+     * @return string
      */
-    public function getAccountHolder()
+    public function getAccountHolder(): string
     {
         return $this->_getCharge()->getHolder();
     }
@@ -94,9 +101,9 @@ class Invoice extends Info
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
-     * @return string|null
+     * @return string
      */
-    public function getAccountIban()
+    public function getAccountIban(): string
     {
         return $this->_getCharge()->getIban();
     }
@@ -104,9 +111,9 @@ class Invoice extends Info
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
-     * @return string|null
+     * @return string
      */
-    public function getAccountBic()
+    public function getAccountBic(): string
     {
         return $this->_getCharge()->getBic();
     }
@@ -114,19 +121,21 @@ class Invoice extends Info
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
-     * @return string|null
+     * @return string
      */
-    public function getIdentificationNumber()
+    public function getIdentificationNumber(): string
     {
         return $this->_getCharge()->getShortId();
     }
 
     /**
+     * Returns the order for the invoice.
+     *
      * @throws \Magento\Framework\Exception\LocalizedException
      *
-     * @return Order|null
+     * @return Order
      */
-    public function getOrder()
+    public function getOrder(): Order
     {
         $order = $this->_getData('order');
         if ($order) {

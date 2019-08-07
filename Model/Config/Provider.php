@@ -48,9 +48,8 @@ class Provider implements ConfigProviderInterface
      *
      * @return array
      * @throws LocalizedException
-     *
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         $methodConfigs = [
             Config::METHOD_BASE => [

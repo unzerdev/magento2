@@ -2,7 +2,6 @@
 
 namespace Heidelpay\Gateway2\Model\Observer;
 
-use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Framework\Api\SearchCriteriaBuilder;
@@ -33,8 +32,7 @@ class PaymentFailedObserver implements ObserverInterface
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder
-    )
-    {
+    ) {
         $this->_orderRepository = $orderRepository;
         $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
     }
@@ -42,9 +40,8 @@ class PaymentFailedObserver implements ObserverInterface
     /**
      * @param Observer $observer
      * @return void
-     * @throws HeidelpayApiException
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         /** @var Authorization|Charge|Payment $payment */
         $payment = $observer->getEvent()->getData('resource');

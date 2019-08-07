@@ -27,7 +27,7 @@ class Invoice extends Base
     /**
      * @inheritDoc
      */
-    public function getAdditionalPaymentInformation(Order $order)
+    public function getAdditionalPaymentInformation(Order $order): string
     {
         /** @var Payment $payment */
         $payment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());

@@ -24,7 +24,7 @@ class InvoiceGuaranteed extends Invoice
     /**
      * @inheritDoc
      */
-    public function isAvailable(CartInterface $quote = null)
+    public function isAvailable(CartInterface $quote = null): bool
     {
         if ($quote !== null && !empty($quote->getBillingAddress()->getCompany())) {
             return false;

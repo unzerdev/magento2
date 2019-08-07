@@ -19,6 +19,11 @@ class Order
      */
     private $_store;
 
+    /**
+     * Order constructor.
+     * @param Config $moduleConfig
+     * @param StoreInterface $store
+     */
     public function __construct(Config $moduleConfig, StoreInterface $store)
     {
         $this->_moduleConfig = $moduleConfig;
@@ -32,7 +37,7 @@ class Order
      *
      * @return Basket
      */
-    public function createBasketForOrder(OrderModel $order)
+    public function createBasketForOrder(OrderModel $order): Basket
     {
         $basket = new Basket();
         $basket->setAmountTotal($order->getGrandTotal());
@@ -69,7 +74,7 @@ class Order
      * @param OrderModel $order
      * @return array
      */
-    public function createMetadata(OrderModel $order)
+    public function createMetadata(OrderModel $order): array
     {
         return [
             'customer_id' => $order->getCustomerId(),

@@ -50,6 +50,7 @@ class Callback extends AbstractPaymentAction
      * @param ManagerInterface $messageManager
      * @param Config $moduleConfig
      * @param OrderRepositoryInterface $orderRepository
+     * @param OrderSender $orderSender
      */
     public function __construct(
         Context $context,
@@ -97,7 +98,7 @@ class Callback extends AbstractPaymentAction
      * @param Payment $payment
      * @return \Magento\Framework\Controller\Result\Redirect
      */
-    protected function handleError(Order $order, Payment $payment)
+    protected function handleError(Order $order, Payment $payment): \Magento\Framework\Controller\Result\Redirect
     {
         $this->_checkoutSession->restoreQuote();
         $order->cancel();
@@ -124,7 +125,7 @@ class Callback extends AbstractPaymentAction
      * @param Order $order
      * @return \Magento\Framework\Controller\Result\Redirect
      */
-    protected function handleSuccess(Order $order)
+    protected function handleSuccess(Order $order): \Magento\Framework\Controller\Result\Redirect
     {
         $order->setCanSendNewEmailFlag(true);
         $order->setState(Order::STATE_PROCESSING);

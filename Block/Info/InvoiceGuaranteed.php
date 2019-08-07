@@ -9,7 +9,7 @@ class InvoiceGuaranteed extends Invoice
     /**
      * @inheritDoc
      */
-    public function toPdf()
+    public function toPdf(): string
     {
         $this->setTemplate('Heidelpay_Gateway2::info/pdf/invoice_guaranteed.phtml');
         return $this->toHtml();
@@ -20,7 +20,7 @@ class InvoiceGuaranteed extends Invoice
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
      */
-    public function getCustomerSalutation()
+    public function getCustomerSalutation(): string
     {
         return $this->_getPayment()->getCustomer()->getSalutation();
     }
@@ -30,7 +30,7 @@ class InvoiceGuaranteed extends Invoice
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
      */
-    public function getCustomerBirthdate()
+    public function getCustomerBirthdate(): string
     {
         return $this->_getPayment()->getCustomer()->getBirthDate();
     }

@@ -11,6 +11,7 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\App\Response\Http as HttpResponse;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Event\Manager;
 use stdClass;
 
@@ -43,7 +44,7 @@ class Process extends Action
     /**
      * @inheritDoc
      */
-    public function execute()
+    public function execute(): ResponseInterface
     {
         /** @var HttpRequest $request */
         $request = $this->getRequest();
@@ -108,7 +109,7 @@ class Process extends Action
      *
      * @return bool
      */
-    protected function _isRequestFromValidIp(HttpRequest $request)
+    protected function _isRequestFromValidIp(HttpRequest $request): bool
     {
         /** @var string[] $clientIps */
         $clientIps = preg_split('/\s*,\s*/', $request->getClientIp(true));
@@ -123,7 +124,7 @@ class Process extends Action
      *
      * @return bool
      */
-    protected function _isValidEvent(stdClass $event)
+    protected function _isValidEvent(stdClass $event): bool
     {
         return isset($event->event)
             && isset($event->publicKey)
