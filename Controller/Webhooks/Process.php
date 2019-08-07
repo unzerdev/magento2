@@ -69,25 +69,32 @@ class Process extends Action
             return $response;
         }
 
+        /** @var AbstractHeidelpayResource|null $resource */
+        $resource = null;
+
         try {
-            /** @var AbstractHeidelpayResource $resource */
             $resource = $this->_moduleConfig
                 ->getHeidelpayClient()
                 ->fetchResourceFromEvent($requestBody);
-
-            $eventKey = str_replace('.', '_', $event->event);
-
-            $this->_eventManager->dispatch("hpg2_{$eventKey}", [
-                'resource' => $resource,
-            ]);
         } catch (HeidelpayApiException $e) {
-            $response->setStatusCode(500);
-            $response->setBody($e->getMerchantMessage());
+            if ($e->getCode() !== ApiResponseCodes::API_ERROR_PAYMENT_NOT_FOUND &&
+                $e->getCode() !== ApiResponseCodes::API_ERROR_CUSTOMER_CAN_NOT_BE_FOUND &&
+                $e->getCode() !== ApiResponseCodes::API_ERROR_CUSTOMER_DOES_NOT_EXIST) {
+                $response->setStatusCode(500);
+                $response->setBody($e->getMerchantMessage());
+            }
         } catch (Exception $e) {
             $response->setStatusCode(500);
             $response->setBody($e->getMessage());
             return $response;
         }
+
+        $eventKey = str_replace('.', '_', $event->event);
+
+        $this->_eventManager->dispatch("hpg2_{$eventKey}", [
+            'resource' => $resource,
+            'resourceUrl' => $event->retrieveUrl,
+        ]);
 
         return $response;
     }
