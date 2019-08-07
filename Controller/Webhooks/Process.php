@@ -103,7 +103,10 @@ class Process extends Action
      */
     protected function _isRequestFromValidIp(HttpRequest $request)
     {
-        return in_array($request->getClientIp(true), $this->_moduleConfig->getWebhooksSourceIps());
+        /** @var string[] $clientIps */
+        $clientIps = preg_split('/\s*,\s*/', $request->getClientIp(true));
+
+        return count(array_intersect($clientIps, $this->_moduleConfig->getWebhooksSourceIps())) > 0;
     }
 
     /**
