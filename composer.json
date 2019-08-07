@@ -4,7 +4,7 @@
     "type": "magento2-module",
     "license": "proprietary",
     "require": {
-        "php": "~7.1.0|~7.2.0|~7.3.0",
+        "php": "~7.0.0|~7.1.0|~7.2.0|~7.3.0",
         "magento/framework": "^101.0.0|^102.0.0|^103.0.0",
         "heidelpay/heidelpay-php": "^1.1"
     },
