@@ -1,9 +1,10 @@
 <?php
 
-namespace Heidelpay\Gateway2\Controller\Payment;
+namespace Heidelpay\Gateway2\Controller\Webhooks;
 
 use Exception;
 use Heidelpay\Gateway2\Model\Config;
+use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use Magento\Framework\App\Action\Action;
