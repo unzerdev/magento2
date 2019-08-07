@@ -26,8 +26,7 @@ class Webhooks
     public function __construct(
         StoreManagerInterface $storeManager,
         Url $urlBuilder
-    )
-    {
+    ) {
         $this->_storeManager = $storeManager;
         $this->_urlBuilder = $urlBuilder;
     }
@@ -35,7 +34,7 @@ class Webhooks
     /**
      * @return string
      */
-    public function getUrl()
+    public function getUrl(): string
     {
         /** @var Store $store */
         $store = $this->_storeManager->getDefaultStoreView();

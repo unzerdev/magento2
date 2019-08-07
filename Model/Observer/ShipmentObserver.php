@@ -31,8 +31,9 @@ class ShipmentObserver implements ObserverInterface
      * @param Observer $observer
      * @return void
      * @throws HeidelpayApiException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         /** @var Shipment $shipment */
         $shipment = $observer->getEvent()->getShipment();

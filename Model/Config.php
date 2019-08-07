@@ -41,8 +41,7 @@ class Config
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         StoreManagerInterface $storeManager
-    )
-    {
+    ) {
         $this->_scopeConfig = $scopeConfig;
         $this->_storeManager = $storeManager;
     }
@@ -52,7 +51,7 @@ class Config
      *
      * @return string
      */
-    public function getPublicKey()
+    public function getPublicKey(): string
     {
         return $this->getValue(self::KEY_PUBLIC_KEY);
     }
@@ -65,9 +64,13 @@ class Config
      *
      * @return mixed
      */
-    protected function getValue($field, $storeId = null)
+    protected function getValue(string $field, $storeId = null)
     {
-        return $this->_scopeConfig->getValue('payment/hpg2/' . $field, ScopeInterface::SCOPE_STORE, $storeId);
+        return $this->_scopeConfig->getValue(
+            'payment/hpg2/' . $field,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
     }
 
     /**
@@ -75,7 +78,7 @@ class Config
      *
      * @return string
      */
-    public function getPrivateKey()
+    public function getPrivateKey(): string
     {
         return $this->getValue(self::KEY_PRIVATE_KEY);
     }
@@ -85,7 +88,7 @@ class Config
      *
      * @return string[]
      */
-    public function getWebhooksSourceIps()
+    public function getWebhooksSourceIps(): array
     {
         return preg_split('/\s*,\s*/', $this->getValue(self::KEY_WEBHOOKS_SOURCE_IPS));
     }
@@ -93,16 +96,14 @@ class Config
     /**
      * Returns an API client using the configured private key.
      *
-     * @param null $locale
      * @return Heidelpay
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getHeidelpayClient($locale = null)
+    public function getHeidelpayClient(): Heidelpay
     {
-        if ($locale === null) {
-            $locale = $this->_storeManager->getStore()->getLocaleCode();
-        }
-
-        return new Heidelpay($this->getPrivateKey(), $locale);
+        return new Heidelpay(
+            $this->getPrivateKey(),
+            $this->_storeManager->getStore()->getLocaleCode()
+        );
     }
 }

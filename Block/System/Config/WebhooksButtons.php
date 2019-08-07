@@ -14,7 +14,7 @@ class WebhooksButtons extends Field
     /**
      * @inheritDoc
      */
-    protected function _getElementHtml(AbstractElement $element)
+    protected function _getElementHtml(AbstractElement $element): string
     {
         return $this->_toHtml();
     }
@@ -22,7 +22,7 @@ class WebhooksButtons extends Field
     /**
      * @inheritDoc
      */
-    public function getRegisterAction()
+    public function getRegisterAction(): string
     {
         return $this->getUrl('hpg2/webhooks/register');
     }
@@ -31,13 +31,13 @@ class WebhooksButtons extends Field
      * @return string
      * @throws LocalizedException
      */
-    public function getRegisterButtonHtml()
+    public function getRegisterButtonHtml(): string
     {
         $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button');
         $button->setData([
             'id' => 'hpg2_webhooks_register',
             'label' => __('Register webhooks'),
-            'onclick' => 'location.href = '. Zend_Json::encode($this->getRegisterAction()),
+            'onclick' => 'location.href = ' . Zend_Json::encode($this->getRegisterAction()),
         ]);
 
         return $button->toHtml();
@@ -46,7 +46,7 @@ class WebhooksButtons extends Field
     /**
      * @inheritDoc
      */
-    public function getUnregisterAction()
+    public function getUnregisterAction(): string
     {
         return $this->getUrl('hpg2/webhooks/unregister');
     }
@@ -55,13 +55,13 @@ class WebhooksButtons extends Field
      * @return string
      * @throws LocalizedException
      */
-    public function getUnregisterButtonHtml()
+    public function getUnregisterButtonHtml(): string
     {
         $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button');
         $button->setData([
             'id' => 'hpg2_webhooks_unregister',
             'label' => __('Unregister webhooks'),
-            'onclick' => 'location.href = '. Zend_Json::encode($this->getUnregisterAction()),
+            'onclick' => 'location.href = ' . Zend_Json::encode($this->getUnregisterAction()),
         ]);
 
         return $button->toHtml();

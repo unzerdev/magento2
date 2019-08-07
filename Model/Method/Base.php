@@ -153,7 +153,7 @@ class Base extends AbstractMethod
      *
      * @return array
      */
-    public function getFrontendConfig()
+    public function getFrontendConfig(): array
     {
         return [];
     }
@@ -162,8 +162,9 @@ class Base extends AbstractMethod
      * Returns the gateway client.
      *
      * @return Heidelpay
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function _getClient()
+    protected function _getClient(): Heidelpay
     {
         if ($this->_client === null) {
             $this->_client = $this->_moduleConfig->getHeidelpayClient();
@@ -175,7 +176,7 @@ class Base extends AbstractMethod
     /**
      * @return string
      */
-    protected function _getCallbackUrl()
+    protected function _getCallbackUrl(): string
     {
         return $this->_urlBuilder->getUrl('hpg2/payment/callback');
     }
@@ -183,7 +184,7 @@ class Base extends AbstractMethod
     /**
      * @inheritDoc
      */
-    public function initialize($paymentAction, $stateObject)
+    public function initialize($paymentAction, $stateObject): void
     {
         /** @var OrderPaymentInterface $payment */
         $payment = $this->getInfoInstance();
@@ -207,7 +208,7 @@ class Base extends AbstractMethod
     /**
      * @inheritDoc
      */
-    public function authorize(InfoInterface $payment, $amount)
+    public function authorize(InfoInterface $payment, $amount): self
     {
         if (!$this->canAuthorize()) {
             throw new LocalizedException(__('The authorize action is not available.'));
@@ -245,7 +246,7 @@ class Base extends AbstractMethod
      * @inheritDoc
      * @throws HeidelpayApiException
      */
-    public function capture(InfoInterface $payment, $amount)
+    public function capture(InfoInterface $payment, $amount): self
     {
         if (!$this->canCapture()) {
             throw new LocalizedException(__('The capture action is not available.'));
@@ -284,11 +285,11 @@ class Base extends AbstractMethod
      * Charges an existing payment.
      *
      * @param Payment $payment
-     * @param $amount
+     * @param float $amount
      * @return Charge
      * @throws HeidelpayApiException
      */
-    protected function _chargeExisting(Payment $payment, $amount)
+    protected function _chargeExisting(Payment $payment, float $amount): Charge
     {
         /** @var Authorization|null $authorization */
         $authorization = $payment->getAuthorization();
@@ -307,8 +308,9 @@ class Base extends AbstractMethod
      * @param $amount
      * @return Charge
      * @throws HeidelpayApiException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function _chargeNew(InfoInterface $payment, $amount)
+    protected function _chargeNew(InfoInterface $payment, float $amount): Charge
     {
         /** @var string|null $customerId */
         $customerId = $payment->getAdditionalInformation(self::KEY_CUSTOMER_ID);
@@ -338,7 +340,7 @@ class Base extends AbstractMethod
      * @inheritDoc
      * @throws LocalizedException
      */
-    public function cancel(InfoInterface $payment)
+    public function cancel(InfoInterface $payment): self
     {
         return $this->refund($payment, null);
     }
@@ -346,7 +348,7 @@ class Base extends AbstractMethod
     /**
      * @inheritDoc
      */
-    public function refund(InfoInterface $payment, $amount)
+    public function refund(InfoInterface $payment, $amount): self
     {
         /** @var Order $order */
         $order = $payment->getOrder();
@@ -371,7 +373,7 @@ class Base extends AbstractMethod
      *
      * @return string
      */
-    public function getAdditionalPaymentInformation(Order $order)
+    public function getAdditionalPaymentInformation(Order $order): string
     {
         return '';
     }

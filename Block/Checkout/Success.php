@@ -17,6 +17,13 @@ class Success extends \Magento\Checkout\Block\Success
      */
     protected $_checkoutSession = null;
 
+    /**
+     * Success constructor.
+     * @param Context $context
+     * @param OrderFactory $orderFactory
+     * @param Session $checkoutSession
+     * @param array $data
+     */
     public function __construct(
         Context $context,
         OrderFactory $orderFactory,
@@ -31,9 +38,9 @@ class Success extends \Magento\Checkout\Block\Success
     /**
      * Returns additional payment information.
      *
-     * @return Payment
+     * @return string
      */
-    public function getAdditionalPaymentInformation()
+    public function getAdditionalPaymentInformation(): string
     {
         /** @var Order $order */
         $order = $this->_checkoutSession->getLastRealOrder();

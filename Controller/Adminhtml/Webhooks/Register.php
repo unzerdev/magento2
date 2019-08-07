@@ -7,6 +7,7 @@ use Heidelpay\Gateway2\Model\Config;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Webhook;
 use Magento\Backend\App\Action;
+use Magento\Framework\Controller\Result\Redirect;
 
 class Register extends Action
 {
@@ -37,7 +38,7 @@ class Register extends Action
     /**
      * @inheritDoc
      */
-    public function execute()
+    public function execute(): Redirect
     {
         /** @var string $webhookUrl */
         $webhookUrl = $this->_webhooksHelper->getUrl();

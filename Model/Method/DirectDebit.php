@@ -28,7 +28,7 @@ class DirectDebit extends Base
     /**
      * @inheritDoc
      */
-    public function getFrontendConfig()
+    public function getFrontendConfig(): array
     {
         $merchantName = $this->getConfigData('merchant_name');
 
