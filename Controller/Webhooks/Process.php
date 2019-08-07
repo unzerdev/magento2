@@ -63,7 +63,7 @@ class Process extends Action
         /** @var stdClass $event */
         $event = json_decode($requestBody);
 
-        if (!$event  || $this->_isValidEvent($event)) {
+        if (!$event  || !$this->_isValidEvent($event)) {
             $response->setStatusCode(400);
             $response->setBody('Bad request');
             return $response;
