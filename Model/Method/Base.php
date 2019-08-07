@@ -81,11 +81,6 @@ class Base extends AbstractMethod
     protected $_priceCurrency;
 
     /**
-     * @var StoreInterface
-     */
-    protected $_store;
-
-    /**
      * @var UrlInterface
      */
     protected $_urlBuilder;
@@ -150,7 +145,6 @@ class Base extends AbstractMethod
         $this->_orderHelper = $orderHelper;
         $this->_paymentProcessor = $paymentProcessor;
         $this->_priceCurrency = $priceCurrency;
-        $this->_store = $store;
         $this->_urlBuilder = $urlBuilder;
     }
 
@@ -172,7 +166,7 @@ class Base extends AbstractMethod
     protected function _getClient()
     {
         if ($this->_client === null) {
-            $this->_client = $this->_moduleConfig->getHeidelpayClient($this->_store->getLocaleCode());
+            $this->_client = $this->_moduleConfig->getHeidelpayClient();
         }
 
         return $this->_client;

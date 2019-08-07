@@ -5,11 +5,13 @@ namespace Heidelpay\Gateway2\Model;
 use heidelpayPHP\Heidelpay;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 class Config
 {
     const KEY_PUBLIC_KEY = 'public_key';
     const KEY_PRIVATE_KEY = 'private_key';
+    const KEY_WEBHOOKS_SOURCE_IPS = 'webhooks_source_ips';
 
     const METHOD_BASE = 'hpg2';
     const METHOD_CREDITCARD = 'hpg2_creditcard';
@@ -28,12 +30,21 @@ class Config
     private $_scopeConfig;
 
     /**
+     * @var StoreManagerInterface
+     */
+    private $_storeManager;
+
+    /**
      * Module constructor.
      * @param ScopeConfigInterface $scopeConfig
      */
-    public function __construct(ScopeConfigInterface $scopeConfig)
+    public function __construct(
+        ScopeConfigInterface $scopeConfig,
+        StoreManagerInterface $storeManager
+    )
     {
         $this->_scopeConfig = $scopeConfig;
+        $this->_storeManager = $storeManager;
     }
 
     /**
@@ -70,13 +81,28 @@ class Config
     }
 
     /**
+     * Returns the list of valid source IPs for webhook events.
+     *
+     * @return string[]
+     */
+    public function getWebhooksSourceIps()
+    {
+        return preg_split('/\s*,\s*/', $this->getValue(self::KEY_WEBHOOKS_SOURCE_IPS));
+    }
+
+    /**
      * Returns an API client using the configured private key.
      *
      * @param null $locale
      * @return Heidelpay
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getHeidelpayClient($locale = null)
     {
+        if ($locale === null) {
+            $locale = $this->_storeManager->getStore()->getLocaleCode();
+        }
+
         return new Heidelpay($this->getPrivateKey(), $locale);
     }
 }

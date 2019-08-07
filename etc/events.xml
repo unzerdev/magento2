@@ -27,4 +27,17 @@
     <event name="payment_method_assign_data_hpg2_sofort">
         <observer name="hpg2_sofort_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
+
+    <event name="hpg2_authorize_failed">
+        <observer name="hpg2_payment_failed" instance="Heidelpay\Gateway2\Model\Method\Observer\PaymentFailedObserver" />
+    </event>
+    <event name="hpg2_authorize_expired">
+        <observer name="hpg2_payment_failed" instance="Heidelpay\Gateway2\Model\Method\Observer\PaymentFailedObserver" />
+    </event>
+    <event name="hpg2_charge_failed">
+        <observer name="hpg2_payment_failed" instance="Heidelpay\Gateway2\Model\Method\Observer\PaymentFailedObserver" />
+    </event>
+    <event name="hpg2_payment_payment_review">
+        <observer name="hpg2_payment_review" instance="Heidelpay\Gateway2\Model\Method\Observer\PaymentReviewObserver" />
+    </event>
 </config>
