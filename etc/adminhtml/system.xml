@@ -26,6 +26,12 @@
                         <comment>Comma separated list of IP addresses. See https://docs.heidelpay.com/docs/webhook-overview#section-what-are-webhooks</comment>
                         <config_path>payment/hpg2/webhooks_source_ips</config_path>
                     </field>
+                    <field id="logging" translate="label,comment" type="select" sortOrder="50"  showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Logging and Debugging</label>
+                        <comment>The SDK provides error and debug information which you can catch and write to your log.</comment>
+                        <config_path>payment/hpg2/logging</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
                 </group>
                 <group id="creditcard" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>HPG2_CREDITCARD</label>

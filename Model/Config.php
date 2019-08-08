@@ -2,6 +2,7 @@
 
 namespace Heidelpay\Gateway2\Model;
 
+use Heidelpay\Gateway2\Model\Logger\DebugHandler;
 use heidelpayPHP\Heidelpay;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
@@ -12,6 +13,7 @@ class Config
     const KEY_PUBLIC_KEY = 'public_key';
     const KEY_PRIVATE_KEY = 'private_key';
     const KEY_WEBHOOKS_SOURCE_IPS = 'webhooks_source_ips';
+    const KEY_LOGGING = 'logging';
 
     const METHOD_BASE = 'hpg2';
     const METHOD_CREDITCARD = 'hpg2_creditcard';
@@ -33,6 +35,7 @@ class Config
      * @var StoreManagerInterface
      */
     private $_storeManager;
+    private $_debugHandler;
 
     /**
      * Module constructor.
@@ -40,10 +43,12 @@ class Config
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        DebugHandler $debugHandler
     ) {
         $this->_scopeConfig = $scopeConfig;
         $this->_storeManager = $storeManager;
+        $this->_debugHandler = $debugHandler;
     }
 
     /**
@@ -101,9 +106,37 @@ class Config
      */
     public function getHeidelpayClient(): Heidelpay
     {
-        return new Heidelpay(
+        $heidelPay = new Heidelpay(
             $this->getPrivateKey(),
             $this->_storeManager->getStore()->getLocaleCode()
         );
+        return $this->activateDebuggingInPayment($heidelPay);
+    }
+
+    /**
+     * Retrive is debug setup activated.
+     *
+     * @return bool
+     */
+    public function isDebugActivated(): bool
+    {
+        return !!$this->getValue(self::KEY_LOGGING);
+    }
+
+    /**
+     * Activate logger function.
+     *
+     * @param Heidelpay $heidelPay Payment object.
+     *
+     * @return Heidelpay
+     */
+    protected function activateDebuggingInPayment(Heidelpay $heidelPay): Heidelpay
+    {
+        if ($this->isDebugActivated()) {
+            $heidelPay->setDebugMode(true)
+                ->setDebugHandler($this->_debugHandler);
+
+        }
+        return $heidelPay;
     }
 }
