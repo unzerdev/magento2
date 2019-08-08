@@ -33,6 +33,8 @@ use Magento\Store\Api\Data\StoreInterface;
 
 class Base extends AbstractMethod
 {
+    const CONFIG_COUNTRY_RESTRICTIONS = 'country_restrictions';
+
     const KEY_CUSTOMER_ID = 'customer_id';
     const KEY_RESOURCE_ID = 'resource_id';
 
@@ -179,6 +181,25 @@ class Base extends AbstractMethod
     protected function _getCallbackUrl(): string
     {
         return $this->_urlBuilder->getUrl('hpg2/payment/callback');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function canUseForCountry($country)
+    {
+        /** @var string|null $countryRestrictions */
+        $countryRestrictions = $this->getConfigData(self::CONFIG_COUNTRY_RESTRICTIONS);
+
+        if ($countryRestrictions !== null) {
+            $allowedCountries = preg_split('/\s*,\s*/', $countryRestrictions);
+
+            if (!in_array($country, $allowedCountries)) {
+                return false;
+            }
+        }
+
+        return parent::canUseForCountry($country);
     }
 
     /**

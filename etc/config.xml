@@ -33,6 +33,7 @@
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
+                <country_restrictions>AT,CH,DE</country_restrictions>
                 <model>Heidelpay\Gateway2\Model\Method\DirectDebitGuaranteed</model>
             </hpg2_direct_debit_guaranteed>
             <hpg2_flexipay_direct>
@@ -42,6 +43,7 @@
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
+                <country_restrictions>AT,DE</country_restrictions>
                 <model>Heidelpay\Gateway2\Model\Method\FlexipayDirect</model>
             </hpg2_flexipay_direct>
             <hpg2_ideal>
@@ -51,6 +53,7 @@
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
+                <country_restrictions>NL</country_restrictions>
                 <model>Heidelpay\Gateway2\Model\Method\Ideal</model>
             </hpg2_ideal>
             <hpg2_invoice>
@@ -69,6 +72,7 @@
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
+                <country_restrictions>AT,DE</country_restrictions>
                 <model>Heidelpay\Gateway2\Model\Method\InvoiceGuaranteed</model>
             </hpg2_invoice_guaranteed>
             <hpg2_paypal>
@@ -87,6 +91,7 @@
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
+                <country_restrictions>AT,BE,CH,DE,ES,GB,IT,NL,PL</country_restrictions>
                 <model>Heidelpay\Gateway2\Model\Method\Sofort</model>
             </hpg2_sofort>
         </payment>
