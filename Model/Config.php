@@ -114,16 +114,6 @@ class Config
     }
 
     /**
-     * Retrive is debug setup activated.
-     *
-     * @return bool
-     */
-    public function isDebugActivated(): bool
-    {
-        return !!$this->getValue(self::KEY_LOGGING);
-    }
-
-    /**
      * Activate logger function.
      *
      * @param Heidelpay $heidelPay Payment object.
@@ -133,7 +123,7 @@ class Config
     protected function activateDebuggingInPayment(Heidelpay $heidelPay): Heidelpay
     {
         if ($this->isDebugActivated()) {
-            $heidelPay->setDebugMode(true)
+            $heidelPay->setDebugMode((bool) $this->getValue(self::KEY_LOGGING))
                 ->setDebugHandler($this->_debugHandler);
         }
         return $heidelPay;
