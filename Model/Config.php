@@ -37,6 +37,10 @@ class Config
      * @var StoreManagerInterface
      */
     private $_storeManager;
+
+    /**
+     * @var DebugHandler
+     */
     private $_debugHandler;
 
     /**
@@ -110,6 +114,7 @@ class Config
      */
     public function getHeidelpayClient(): Heidelpay
     {
+        /** @var Heidelpay $heidelPay */
         $heidelPay = new Heidelpay(
             $this->getPrivateKey(),
             $this->_storeManager->getStore()->getLocaleCode()
@@ -126,6 +131,7 @@ class Config
      */
     protected function activateDebuggingInPayment(Heidelpay $heidelPay): Heidelpay
     {
+        /** @var boolean $activateLogging */
         $activateLogging = $this->_scopeConfig->isSetFlag(
             self::CONFIGURATION_PATH.self::KEY_LOGGING,
             ScopeInterface::SCOPE_STORE
