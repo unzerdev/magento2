@@ -5,6 +5,7 @@ namespace Heidelpay\Gateway2\Model;
 use Heidelpay\Gateway2\Model\Logger\DebugHandler;
 use heidelpayPHP\Heidelpay;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -25,6 +26,7 @@ class Config
     const METHOD_INVOICE_GUARANTEED = 'hpg2_invoice_guaranteed';
     const METHOD_PAYPAL = 'hpg2_paypal';
     const METHOD_SOFORT = 'hpg2_sofort';
+    const CONFIGURATION_PATH = 'payment/hpg2/';
 
     /**
      * @var ScopeConfigInterface
@@ -40,6 +42,8 @@ class Config
     /**
      * Module constructor.
      * @param ScopeConfigInterface $scopeConfig
+     * @param StoreManagerInterface $storeManager
+     * @param DebugHandler $debugHandler
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
@@ -72,7 +76,7 @@ class Config
     protected function getValue(string $field, $storeId = null)
     {
         return $this->_scopeConfig->getValue(
-            'payment/hpg2/' . $field,
+            self::CONFIGURATION_PATH . $field,
             ScopeInterface::SCOPE_STORE,
             $storeId
         );
@@ -102,7 +106,7 @@ class Config
      * Returns an API client using the configured private key.
      *
      * @return Heidelpay
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function getHeidelpayClient(): Heidelpay
     {
@@ -122,10 +126,11 @@ class Config
      */
     protected function activateDebuggingInPayment(Heidelpay $heidelPay): Heidelpay
     {
-        if ($this->isDebugActivated()) {
-            $heidelPay->setDebugMode((bool) $this->getValue(self::KEY_LOGGING))
-                ->setDebugHandler($this->_debugHandler);
-        }
-        return $heidelPay;
+        $activateLogging = $this->_scopeConfig->isSetFlag(
+            self::CONFIGURATION_PATH.self::KEY_LOGGING,
+            ScopeInterface::SCOPE_STORE
+        );
+        return $heidelPay->setDebugMode($activateLogging)
+            ->setDebugHandler($this->_debugHandler);
     }
 }
