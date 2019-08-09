@@ -2,9 +2,8 @@
 
 namespace Heidelpay\Gateway2\Model\Logger\Handler;
 
-use \Magento\Framework\Logger\Handler\Base;
+use Magento\Framework\Logger\Handler\Base;
 use Monolog\Logger;
-
 
 class Debug extends Base
 {

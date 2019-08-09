@@ -4,7 +4,6 @@ namespace Heidelpay\Gateway2\Model\Logger;
 
 use heidelpayPHP\Interfaces\DebugHandlerInterface;
 
-
 class DebugHandler implements DebugHandlerInterface
 {
     /**
