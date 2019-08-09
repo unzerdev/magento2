@@ -135,7 +135,6 @@ class Config
         if ($this->isDebugActivated()) {
             $heidelPay->setDebugMode(true)
                 ->setDebugHandler($this->_debugHandler);
-
         }
         return $heidelPay;
     }
