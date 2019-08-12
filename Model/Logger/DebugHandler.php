@@ -3,6 +3,7 @@
 namespace Heidelpay\Gateway2\Model\Logger;
 
 use heidelpayPHP\Interfaces\DebugHandlerInterface;
+//use \Psr\Log\LoggerInterface;
 
 class DebugHandler implements DebugHandlerInterface
 {
@@ -16,7 +17,9 @@ class DebugHandler implements DebugHandlerInterface
      *
      * @param LoggerInterface $logger
      */
-    public function __construct(Logger $logger)
+    public function __construct(
+        \Psr\Log\LoggerInterface $logger
+    )
     {
         $this->_logger = $logger;
     }
@@ -30,6 +33,6 @@ class DebugHandler implements DebugHandlerInterface
      */
     public function log(string $message)
     {
-        $this->_logger->debug(var_export($message, true));
+        $this->_logger->debug($message);
     }
 }
