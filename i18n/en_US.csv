@@ -48,3 +48,5 @@
 
 "Webhooks IP Whitelist","Webhooks IP Whitelist"
 "Comma separated list of IP addresses. See https://docs.heidelpay.com/docs/webhook-overview#section-what-are-webhooks","Comma separated list of IP addresses. See https://docs.heidelpay.com/docs/webhook-overview#section-what-are-webhooks"
+"The SDK provides error and debug information which you can catch and write to your log.","The SDK provides error and debug information which you can catch and write to your log."
+"Logging and Debugging","Logging and Debugging"

@@ -8,7 +8,7 @@ use Monolog\Logger;
 class Debug extends Base
 {
     /** @var string */
-    protected $fileName = '/var/log/heidelpay/debug.log';
+    protected $fileName = '/var/log/hpg2_debug.log';
     /** @var int */
     protected $loggerType = Logger::DEBUG;
 }

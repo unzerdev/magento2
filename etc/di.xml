@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Heidelpay\Gateway2\Model\Logger\Logger\Handler\Debug">
-        <arguments>
-            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
-        </arguments>
-    </type>
-    <type name="Heidelpay\Gateway2\Model\Logger\Logger">
+    <virtualType name="Heidelpay\Gateway2\Logger\Logger" type="\Magento\Framework\Logger\Monolog">
         <arguments>
             <argument name="name" xsi:type="string">heidelpay_logger</argument>
-            <argument name="handlers"  xsi:type="array">
+            <argument name="handlers" xsi:type="array">
                 <item name="debug" xsi:type="object">Heidelpay\Gateway2\Model\Logger\Handler\Debug</item>
             </argument>
+        </arguments>
+    </virtualType>
+    <type name="Heidelpay\Gateway2\Model\Logger\DebugHandler">
+        <arguments>
+            <argument name="logger" xsi:type="object">Heidelpay\Gateway2\Logger\Logger</argument>
         </arguments>
     </type>
 </config>

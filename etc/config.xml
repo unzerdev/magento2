@@ -7,6 +7,7 @@
                 <private_key>s-priv-2a102ZMq3gV4I3zJ888J7RR6u75oqK3n</private_key>
                 <webhooks_source_ips>3.120.66.194,35.158.69.58</webhooks_source_ips>
                 <model>Heidelpay\Gateway2\Model\Method\Base</model>
+                <logging>0</logging>
             </hpg2>
             <hpg2_creditcard>
                 <active>0</active>
