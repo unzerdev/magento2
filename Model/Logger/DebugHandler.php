@@ -18,8 +18,7 @@ class DebugHandler implements DebugHandlerInterface
      */
     public function __construct(
         \Psr\Log\LoggerInterface $logger
-    )
-    {
+    ) {
         $this->_logger = $logger;
     }
 
