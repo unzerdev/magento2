@@ -10,7 +10,7 @@
     </virtualType>
     <type name="Heidelpay\Gateway2\Model\Logger\DebugHandler">
         <arguments>
-            <argument name="logger" xsi:type="object">Heidelpay\Gateway2\Logger\Logger/argument>
+            <argument name="logger" xsi:type="object">Heidelpay\Gateway2\Logger\Logger</argument>
         </arguments>
     </type>
 </config>

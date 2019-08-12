@@ -3,7 +3,6 @@
 namespace Heidelpay\Gateway2\Model\Logger;
 
 use heidelpayPHP\Interfaces\DebugHandlerInterface;
-//use \Psr\Log\LoggerInterface;
 
 class DebugHandler implements DebugHandlerInterface
 {
