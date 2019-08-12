@@ -133,7 +133,7 @@ class Config
     {
         /** @var boolean $activateLogging */
         $activateLogging = $this->_scopeConfig->isSetFlag(
-            self::CONFIGURATION_PATH.self::KEY_LOGGING,
+            self::CONFIGURATION_PATH . self::KEY_LOGGING,
             ScopeInterface::SCOPE_STORE
         );
         return $heidelPay->setDebugMode($activateLogging)
