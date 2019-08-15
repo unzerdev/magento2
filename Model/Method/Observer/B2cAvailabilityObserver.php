@@ -26,7 +26,7 @@ class B2CAvailabilityObserver implements ObserverInterface
         /** @var Quote $quote */
         $quote = $observer->getEvent()->getData('quote');
 
-        $isAvailable = empty($quote->getBillingAddress()->getCompany());
+        $isAvailable = $quote === null || empty($quote->getBillingAddress()->getCompany());
 
         $resultObject = $observer->getEvent()->getData('result');
         $resultObject->setData('is_available', $isAvailable);
