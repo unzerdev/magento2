@@ -2,152 +2,65 @@
 
 namespace Heidelpay\Gateway2\Model\Method;
 
-use Heidelpay\Gateway2\Helper\Order as OrderHelper;
-use Heidelpay\Gateway2\Model\Config;
-use heidelpayPHP\Constants\ApiResponseCodes;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Heidelpay;
-use heidelpayPHP\Resources\Payment;
-use heidelpayPHP\Resources\TransactionTypes\Authorization;
-use heidelpayPHP\Resources\TransactionTypes\Cancellation;
-use heidelpayPHP\Resources\TransactionTypes\Charge;
-use Magento\Checkout\Model\Session as CheckoutSession;
-use Magento\Directory\Helper\Data as DirectoryHelper;
-use Magento\Framework\Api\AttributeValueFactory;
-use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Data\Collection\AbstractDb;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Model\Context;
-use Magento\Framework\Model\ResourceModel\AbstractResource;
-use Magento\Framework\Pricing\PriceCurrencyInterface;
-use Magento\Framework\Registry;
-use Magento\Framework\UrlInterface;
-use Magento\Payment\Helper\Data;
-use Magento\Payment\Model\InfoInterface;
-use Magento\Payment\Model\Method\AbstractMethod;
-use Magento\Payment\Model\Method\Logger;
-use Magento\Sales\Api\Data\OrderPaymentInterface;
+use Magento\Framework\Event\ManagerInterface;
+use Magento\Payment\Gateway\Command\CommandManagerInterface;
+use Magento\Payment\Gateway\Command\CommandPoolInterface;
+use Magento\Payment\Gateway\Config\ValueHandlerPoolInterface;
+use Magento\Payment\Gateway\Data\PaymentDataObjectFactory;
+use Magento\Payment\Gateway\Validator\ValidatorPoolInterface;
+use Magento\Payment\Model\Method\Adapter;
 use Magento\Sales\Model\Order;
-use Magento\Store\Api\Data\StoreInterface;
+use Psr\Log\LoggerInterface;
 
-class Base extends AbstractMethod
+class Base extends Adapter
 {
-    const CONFIG_COUNTRY_RESTRICTIONS = 'country_restrictions';
-
-    const KEY_CUSTOMER_ID = 'customer_id';
-    const KEY_RESOURCE_ID = 'resource_id';
-
-    protected $_code = Config::METHOD_BASE;
-
     /**
-     * Payment Method feature
-     *
-     * @var bool
+     * @var ScopeConfigInterface
      */
-    protected $_isGateway = true;
-
-    /**
-     * @var boolean
-     */
-    protected $_canUseInternal = false;
-
-    /**
-     * @var Heidelpay
-     */
-    protected $_client;
-
-    /**
-     * @var CheckoutSession
-     */
-    protected $_checkoutSession;
-
-    /**
-     * @var Config
-     */
-    protected $_moduleConfig;
-
-    /**
-     * @var OrderHelper
-     */
-    protected $_orderHelper;
-
-    /**
-     * @var Order\Payment\Processor
-     */
-    protected $_paymentProcessor;
-
-    /**
-     * @var PriceCurrencyInterface
-     */
-    protected $_priceCurrency;
-
-    /**
-     * @var UrlInterface
-     */
-    protected $_urlBuilder;
+    protected $_scopeConfig;
 
     /**
      * Base constructor.
-     * @param Context $context
-     * @param Registry $registry
-     * @param ExtensionAttributesFactory $extensionFactory
-     * @param AttributeValueFactory $customAttributeFactory
-     * @param Data $paymentData
+     * @param ManagerInterface $eventManager
+     * @param ValueHandlerPoolInterface $valueHandlerPool
+     * @param PaymentDataObjectFactory $paymentDataObjectFactory
+     * @param string $code
+     * @param string $formBlockType
+     * @param string $infoBlockType
      * @param ScopeConfigInterface $scopeConfig
-     * @param Logger $logger
-     * @param CheckoutSession $checkoutSession
-     * @param Config $moduleConfig
-     * @param OrderHelper $orderHelper
-     * @param Order\Payment\Processor $paymentProcessor
-     * @param PriceCurrencyInterface $priceCurrency
-     * @param StoreInterface $store
-     * @param UrlInterface $urlBuilder
-     * @param AbstractResource|null $resource
-     * @param AbstractDb|null $resourceCollection
-     * @param array $data
-     * @param DirectoryHelper|null $directory
+     * @param CommandPoolInterface|null $commandPool
+     * @param ValidatorPoolInterface|null $validatorPool
+     * @param CommandManagerInterface|null $commandExecutor
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
-        Context $context,
-        Registry $registry,
-        ExtensionAttributesFactory $extensionFactory,
-        AttributeValueFactory $customAttributeFactory,
-        Data $paymentData,
+        ManagerInterface $eventManager,
+        ValueHandlerPoolInterface $valueHandlerPool,
+        PaymentDataObjectFactory $paymentDataObjectFactory,
+        $code,
+        $formBlockType,
+        $infoBlockType,
         ScopeConfigInterface $scopeConfig,
-        Logger $logger,
-        CheckoutSession $checkoutSession,
-        Config $moduleConfig,
-        OrderHelper $orderHelper,
-        Order\Payment\Processor $paymentProcessor,
-        PriceCurrencyInterface $priceCurrency,
-        StoreInterface $store,
-        UrlInterface $urlBuilder,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
-        array $data = [],
-        DirectoryHelper $directory = null
+        CommandPoolInterface $commandPool = null,
+        ValidatorPoolInterface $validatorPool = null,
+        CommandManagerInterface $commandExecutor = null,
+        LoggerInterface $logger = null
     ) {
         parent::__construct(
-            $context,
-            $registry,
-            $extensionFactory,
-            $customAttributeFactory,
-            $paymentData,
-            $scopeConfig,
-            $logger,
-            $resource,
-            $resourceCollection,
-            $data,
-            $directory
+            $eventManager,
+            $valueHandlerPool,
+            $paymentDataObjectFactory,
+            $code,
+            $formBlockType,
+            $infoBlockType,
+            $commandPool,
+            $validatorPool,
+            $commandExecutor,
+            $logger
         );
 
-        $this->_checkoutSession = $checkoutSession;
-        $this->_moduleConfig = $moduleConfig;
-        $this->_orderHelper = $orderHelper;
-        $this->_paymentProcessor = $paymentProcessor;
-        $this->_priceCurrency = $priceCurrency;
-        $this->_urlBuilder = $urlBuilder;
+        $this->_scopeConfig = $scopeConfig;
     }
 
     /**
@@ -161,237 +74,9 @@ class Base extends AbstractMethod
     }
 
     /**
-     * Returns the gateway client.
-     *
-     * @return Heidelpay
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    protected function _getClient(): Heidelpay
-    {
-        if ($this->_client === null) {
-            $this->_client = $this->_moduleConfig->getHeidelpayClient();
-        }
-
-        return $this->_client;
-    }
-
-    /**
-     * @return string
-     */
-    protected function _getCallbackUrl(): string
-    {
-        return $this->_urlBuilder->getUrl('hpg2/payment/callback');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function canUseForCountry($country)
-    {
-        /** @var string|null $countryRestrictions */
-        $countryRestrictions = $this->getConfigData(self::CONFIG_COUNTRY_RESTRICTIONS);
-
-        if ($countryRestrictions !== null) {
-            $allowedCountries = preg_split('/\s*,\s*/', $countryRestrictions);
-
-            if (!in_array($country, $allowedCountries)) {
-                return false;
-            }
-        }
-
-        return parent::canUseForCountry($country);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function initialize($paymentAction, $stateObject): void
-    {
-        /** @var OrderPaymentInterface $payment */
-        $payment = $this->getInfoInstance();
-
-        /** @var Order $order */
-        $order = $payment->getOrder();
-        $order->setCanSendNewEmailFlag(false);
-
-        switch ($paymentAction) {
-            case self::ACTION_AUTHORIZE:
-                $this->_paymentProcessor->authorize($payment, true, $order->getTotalDue());
-                break;
-            case self::ACTION_AUTHORIZE_CAPTURE:
-                $this->_paymentProcessor->capture($payment, null);
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function authorize(InfoInterface $payment, $amount): self
-    {
-        if (!$this->canAuthorize()) {
-            throw new LocalizedException(__('The authorize action is not available.'));
-        }
-
-        /** @var string|null $customerId */
-        $customerId = $payment->getAdditionalInformation(self::KEY_CUSTOMER_ID);
-
-        /** @var string $resourceId */
-        $resourceId = $payment->getAdditionalInformation(self::KEY_RESOURCE_ID);
-
-        /** @var Order $order */
-        $order = $payment->getOrder();
-
-        $authorization = $this->_getClient()->authorize(
-            $amount,
-            $order->getOrderCurrencyCode(),
-            $resourceId,
-            $this->_getCallbackUrl(),
-            $customerId,
-            $order->getIncrementId(),
-            $this->_orderHelper->createMetadata($order),
-            $this->_orderHelper->createBasketForOrder($order),
-            null
-        );
-
-        if ($authorization->isError()) {
-            throw new LocalizedException(__('Failed to authorize payment.'));
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     * @throws HeidelpayApiException
-     */
-    public function capture(InfoInterface $payment, $amount): self
-    {
-        if (!$this->canCapture()) {
-            throw new LocalizedException(__('The capture action is not available.'));
-        }
-
-        /** @var Order $order */
-        $order = $payment->getOrder();
-
-        try {
-            $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
-        } catch (HeidelpayApiException $e) {
-            if ($e->getCode() !== ApiResponseCodes::API_ERROR_PAYMENT_NOT_FOUND) {
-                throw $e;
-            }
-
-            $hpPayment = null;
-        }
-
-        if ($hpPayment !== null) {
-            $charge = $this->_chargeExisting($hpPayment, $amount);
-        } else {
-            $charge = $this->_chargeNew($payment, $amount);
-        }
-
-        if ($charge->isError()) {
-            throw new LocalizedException(__('Failed to charge payment.'));
-        }
-
-        /** @var OrderPaymentInterface $payment */
-        $payment->setLastTransId($charge->getShortId());
-
-        return $this;
-    }
-
-    /**
-     * Charges an existing payment.
-     *
-     * @param Payment $payment
-     * @param float $amount
-     * @return Charge
-     * @throws HeidelpayApiException
-     */
-    protected function _chargeExisting(Payment $payment, float $amount): Charge
-    {
-        /** @var Authorization|null $authorization */
-        $authorization = $payment->getAuthorization();
-
-        if ($authorization !== null) {
-            return $authorization->charge($amount);
-        }
-
-        return $payment->getChargeByIndex(0);
-    }
-
-    /**
-     * Charges a new payment.
-     *
-     * @param InfoInterface $payment
-     * @param $amount
-     * @return Charge
-     * @throws HeidelpayApiException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    protected function _chargeNew(InfoInterface $payment, float $amount): Charge
-    {
-        /** @var string|null $customerId */
-        $customerId = $payment->getAdditionalInformation(self::KEY_CUSTOMER_ID);
-
-        /** @var Order $order */
-        $order = $payment->getOrder();
-
-        /** @var string $resourceId */
-        $resourceId = $payment->getAdditionalInformation(self::KEY_RESOURCE_ID);
-
-        return $this->_getClient()->charge(
-            $amount,
-            $order->getOrderCurrencyCode(),
-            $resourceId,
-            $this->_getCallbackUrl(),
-            $customerId,
-            $order->getIncrementId(),
-            $this->_orderHelper->createMetadata($order),
-            $this->_orderHelper->createBasketForOrder($order),
-            null,
-            null,
-            null
-        );
-    }
-
-    /**
-     * @inheritDoc
-     * @throws LocalizedException
-     */
-    public function cancel(InfoInterface $payment): self
-    {
-        return $this->refund($payment, null);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function refund(InfoInterface $payment, $amount): self
-    {
-        /** @var Order $order */
-        $order = $payment->getOrder();
-
-        /** @var Payment $hpPayment */
-        $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
-
-        /** @var Cancellation $refund */
-        $cancellation = $hpPayment->cancel($amount);
-
-        if ($cancellation->isError()) {
-            throw new LocalizedException(__('Failed to refund payment.'));
-        }
-
-        return $this;
-    }
-
-    /**
      * Returns additional payment information for the customer.
      *
      * @param Order $order
-     *
      * @return string
      */
     public function getAdditionalPaymentInformation(Order $order): string

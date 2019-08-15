@@ -3,18 +3,20 @@
 namespace Heidelpay\Gateway2\Model\System\Config\Source;
 
 use Magento\Framework\Option\ArrayInterface;
-use Magento\Payment\Model\Method\AbstractMethod;
 
 class PaymentAction implements ArrayInterface
 {
+    const ACTION_AUTHORIZE = 'authorize';
+    const ACTION_AUTHORIZE_CAPTURE = 'authorize_capture';
+
     /**
      * @inheritDoc
      */
     public function toOptionArray(): array
     {
         return [
-            AbstractMethod::ACTION_AUTHORIZE => __('Authorize'),
-            AbstractMethod::ACTION_AUTHORIZE_CAPTURE => __('Capture'),
+            self::ACTION_AUTHORIZE => __('Authorize'),
+            self::ACTION_AUTHORIZE_CAPTURE => __('Capture'),
         ];
     }
 }

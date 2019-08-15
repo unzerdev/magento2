@@ -5,15 +5,20 @@ namespace Heidelpay\Gateway2\Controller\Payment;
 use Exception;
 use Heidelpay\Gateway2\Model\Config;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
+use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Authorization;
+use heidelpayPHP\Resources\TransactionTypes\Charge;
+use heidelpayPHP\Traits\HasStates;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Quote\Api\CartManagementInterface;
+use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
 
 class Callback extends AbstractPaymentAction
 {
@@ -43,6 +48,11 @@ class Callback extends AbstractPaymentAction
     protected $_orderSender;
 
     /**
+     * @var OrderPaymentRepositoryInterface
+     */
+    protected $_paymentRepository;
+
+    /**
      * Callback constructor.
      * @param Context $context
      * @param CartManagementInterface $cartManagement
@@ -51,6 +61,7 @@ class Callback extends AbstractPaymentAction
      * @param Config $moduleConfig
      * @param OrderRepositoryInterface $orderRepository
      * @param OrderSender $orderSender
+     * @param OrderPaymentRepositoryInterface $paymentRepository
      */
     public function __construct(
         Context $context,
@@ -59,7 +70,8 @@ class Callback extends AbstractPaymentAction
         ManagerInterface $messageManager,
         Config $moduleConfig,
         OrderRepositoryInterface $orderRepository,
-        OrderSender $orderSender
+        OrderSender $orderSender,
+        OrderPaymentRepositoryInterface $paymentRepository
     ) {
         parent::__construct($context, $checkoutSession, $moduleConfig);
         $this->_cartManagement = $cartManagement;
@@ -67,6 +79,7 @@ class Callback extends AbstractPaymentAction
         $this->_moduleConfig = $moduleConfig;
         $this->_orderRepository = $orderRepository;
         $this->_orderSender = $orderSender;
+        $this->_paymentRepository = $paymentRepository;
     }
 
     /**
@@ -75,19 +88,19 @@ class Callback extends AbstractPaymentAction
      */
     public function executeWith(Order $order, Payment $payment)
     {
-        if ($payment->isCompleted()) {
-            $response = $this->handleSuccess($order);
-        } elseif ($payment->isPending()) {
-            // Some methods report cancelled charges as pending, so we must manually check the transaction state.
-            $charge = $payment->getChargeByIndex(0);
+        /** @var AbstractHeidelpayResource|HasStates $transaction */
+        $transaction = $payment->getAuthorization() ?? $payment->getChargeByIndex(0);
 
-            if ($charge === null || $charge->isSuccess()) {
-                $response = $this->handleSuccess($order);
+        if ($payment->isCompleted()) {
+            $response = $this->handleSuccess($order, $transaction);
+        } elseif ($payment->isPending()) {
+            if (!$transaction instanceof Charge || $transaction->isSuccess()) {
+                $response = $this->handleSuccess($order, $transaction);
             } else {
-                $response = $this->handleError($order, $payment);
+                $response = $this->handleError($order, $transaction);
             }
         } else {
-            $response = $this->handleError($order, $payment);
+            $response = $this->handleError($order, $transaction);
         }
 
         return $response;
@@ -95,20 +108,18 @@ class Callback extends AbstractPaymentAction
 
     /**
      * @param Order $order
-     * @param Payment $payment
+     * @param AbstractHeidelpayResource $transaction
      * @return \Magento\Framework\Controller\Result\Redirect
      */
-    protected function handleError(Order $order, Payment $payment): \Magento\Framework\Controller\Result\Redirect
-    {
+    protected function handleError(
+        Order $order,
+        AbstractHeidelpayResource $transaction
+    ): \Magento\Framework\Controller\Result\Redirect {
         $this->_checkoutSession->restoreQuote();
         $order->cancel();
         $this->_orderRepository->save($order);
 
         try {
-            $transaction = $payment->getAuthorization();
-            if (!$transaction instanceof Authorization) {
-                $transaction = $payment->getChargeByIndex(0);
-            }
             $this->_messageManager->addError($transaction->getMessage()->getCustomer());
         } catch (HeidelpayApiException $e) {
             $this->_messageManager->addError($e->getMerchantMessage());
@@ -123,13 +134,30 @@ class Callback extends AbstractPaymentAction
 
     /**
      * @param Order $order
+     * @param AbstractHeidelpayResource $transaction
      * @return \Magento\Framework\Controller\Result\Redirect
      */
-    protected function handleSuccess(Order $order): \Magento\Framework\Controller\Result\Redirect
-    {
+    protected function handleSuccess(
+        Order $order,
+        AbstractHeidelpayResource $transaction
+    ): \Magento\Framework\Controller\Result\Redirect {
+        /** @var OrderPayment $payment */
+        $payment = $order->getPayment();
+
+        switch (true) {
+            case $transaction instanceof Authorization:
+                $payment->registerAuthorizationNotification($transaction->getAmount());
+                break;
+            case $transaction instanceof Charge:
+                $payment->registerCaptureNotification($transaction->getAmount());
+                break;
+            default:
+        }
+
         $order->setCanSendNewEmailFlag(true);
         $order->setState(Order::STATE_PROCESSING);
 
+        $this->_paymentRepository->save($payment);
         $this->_orderRepository->save($order);
         $this->_orderSender->send($order);
 
