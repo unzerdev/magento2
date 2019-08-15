@@ -6,11 +6,12 @@ use Heidelpay\Gateway2\Model\Logger\DebugHandler;
 use heidelpayPHP\Heidelpay;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
-class Config
+class Config extends \Magento\Payment\Gateway\Config\Config
 {
+    const BASE_CONFIGURATION_PATH = 'payment/hpg2/';
+
     const KEY_PUBLIC_KEY = 'public_key';
     const KEY_PRIVATE_KEY = 'private_key';
     const KEY_WEBHOOKS_SOURCE_IPS = 'webhooks_source_ips';
@@ -26,7 +27,11 @@ class Config
     const METHOD_INVOICE_GUARANTEED = 'hpg2_invoice_guaranteed';
     const METHOD_PAYPAL = 'hpg2_paypal';
     const METHOD_SOFORT = 'hpg2_sofort';
-    const CONFIGURATION_PATH = 'payment/hpg2/';
+
+    /**
+     * @var DebugHandler
+     */
+    private $_debugHandler;
 
     /**
      * @var ScopeConfigInterface
@@ -39,24 +44,25 @@ class Config
     private $_storeManager;
 
     /**
-     * @var DebugHandler
-     */
-    private $_debugHandler;
-
-    /**
-     * Module constructor.
+     * Config constructor.
      * @param ScopeConfigInterface $scopeConfig
      * @param StoreManagerInterface $storeManager
      * @param DebugHandler $debugHandler
+     * @param null $methodCode
+     * @param string $pathPattern
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         StoreManagerInterface $storeManager,
-        DebugHandler $debugHandler
+        DebugHandler $debugHandler,
+        $methodCode = null,
+        $pathPattern = self::DEFAULT_PATH_PATTERN
     ) {
+        parent::__construct($scopeConfig, $methodCode, $pathPattern);
+
+        $this->_debugHandler = $debugHandler;
         $this->_scopeConfig = $scopeConfig;
         $this->_storeManager = $storeManager;
-        $this->_debugHandler = $debugHandler;
     }
 
     /**
@@ -66,24 +72,7 @@ class Config
      */
     public function getPublicKey(): string
     {
-        return $this->getValue(self::KEY_PUBLIC_KEY);
-    }
-
-    /**
-     * Retrieve information from payment configuration
-     *
-     * @param string $field
-     * @param int|null $storeId
-     *
-     * @return mixed
-     */
-    protected function getValue(string $field, $storeId = null)
-    {
-        return $this->_scopeConfig->getValue(
-            self::CONFIGURATION_PATH . $field,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
+        return $this->_scopeConfig->getValue(self::BASE_CONFIGURATION_PATH . self::KEY_PUBLIC_KEY);
     }
 
     /**
@@ -93,7 +82,7 @@ class Config
      */
     public function getPrivateKey(): string
     {
-        return $this->getValue(self::KEY_PRIVATE_KEY);
+        return $this->_scopeConfig->getValue(self::BASE_CONFIGURATION_PATH . self::KEY_PRIVATE_KEY);
     }
 
     /**
@@ -114,29 +103,17 @@ class Config
      */
     public function getHeidelpayClient(): Heidelpay
     {
-        /** @var Heidelpay $heidelPay */
-        $heidelPay = new Heidelpay(
+        /** @var Heidelpay $client */
+        $client = new Heidelpay(
             $this->getPrivateKey(),
             $this->_storeManager->getStore()->getLocaleCode()
         );
-        return $this->activateDebuggingInPayment($heidelPay);
-    }
 
-    /**
-     * Activate logger function.
-     *
-     * @param Heidelpay $heidelPay Payment object.
-     *
-     * @return Heidelpay
-     */
-    protected function activateDebuggingInPayment(Heidelpay $heidelPay): Heidelpay
-    {
-        /** @var boolean $activateLogging */
-        $activateLogging = $this->_scopeConfig->isSetFlag(
-            self::CONFIGURATION_PATH . self::KEY_LOGGING,
-            ScopeInterface::SCOPE_STORE
-        );
-        return $heidelPay->setDebugMode($activateLogging)
-            ->setDebugHandler($this->_debugHandler);
+        $loggingEnabled = boolval($this->getValue(self::KEY_LOGGING));
+
+        $client->setDebugMode($loggingEnabled);
+        $client->setDebugHandler($this->_debugHandler);
+
+        return $client;
     }
 }

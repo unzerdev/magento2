@@ -1,5 +1,9 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="payment_method_is_active">
+        <observer name="hpg2_direct_debit_guaranteed_available_for_quote" instance="Heidelpay\Gateway2\Model\Method\Observer\B2cAvailabilityObserver" />
+    </event>
+
     <event name="payment_method_assign_data_hpg2_creditcard">
         <observer name="hpg2_creditcard_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
@@ -7,7 +11,7 @@
         <observer name="hpg2_direct_debit_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
     <event name="payment_method_assign_data_hpg2_direct_debit_guaranteed">
-        <observer name="hpg2_direct_debit_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
+        <observer name="hpg2_direct_debit_guaranteed_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
     <event name="payment_method_assign_data_hpg2_flexipay_direct">
         <observer name="hpg2_flexipay_direct_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />

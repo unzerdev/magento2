@@ -2,7 +2,6 @@
 
 namespace Heidelpay\Gateway2\Model\Method\Observer;
 
-use Heidelpay\Gateway2\Model\Method\Base;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\Observer;
 use Magento\Payment\Model\InfoInterface;
@@ -11,12 +10,15 @@ use Magento\Quote\Api\Data\PaymentInterface;
 
 class BaseDataAssignObserver extends AbstractDataAssignObserver
 {
+    const KEY_CUSTOMER_ID = 'customer_id';
+    const KEY_RESOURCE_ID = 'resource_id';
+
     /**
      * @var array
      */
     protected $additionalInformationList = [
-        Base::KEY_CUSTOMER_ID,
-        Base::KEY_RESOURCE_ID,
+        self::KEY_CUSTOMER_ID,
+        self::KEY_RESOURCE_ID,
     ];
 
     /**

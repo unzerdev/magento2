@@ -2,7 +2,6 @@
 
 namespace Heidelpay\Gateway2\Model\Method;
 
-use Heidelpay\Gateway2\Model\Config;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
@@ -10,20 +9,6 @@ use Magento\Sales\Model\Order;
 
 class Invoice extends Base
 {
-    protected $_code = Config::METHOD_INVOICE;
-
-    protected $_infoBlockType = \Heidelpay\Gateway2\Block\Info\Invoice::class;
-
-    /**
-     * @var bool
-     */
-    protected $_canCapture = true;
-
-    /**
-     * @var bool
-     */
-    protected $_canRefund = true;
-
     /**
      * @inheritDoc
      */
