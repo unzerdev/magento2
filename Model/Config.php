@@ -66,6 +66,14 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     }
 
     /**
+     * @return bool
+     */
+    private function isDebugMode(): bool
+    {
+        return $this->_scopeConfig->isSetFlag(self::BASE_CONFIGURATION_PATH . self::KEY_LOGGING);
+    }
+
+    /**
      * Returns the public key.
      *
      * @return string
@@ -109,9 +117,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
             $this->_storeManager->getStore()->getLocaleCode()
         );
 
-        $loggingEnabled = boolval($this->getValue(self::KEY_LOGGING));
-
-        $client->setDebugMode($loggingEnabled);
+        $client->setDebugMode($this->isDebugMode());
         $client->setDebugHandler($this->_debugHandler);
 
         return $client;
