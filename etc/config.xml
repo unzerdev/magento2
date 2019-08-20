@@ -5,7 +5,7 @@
                 <active>0</active>
                 <public_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <private_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
-                <webhooks_source_ips>3.120.66.194,35.158.69.58</webhooks_source_ips>
+                <webhooks_source_ips>3.120.62.83,18.196.35.212</webhooks_source_ips>
                 <model>Heidelpay\Gateway2\Model\Method\Base</model>
                 <logging>0</logging>
             </hpg2>
