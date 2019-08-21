@@ -1,47 +1,47 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="payment_method_is_active">
-        <observer name="hpg2_direct_debit_guaranteed_available_for_quote" instance="Heidelpay\Gateway2\Model\Method\Observer\B2cAvailabilityObserver" />
+        <observer name="hpmgw_direct_debit_guaranteed_available_for_quote" instance="Heidelpay\MGW\Model\Method\Observer\B2cAvailabilityObserver" />
     </event>
 
-    <event name="payment_method_assign_data_hpg2_creditcard">
-        <observer name="hpg2_creditcard_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_hpmgw_creditcard">
+        <observer name="hpmgw_creditcard_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpg2_direct_debit">
-        <observer name="hpg2_direct_debit_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_hpmgw_direct_debit">
+        <observer name="hpmgw_direct_debit_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpg2_direct_debit_guaranteed">
-        <observer name="hpg2_direct_debit_guaranteed_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_hpmgw_direct_debit_guaranteed">
+        <observer name="hpmgw_direct_debit_guaranteed_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpg2_flexipay_direct">
-        <observer name="hpg2_flexipay_direct_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_hpmgw_flexipay_direct">
+        <observer name="hpmgw_flexipay_direct_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpg2_ideal">
-        <observer name="hpg2_ideal_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_hpmgw_ideal">
+        <observer name="hpmgw_ideal_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpg2_invoice">
-        <observer name="hpg2_invoice_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_hpmgw_invoice">
+        <observer name="hpmgw_invoice_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpg2_invoice_guaranteed">
-        <observer name="hpg2_invoice_guaranteed_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_hpmgw_invoice_guaranteed">
+        <observer name="hpmgw_invoice_guaranteed_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpg2_paypal">
-        <observer name="hpg2_paypal_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_hpmgw_paypal">
+        <observer name="hpmgw_paypal_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpg2_sofort">
-        <observer name="hpg2_sofort_data_assign" instance="Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_hpmgw_sofort">
+        <observer name="hpmgw_sofort_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
 
-    <event name="hpg2_authorize_failed">
-        <observer name="hpg2_payment_failed" instance="Heidelpay\Gateway2\Model\Observer\PaymentFailedObserver" />
+    <event name="hpmgw_authorize_failed">
+        <observer name="hpmgw_payment_failed" instance="Heidelpay\MGW\Model\Observer\PaymentFailedObserver" />
     </event>
-    <event name="hpg2_authorize_expired">
-        <observer name="hpg2_payment_failed" instance="Heidelpay\Gateway2\Model\Observer\PaymentFailedObserver" />
+    <event name="hpmgw_authorize_expired">
+        <observer name="hpmgw_payment_failed" instance="Heidelpay\MGW\Model\Observer\PaymentFailedObserver" />
     </event>
-    <event name="hpg2_charge_failed">
-        <observer name="hpg2_payment_failed" instance="Heidelpay\Gateway2\Model\Observer\PaymentFailedObserver" />
+    <event name="hpmgw_charge_failed">
+        <observer name="hpmgw_payment_failed" instance="Heidelpay\MGW\Model\Observer\PaymentFailedObserver" />
     </event>
-    <event name="hpg2_payment_payment_review">
-        <observer name="hpg2_payment_review" instance="Heidelpay\Gateway2\Model\Observer\PaymentReviewObserver" />
+    <event name="hpmgw_payment_payment_review">
+        <observer name="hpmgw_payment_review" instance="Heidelpay\MGW\Model\Observer\PaymentReviewObserver" />
     </event>
 </config>

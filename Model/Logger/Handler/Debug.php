@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Logger\Handler;
+namespace Heidelpay\MGW\Model\Logger\Handler;
 
 use Magento\Framework\Logger\Handler\Base;
 use Monolog\Logger;
@@ -31,7 +31,7 @@ use Monolog\Logger;
 class Debug extends Base
 {
     /** @var string */
-    protected $fileName = '/var/log/hpg2_debug.log';
+    protected $fileName = '/var/log/hpmgw_debug.log';
 
     /** @var int */
     protected $loggerType = Logger::DEBUG;

@@ -2,8 +2,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="standard">
-        <route frontName="hpg2" id="hpg2">
-            <module name="Heidelpay_Gateway2"/>
+        <route frontName="hpmgw" id="hpmgw">
+            <module name="Heidelpay_MGW"/>
         </route>
     </router>
 </config>

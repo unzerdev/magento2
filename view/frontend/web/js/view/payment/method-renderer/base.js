@@ -15,9 +15,9 @@ define(
 
         return Component.extend({
             redirectAfterPlaceOrder: false,
-            redirectUrl: 'hpg2/payment/redirect',
-            sdk: new heidelpay(window.checkoutConfig.payment.hpg2.publicKey),
-            sdkConfig: window.checkoutConfig.payment.hpg2,
+            redirectUrl: 'hpmgw/payment/redirect',
+            sdk: new heidelpay(window.checkoutConfig.payment.hpmgw.publicKey),
+            sdkConfig: window.checkoutConfig.payment.hpmgw,
 
             defaults: {
                 config: null,

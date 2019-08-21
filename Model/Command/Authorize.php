@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Command;
+namespace Heidelpay\MGW\Model\Command;
 
-use Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver;
+use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment as OrderPayment;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Observer;
+namespace Heidelpay\MGW\Model\Observer;
 
 use heidelpayPHP\Resources\Payment;
 use Magento\Framework\Api\SearchCriteriaBuilder;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Logger;
+namespace Heidelpay\MGW\Model\Logger;
 
 use heidelpayPHP\Interfaces\DebugHandlerInterface;
 use Psr\Log\LoggerInterface;

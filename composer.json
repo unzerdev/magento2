@@ -25,7 +25,7 @@
             "registration.php"
         ],
         "psr-4": {
-            "Heidelpay\\Gateway2\\": ""
+            "Heidelpay\\MGW\\": ""
         }
     },
     "homepage": "https://dev.heidelpay.com/magento2",

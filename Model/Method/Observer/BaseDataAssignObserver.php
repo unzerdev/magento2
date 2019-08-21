@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Method\Observer;
+namespace Heidelpay\MGW\Model\Method\Observer;
 
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\Observer;

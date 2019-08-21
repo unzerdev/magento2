@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\Gateway2\Block\Checkout;
+namespace Heidelpay\MGW\Block\Checkout;
 
 use heidelpayPHP\Resources\Payment;
 use Magento\Checkout\Model\Session;
@@ -33,7 +33,7 @@ use Magento\Sales\Model\OrderFactory;
  */
 class Success extends \Magento\Checkout\Block\Success
 {
-    protected $_template = 'Heidelpay_Gateway2::info/invoice.phtml';
+    protected $_template = 'Heidelpay_MGW::info/invoice.phtml';
 
     /**
      * @var Session|null

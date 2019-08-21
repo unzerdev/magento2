@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Command;
+namespace Heidelpay\MGW\Model\Command;
 
-use Heidelpay\Gateway2\Model\Method\Observer\BaseDataAssignObserver;
+use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
 use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;

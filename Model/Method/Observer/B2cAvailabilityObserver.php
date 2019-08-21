@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Method\Observer;
+namespace Heidelpay\MGW\Model\Method\Observer;
 
-use Heidelpay\Gateway2\Model\Method\DirectDebitGuaranteed;
+use Heidelpay\MGW\Model\Method\DirectDebitGuaranteed;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Payment\Model\MethodInterface;

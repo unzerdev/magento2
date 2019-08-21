@@ -2,7 +2,7 @@ define(
     [
         'ko',
         'mage/translate',
-        'Heidelpay_Gateway2/js/view/payment/method-renderer/base'
+        'Heidelpay_MGW/js/view/payment/method-renderer/base'
     ],
     function (ko, $t, Component) {
         'use strict';
@@ -12,7 +12,7 @@ define(
 
             defaults: {
                 field: {valid: false},
-                template: 'Heidelpay_Gateway2/payment/direct_debit'
+                template: 'Heidelpay_MGW/payment/direct_debit'
             },
 
             initializeForm: function () {
@@ -39,7 +39,7 @@ define(
             },
 
             translate: function (text) {
-                return $t(text).replace(/%1/g, window.checkoutConfig.payment.hpg2_direct_debit.merchantName);
+                return $t(text).replace(/%1/g, window.checkoutConfig.payment.hpmgw_direct_debit.merchantName);
             }
         });
     }

@@ -1,390 +1,390 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <virtualType name="Heidelpay\Gateway2\Logger\Logger" type="\Magento\Framework\Logger\Monolog">
+    <virtualType name="Heidelpay\MGW\Logger\Logger" type="\Magento\Framework\Logger\Monolog">
         <arguments>
             <argument name="name" xsi:type="string">heidelpay_logger</argument>
             <argument name="handlers" xsi:type="array">
-                <item name="debug" xsi:type="object">Heidelpay\Gateway2\Model\Logger\Handler\Debug</item>
+                <item name="debug" xsi:type="object">Heidelpay\MGW\Model\Logger\Handler\Debug</item>
             </argument>
         </arguments>
     </virtualType>
-    <type name="Heidelpay\Gateway2\Model\Logger\DebugHandler">
+    <type name="Heidelpay\MGW\Model\Logger\DebugHandler">
         <arguments>
-            <argument name="logger" xsi:type="object">Heidelpay\Gateway2\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Heidelpay\MGW\Logger\Logger</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayGateway2ValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="HeidelpayMGWValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">Heidelpay\Gateway2\Model\Validator\CountryRestrictionValidator</item>
+                <item name="country" xsi:type="string">Heidelpay\MGW\Model\Validator\CountryRestrictionValidator</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2AuthorizeAndCaptureCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+    <virtualType name="HeidelpayMGWAuthorizeAndCaptureCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="authorize" xsi:type="string">Heidelpay\Gateway2\Model\Command\Authorize</item>
-                <item name="cancel" xsi:type="string">Heidelpay\Gateway2\Model\Command\Cancel</item>
-                <item name="capture" xsi:type="string">Heidelpay\Gateway2\Model\Command\Capture</item>
-                <item name="order" xsi:type="string">Heidelpay\Gateway2\Model\Command\Order</item>
-                <item name="refund" xsi:type="string">Heidelpay\Gateway2\Model\Command\Cancel</item>
-                <item name="void" xsi:type="string">Heidelpay\Gateway2\Model\Command\Cancel</item>
+                <item name="authorize" xsi:type="string">Heidelpay\MGW\Model\Command\Authorize</item>
+                <item name="cancel" xsi:type="string">Heidelpay\MGW\Model\Command\Cancel</item>
+                <item name="capture" xsi:type="string">Heidelpay\MGW\Model\Command\Capture</item>
+                <item name="order" xsi:type="string">Heidelpay\MGW\Model\Command\Order</item>
+                <item name="refund" xsi:type="string">Heidelpay\MGW\Model\Command\Cancel</item>
+                <item name="void" xsi:type="string">Heidelpay\MGW\Model\Command\Cancel</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2CaptureCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+    <virtualType name="HeidelpayMGWCaptureCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="cancel" xsi:type="string">Heidelpay\Gateway2\Model\Command\Cancel</item>
-                <item name="capture" xsi:type="string">Heidelpay\Gateway2\Model\Command\Capture</item>
-                <item name="order" xsi:type="string">Heidelpay\Gateway2\Model\Command\Order</item>
-                <item name="refund" xsi:type="string">Heidelpay\Gateway2\Model\Command\Cancel</item>
-                <item name="void" xsi:type="string">Heidelpay\Gateway2\Model\Command\Cancel</item>
+                <item name="cancel" xsi:type="string">Heidelpay\MGW\Model\Command\Cancel</item>
+                <item name="capture" xsi:type="string">Heidelpay\MGW\Model\Command\Capture</item>
+                <item name="order" xsi:type="string">Heidelpay\MGW\Model\Command\Order</item>
+                <item name="refund" xsi:type="string">Heidelpay\MGW\Model\Command\Cancel</item>
+                <item name="void" xsi:type="string">Heidelpay\MGW\Model\Command\Cancel</item>
             </argument>
         </arguments>
     </virtualType>
 
     <!-- must be configured to avoid DI problems -->
-    <virtualType name="HeidelpayGateway2BaseConfig" type="Heidelpay\Gateway2\Model\Config">
+    <virtualType name="HeidelpayMGWBaseConfig" type="Heidelpay\MGW\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_BASE</argument>
+            <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_BASE</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2BaseConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="HeidelpayMGWBaseConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayGateway2BaseConfig</argument>
+            <argument name="configInterface" xsi:type="object">HeidelpayMGWBaseConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2BaseValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="HeidelpayMGWBaseValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayGateway2BaseConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_void" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
+                <item name="default" xsi:type="string">HeidelpayMGWBaseConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Heidelpay\Gateway2\Model\Method\Base">
+    <type name="Heidelpay\MGW\Model\Method\Base">
         <arguments>
-            <argument name="code" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_BASE</argument>
+            <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_BASE</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayGateway2BaseValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayGateway2ValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayGateway2AuthorizeAndCaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWBaseValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">HeidelpayMGWAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayGateway2CreditcardConfig" type="Heidelpay\Gateway2\Model\Config">
+    <virtualType name="HeidelpayMGWCreditcardConfig" type="Heidelpay\MGW\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_CREDITCARD</argument>
+            <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_CREDITCARD</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2CreditcardConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="HeidelpayMGWCreditcardConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayGateway2CreditcardConfig</argument>
+            <argument name="configInterface" xsi:type="object">HeidelpayMGWCreditcardConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2CreditcardValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="HeidelpayMGWCreditcardValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayGateway2CreditcardConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_void" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
+                <item name="default" xsi:type="string">HeidelpayMGWCreditcardConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Heidelpay\Gateway2\Model\Method\Creditcard">
+    <type name="Heidelpay\MGW\Model\Method\Creditcard">
         <arguments>
-            <argument name="code" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_CREDITCARD</argument>
+            <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_CREDITCARD</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayGateway2CreditcardValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayGateway2ValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayGateway2AuthorizeAndCaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWCreditcardValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">HeidelpayMGWAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayGateway2DirectDebitConfig" type="Heidelpay\Gateway2\Model\Config">
+    <virtualType name="HeidelpayMGWDirectDebitConfig" type="Heidelpay\MGW\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_DIRECT_DEBIT</argument>
+            <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_DIRECT_DEBIT</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2DirectDebitConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="HeidelpayMGWDirectDebitConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayGateway2DirectDebitConfig</argument>
+            <argument name="configInterface" xsi:type="object">HeidelpayMGWDirectDebitConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2DirectDebitValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="HeidelpayMGWDirectDebitValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayGateway2DirectDebitConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_void" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
+                <item name="default" xsi:type="string">HeidelpayMGWDirectDebitConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Heidelpay\Gateway2\Model\Method\DirectDebit">
+    <type name="Heidelpay\MGW\Model\Method\DirectDebit">
         <arguments>
-            <argument name="code" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_DIRECT_DEBIT</argument>
+            <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_DIRECT_DEBIT</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayGateway2DirectDebitValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayGateway2ValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayGateway2CaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWDirectDebitValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayGateway2DirectDebitGuaranteedConfig" type="Heidelpay\Gateway2\Model\Config">
+    <virtualType name="HeidelpayMGWDirectDebitGuaranteedConfig" type="Heidelpay\MGW\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_DIRECT_DEBIT_GUARANTEED</argument>
+            <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_DIRECT_DEBIT_GUARANTEED</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2DirectDebitGuaranteedConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="HeidelpayMGWDirectDebitGuaranteedConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayGateway2DirectDebitGuaranteedConfig</argument>
+            <argument name="configInterface" xsi:type="object">HeidelpayMGWDirectDebitGuaranteedConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2DirectDebitGuaranteedValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="HeidelpayMGWDirectDebitGuaranteedValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayGateway2DirectDebitGuaranteedConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_void" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
+                <item name="default" xsi:type="string">HeidelpayMGWDirectDebitGuaranteedConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Heidelpay\Gateway2\Model\Method\DirectDebitGuaranteed">
+    <type name="Heidelpay\MGW\Model\Method\DirectDebitGuaranteed">
         <arguments>
-            <argument name="code" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_DIRECT_DEBIT_GUARANTEED</argument>
+            <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_DIRECT_DEBIT_GUARANTEED</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayGateway2DirectDebitGuaranteedValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayGateway2ValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayGateway2CaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWDirectDebitGuaranteedValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayGateway2FlexipayDirectConfig" type="Heidelpay\Gateway2\Model\Config">
+    <virtualType name="HeidelpayMGWFlexipayDirectConfig" type="Heidelpay\MGW\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_FLEXIPAY_DIRECT</argument>
+            <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_FLEXIPAY_DIRECT</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2FlexipayDirectConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="HeidelpayMGWFlexipayDirectConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayGateway2FlexipayDirectConfig</argument>
+            <argument name="configInterface" xsi:type="object">HeidelpayMGWFlexipayDirectConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2FlexipayDirectValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="HeidelpayMGWFlexipayDirectValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayGateway2FlexipayDirectConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_void" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
+                <item name="default" xsi:type="string">HeidelpayMGWFlexipayDirectConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Heidelpay\Gateway2\Model\Method\FlexipayDirect">
+    <type name="Heidelpay\MGW\Model\Method\FlexipayDirect">
         <arguments>
-            <argument name="code" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_FLEXIPAY_DIRECT</argument>
+            <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_FLEXIPAY_DIRECT</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayGateway2FlexipayDirectValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayGateway2ValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayGateway2CaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWFlexipayDirectValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayGateway2IdealConfig" type="Heidelpay\Gateway2\Model\Config">
+    <virtualType name="HeidelpayMGWIdealConfig" type="Heidelpay\MGW\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_IDEAL</argument>
+            <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_IDEAL</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2IdealConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="HeidelpayMGWIdealConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayGateway2IdealConfig</argument>
+            <argument name="configInterface" xsi:type="object">HeidelpayMGWIdealConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2IdealValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="HeidelpayMGWIdealValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayGateway2IdealConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_void" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
+                <item name="default" xsi:type="string">HeidelpayMGWIdealConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Heidelpay\Gateway2\Model\Method\Ideal">
+    <type name="Heidelpay\MGW\Model\Method\Ideal">
         <arguments>
-            <argument name="code" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_IDEAL</argument>
+            <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_IDEAL</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayGateway2IdealValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayGateway2ValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayGateway2CaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWIdealValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayGateway2InvoiceConfig" type="Heidelpay\Gateway2\Model\Config">
+    <virtualType name="HeidelpayMGWInvoiceConfig" type="Heidelpay\MGW\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_INVOICE</argument>
+            <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_INVOICE</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2InvoiceConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="HeidelpayMGWInvoiceConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayGateway2InvoiceConfig</argument>
+            <argument name="configInterface" xsi:type="object">HeidelpayMGWInvoiceConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2InvoiceValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="HeidelpayMGWInvoiceValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayGateway2InvoiceConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_void" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
+                <item name="default" xsi:type="string">HeidelpayMGWInvoiceConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Heidelpay\Gateway2\Model\Method\Invoice">
+    <type name="Heidelpay\MGW\Model\Method\Invoice">
         <arguments>
-            <argument name="code" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_INVOICE</argument>
+            <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_INVOICE</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">Heidelpay\Gateway2\Block\Info\Invoice</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayGateway2InvoiceValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayGateway2ValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayGateway2CaptureCommandPool</argument>
+            <argument name="infoBlockType" xsi:type="string">Heidelpay\MGW\Block\Info\Invoice</argument>
+            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWInvoiceValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayGateway2InvoiceGuaranteedConfig" type="Heidelpay\Gateway2\Model\Config">
+    <virtualType name="HeidelpayMGWInvoiceGuaranteedConfig" type="Heidelpay\MGW\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_INVOICE_GUARANTEED</argument>
+            <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_INVOICE_GUARANTEED</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2InvoiceGuaranteedConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="HeidelpayMGWInvoiceGuaranteedConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayGateway2InvoiceGuaranteedConfig</argument>
+            <argument name="configInterface" xsi:type="object">HeidelpayMGWInvoiceGuaranteedConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2InvoiceGuaranteedValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="HeidelpayMGWInvoiceGuaranteedValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayGateway2InvoiceGuaranteedConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_void" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
+                <item name="default" xsi:type="string">HeidelpayMGWInvoiceGuaranteedConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Heidelpay\Gateway2\Model\Method\InvoiceGuaranteed">
+    <type name="Heidelpay\MGW\Model\Method\InvoiceGuaranteed">
         <arguments>
-            <argument name="code" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_INVOICE_GUARANTEED</argument>
+            <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_INVOICE_GUARANTEED</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">Heidelpay\Gateway2\Block\Info\InvoiceGuaranteed</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayGateway2InvoiceGuaranteedValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayGateway2ValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayGateway2CaptureCommandPool</argument>
+            <argument name="infoBlockType" xsi:type="string">Heidelpay\MGW\Block\Info\InvoiceGuaranteed</argument>
+            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWInvoiceGuaranteedValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayGateway2PaypalConfig" type="Heidelpay\Gateway2\Model\Config">
+    <virtualType name="HeidelpayMGWPaypalConfig" type="Heidelpay\MGW\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_PAYPAL</argument>
+            <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_PAYPAL</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2PaypalConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="HeidelpayMGWPaypalConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayGateway2PaypalConfig</argument>
+            <argument name="configInterface" xsi:type="object">HeidelpayMGWPaypalConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayGateway2PaypalValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="HeidelpayMGWPaypalValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayGateway2PaypalConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_void" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
+                <item name="default" xsi:type="string">HeidelpayMGWPaypalConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Heidelpay\Gateway2\Model\Method\Paypal">
+    <type name="Heidelpay\MGW\Model\Method\Paypal">
         <arguments>
-            <argument name="code" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_PAYPAL</argument>
-            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayGateway2PaypalValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayGateway2ValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayGateway2CaptureCommandPool</argument>
-        </arguments>
-    </type>
-
-    <virtualType name="HeidelpayGateway2SofortConfig" type="Heidelpay\Gateway2\Model\Config">
-        <arguments>
-            <argument name="methodCode" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_SOFORT</argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="HeidelpayGateway2SofortConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
-        <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayGateway2SofortConfig</argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="HeidelpayGateway2SofortValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
-        <arguments>
-            <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayGateway2SofortConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-                <item name="can_void" xsi:type="string">Heidelpay\Gateway2\Model\Config\CanVoidHandler</item>
-            </argument>
-        </arguments>
-    </virtualType>
-
-    <type name="Heidelpay\Gateway2\Model\Method\Sofort">
-        <arguments>
-            <argument name="code" xsi:type="const">Heidelpay\Gateway2\Model\Config::METHOD_SOFORT</argument>
+            <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_PAYPAL</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayGateway2SofortValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayGateway2ValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayGateway2AuthorizeAndCaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWPaypalValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="HeidelpayMGWSofortConfig" type="Heidelpay\MGW\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_SOFORT</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWSofortConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">HeidelpayMGWSofortConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWSofortValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">HeidelpayMGWSofortConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Heidelpay\MGW\Model\Method\Sofort">
+        <arguments>
+            <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_SOFORT</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWSofortValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">HeidelpayMGWAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </type>
 </config>

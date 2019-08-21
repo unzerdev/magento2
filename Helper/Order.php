@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\Gateway2\Helper;
+namespace Heidelpay\MGW\Helper;
 
-use Heidelpay\Gateway2\Model\Config;
+use Heidelpay\MGW\Model\Config;
 use heidelpayPHP\Resources\Basket;
 use heidelpayPHP\Resources\EmbeddedResources\BasketItem;
 use Magento\Sales\Model\Order as OrderModel;

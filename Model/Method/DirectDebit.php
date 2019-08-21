@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Method;
+namespace Heidelpay\MGW\Model\Method;
 
 /**
  * Direct debit payment method
