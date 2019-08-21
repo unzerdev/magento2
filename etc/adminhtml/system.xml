@@ -48,16 +48,6 @@
                         <config_path>payment/hpg2_creditcard/order_payment_action</config_path>
                         <source_model>Heidelpay\Gateway2\Model\System\Config\Source\PaymentAction</source_model>
                     </field>
-                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Applicable Countries</label>
-                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-                        <config_path>payment/hpg2_creditcard/allowspecific</config_path>
-                    </field>
-                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Specific Countries</label>
-                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                        <config_path>payment/hpg2_creditcard/specificcountry</config_path>
-                    </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
                         <config_path>payment/hpg2_creditcard/min_order_total</config_path>
@@ -86,16 +76,6 @@
                     <field id="merchant_name" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Merchant Name</label>
                         <config_path>payment/hpg2_direct_debit/merchant_name</config_path>
-                    </field>
-                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Applicable Countries</label>
-                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-                        <config_path>payment/hpg2_direct_debit/allowspecific</config_path>
-                    </field>
-                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Specific Countries</label>
-                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                        <config_path>payment/hpg2_direct_debit/specificcountry</config_path>
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
@@ -126,16 +106,6 @@
                         <label>Merchant Name</label>
                         <config_path>payment/hpg2_direct_debit_guaranteed/merchant_name</config_path>
                     </field>
-                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Applicable Countries</label>
-                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-                        <config_path>payment/hpg2_direct_debit_guaranteed/allowspecific</config_path>
-                    </field>
-                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Specific Countries</label>
-                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                        <config_path>payment/hpg2_direct_debit_guaranteed/specificcountry</config_path>
-                    </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
                         <config_path>payment/hpg2_direct_debit_guaranteed/min_order_total</config_path>
@@ -160,16 +130,6 @@
                     <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Title</label>
                         <config_path>payment/hpg2_flexipay_direct/title</config_path>
-                    </field>
-                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Applicable Countries</label>
-                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-                        <config_path>payment/hpg2_flexipay_direct/allowspecific</config_path>
-                    </field>
-                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Specific Countries</label>
-                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                        <config_path>payment/hpg2_flexipay_direct/specificcountry</config_path>
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
@@ -196,16 +156,6 @@
                         <label>Title</label>
                         <config_path>payment/hpg2_ideal/title</config_path>
                     </field>
-                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Applicable Countries</label>
-                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-                        <config_path>payment/hpg2_ideal/allowspecific</config_path>
-                    </field>
-                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Specific Countries</label>
-                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                        <config_path>payment/hpg2_ideal/specificcountry</config_path>
-                    </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
                         <config_path>payment/hpg2_ideal/min_order_total</config_path>
@@ -231,16 +181,6 @@
                         <label>Title</label>
                         <config_path>payment/hpg2_invoice/title</config_path>
                     </field>
-                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Applicable Countries</label>
-                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-                        <config_path>payment/hpg2_invoice/allowspecific</config_path>
-                    </field>
-                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Specific Countries</label>
-                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                        <config_path>payment/hpg2_invoice/specificcountry</config_path>
-                    </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
                         <config_path>payment/hpg2_invoice/min_order_total</config_path>
@@ -265,16 +205,6 @@
                     <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Title</label>
                         <config_path>payment/hpg2_invoice_guaranteed/title</config_path>
-                    </field>
-                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Applicable Countries</label>
-                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-                        <config_path>payment/hpg2_invoice_guaranteed/allowspecific</config_path>
-                    </field>
-                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Specific Countries</label>
-                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                        <config_path>payment/hpg2_invoice_guaranteed/specificcountry</config_path>
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
@@ -306,16 +236,6 @@
                         <config_path>payment/hpg2_paypal/order_payment_action</config_path>
                         <source_model>Heidelpay\Gateway2\Model\System\Config\Source\PaymentAction</source_model>
                     </field>
-                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Applicable Countries</label>
-                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-                        <config_path>payment/hpg2_paypal/allowspecific</config_path>
-                    </field>
-                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Specific Countries</label>
-                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                        <config_path>payment/hpg2_paypal/specificcountry</config_path>
-                    </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
                         <config_path>payment/hpg2_paypal/min_order_total</config_path>
@@ -340,16 +260,6 @@
                     <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Title</label>
                         <config_path>payment/hpg2_sofort/title</config_path>
-                    </field>
-                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Applicable Countries</label>
-                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-                        <config_path>payment/hpg2_sofort/allowspecific</config_path>
-                    </field>
-                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Payment from Specific Countries</label>
-                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                        <config_path>payment/hpg2_sofort/specificcountry</config_path>
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
