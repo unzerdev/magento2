@@ -14,7 +14,10 @@ define(
             },
 
             initializeForm: function () {
-                this.initializeCustomerForm('invoice-customer');
+                this.initializeCustomerForm(
+                    'invoice-customer',
+                    'invoice-customer-error'
+                );
                 this.resourceProvider = this.sdk.InvoiceGuaranteed();
             },
 

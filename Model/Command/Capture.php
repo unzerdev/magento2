@@ -112,9 +112,6 @@ class Capture extends AbstractCommand
      */
     protected function _chargeNew(InfoInterface $payment, float $amount): Charge
     {
-        /** @var string|null $customerId */
-        $customerId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
-
         /** @var Order $order */
         $order = $payment->getOrder();
 
@@ -126,9 +123,9 @@ class Capture extends AbstractCommand
             $order->getOrderCurrencyCode(),
             $resourceId,
             $this->_getCallbackUrl(),
-            $customerId,
+            $this->_getCustomerId($payment),
             $order->getIncrementId(),
-            $this->_orderHelper->createMetadata($order),
+            $this->_orderHelper->createMetadataForOrder($order),
             $this->_orderHelper->createBasketForOrder($order),
             null,
             null,

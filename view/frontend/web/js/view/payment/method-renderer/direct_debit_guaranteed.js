@@ -16,7 +16,10 @@ define(
             initializeForm: function () {
                 var self = this;
 
-                this.initializeCustomerForm('sepa-direct-debit-guaranteed-customer');
+                this.initializeCustomerForm(
+                    'sepa-direct-debit-guaranteed-customer',
+                    'sepa-direct-debit-guaranteed-customer-error'
+                );
 
                 this.resourceProvider = this.sdk.SepaDirectDebitGuaranteed();
                 this.resourceProvider.create('sepa-direct-debit', {

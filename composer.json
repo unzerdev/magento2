@@ -14,12 +14,6 @@
     "support": {
         "email": "support@heidelpay.com"
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://repo.magento.com/"
-        }
-    ],
     "autoload": {
         "files": [
             "registration.php"

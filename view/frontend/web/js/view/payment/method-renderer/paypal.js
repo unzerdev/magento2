@@ -12,9 +12,6 @@ define(
 
             initializeForm: function () {
                 this.resourceProvider = this.sdk.Paypal();
-                this.resourceProvider.create('email', {
-                    containerId: 'paypal-email-element-id'
-                });
             },
         });
     }

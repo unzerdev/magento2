@@ -48,9 +48,6 @@ class Authorize extends AbstractCommand
         /** @var Order $order */
         $order = $payment->getOrder();
 
-        /** @var string|null $customerId */
-        $customerId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
-
         /** @var string $resourceId */
         $resourceId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_RESOURCE_ID);
 
@@ -59,9 +56,9 @@ class Authorize extends AbstractCommand
             $order->getOrderCurrencyCode(),
             $resourceId,
             $this->_getCallbackUrl(),
-            $customerId,
+            $this->_getCustomerId($payment),
             $order->getIncrementId(),
-            $this->_orderHelper->createMetadata($order),
+            $this->_orderHelper->createMetadataForOrder($order),
             $this->_orderHelper->createBasketForOrder($order),
             null
         );

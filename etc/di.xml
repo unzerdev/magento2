@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Heidelpay\MGW\Api\CheckoutInterface" type="Heidelpay\MGW\Api\Checkout"/>
+
     <virtualType name="Heidelpay\MGW\Logger\Logger" type="\Magento\Framework\Logger\Monolog">
         <arguments>
             <argument name="name" xsi:type="string">heidelpay_logger</argument>
