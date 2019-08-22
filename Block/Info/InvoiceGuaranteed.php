@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\Gateway2\Block\Info;
+namespace Heidelpay\MGW\Block\Info;
 
 /**
  * Customer Account Order Invoice Information Block
@@ -27,14 +27,14 @@ namespace Heidelpay\Gateway2\Block\Info;
  */
 class InvoiceGuaranteed extends Invoice
 {
-    protected $_template = 'Heidelpay_Gateway2::info/invoice_guaranteed.phtml';
+    protected $_template = 'Heidelpay_MGW::info/invoice_guaranteed.phtml';
 
     /**
      * @inheritDoc
      */
     public function toPdf(): string
     {
-        $this->setTemplate('Heidelpay_Gateway2::info/pdf/invoice_guaranteed.phtml');
+        $this->setTemplate('Heidelpay_MGW::info/pdf/invoice_guaranteed.phtml');
         return $this->toHtml();
     }
 

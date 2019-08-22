@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\Gateway2\Controller\Payment;
+namespace Heidelpay\MGW\Controller\Payment;
 
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Authorization;

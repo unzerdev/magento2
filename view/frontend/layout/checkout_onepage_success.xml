@@ -3,8 +3,8 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="content">
-            <block class="Heidelpay\Gateway2\Block\Checkout\Success"
-                   name="HeidelpayGateway2CheckoutSuccess"
+            <block class="Heidelpay\MGW\Block\Checkout\Success"
+                   name="HeidelpayMGWCheckoutSuccess"
                    template="success.phtml" />
         </referenceBlock>
     </body>

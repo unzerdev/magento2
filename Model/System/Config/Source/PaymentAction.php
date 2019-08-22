@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\System\Config\Source;
+namespace Heidelpay\MGW\Model\System\Config\Source;
 
 use Magento\Framework\Option\ArrayInterface;
 

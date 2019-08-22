@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Command;
+namespace Heidelpay\MGW\Model\Command;
 
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;

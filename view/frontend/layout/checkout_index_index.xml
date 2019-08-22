@@ -2,7 +2,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <css src="Heidelpay_Gateway2::css/heidelpay.css"/>
+        <css src="Heidelpay_MGW::css/heidelpay.css"/>
     </head>
     <body>
         <referenceBlock name="checkout.root">
@@ -20,34 +20,34 @@
                                                     <item name="children" xsi:type="array">
                                                         <item name="renders" xsi:type="array">
                                                             <item name="children" xsi:type="array">
-                                                                <item name="heidelpay_gateway2" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">Heidelpay_Gateway2/js/view/payment/method-renderer</item>
+                                                                <item name="heidelpay_mgw" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Heidelpay_MGW/js/view/payment/method-renderer</item>
                                                                     <item name="methods" xsi:type="array">
-                                                                        <item name="hpg2_creditcard" xsi:type="array">
+                                                                        <item name="hpmgw_creditcard" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="hpg2_direct_debit" xsi:type="array">
+                                                                        <item name="hpmgw_direct_debit" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="hpg2_direct_debit_guaranteed" xsi:type="array">
+                                                                        <item name="hpmgw_direct_debit_guaranteed" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="hpg2_flexipay_direct" xsi:type="array">
+                                                                        <item name="hpmgw_flexipay_direct" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="hpg2_ideal" xsi:type="array">
+                                                                        <item name="hpmgw_ideal" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="hpg2_invoice" xsi:type="array">
+                                                                        <item name="hpmgw_invoice" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="hpg2_invoice_guaranteed" xsi:type="array">
+                                                                        <item name="hpmgw_invoice_guaranteed" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="hpg2_paypal" xsi:type="array">
+                                                                        <item name="hpmgw_paypal" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="hpg2_sofort" xsi:type="array">
+                                                                        <item name="hpmgw_sofort" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                     </item>

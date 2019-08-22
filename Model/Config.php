@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model;
+namespace Heidelpay\MGW\Model;
 
-use Heidelpay\Gateway2\Model\Logger\DebugHandler;
+use Heidelpay\MGW\Model\Logger\DebugHandler;
 use heidelpayPHP\Heidelpay;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -33,23 +33,23 @@ use Magento\Store\Model\StoreManagerInterface;
  */
 class Config extends \Magento\Payment\Gateway\Config\Config
 {
-    const BASE_CONFIGURATION_PATH = 'payment/hpg2/';
+    const BASE_CONFIGURATION_PATH = 'payment/hpmgw/';
 
     const KEY_PUBLIC_KEY = 'public_key';
     const KEY_PRIVATE_KEY = 'private_key';
     const KEY_WEBHOOKS_SOURCE_IPS = 'webhooks_source_ips';
     const KEY_LOGGING = 'logging';
 
-    const METHOD_BASE = 'hpg2';
-    const METHOD_CREDITCARD = 'hpg2_creditcard';
-    const METHOD_DIRECT_DEBIT = 'hpg2_direct_debit';
-    const METHOD_DIRECT_DEBIT_GUARANTEED = 'hpg2_direct_debit_guaranteed';
-    const METHOD_FLEXIPAY_DIRECT = 'hpg2_flexipay_direct';
-    const METHOD_IDEAL = 'hpg2_ideal';
-    const METHOD_INVOICE = 'hpg2_invoice';
-    const METHOD_INVOICE_GUARANTEED = 'hpg2_invoice_guaranteed';
-    const METHOD_PAYPAL = 'hpg2_paypal';
-    const METHOD_SOFORT = 'hpg2_sofort';
+    const METHOD_BASE = 'hpmgw';
+    const METHOD_CREDITCARD = 'hpmgw_creditcard';
+    const METHOD_DIRECT_DEBIT = 'hpmgw_direct_debit';
+    const METHOD_DIRECT_DEBIT_GUARANTEED = 'hpmgw_direct_debit_guaranteed';
+    const METHOD_FLEXIPAY_DIRECT = 'hpmgw_flexipay_direct';
+    const METHOD_IDEAL = 'hpmgw_ideal';
+    const METHOD_INVOICE = 'hpmgw_invoice';
+    const METHOD_INVOICE_GUARANTEED = 'hpmgw_invoice_guaranteed';
+    const METHOD_PAYPAL = 'hpmgw_paypal';
+    const METHOD_SOFORT = 'hpmgw_sofort';
 
     /**
      * @var DebugHandler

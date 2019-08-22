@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\Gateway2\Block\System\Config;
+namespace Heidelpay\MGW\Block\System\Config;
 
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
@@ -32,7 +32,7 @@ use Zend_Json;
  */
 class WebhooksButtons extends Field
 {
-    protected $_template = 'Heidelpay_Gateway2::system/config/webhooks.phtml';
+    protected $_template = 'Heidelpay_MGW::system/config/webhooks.phtml';
 
     /**
      * @inheritDoc
@@ -47,7 +47,7 @@ class WebhooksButtons extends Field
      */
     public function getRegisterAction(): string
     {
-        return $this->getUrl('hpg2/webhooks/register');
+        return $this->getUrl('hpmgw/webhooks/register');
     }
 
     /**
@@ -58,7 +58,7 @@ class WebhooksButtons extends Field
     {
         $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button');
         $button->setData([
-            'id' => 'hpg2_webhooks_register',
+            'id' => 'hpmgw_webhooks_register',
             'label' => __('Register webhooks'),
             'onclick' => 'location.href = ' . Zend_Json::encode($this->getRegisterAction()),
         ]);
@@ -71,7 +71,7 @@ class WebhooksButtons extends Field
      */
     public function getUnregisterAction(): string
     {
-        return $this->getUrl('hpg2/webhooks/unregister');
+        return $this->getUrl('hpmgw/webhooks/unregister');
     }
 
     /**
@@ -82,7 +82,7 @@ class WebhooksButtons extends Field
     {
         $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button');
         $button->setData([
-            'id' => 'hpg2_webhooks_unregister',
+            'id' => 'hpmgw_webhooks_unregister',
             'label' => __('Unregister webhooks'),
             'onclick' => 'location.href = ' . Zend_Json::encode($this->getUnregisterAction()),
         ]);

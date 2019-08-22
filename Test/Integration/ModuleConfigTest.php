@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\Gateway2\Test\Integration;
+namespace Heidelpay\MGW\Test\Integration;
 
 use Magento\Framework\Component\ComponentRegistrar;
 use Magento\Framework\Module\ModuleList;
@@ -31,7 +31,7 @@ use Magento\TestFramework\ObjectManager;
  */
 class ModuleConfigTest extends \PHPUnit\Framework\TestCase
 {
-    private $moduleName = 'Heidelpay_Gateway2';
+    private $moduleName = 'Heidelpay_MGW';
 
     public function testTheModuleIsRegistered()
     {

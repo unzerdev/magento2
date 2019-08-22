@@ -1,9 +1,9 @@
 <?php
 
-namespace Heidelpay\Gateway2\Controller\Webhooks;
+namespace Heidelpay\MGW\Controller\Webhooks;
 
 use Exception;
-use Heidelpay\Gateway2\Model\Config;
+use Heidelpay\MGW\Model\Config;
 use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
@@ -115,7 +115,7 @@ class Process extends Action
 
         $eventKey = str_replace('.', '_', $event->event);
 
-        $this->_eventManager->dispatch("hpg2_{$eventKey}", [
+        $this->_eventManager->dispatch("hpmgw_{$eventKey}", [
             'resource' => $resource,
             'resourceUrl' => $event->retrieveUrl,
         ]);

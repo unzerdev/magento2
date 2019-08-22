@@ -1,11 +1,11 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Command;
+namespace Heidelpay\MGW\Model\Command;
 
-use Heidelpay\Gateway2\Helper\Order as OrderHelper;
-use Heidelpay\Gateway2\Model\Config;
-use Heidelpay\Gateway2\Model\Method\Base;
-use Heidelpay\Gateway2\Model\System\Config\Source\PaymentAction;
+use Heidelpay\MGW\Helper\Order as OrderHelper;
+use Heidelpay\MGW\Model\Config;
+use Heidelpay\MGW\Model\Method\Base;
+use Heidelpay\MGW\Model\System\Config\Source\PaymentAction;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;

@@ -1,15 +1,15 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <payment>
-            <hpg2>
+            <hpmgw>
                 <active>0</active>
                 <public_key>s-pub-2a10ifVINFAjpQJ9qW8jBe5OJPBx6Gxa</public_key>
                 <private_key>s-priv-2a102ZMq3gV4I3zJ888J7RR6u75oqK3n</private_key>
                 <webhooks_source_ips>3.120.62.83,18.196.35.212</webhooks_source_ips>
-                <model>Heidelpay\Gateway2\Model\Method\Base</model>
+                <model>Heidelpay\MGW\Model\Method\Base</model>
                 <logging>0</logging>
-            </hpg2>
-            <hpg2_creditcard>
+            </hpmgw>
+            <hpmgw_creditcard>
                 <active>0</active>
                 <payment_action>order</payment_action>
                 <order_payment_action>authorize</order_payment_action>
@@ -22,9 +22,9 @@
                 <can_order>1</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
-                <model>Heidelpay\Gateway2\Model\Method\Creditcard</model>
-            </hpg2_creditcard>
-            <hpg2_direct_debit>
+                <model>Heidelpay\MGW\Model\Method\Creditcard</model>
+            </hpmgw_creditcard>
+            <hpmgw_direct_debit>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
@@ -37,9 +37,9 @@
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
-                <model>Heidelpay\Gateway2\Model\Method\DirectDebit</model>
-            </hpg2_direct_debit>
-            <hpg2_direct_debit_guaranteed>
+                <model>Heidelpay\MGW\Model\Method\DirectDebit</model>
+            </hpmgw_direct_debit>
+            <hpmgw_direct_debit_guaranteed>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
@@ -53,9 +53,9 @@
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
-                <model>Heidelpay\Gateway2\Model\Method\DirectDebitGuaranteed</model>
-            </hpg2_direct_debit_guaranteed>
-            <hpg2_flexipay_direct>
+                <model>Heidelpay\MGW\Model\Method\DirectDebitGuaranteed</model>
+            </hpmgw_direct_debit_guaranteed>
+            <hpmgw_flexipay_direct>
                 <active>0</active>
                 <payment_action>order</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
@@ -70,9 +70,9 @@
                 <can_void>1</can_void>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
-                <model>Heidelpay\Gateway2\Model\Method\FlexipayDirect</model>
-            </hpg2_flexipay_direct>
-            <hpg2_ideal>
+                <model>Heidelpay\MGW\Model\Method\FlexipayDirect</model>
+            </hpmgw_flexipay_direct>
+            <hpmgw_ideal>
                 <active>0</active>
                 <payment_action>order</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
@@ -86,9 +86,9 @@
                 <can_order>1</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
-                <model>Heidelpay\Gateway2\Model\Method\Ideal</model>
-            </hpg2_ideal>
-            <hpg2_invoice>
+                <model>Heidelpay\MGW\Model\Method\Ideal</model>
+            </hpmgw_ideal>
+            <hpmgw_invoice>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
@@ -101,9 +101,9 @@
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
-                <model>Heidelpay\Gateway2\Model\Method\Invoice</model>
-            </hpg2_invoice>
-            <hpg2_invoice_guaranteed>
+                <model>Heidelpay\MGW\Model\Method\Invoice</model>
+            </hpmgw_invoice>
+            <hpmgw_invoice_guaranteed>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
@@ -117,9 +117,9 @@
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
-                <model>Heidelpay\Gateway2\Model\Method\InvoiceGuaranteed</model>
-            </hpg2_invoice_guaranteed>
-            <hpg2_paypal>
+                <model>Heidelpay\MGW\Model\Method\InvoiceGuaranteed</model>
+            </hpmgw_invoice_guaranteed>
+            <hpmgw_paypal>
                 <active>0</active>
                 <payment_action>order</payment_action>
                 <order_payment_action>authorize</order_payment_action>
@@ -132,9 +132,9 @@
                 <can_order>1</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
-                <model>Heidelpay\Gateway2\Model\Method\Paypal</model>
-            </hpg2_paypal>
-            <hpg2_sofort>
+                <model>Heidelpay\MGW\Model\Method\Paypal</model>
+            </hpmgw_paypal>
+            <hpmgw_sofort>
                 <active>0</active>
                 <payment_action>order</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
@@ -148,8 +148,8 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
                 <country_restrictions>AT,BE,CH,DE,ES,GB,IT,NL,PL</country_restrictions>
-                <model>Heidelpay\Gateway2\Model\Method\Sofort</model>
-            </hpg2_sofort>
+                <model>Heidelpay\MGW\Model\Method\Sofort</model>
+            </hpmgw_sofort>
         </payment>
     </default>
 </config>

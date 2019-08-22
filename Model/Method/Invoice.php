@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Method;
+namespace Heidelpay\MGW\Model\Method;
 
-use Heidelpay\Gateway2\Model\Config;
+use Heidelpay\MGW\Model\Config;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Framework\App\Config\ScopeConfigInterface;
