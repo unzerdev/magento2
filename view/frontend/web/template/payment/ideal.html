@@ -13,6 +13,11 @@
         <form class="heidelpayUI form" novalidate>
             <div id="ideal-field" class="field"></div>
             <div class="field">
+                <div class="checkout-agreements-block">
+                    <!-- ko foreach: $parent.getRegion('before-place-order') -->
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                    <!--/ko-->
+                </div>
                 <button class="heidelpayUI primary button fluid"
                         data-bind="
                         click: placeOrder,
