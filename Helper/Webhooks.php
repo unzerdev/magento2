@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\Gateway2\Helper;
+namespace Heidelpay\MGW\Helper;
 
 use Magento\Framework\Url;
 use Magento\Store\Model\Store;
@@ -64,6 +64,6 @@ class Webhooks
 
         return $this->_urlBuilder
             ->setScope($store)
-            ->getUrl('hpg2/webhooks/process', ['_nosid' => true]);
+            ->getUrl('hpmgw/webhooks/process', ['_nosid' => true]);
     }
 }

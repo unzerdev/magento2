@@ -1,7 +1,7 @@
 define(
     [
         'ko',
-        'Heidelpay_Gateway2/js/view/payment/method-renderer/base'
+        'Heidelpay_MGW/js/view/payment/method-renderer/base'
     ],
     function (ko, Component) {
         'use strict';
@@ -13,7 +13,7 @@ define(
                     expiry: {valid: null},
                     number: {valid: null},
                 },
-                template: 'Heidelpay_Gateway2/payment/creditcard'
+                template: 'Heidelpay_MGW/payment/creditcard'
             },
 
             initializeForm: function () {

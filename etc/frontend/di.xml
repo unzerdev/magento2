@@ -4,7 +4,7 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="hpg2_config_provider" xsi:type="object">Heidelpay\Gateway2\Model\Config\Provider</item>
+                <item name="hpmgw_config_provider" xsi:type="object">Heidelpay\MGW\Model\Config\Provider</item>
             </argument>
         </arguments>
     </type>

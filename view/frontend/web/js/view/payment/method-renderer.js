@@ -10,40 +10,40 @@ define(
         'use strict';
         rendererList.push(
             {
-                type: 'hpg2_creditcard',
-                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/creditcard'
+                type: 'hpmgw_creditcard',
+                component: 'Heidelpay_MGW/js/view/payment/method-renderer/creditcard'
             },
             {
-                type: 'hpg2_direct_debit',
-                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/direct_debit'
+                type: 'hpmgw_direct_debit',
+                component: 'Heidelpay_MGW/js/view/payment/method-renderer/direct_debit'
             },
             {
-                type: 'hpg2_direct_debit_guaranteed',
-                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/direct_debit_guaranteed'
+                type: 'hpmgw_direct_debit_guaranteed',
+                component: 'Heidelpay_MGW/js/view/payment/method-renderer/direct_debit_guaranteed'
             },
             {
-                type: 'hpg2_flexipay_direct',
-                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/flexipay_direct'
+                type: 'hpmgw_flexipay_direct',
+                component: 'Heidelpay_MGW/js/view/payment/method-renderer/flexipay_direct'
             },
             {
-                type: 'hpg2_ideal',
-                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/ideal'
+                type: 'hpmgw_ideal',
+                component: 'Heidelpay_MGW/js/view/payment/method-renderer/ideal'
             },
             {
-                type: 'hpg2_invoice',
-                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/invoice'
+                type: 'hpmgw_invoice',
+                component: 'Heidelpay_MGW/js/view/payment/method-renderer/invoice'
             },
             {
-                type: 'hpg2_invoice_guaranteed',
-                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/invoice_guaranteed'
+                type: 'hpmgw_invoice_guaranteed',
+                component: 'Heidelpay_MGW/js/view/payment/method-renderer/invoice_guaranteed'
             },
             {
-                type: 'hpg2_paypal',
-                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/paypal'
+                type: 'hpmgw_paypal',
+                component: 'Heidelpay_MGW/js/view/payment/method-renderer/paypal'
             },
             {
-                type: 'hpg2_sofort',
-                component: 'Heidelpay_Gateway2/js/view/payment/method-renderer/sofort'
+                type: 'hpmgw_sofort',
+                component: 'Heidelpay_MGW/js/view/payment/method-renderer/sofort'
             }
         );
         return Component.extend({});

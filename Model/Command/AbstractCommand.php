@@ -1,9 +1,9 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Command;
+namespace Heidelpay\MGW\Model\Command;
 
-use Heidelpay\Gateway2\Helper\Order;
-use Heidelpay\Gateway2\Model\Config;
+use Heidelpay\MGW\Helper\Order;
+use Heidelpay\MGW\Model\Config;
 use heidelpayPHP\Heidelpay;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
@@ -77,7 +77,7 @@ abstract class AbstractCommand implements CommandInterface
      */
     protected function _getCallbackUrl(): string
     {
-        return $this->_urlBuilder->getUrl('hpg2/payment/callback');
+        return $this->_urlBuilder->getUrl('hpmgw/payment/callback');
     }
 
     /**

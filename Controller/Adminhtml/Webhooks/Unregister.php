@@ -1,9 +1,9 @@
 <?php
 
-namespace Heidelpay\Gateway2\Controller\Adminhtml\Webhooks;
+namespace Heidelpay\MGW\Controller\Adminhtml\Webhooks;
 
-use Heidelpay\Gateway2\Helper\Webhooks as WebhooksHelper;
-use Heidelpay\Gateway2\Model\Config;
+use Heidelpay\MGW\Helper\Webhooks as WebhooksHelper;
+use Heidelpay\MGW\Model\Config;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Webhook;
 use Magento\Backend\App\Action;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Validator;
+namespace Heidelpay\MGW\Model\Validator;
 
-use Heidelpay\Gateway2\Model\Config;
+use Heidelpay\MGW\Model\Config;
 use Magento\Payment\Gateway\Validator\CountryValidator;
 use Magento\Payment\Gateway\Validator\ResultInterfaceFactory;
 

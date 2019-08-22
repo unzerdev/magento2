@@ -1,7 +1,7 @@
 define(
     [
         'ko',
-        'Heidelpay_Gateway2/js/view/payment/method-renderer/base'
+        'Heidelpay_MGW/js/view/payment/method-renderer/base'
     ],
     function (ko, Component) {
         'use strict';
@@ -9,7 +9,7 @@ define(
         return Component.extend({
             defaults: {
                 field: {valid: false},
-                template: 'Heidelpay_Gateway2/payment/ideal'
+                template: 'Heidelpay_MGW/payment/ideal'
             },
 
             initializeForm: function () {

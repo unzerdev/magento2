@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Observer;
+namespace Heidelpay\MGW\Model\Observer;
 
-use Heidelpay\Gateway2\Model\Config;
+use Heidelpay\MGW\Model\Config;
 use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;

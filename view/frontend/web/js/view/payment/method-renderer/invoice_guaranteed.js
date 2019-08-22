@@ -1,7 +1,7 @@
 define(
     [
         'ko',
-        'Heidelpay_Gateway2/js/view/payment/method-renderer/base'
+        'Heidelpay_MGW/js/view/payment/method-renderer/base'
     ],
     function (ko, Component) {
         'use strict';
@@ -10,7 +10,7 @@ define(
             redirectUrl: 'checkout/onepage/success',
 
             defaults: {
-                template: 'Heidelpay_Gateway2/payment/invoice_guaranteed'
+                template: 'Heidelpay_MGW/payment/invoice_guaranteed'
             },
 
             initializeForm: function () {

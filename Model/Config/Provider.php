@@ -1,9 +1,9 @@
 <?php
 
-namespace Heidelpay\Gateway2\Model\Config;
+namespace Heidelpay\MGW\Model\Config;
 
-use Heidelpay\Gateway2\Model\Config;
-use Heidelpay\Gateway2\Model\Method\Base as MethodBase;
+use Heidelpay\MGW\Model\Config;
+use Heidelpay\MGW\Model\Method\Base as MethodBase;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Helper\Data as PaymentHelper;

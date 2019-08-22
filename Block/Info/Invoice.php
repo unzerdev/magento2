@@ -1,9 +1,9 @@
 <?php
 
-namespace Heidelpay\Gateway2\Block\Info;
+namespace Heidelpay\MGW\Block\Info;
 
-use Heidelpay\Gateway2\Helper\Order as OrderHelper;
-use Heidelpay\Gateway2\Model\Config;
+use Heidelpay\MGW\Helper\Order as OrderHelper;
+use Heidelpay\MGW\Model\Config;
 use heidelpayPHP\Heidelpay;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
@@ -36,7 +36,7 @@ use Magento\Sales\Model\Order;
  */
 class Invoice extends Info
 {
-    protected $_template = 'Heidelpay_Gateway2::info/invoice.phtml';
+    protected $_template = 'Heidelpay_MGW::info/invoice.phtml';
 
     /**
      * @var Config
@@ -71,7 +71,7 @@ class Invoice extends Info
      */
     public function toPdf(): string
     {
-        $this->setTemplate('Heidelpay_Gateway2::info/pdf/invoice.phtml');
+        $this->setTemplate('Heidelpay_MGW::info/pdf/invoice.phtml');
         return $this->toHtml();
     }
 
