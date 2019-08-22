@@ -1100,6 +1100,10 @@ i.h-iconideal-van-lanschot:before {
     height: 40px
 }
 
+.heidelpayUI.input > input {
+    height: 40px;
+}
+
 .heidelpayUI.input > .heidelpayInput, .heidelpayUI.input > input {
     margin: 0;
     max-width: 100%;
@@ -4217,15 +4221,15 @@ a.heidelpayUI.button:any-link {
 [class*=" h-iconimg-"], [class^=h-iconimg-] {
     position: relative;
     display: inline-block;
-    height: 1rem;
-    width: 1rem;
+    height: 16px;
+    width: 16px;
     margin-left: .4rem;
     margin-right: .4rem;
-    line-height: 1rem
+    line-height: 16px
 }
 
 [class*=" h-iconimg-"]:before, [class^=h-iconimg-]:before, i.icon[class*=" h-iconimg-"]:before, i.icon[class^=h-iconimg-]:before {
-    font-size: 1rem;
+    font-size: 16px;
     display: inline-block;
     text-decoration: inherit;
     text-align: center;
@@ -4235,11 +4239,11 @@ a.heidelpayUI.button:any-link {
     top: 50%;
     margin-top: -.5rem;
     left: 0;
-    height: 1rem;
-    width: 1rem;
+    height: 16px;
+    width: 16px;
     background-position: 0 0;
     background-repeat: no-repeat;
-    background-size: auto 1rem;
+    background-size: auto 16px;
     content: " "
 }
 
