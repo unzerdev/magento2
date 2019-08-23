@@ -55,16 +55,22 @@ class Checkout implements CheckoutInterface
     }
 
     /**
-     * Returns the external customer ID for the given E-Mail adress.
+     * Returns the external customer ID for the current quote.
      *
-     * @param string $email Customer E-Mail adress.
+     * @param string|null $email Customer E-Mail address.
      *
      * @return string|null
      */
-    public function getExternalCustomerId(string $email): ?string
+    public function getExternalCustomerId(?string $email = null): ?string
     {
         /** @var Quote $quote */
         $quote = $this->_checkoutSession->getQuote();
+
+        $email = $email ?? $quote->getCustomerEmail();
+
+        if ($email === null) {
+            return null;
+        }
 
         /** @var Customer $customer */
 

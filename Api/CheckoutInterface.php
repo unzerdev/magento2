@@ -30,11 +30,11 @@ use heidelpayPHP\Resources\Customer;
 interface CheckoutInterface
 {
     /**
-     * Returns the external customer ID for the given E-Mail adress.
+     * Returns the external customer ID for the current quote.
      *
-     * @param string $email Customer E-Mail adress.
+     * @param string|null $email Customer E-Mail address.
      *
      * @return string|null
      */
-    public function getExternalCustomerId(string $email): ?string;
+    public function getExternalCustomerId(?string $email = null): ?string;
 }
