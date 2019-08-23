@@ -75,8 +75,8 @@ class Capture extends AbstractCommand
         }
 
         /** @var OrderPayment $payment */
-        $payment->setLastTransId($charge->getPaymentId());
-        $payment->setTransactionId($charge->getPaymentId());
+        $payment->setLastTransId($charge->getUniqueId());
+        $payment->setTransactionId($charge->getUniqueId());
 
         return null;
     }

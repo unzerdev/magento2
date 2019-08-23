@@ -68,8 +68,8 @@ class Authorize extends AbstractCommand
         }
 
         /** @var OrderPayment $payment */
-        $payment->setLastTransId($authorization->getPaymentId());
-        $payment->setTransactionId($authorization->getPaymentId());
+        $payment->setLastTransId($authorization->getUniqueId());
+        $payment->setTransactionId($authorization->getUniqueId());
 
         return null;
     }
