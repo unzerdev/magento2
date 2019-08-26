@@ -32,9 +32,9 @@ interface CheckoutInterface
     /**
      * Returns the external customer ID for the current quote.
      *
-     * @param string|null $email Customer E-Mail address.
+     * @param string|null $guestEmail Customer E-Mail address.
      *
      * @return string|null
      */
-    public function getExternalCustomerId(?string $email = null): ?string;
+    public function getExternalCustomerId(?string $guestEmail = null): ?string;
 }

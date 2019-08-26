@@ -56,7 +56,7 @@ define(
                         this.customerIdPromise = storage.post(
                             urlBuilder.createUrl('/hpmgw/get-external-customer-id', {}),
                             JSON.stringify({
-                                email: quote.guestEmail,
+                                guestEmail: quote.guestEmail,
                             })
                         );
 
