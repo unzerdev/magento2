@@ -4,7 +4,7 @@
 
     <virtualType name="Heidelpay\MGW\Logger\Logger" type="\Magento\Framework\Logger\Monolog">
         <arguments>
-            <argument name="name" xsi:type="string">heidelpay_logger</argument>
+            <argument name="name" xsi:type="string">heidelpay</argument>
             <argument name="handlers" xsi:type="array">
                 <item name="debug" xsi:type="object">Heidelpay\MGW\Model\Logger\Handler\Debug</item>
             </argument>
