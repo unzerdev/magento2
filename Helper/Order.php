@@ -63,7 +63,7 @@ class Order
     public function createBasketForOrder(OrderModel $order): Basket
     {
         $basket = new Basket();
-        $basket->setAmountTotal($order->getGrandTotal());
+        $basket->setAmountTotalGross($order->getGrandTotal());
         $basket->setAmountTotalDiscount($order->getDiscountAmount());
         $basket->setCurrencyCode($order->getOrderCurrencyCode());
         $basket->setOrderId($order->getIncrementId());
