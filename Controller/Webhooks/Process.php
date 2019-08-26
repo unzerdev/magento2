@@ -12,6 +12,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\App\Response\Http as HttpResponse;
 use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\DataObject;
 use Magento\Framework\Event\Manager;
 use stdClass;
 
@@ -115,10 +116,19 @@ class Process extends Action
 
         $eventKey = str_replace('.', '_', $event->event);
 
+        $result = new DataObject();
+        $result->setData('message', 'OK');
+        $result->setData('status', 200);
+
         $this->_eventManager->dispatch("hpmgw_{$eventKey}", [
+            'eventType' => $event->event,
             'resource' => $resource,
             'resourceUrl' => $event->retrieveUrl,
+            'result' => $result,
         ]);
+
+        $response->setHttpResponseCode($result->getData('status'));
+        $response->setBody($result->getData('message'));
 
         return $response;
     }

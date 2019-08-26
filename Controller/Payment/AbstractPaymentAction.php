@@ -82,6 +82,7 @@ abstract class AbstractPaymentAction extends Action
 
         if (!$order || !$order->getId()) {
             $response->setHttpResponseCode(400);
+            $response->setBody('Bad request');
             return $response;
         }
 

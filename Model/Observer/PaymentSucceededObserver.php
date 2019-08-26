@@ -7,7 +7,7 @@ use Magento\Framework\DataObject;
 use Magento\Sales\Model\Order;
 
 /**
- * Observer for payment.review webhook events
+ * Observer for webhooks about successfull payments
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -29,7 +29,7 @@ use Magento\Sales\Model\Order;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class PaymentReviewObserver extends AbstractPaymentWebhookObserver
+class PaymentSucceededObserver extends AbstractPaymentWebhookObserver
 {
     /**
      * @param Order $order
@@ -39,6 +39,6 @@ class PaymentReviewObserver extends AbstractPaymentWebhookObserver
      */
     public function executeWith(Order $order, Payment $payment, DataObject $result): void
     {
-        $order->setState(Order::STATE_PAYMENT_REVIEW);
+        $order->setState(Order::STATE_PROCESSING);
     }
 }
