@@ -22,7 +22,7 @@ define(
                 );
 
                 this.resourceProvider = this.sdk.SepaDirectDebitGuaranteed();
-                this.resourceProvider.create('sepa-direct-debit', {
+                this.resourceProvider.create('sepa-direct-debit-guaranteed', {
                     containerId: 'sepa-direct-debit-guaranteed-iban-field'
                 });
 
