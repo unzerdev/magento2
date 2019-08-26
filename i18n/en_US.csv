@@ -12,7 +12,7 @@
 "HPMGW_ABOUT_US","heidelpay GmbH, shortly: heidelpay, is a leading payment institution for online payment methods authorized and regulated by BaFin, which offers the full range of services for an electronic payment processing from one single source: from processing of transactions and providing of acceptance contracts to monitoring and risk management.<br/><br/>For more information please visit <a href='https://www.heidelpay.com/en/integration/shopmodules/' target='_blank'>www.heidelpay.com/en/</a>"
 
 "Enabled","Enabled"
-"Title","Titel"
+"Title","Title"
 "Insert 0 to disable limit.","Insert 0 to disable limit."
 "An unexpected error occurred. Please contact us to get further information.","An unexpected error occurred. Please contact us to get further information."
 "Authorize","Authorize"
@@ -39,7 +39,7 @@
 "Customer Information","Customer Information"
 "mr","Mr."
 "mrs","Mrs."
-"Birthdate","Birthdate"
+"Birthdate","BirtDate of birthhdate"
 "Your date of birth","Your date of birth"
 
 "Merchant Name","Merchant Name"
