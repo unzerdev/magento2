@@ -88,7 +88,7 @@ define(
                 this.customerProvider.update(
                     customerId,
                     {
-                        infoBoxText: $t('Your birthdate data'),
+                        infoBoxText: $t('Your date of birth'),
                         containerId: fieldId,
                         errorHolderId: errorFieldId,
                         fields: ['birthdate'],
