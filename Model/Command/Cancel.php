@@ -5,6 +5,7 @@ namespace Heidelpay\MGW\Model\Command;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Cancellation;
+use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order;
@@ -50,8 +51,16 @@ class Cancel extends AbstractCommand
         /** @var Payment $hpPayment */
         $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
 
+        /** @var Charge|null $charge */
+        $charge = $hpPayment->getChargeByIndex(0);
+
         /** @var Cancellation $cancellation */
-        $cancellation = $hpPayment->cancel($order->getGrandTotal());
+        if ($charge !== null) {
+            // Partial cancellation does not work correctly in all cases, so we always cancel the whole charge.
+            $cancellation = $charge->cancel();
+        } else {
+            $cancellation = $hpPayment->getAuthorization()->cancel($order->getGrandTotal());
+        }
 
         if ($cancellation->isError()) {
             throw new LocalizedException(__('Failed to cancel payment.'));
