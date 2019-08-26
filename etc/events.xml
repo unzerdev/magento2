@@ -1,7 +1,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="payment_method_assign_data_hpmgw_creditcard">
-        <observer name="hpmgw_creditcard_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_hpmgw_cards">
+        <observer name="hpmgw_cards_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
     <event name="payment_method_assign_data_hpmgw_direct_debit">
         <observer name="hpmgw_direct_debit_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />

@@ -13,7 +13,7 @@ define(
                     expiry: {valid: null},
                     number: {valid: null},
                 },
-                template: 'Heidelpay_MGW/payment/creditcard'
+                template: 'Heidelpay_MGW/payment/cards'
             },
 
             initializeForm: function () {

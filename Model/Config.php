@@ -41,7 +41,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     const KEY_LOGGING = 'logging';
 
     const METHOD_BASE = 'hpmgw';
-    const METHOD_CREDITCARD = 'hpmgw_creditcard';
+    const METHOD_CARDS = 'hpmgw_cards';
     const METHOD_DIRECT_DEBIT = 'hpmgw_direct_debit';
     const METHOD_DIRECT_DEBIT_GUARANTEED = 'hpmgw_direct_debit_guaranteed';
     const METHOD_FLEXIPAY_DIRECT = 'hpmgw_flexipay_direct';
