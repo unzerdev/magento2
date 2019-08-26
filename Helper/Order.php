@@ -8,6 +8,7 @@ use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Heidelpay;
 use heidelpayPHP\Resources\Basket;
 use heidelpayPHP\Resources\Customer;
+use heidelpayPHP\Resources\CustomerFactory;
 use heidelpayPHP\Resources\EmbeddedResources;
 use heidelpayPHP\Resources\EmbeddedResources\BasketItem;
 use Magento\Quote\Model\Quote;
@@ -127,6 +128,9 @@ class Order
         /** @var Heidelpay $client */
         $client = $this->_moduleConfig->getHeidelpayClient();
 
+        /** @var Quote\Address $billingAddress */
+        $billingAddress = $quote->getBillingAddress();
+
         /** @var Customer $customer */
 
         try {
@@ -137,12 +141,13 @@ class Order
                 throw $e;
             }
 
-            $customer = new Customer();
+            $customer = CustomerFactory::createCustomer(
+                $billingAddress->getFirstname(),
+                $billingAddress->getLastname()
+            );
+
             $customer->setCustomerId($email);
         }
-
-        /** @var Quote\Address $billingAddress */
-        $billingAddress = $quote->getBillingAddress();
 
         $customer->setEmail($email);
         $customer->setFirstname($billingAddress->getFirstname());
@@ -166,7 +171,7 @@ class Order
         Quote\Address $magentoAddress
     ): void {
         $gatewayAddress->setCity($magentoAddress->getCity());
-        $gatewayAddress->setCountry($magentoAddress->getCountry()); // TODO: Correct?
+        $gatewayAddress->setCountry($magentoAddress->getCountry());
         $gatewayAddress->setStreet($magentoAddress->getStreetFull());
         $gatewayAddress->setZip($magentoAddress->getPostcode());
     }
