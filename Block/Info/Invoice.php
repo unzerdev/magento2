@@ -148,7 +148,7 @@ class Invoice extends Info
      */
     public function getIdentificationNumber(): string
     {
-        return $this->_getCharge()->getShortId();
+        return $this->_getCharge()->getDescriptor();
     }
 
     /**
