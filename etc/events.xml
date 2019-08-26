@@ -1,9 +1,5 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="payment_method_is_active">
-        <observer name="hpmgw_direct_debit_guaranteed_available_for_quote" instance="Heidelpay\MGW\Model\Method\Observer\B2cAvailabilityObserver" />
-    </event>
-
     <event name="payment_method_assign_data_hpmgw_creditcard">
         <observer name="hpmgw_creditcard_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />
     </event>

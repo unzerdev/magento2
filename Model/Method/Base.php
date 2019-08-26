@@ -10,6 +10,7 @@ use Magento\Payment\Gateway\Config\ValueHandlerPoolInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectFactory;
 use Magento\Payment\Gateway\Validator\ValidatorPoolInterface;
 use Magento\Payment\Model\Method\Adapter;
+use Magento\Quote\Api\Data\CartInterface;
 use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface;
 
@@ -105,5 +106,31 @@ class Base extends Adapter
     public function getAdditionalPaymentInformation(Order $order): string
     {
         return '';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isAvailable(CartInterface $quote = null)
+    {
+        if ($this->isB2cOnly()) {
+            $isAvailable = $quote === null || empty($quote->getBillingAddress()->getCompany());
+
+            if (!$isAvailable) {
+                return false;
+            }
+        }
+
+        return parent::isAvailable($quote);
+    }
+
+    /**
+     * Returns whether the payment method is only available for B2C customers.
+     *
+     * @return bool
+     */
+    public function isB2cOnly(): bool
+    {
+        return false;
     }
 }
