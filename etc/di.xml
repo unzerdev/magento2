@@ -84,22 +84,22 @@
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayMGWCreditcardConfig" type="Heidelpay\MGW\Model\Config">
+    <virtualType name="HeidelpayMGWCardsConfig" type="Heidelpay\MGW\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_CREDITCARD</argument>
+            <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_CARDS</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWCreditcardConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="HeidelpayMGWCardsConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayMGWCreditcardConfig</argument>
+            <argument name="configInterface" xsi:type="object">HeidelpayMGWCardsConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWCreditcardValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="HeidelpayMGWCardsValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayMGWCreditcardConfigValueHandler</item>
+                <item name="default" xsi:type="string">HeidelpayMGWCardsConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
                 <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
                 <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
@@ -107,12 +107,12 @@
         </arguments>
     </virtualType>
 
-    <type name="Heidelpay\MGW\Model\Method\Creditcard">
+    <type name="Heidelpay\MGW\Model\Method\Cards">
         <arguments>
-            <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_CREDITCARD</argument>
+            <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_CARDS</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWCreditcardValueHandlerPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWCardsValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">HeidelpayMGWAuthorizeAndCaptureCommandPool</argument>
         </arguments>
