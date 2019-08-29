@@ -76,11 +76,11 @@ class Unregister extends Action
                 }
             }
 
-            $this->messageManager->addSuccess(__('Successfully unregistered webhooks'));
+            $this->messageManager->addSuccessMessage(__('Successfully unregistered webhooks'));
         } catch (HeidelpayApiException $e) {
-            $this->messageManager->addError(__($e->getMerchantMessage()));
+            $this->messageManager->addErrorMessage(__($e->getMerchantMessage()));
         } catch (\Exception $e) {
-            $this->messageManager->addError(__($e->getMessage()));
+            $this->messageManager->addErrorMessage(__($e->getMessage()));
         }
 
         $redirect = $this->resultRedirectFactory->create();

@@ -136,7 +136,7 @@ class Invoice extends Base
             $charge->getHolder(),
             $charge->getIban(),
             $charge->getBic(),
-            $charge->getShortId()
+            $charge->getDescriptor()
         );
     }
 }

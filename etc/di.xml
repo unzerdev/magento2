@@ -4,7 +4,7 @@
 
     <virtualType name="Heidelpay\MGW\Logger\Logger" type="\Magento\Framework\Logger\Monolog">
         <arguments>
-            <argument name="name" xsi:type="string">heidelpay_logger</argument>
+            <argument name="name" xsi:type="string">heidelpay</argument>
             <argument name="handlers" xsi:type="array">
                 <item name="debug" xsi:type="object">Heidelpay\MGW\Model\Logger\Handler\Debug</item>
             </argument>
@@ -49,7 +49,8 @@
         </arguments>
     </virtualType>
 
-    <!-- must be configured to avoid DI problems -->
+    <!-- must be configured to avoid DI compilation errors since Base is interpreted as a normal payment method
+         and thus requires a configuration, even though it is not used as payment method -->
     <virtualType name="HeidelpayMGWBaseConfig" type="Heidelpay\MGW\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_BASE</argument>

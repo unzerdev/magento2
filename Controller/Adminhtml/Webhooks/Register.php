@@ -83,11 +83,11 @@ class Register extends Action
                 $client->createWebhook($webhookUrl, 'all');
             }
 
-            $this->messageManager->addSuccess(__('Successfully registered webhooks'));
+            $this->messageManager->addSuccessMessage(__('Successfully registered webhooks'));
         } catch (HeidelpayApiException $e) {
-            $this->messageManager->addError(__($e->getMerchantMessage()));
+            $this->messageManager->addErrorMessage(__($e->getMerchantMessage()));
         } catch (\Exception $e) {
-            $this->messageManager->addError(__($e->getMessage()));
+            $this->messageManager->addErrorMessage(__($e->getMessage()));
         }
 
         $redirect = $this->resultRedirectFactory->create();

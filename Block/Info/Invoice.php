@@ -146,9 +146,9 @@ class Invoice extends Info
      * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
      * @return string
      */
-    public function getIdentificationNumber(): string
+    public function getReference(): string
     {
-        return $this->_getCharge()->getShortId();
+        return $this->_getCharge()->getDescriptor();
     }
 
     /**
