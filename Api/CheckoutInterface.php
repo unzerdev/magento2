@@ -1,12 +1,11 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Logger;
+namespace Heidelpay\MGW\Api;
 
-use heidelpayPHP\Interfaces\DebugHandlerInterface;
-use Psr\Log\LoggerInterface;
+use heidelpayPHP\Resources\Customer;
 
 /**
- * Wrapper around Psr Logger for use as Debug Handler in the heidelpay PHP SDK
+ * Checkout API Interface.
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -28,32 +27,14 @@ use Psr\Log\LoggerInterface;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class DebugHandler implements DebugHandlerInterface
+interface CheckoutInterface
 {
     /**
-     * @var LoggerInterface
-     */
-    protected $_logger;
-
-    /**
-     * DebugHandler constructor.
+     * Returns the external customer ID for the current quote.
      *
-     * @param LoggerInterface $logger
-     */
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->_logger = $logger;
-    }
-
-    /**
-     * Export in log file debug data.
+     * @param string|null $guestEmail Customer E-Mail address.
      *
-     * @param string $message Debug message.
-     *
-     * @return void
+     * @return string|null
      */
-    public function log(string $message)
-    {
-        $this->_logger->debug($message);
-    }
+    public function getExternalCustomerId(?string $guestEmail = null): ?string;
 }

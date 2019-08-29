@@ -7,6 +7,7 @@ use Heidelpay\MGW\Model\Config;
 use Heidelpay\MGW\Model\Method\Base;
 use Heidelpay\MGW\Model\System\Config\Source\PaymentAction;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
+use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
 use Magento\Sales\Model\Order as OrderModel;
@@ -48,6 +49,7 @@ class Order extends AbstractCommand
 
     /**
      * Order constructor.
+     * @param Session $checkoutSession
      * @param Config $config
      * @param OrderHelper $orderHelper
      * @param UrlInterface $urlBuilder
@@ -55,13 +57,14 @@ class Order extends AbstractCommand
      * @param Capture $captureCommand
      */
     public function __construct(
+        Session $checkoutSession,
         Config $config,
         OrderHelper $orderHelper,
         UrlInterface $urlBuilder,
         Authorize $authorizeCommand,
         Capture $captureCommand
     ) {
-        parent::__construct($config, $orderHelper, $urlBuilder);
+        parent::__construct($checkoutSession, $config, $orderHelper, $urlBuilder);
 
         $this->_authorizeCommand = $authorizeCommand;
         $this->_captureCommand = $captureCommand;
