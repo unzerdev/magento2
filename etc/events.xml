@@ -28,15 +28,32 @@
         <observer name="hpmgw_sofort_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
 
+    <event name="hpmgw_authorize_canceled">
+        <observer name="hpmgw_payment_failed" instance="Heidelpay\MGW\Model\Observer\PaymentFailedObserver" />
+    </event>
     <event name="hpmgw_authorize_failed">
         <observer name="hpmgw_payment_failed" instance="Heidelpay\MGW\Model\Observer\PaymentFailedObserver" />
     </event>
     <event name="hpmgw_authorize_expired">
         <observer name="hpmgw_payment_failed" instance="Heidelpay\MGW\Model\Observer\PaymentFailedObserver" />
     </event>
+    <event name="hpmgw_charge_canceled">
+        <observer name="hpmgw_payment_failed" instance="Heidelpay\MGW\Model\Observer\PaymentFailedObserver" />
+    </event>
     <event name="hpmgw_charge_failed">
         <observer name="hpmgw_payment_failed" instance="Heidelpay\MGW\Model\Observer\PaymentFailedObserver" />
     </event>
+    <event name="hpmgw_chargeback">
+        <observer name="hpmgw_payment_review" instance="Heidelpay\MGW\Model\Observer\PaymentFailedObserver" />
+    </event>
+
+    <event name="hpmgw_authorize_succeeded">
+        <observer name="hpmgw_payment_review" instance="Heidelpay\MGW\Model\Observer\PaymentSucceededObserver" />
+    </event>
+    <event name="hpmgw_charge_succeeded">
+        <observer name="hpmgw_payment_review" instance="Heidelpay\MGW\Model\Observer\PaymentSucceededObserver" />
+    </event>
+
     <event name="hpmgw_payment_payment_review">
         <observer name="hpmgw_payment_review" instance="Heidelpay\MGW\Model\Observer\PaymentReviewObserver" />
     </event>

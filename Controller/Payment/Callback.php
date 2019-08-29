@@ -117,11 +117,7 @@ class Callback extends AbstractPaymentAction
         if ($payment->isCompleted()) {
             $response = $this->handleSuccess($order, $transaction);
         } elseif ($payment->isPending()) {
-            if (!$transaction instanceof Charge || $transaction->isSuccess()) {
-                $response = $this->handleSuccess($order, $transaction);
-            } else {
-                $response = $this->handleError($order, $transaction);
-            }
+            $response = $this->handlePending($order);
         } else {
             $response = $this->handleError($order, $transaction);
         }
@@ -152,6 +148,25 @@ class Callback extends AbstractPaymentAction
 
         $redirect = $this->resultRedirectFactory->create();
         $redirect->setPath('checkout/cart');
+        return $redirect;
+    }
+
+    /**
+     * @param Order $order
+     * @param AbstractHeidelpayResource $transaction
+     * @return \Magento\Framework\Controller\Result\Redirect
+     */
+    protected function handlePending(
+        Order $order,
+        AbstractHeidelpayResource $transaction
+    ): \Magento\Framework\Controller\Result\Redirect
+    {
+        $order->setState(Order::STATE_PENDING_PAYMENT);
+        $order->addCommentToStatusHistory(sprintf("Transaction %s is pending", $transaction->getUniqueId()));
+        $this->_orderRepository->save($order);
+
+        $redirect = $this->resultRedirectFactory->create();
+        $redirect->setPath('checkout/onepage/success');
         return $redirect;
     }
 
