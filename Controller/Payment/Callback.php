@@ -161,7 +161,7 @@ class Callback extends AbstractPaymentAction
         AbstractHeidelpayResource $transaction
     ): \Magento\Framework\Controller\Result\Redirect
     {
-        $order->setState(Order::STATE_PAYMENT_REVIEW);
+        $order->setState(Order::STATE_PENDING_PAYMENT);
         $order->addCommentToStatusHistory(sprintf("Transaction %s is pending", $transaction->getUniqueId()));
         $this->_orderRepository->save($order);
 
