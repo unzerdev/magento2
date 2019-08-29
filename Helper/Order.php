@@ -149,6 +149,12 @@ class Order
             $customer->setCustomerId($email);
         }
 
+        $company = $billingAddress->getCompany();
+        if (empty($company)) {
+            $company = null;
+        }
+
+        $customer->setCompany($company);
         $customer->setEmail($email);
         $customer->setFirstname($billingAddress->getFirstname());
         $customer->setLastname($billingAddress->getLastname());
@@ -169,10 +175,11 @@ class Order
     private function updateGatewayAddressFromMagento(
         EmbeddedResources\Address $gatewayAddress,
         Quote\Address $magentoAddress
-    ): void {
+    ): void
+    {
         $gatewayAddress->setCity($magentoAddress->getCity());
         $gatewayAddress->setCountry($magentoAddress->getCountry());
-        $gatewayAddress->setStreet($magentoAddress->getStreetFull());
+        $gatewayAddress->setStreet($magentoAddress->getStreetLine(1));
         $gatewayAddress->setZip($magentoAddress->getPostcode());
     }
 }

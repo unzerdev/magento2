@@ -289,6 +289,40 @@
         </arguments>
     </type>
 
+    <virtualType name="HeidelpayMGWInvoiceGuaranteedB2bConfig" type="Heidelpay\MGW\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_INVOICE_GUARANTEED_B2B</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWInvoiceGuaranteedB2bConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">HeidelpayMGWInvoiceGuaranteedB2bConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWInvoiceGuaranteedB2bValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">HeidelpayMGWInvoiceGuaranteedB2bConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Heidelpay\MGW\Model\Method\InvoiceGuaranteedB2b">
+        <arguments>
+            <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_INVOICE_GUARANTEED_B2B</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Heidelpay\MGW\Block\Info\InvoiceGuaranteedB2b</argument>
+            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWInvoiceGuaranteedB2bValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
+        </arguments>
+    </type>
+
     <virtualType name="HeidelpayMGWInvoiceGuaranteedConfig" type="Heidelpay\MGW\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_INVOICE_GUARANTEED</argument>

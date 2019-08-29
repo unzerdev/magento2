@@ -70,7 +70,8 @@ class Base extends Adapter
         ValidatorPoolInterface $validatorPool = null,
         CommandManagerInterface $commandExecutor = null,
         LoggerInterface $logger = null
-    ) {
+    )
+    {
         parent::__construct(
             $eventManager,
             $valueHandlerPool,
@@ -123,15 +124,33 @@ class Base extends Adapter
      */
     public function isAvailable(CartInterface $quote = null)
     {
-        if ($this->isB2cOnly()) {
-            $isAvailable = $quote === null || empty($quote->getBillingAddress()->getCompany());
+        if ($quote === null) {
+            return parent::isAvailable($quote);
+        }
 
-            if (!$isAvailable) {
+        $hasCompany = !empty($quote->getBillingAddress()->getCompany());
+
+        if ($hasCompany) {
+            if ($this->isB2cOnly()) {
+                return false;
+            }
+        } else {
+            if ($this->isB2bOnly()) {
                 return false;
             }
         }
 
         return parent::isAvailable($quote);
+    }
+
+    /**
+     * Returns whether the payment method is only available for B2B customers.
+     *
+     * @return bool
+     */
+    public function isB2bOnly(): bool
+    {
+        return false;
     }
 
     /**
