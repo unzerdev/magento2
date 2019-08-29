@@ -29,7 +29,7 @@
                 <item name="cancel" xsi:type="string">Heidelpay\MGW\Model\Command\Cancel</item>
                 <item name="capture" xsi:type="string">Heidelpay\MGW\Model\Command\Capture</item>
                 <item name="order" xsi:type="string">Heidelpay\MGW\Model\Command\Order</item>
-                <item name="refund" xsi:type="string">Heidelpay\MGW\Model\Command\Cancel</item>
+                <item name="refund" xsi:type="string">Heidelpay\MGW\Model\Command\Refund</item>
                 <item name="void" xsi:type="string">Heidelpay\MGW\Model\Command\Cancel</item>
             </argument>
         </arguments>
@@ -41,7 +41,7 @@
                 <item name="cancel" xsi:type="string">Heidelpay\MGW\Model\Command\Cancel</item>
                 <item name="capture" xsi:type="string">Heidelpay\MGW\Model\Command\Capture</item>
                 <item name="order" xsi:type="string">Heidelpay\MGW\Model\Command\Order</item>
-                <item name="refund" xsi:type="string">Heidelpay\MGW\Model\Command\Cancel</item>
+                <item name="refund" xsi:type="string">Heidelpay\MGW\Model\Command\Refund</item>
                 <item name="void" xsi:type="string">Heidelpay\MGW\Model\Command\Cancel</item>
             </argument>
         </arguments>

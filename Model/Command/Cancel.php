@@ -2,6 +2,7 @@
 
 namespace Heidelpay\MGW\Model\Command;
 
+use heidelpayPHP\Constants\CancelReasonCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Cancellation;
@@ -35,6 +36,8 @@ use Magento\Sales\Model\Order;
  */
 class Cancel extends AbstractCommand
 {
+    const REASON = CancelReasonCodes::REASON_CODE_CANCEL;
+
     /**
      * @inheritDoc
      * @throws LocalizedException
@@ -48,22 +51,39 @@ class Cancel extends AbstractCommand
         /** @var Order $order */
         $order = $payment->getOrder();
 
+        /** @var float $amountToCancel */
+        $amountToCancel = $order->getGrandTotal();
+
         /** @var Payment $hpPayment */
         $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
 
-        /** @var Charge|null $charge */
-        $charge = $hpPayment->getChargeByIndex(0);
+        $chargeCount = count($hpPayment->getCharges());
 
-        /** @var Cancellation $cancellation */
-        if ($charge !== null) {
-            // Partial cancellation does not work correctly in all cases, so we always cancel the whole charge.
-            $cancellation = $charge->cancel();
-        } else {
-            $cancellation = $hpPayment->getAuthorization()->cancel($order->getGrandTotal());
+        if ($chargeCount === 0) {
+            /** @var Cancellation $cancellation */
+            $cancellation = $hpPayment->getAuthorization()->cancel($amountToCancel);
+            if ($cancellation->isError()) {
+                throw new LocalizedException(__('Failed to cancel payment.'));
+            }
+            return;
         }
 
-        if ($cancellation->isError()) {
-            throw new LocalizedException(__('Failed to cancel payment.'));
+        for ($index = $chargeCount - 1; $index >= 0 && $amountToCancel > 0; $index--) {
+            /** @var Charge $charge */
+            $charge = $hpPayment->getChargeByIndex($index);
+
+            /** @var Cancellation $cancellation */
+            if ($charge->getAmount() >= $amountToCancel) {
+                $cancellation = $charge->cancel($amountToCancel, static::REASON);
+            } else {
+                $cancellation = $charge->cancel(null, static::REASON);
+            }
+
+            if ($cancellation->isError()) {
+                throw new LocalizedException(__('Failed to cancel payment.'));
+            }
+
+            $amountToCancel -= $cancellation->getAmount();
         }
     }
 }
