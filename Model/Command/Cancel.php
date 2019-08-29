@@ -52,7 +52,7 @@ class Cancel extends AbstractCommand
         $order = $payment->getOrder();
 
         /** @var float $amountToCancel */
-        $amountToCancel = $order->getGrandTotal();
+        $amountToCancel = $commandSubject['amount'] ?? $order->getGrandTotal();
 
         /** @var Payment $hpPayment */
         $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
