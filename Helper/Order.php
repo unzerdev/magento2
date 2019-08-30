@@ -177,9 +177,14 @@ class Order
         Quote\Address $magentoAddress
     ): void
     {
+        $streetLines = $magentoAddress->getStreet();
+        $streetLines = array_map('trim', $streetLines);
+        $streetLines = array_unique($streetLines);
+        $street = implode(' ', $streetLines);
+
         $gatewayAddress->setCity($magentoAddress->getCity());
         $gatewayAddress->setCountry($magentoAddress->getCountry());
-        $gatewayAddress->setStreet($magentoAddress->getStreetFull());
+        $gatewayAddress->setStreet($street);
         $gatewayAddress->setZip($magentoAddress->getPostcode());
     }
 }
