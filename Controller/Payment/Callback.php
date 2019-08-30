@@ -117,7 +117,7 @@ class Callback extends AbstractPaymentAction
         if ($payment->isCompleted()) {
             $response = $this->handleSuccess($order, $transaction);
         } elseif ($payment->isPending()) {
-            $response = $this->handlePending($order);
+            $response = $this->handlePending($order, $transaction);
         } else {
             $response = $this->handleError($order, $transaction);
         }
