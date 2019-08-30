@@ -179,7 +179,7 @@ class Order
     {
         $gatewayAddress->setCity($magentoAddress->getCity());
         $gatewayAddress->setCountry($magentoAddress->getCountry());
-        $gatewayAddress->setStreet($magentoAddress->getStreetLine(1));
+        $gatewayAddress->setStreet($magentoAddress->getStreetFull());
         $gatewayAddress->setZip($magentoAddress->getPostcode());
     }
 }
