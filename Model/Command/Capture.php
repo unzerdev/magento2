@@ -64,10 +64,14 @@ class Capture extends AbstractCommand
             $hpPayment = null;
         }
 
-        if ($hpPayment !== null) {
-            $charge = $this->_chargeExisting($hpPayment, $amount);
-        } else {
-            $charge = $this->_chargeNew($payment, $amount);
+        try {
+            if ($hpPayment !== null) {
+                $charge = $this->_chargeExisting($hpPayment, $amount);
+            } else {
+                $charge = $this->_chargeNew($payment, $amount);
+            }
+        } catch (HeidelpayApiException $e) {
+            throw new LocalizedException(__($e->getClientMessage()));
         }
 
         if ($charge->isError()) {

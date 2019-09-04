@@ -11,6 +11,7 @@ define(
         'Magento_Checkout/js/model/quote',
         'Magento_Checkout/js/model/url-builder',
         'Magento_Checkout/js/view/payment/default',
+        'Magento_Ui/js/model/messageList',
         '//static.heidelpay.com/v1/heidelpay.js',
         '//cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js'
     ],
@@ -26,6 +27,7 @@ define(
         quote,
         urlBuilder,
         Component,
+        globalMessageList,
         heidelpay,
         Promise
     ) {
@@ -142,13 +144,19 @@ define(
                             .done(function () {
                                 deferred.resolve.apply(deferred, arguments);
                             })
-                            .fail(function () {
-                                deferred.reject.apply(deferred, arguments);
+                            .fail(function (request) {
+                                deferred.reject(request.responseJSON.message);
                             });
                     })
                     .catch(function (error) {
                         deferred.reject($t("There was an error placing your order"));
                     });
+
+                deferred.fail(function(error) {
+                    globalMessageList.addErrorMessage({
+                        message: error
+                    });
+                });
 
                 return $.when(deferred);
             },

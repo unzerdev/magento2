@@ -3,6 +3,7 @@
 namespace Heidelpay\MGW\Model\Command;
 
 use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
+use heidelpayPHP\Exceptions\HeidelpayApiException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
@@ -51,17 +52,21 @@ class Authorize extends AbstractCommand
         /** @var string $resourceId */
         $resourceId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_RESOURCE_ID);
 
-        $authorization = $this->_getClient()->authorize(
-            $amount,
-            $order->getOrderCurrencyCode(),
-            $resourceId,
-            $this->_getCallbackUrl(),
-            $this->_getCustomerId($payment),
-            $order->getIncrementId(),
-            $this->_orderHelper->createMetadataForOrder($order),
-            $this->_orderHelper->createBasketForOrder($order),
-            null
-        );
+        try {
+            $authorization = $this->_getClient()->authorize(
+                $amount,
+                $order->getOrderCurrencyCode(),
+                $resourceId,
+                $this->_getCallbackUrl(),
+                $this->_getCustomerId($payment),
+                $order->getIncrementId(),
+                $this->_orderHelper->createMetadataForOrder($order),
+                $this->_orderHelper->createBasketForOrder($order),
+                null
+            );
+        } catch (HeidelpayApiException $e) {
+            throw new LocalizedException(__($e->getClientMessage()));
+        }
 
         if ($authorization->isError()) {
             throw new LocalizedException(__('Failed to authorize payment.'));
