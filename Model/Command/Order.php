@@ -10,7 +10,10 @@ use heidelpayPHP\Exceptions\HeidelpayApiException;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
+use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order as OrderModel;
+use Magento\Sales\Model\Order\Payment\Operations\AuthorizeOperation;
+use Magento\Sales\Model\Order\Payment\Operations\CaptureOperation;
 
 /**
  * Order Command for payments
@@ -38,14 +41,14 @@ use Magento\Sales\Model\Order as OrderModel;
 class Order extends AbstractCommand
 {
     /**
-     * @var Authorize
+     * @var AuthorizeOperation
      */
-    protected $_authorizeCommand;
+    protected $_authorizeOperation;
 
     /**
-     * @var Capture
+     * @var CaptureOperation
      */
-    protected $_captureCommand;
+    protected $_captureOperation;
 
     /**
      * Order constructor.
@@ -53,21 +56,21 @@ class Order extends AbstractCommand
      * @param Config $config
      * @param OrderHelper $orderHelper
      * @param UrlInterface $urlBuilder
-     * @param Authorize $authorizeCommand
-     * @param Capture $captureCommand
+     * @param AuthorizeOperation $authorizeOperation
+     * @param CaptureOperation $captureOperation
      */
     public function __construct(
         Session $checkoutSession,
         Config $config,
         OrderHelper $orderHelper,
         UrlInterface $urlBuilder,
-        Authorize $authorizeCommand,
-        Capture $captureCommand
+        AuthorizeOperation $authorizeOperation,
+        CaptureOperation $captureOperation
     ) {
         parent::__construct($checkoutSession, $config, $orderHelper, $urlBuilder);
 
-        $this->_authorizeCommand = $authorizeCommand;
-        $this->_captureCommand = $captureCommand;
+        $this->_authorizeOperation = $authorizeOperation;
+        $this->_captureOperation = $captureOperation;
     }
 
     /**
@@ -78,7 +81,7 @@ class Order extends AbstractCommand
      */
     public function execute(array $commandSubject)
     {
-        /** @var \Magento\Payment\Model\InfoInterface $payment */
+        /** @var OrderPaymentInterface $payment */
         $payment = $commandSubject['payment']->getPayment();
 
         /** @var OrderModel $order */
@@ -93,14 +96,17 @@ class Order extends AbstractCommand
 
         switch ($action) {
             case PaymentAction::ACTION_AUTHORIZE:
-                $this->_authorizeCommand->execute($commandSubject);
+                $this->_authorizeOperation->authorize($payment, true, $commandSubject['amount']);
                 break;
             case PaymentAction::ACTION_AUTHORIZE_CAPTURE:
-                $this->_captureCommand->execute($commandSubject);
+                $this->_captureOperation->capture($payment, null);
                 break;
             default:
                 throw new \Exception('Invalid payment action');
         }
+
+        // Don't create a transaction for the Order command itself.
+        $payment->setSkipOrderProcessing(true);
 
         return null;
     }

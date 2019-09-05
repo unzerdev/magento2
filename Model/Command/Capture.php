@@ -82,6 +82,14 @@ class Capture extends AbstractCommand
         $payment->setLastTransId($charge->getUniqueId());
         $payment->setTransactionId($charge->getUniqueId());
 
+        if ($charge->isPending()) {
+            $payment->setIsTransactionClosed(false);
+            $payment->setIsTransactionPending(true);
+        } else {
+            $payment->setIsTransactionClosed(true);
+            $payment->setIsTransactionPending(false);
+        }
+
         return null;
     }
 
