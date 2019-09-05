@@ -3,6 +3,7 @@
 namespace Heidelpay\MGW\Model\Observer;
 
 use Exception;
+use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Framework\Api\SearchCriteriaBuilder;
@@ -45,6 +46,11 @@ abstract class AbstractPaymentWebhookObserver implements ObserverInterface
     protected $_orderRepository;
 
     /**
+     * @var \Heidelpay\MGW\Helper\Payment
+     */
+    protected $_paymentHelper;
+
+    /**
      * @var SearchCriteriaBuilder
      */
     protected $_searchCriteriaBuilder;
@@ -52,13 +58,16 @@ abstract class AbstractPaymentWebhookObserver implements ObserverInterface
     /**
      * ShipmentObserver constructor.
      * @param OrderRepositoryInterface $orderRepository
+     * @param \Heidelpay\MGW\Helper\Payment $paymentHelper
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
+        \Heidelpay\MGW\Helper\Payment $paymentHelper,
         SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->_orderRepository = $orderRepository;
+        $this->_paymentHelper = $paymentHelper;
         $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
@@ -72,10 +81,13 @@ abstract class AbstractPaymentWebhookObserver implements ObserverInterface
         $eventType = $observer->getEvent()->getData('eventType');
 
         /** @var Authorization|Charge|Payment $payment */
-        $payment = $observer->getEvent()->getData('resource');
+        $resource = $observer->getEvent()->getData('resource');
 
         /** @var DataObject $result */
         $result = $observer->getEvent()->getData('result');
+
+        /** @var Payment $payment */
+        $payment = $resource;
 
         if (!$payment instanceof Payment) {
             $payment = $payment->getPayment();
@@ -98,7 +110,7 @@ abstract class AbstractPaymentWebhookObserver implements ObserverInterface
         $order = reset($orders);
 
         try {
-            $this->executeWith($order, $payment, $result);
+            $this->executeWith($order, $resource, $result);
             $this->_orderRepository->save($order);
         } catch (Exception $e) {
             $result->setData('message', 'Internal server error');
@@ -121,8 +133,8 @@ abstract class AbstractPaymentWebhookObserver implements ObserverInterface
 
     /**
      * @param Order $order
-     * @param Payment $payment
+     * @param AbstractHeidelpayResource $resource
      * @param DataObject $result
      */
-    abstract public function executeWith(Order $order, Payment $payment, DataObject $result): void;
+    abstract public function executeWith(Order $order, AbstractHeidelpayResource $resource, DataObject $result): void;
 }

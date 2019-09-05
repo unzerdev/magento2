@@ -2,6 +2,7 @@
 
 namespace Heidelpay\MGW\Controller\Payment;
 
+use Exception;
 use Heidelpay\MGW\Model\Config;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
@@ -12,12 +13,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Quote\Api\CartManagementInterface;
-use Magento\Sales\Api\OrderPaymentRepositoryInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Email\Sender\OrderSender;
-use Magento\Sales\Model\Order\Payment as OrderPayment;
-use Magento\Sales\Model\Order\StatusResolver;
 
 /**
  * Callback action called when customers return from a payment provider
@@ -55,34 +51,9 @@ class Callback extends AbstractPaymentAction
     protected $_messageManager;
 
     /**
-     * @var Config
+     * @var \Heidelpay\MGW\Helper\Payment
      */
-    protected $_moduleConfig;
-
-    /**
-     * @var OrderRepositoryInterface
-     */
-    protected $_orderRepository;
-
-    /**
-     * @var OrderSender
-     */
-    protected $_orderSender;
-
-    /**
-     * @var StatusResolver
-     */
-    protected $_orderStatusResolver;
-
-    /**
-     * @var OrderPaymentRepositoryInterface
-     */
-    protected $_paymentRepository;
-
-    /**
-     * @var OrderPayment\Transaction\Repository
-     */
-    protected $_transactionRepository;
+    protected $_paymentHelper;
 
     /**
      * Callback constructor.
@@ -91,11 +62,7 @@ class Callback extends AbstractPaymentAction
      * @param Session $checkoutSession
      * @param ManagerInterface $messageManager
      * @param Config $moduleConfig
-     * @param OrderRepositoryInterface $orderRepository
-     * @param OrderSender $orderSender
-     * @param StatusResolver $orderStatusResolver
-     * @param OrderPaymentRepositoryInterface $paymentRepository
-     * @param OrderPayment\Transaction\Repository $transactionRepository
+     * @param \Heidelpay\MGW\Helper\Payment $paymentHelper
      */
     public function __construct(
         Context $context,
@@ -103,23 +70,14 @@ class Callback extends AbstractPaymentAction
         Session $checkoutSession,
         ManagerInterface $messageManager,
         Config $moduleConfig,
-        OrderRepositoryInterface $orderRepository,
-        OrderSender $orderSender,
-        StatusResolver $orderStatusResolver,
-        OrderPaymentRepositoryInterface $paymentRepository,
-        OrderPayment\Transaction\Repository $transactionRepository
+        \Heidelpay\MGW\Helper\Payment $paymentHelper
     )
     {
         parent::__construct($context, $checkoutSession, $moduleConfig);
 
         $this->_cartManagement = $cartManagement;
         $this->_messageManager = $messageManager;
-        $this->_moduleConfig = $moduleConfig;
-        $this->_orderRepository = $orderRepository;
-        $this->_orderSender = $orderSender;
-        $this->_orderStatusResolver = $orderStatusResolver;
-        $this->_paymentRepository = $paymentRepository;
-        $this->_transactionRepository = $transactionRepository;
+        $this->_paymentHelper = $paymentHelper;
     }
 
     /**
@@ -128,15 +86,15 @@ class Callback extends AbstractPaymentAction
      */
     public function executeWith(Order $order, Payment $payment)
     {
-        /** @var Authorization|Charge|AbstractHeidelpayResource $transaction */
-        $transaction = $payment->getAuthorization() ?? $payment->getChargeByIndex(0);
+        /** @var Authorization|Charge|AbstractHeidelpayResource $resource */
+        $resource = $payment->getAuthorization() ?? $payment->getChargeByIndex(0);
 
         if ($payment->isCompleted()) {
-            $response = $this->handleSuccess($order, $transaction);
+            $response = $this->handleSuccess($order, $resource);
         } elseif ($payment->isPending()) {
-            $response = $this->handlePending($order, $transaction);
+            $response = $this->handlePending($order);
         } else {
-            $response = $this->handleError($order, $transaction);
+            $response = $this->handleError($order, $resource);
         }
 
         return $response;
@@ -144,15 +102,15 @@ class Callback extends AbstractPaymentAction
 
     /**
      * @param Order $order
-     * @param Authorization|Charge|AbstractHeidelpayResource $transaction
+     * @param Authorization|Charge|AbstractHeidelpayResource $resource
      * @return \Magento\Framework\Controller\Result\Redirect
      */
     protected function handleError(
         Order $order,
-        AbstractHeidelpayResource $transaction
+        AbstractHeidelpayResource $resource
     ): \Magento\Framework\Controller\Result\Redirect
     {
-        return $this->handleErrorMessage($order, $transaction->getMessage()->getCustomer());
+        return $this->handleErrorMessage($order, $resource->getMessage()->getCustomer());
     }
 
     /**
@@ -163,10 +121,9 @@ class Callback extends AbstractPaymentAction
     private function handleErrorMessage(Order $order, string $message): \Magento\Framework\Controller\Result\Redirect
     {
         $this->_checkoutSession->restoreQuote();
-        $order->cancel();
-        $this->_orderRepository->save($order);
-
         $this->_messageManager->addError($message);
+
+        $this->_paymentHelper->handleTransactionError($order);
 
         $redirect = $this->resultRedirectFactory->create();
         $redirect->setPath('checkout/cart');
@@ -174,15 +131,11 @@ class Callback extends AbstractPaymentAction
     }
 
     /**
-     * @param Order $order
      * @return \Magento\Framework\Controller\Result\Redirect
      */
     protected function handlePending(Order $order): \Magento\Framework\Controller\Result\Redirect
     {
-        $order->setState(Order::STATE_PAYMENT_REVIEW);
-        $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
-
-        $this->_orderRepository->save($order);
+        $this->_paymentHelper->handleTransactionPending($order);
 
         $redirect = $this->resultRedirectFactory->create();
         $redirect->setPath('checkout/onepage/success');
@@ -191,48 +144,19 @@ class Callback extends AbstractPaymentAction
 
     /**
      * @param Order $order
-     * @param Authorization|Charge|AbstractHeidelpayResource $transaction
+     * @param Authorization|Charge|AbstractHeidelpayResource $resource
      * @return \Magento\Framework\Controller\Result\Redirect
      */
     protected function handleSuccess(
         Order $order,
-        AbstractHeidelpayResource $transaction
+        AbstractHeidelpayResource $resource
     ): \Magento\Framework\Controller\Result\Redirect
     {
-        /** @var OrderPayment $payment */
-        $payment = $order->getPayment();
-
         try {
-            /** @var OrderPayment\Transaction $paymentTransaction */
-            $paymentTransaction = $this->_transactionRepository->getByTransactionId(
-                $transaction->getUniqueId(),
-                $payment->getId(),
-                $order->getId()
-            );
-        } catch (\Exception $e) {
+            $this->_paymentHelper->handleTransactionSuccess($order, $resource);
+        } catch (Exception $e) {
             return $this->handleErrorMessage($order, $e->getMessage());
         }
-
-        switch (true) {
-            case $transaction instanceof Authorization:
-                $payment->registerAuthorizationNotification($transaction->getAmount());
-                break;
-            case $transaction instanceof Charge:
-                $payment->registerCaptureNotification($transaction->getAmount());
-                break;
-            default:
-        }
-
-        $order->setCanSendNewEmailFlag(true);
-        $order->setState(Order::STATE_PROCESSING);
-        $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
-
-        $paymentTransaction->setIsClosed(true);
-
-        $this->_transactionRepository->save($paymentTransaction);
-        $this->_paymentRepository->save($payment);
-        $this->_orderRepository->save($order);
-        $this->_orderSender->send($order);
 
         $redirect = $this->resultRedirectFactory->create();
         $redirect->setPath('checkout/onepage/success');
