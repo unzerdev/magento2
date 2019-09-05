@@ -2,6 +2,7 @@
 
 namespace Heidelpay\MGW\Controller\Payment;
 
+use Exception;
 use Heidelpay\MGW\Model\Config;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
@@ -53,11 +54,6 @@ class Callback extends AbstractPaymentAction
      * @var \Heidelpay\MGW\Helper\Payment
      */
     protected $_paymentHelper;
-
-    /**
-     * @var OrderPayment\Transaction\Repository
-     */
-    protected $_transactionRepository;
 
     /**
      * Callback constructor.
@@ -136,7 +132,6 @@ class Callback extends AbstractPaymentAction
     }
 
     /**
-     * @param Order $order
      * @return \Magento\Framework\Controller\Result\Redirect
      */
     protected function handlePending(Order $order): \Magento\Framework\Controller\Result\Redirect
