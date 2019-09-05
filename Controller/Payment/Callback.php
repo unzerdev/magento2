@@ -2,7 +2,6 @@
 
 namespace Heidelpay\MGW\Controller\Payment;
 
-use Exception;
 use Heidelpay\MGW\Model\Config;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
@@ -56,6 +55,11 @@ class Callback extends AbstractPaymentAction
     protected $_paymentHelper;
 
     /**
+     * @var OrderPayment\Transaction\Repository
+     */
+    protected $_transactionRepository;
+
+    /**
      * Callback constructor.
      * @param Context $context
      * @param CartManagementInterface $cartManagement
@@ -83,6 +87,7 @@ class Callback extends AbstractPaymentAction
     /**
      * @inheritDoc
      * @throws HeidelpayApiException
+     * @throws \Magento\Framework\Exception\InputException
      */
     public function executeWith(Order $order, Payment $payment)
     {
@@ -147,6 +152,7 @@ class Callback extends AbstractPaymentAction
      * @param Order $order
      * @param Authorization|Charge|AbstractHeidelpayResource $resource
      * @return \Magento\Framework\Controller\Result\Redirect
+     * @throws \Magento\Framework\Exception\InputException
      */
     protected function handleSuccess(
         Order $order,
