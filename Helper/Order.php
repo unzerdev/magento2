@@ -72,7 +72,7 @@ class Order
     {
         $basket = new Basket();
         $basket->setAmountTotalGross($order->getGrandTotal());
-        $basket->setAmountTotalDiscount($order->getDiscountAmount());
+        $basket->setAmountTotalDiscount(abs($order->getDiscountAmount()));
         $basket->setCurrencyCode($order->getOrderCurrencyCode());
         $basket->setOrderId($order->getIncrementId());
 
@@ -86,7 +86,7 @@ class Order
 
             $basketItem = new BasketItem();
             $basketItem->setAmountNet($orderItem->getRowTotal());
-            $basketItem->setAmountDiscount($orderItem->getDiscountAmount());
+            $basketItem->setAmountDiscount(abs($orderItem->getDiscountAmount()));
             $basketItem->setAmountGross($totalInclTax);
             $basketItem->setAmountPerUnit($orderItem->getPrice());
             $basketItem->setAmountVat($orderItem->getTaxAmount());
