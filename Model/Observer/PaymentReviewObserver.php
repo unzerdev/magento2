@@ -2,7 +2,7 @@
 
 namespace Heidelpay\MGW\Model\Observer;
 
-use heidelpayPHP\Resources\Payment;
+use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use Magento\Framework\DataObject;
 use Magento\Sales\Model\Order;
 
@@ -33,12 +33,12 @@ class PaymentReviewObserver extends AbstractPaymentWebhookObserver
 {
     /**
      * @param Order $order
-     * @param Payment $payment
+     * @param AbstractHeidelpayResource $resource
      * @param DataObject $result
      * @return void
      */
-    public function executeWith(Order $order, Payment $payment, DataObject $result): void
+    public function executeWith(Order $order, AbstractHeidelpayResource $resource, DataObject $result): void
     {
-        $order->setState(Order::STATE_PAYMENT_REVIEW);
+        $this->_paymentHelper->handleTransactionPending($order);
     }
 }

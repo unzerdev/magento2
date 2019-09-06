@@ -2,11 +2,8 @@
 
 namespace Heidelpay\MGW\Model\Observer;
 
-use heidelpayPHP\Resources\Payment;
-use Magento\Framework\Api\SearchCriteriaBuilder;
+use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use Magento\Framework\DataObject;
-use Magento\Sales\Api\OrderManagementInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 
 /**
@@ -35,33 +32,13 @@ use Magento\Sales\Model\Order;
 class PaymentFailedObserver extends AbstractPaymentWebhookObserver
 {
     /**
-     * @var OrderManagementInterface
-     */
-    protected $_orderManagement;
-
-    /**
-     * ShipmentObserver constructor.
-     * @param OrderRepositoryInterface $orderRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param OrderManagementInterface $orderManagement
-     */
-    public function __construct(
-        OrderRepositoryInterface $orderRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        OrderManagementInterface $orderManagement
-    ) {
-        parent::__construct($orderRepository, $searchCriteriaBuilder);
-        $this->_orderManagement = $orderManagement;
-    }
-
-    /**
      * @param Order $order
-     * @param Payment $payment
+     * @param AbstractHeidelpayResource $resource
      * @param DataObject $result
      * @return void
      */
-    public function executeWith(Order $order, Payment $payment, DataObject $result): void
+    public function executeWith(Order $order, AbstractHeidelpayResource $resource, DataObject $result): void
     {
-        $this->_orderManagement->cancel($order->getId());
+        $this->_paymentHelper->handleTransactionError($order);
     }
 }

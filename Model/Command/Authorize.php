@@ -76,6 +76,14 @@ class Authorize extends AbstractCommand
         $payment->setLastTransId($authorization->getUniqueId());
         $payment->setTransactionId($authorization->getUniqueId());
 
+        if ($authorization->isPending()) {
+            $payment->setIsTransactionClosed(false);
+            $payment->setIsTransactionPending(true);
+        } else {
+            $payment->setIsTransactionClosed(true);
+            $payment->setIsTransactionPending(false);
+        }
+
         return null;
     }
 }
