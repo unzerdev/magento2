@@ -131,6 +131,7 @@ class Callback extends AbstractPaymentAction
     }
 
     /**
+     * @param Order $order
      * @return \Magento\Framework\Controller\Result\Redirect
      */
     protected function handlePending(Order $order): \Magento\Framework\Controller\Result\Redirect

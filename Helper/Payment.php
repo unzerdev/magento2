@@ -122,12 +122,12 @@ class Payment
     public function handleTransactionSuccess(Order $order, AbstractHeidelpayResource $resource)
     {
         /** @var OrderPayment $payment */
-        $orderPayment = $order->getPayment();
+        $payment = $order->getPayment();
 
         /** @var OrderPayment\Transaction $paymentTransaction */
         $paymentTransaction = $this->_transactionRepository->getByTransactionId(
-            $orderPayment->getLastTransId(),
-            $orderPayment->getId(),
+            $payment->getLastTransId(),
+            $payment->getId(),
             $order->getId()
         );
 
@@ -149,7 +149,7 @@ class Payment
         $paymentTransaction->setIsClosed(true);
 
         $this->_transactionRepository->save($paymentTransaction);
-        $this->_paymentRepository->save($orderPayment);
+        $this->_paymentRepository->save($payment);
         $this->_orderRepository->save($order);
         $this->_orderSender->send($order);
     }
