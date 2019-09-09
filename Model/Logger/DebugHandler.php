@@ -40,7 +40,8 @@ class DebugHandler implements DebugHandlerInterface
      *
      * @param LoggerInterface $logger
      */
-    public function __construct(LoggerInterface $logger) {
+    public function __construct(LoggerInterface $logger)
+    {
         $this->_logger = $logger;
     }
 

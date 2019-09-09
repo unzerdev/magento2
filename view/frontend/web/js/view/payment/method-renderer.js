@@ -10,8 +10,8 @@ define(
         'use strict';
         rendererList.push(
             {
-                type: 'hpmgw_creditcard',
-                component: 'Heidelpay_MGW/js/view/payment/method-renderer/creditcard'
+                type: 'hpmgw_cards',
+                component: 'Heidelpay_MGW/js/view/payment/method-renderer/cards'
             },
             {
                 type: 'hpmgw_direct_debit',

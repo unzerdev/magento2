@@ -1,13 +1,18 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Observer;
+namespace Heidelpay\MGW\Model\Command;
 
-use heidelpayPHP\Resources\AbstractHeidelpayResource;
-use Magento\Framework\DataObject;
+use heidelpayPHP\Constants\CancelReasonCodes;
+use heidelpayPHP\Exceptions\HeidelpayApiException;
+use heidelpayPHP\Resources\Payment;
+use heidelpayPHP\Resources\TransactionTypes\Cancellation;
+use heidelpayPHP\Resources\TransactionTypes\Charge;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order;
 
 /**
- * Observer for payment.review webhook events
+ * Refund Command for payments
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -29,16 +34,7 @@ use Magento\Sales\Model\Order;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class PaymentReviewObserver extends AbstractPaymentWebhookObserver
+class Refund extends Cancel
 {
-    /**
-     * @param Order $order
-     * @param AbstractHeidelpayResource $resource
-     * @param DataObject $result
-     * @return void
-     */
-    public function executeWith(Order $order, AbstractHeidelpayResource $resource, DataObject $result): void
-    {
-        $this->_paymentHelper->handleTransactionPending($order);
-    }
+    const REASON = CancelReasonCodes::REASON_CODE_RETURN;
 }

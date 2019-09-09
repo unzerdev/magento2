@@ -33,34 +33,34 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
                 </group>
-                <group id="creditcard" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>HPMGW_CREDITCARD</label>
+                <group id="cards" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>HPMGW_CARDS</label>
                     <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Enabled</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                        <config_path>payment/hpmgw_creditcard/active</config_path>
+                        <config_path>payment/hpmgw_cards/active</config_path>
                     </field>
                     <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Title</label>
-                        <config_path>payment/hpmgw_creditcard/title</config_path>
+                        <config_path>payment/hpmgw_cards/title</config_path>
                     </field>
                     <field id="order_payment_action" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1">
                         <label>Payment Action</label>
-                        <config_path>payment/hpmgw_creditcard/order_payment_action</config_path>
+                        <config_path>payment/hpmgw_cards/order_payment_action</config_path>
                         <source_model>Heidelpay\MGW\Model\System\Config\Source\PaymentAction</source_model>
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
-                        <config_path>payment/hpmgw_creditcard/min_order_total</config_path>
+                        <config_path>payment/hpmgw_cards/min_order_total</config_path>
                     </field>
                     <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Maximum Order Total</label>
-                        <config_path>payment/hpmgw_creditcard/max_order_total</config_path>
+                        <config_path>payment/hpmgw_cards/max_order_total</config_path>
                         <comment>Insert 0 to disable limit.</comment>
                     </field>
                     <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Sort Order</label>
-                        <config_path>payment/hpmgw_creditcard/sort_order</config_path>
+                        <config_path>payment/hpmgw_cards/sort_order</config_path>
                     </field>
                 </group>
                 <group id="direct_debit" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">

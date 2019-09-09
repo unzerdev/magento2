@@ -1,13 +1,11 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Observer;
+namespace Heidelpay\MGW\Api;
 
-use heidelpayPHP\Resources\AbstractHeidelpayResource;
-use Magento\Framework\DataObject;
-use Magento\Sales\Model\Order;
+use heidelpayPHP\Resources\Customer;
 
 /**
- * Observer for payment.review webhook events
+ * Checkout API Interface.
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -29,16 +27,14 @@ use Magento\Sales\Model\Order;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class PaymentReviewObserver extends AbstractPaymentWebhookObserver
+interface CheckoutInterface
 {
     /**
-     * @param Order $order
-     * @param AbstractHeidelpayResource $resource
-     * @param DataObject $result
-     * @return void
+     * Returns the external customer ID for the current quote.
+     *
+     * @param string|null $guestEmail Customer E-Mail address.
+     *
+     * @return string|null
      */
-    public function executeWith(Order $order, AbstractHeidelpayResource $resource, DataObject $result): void
-    {
-        $this->_paymentHelper->handleTransactionPending($order);
-    }
+    public function getExternalCustomerId(?string $guestEmail = null): ?string;
 }

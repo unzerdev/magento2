@@ -3,7 +3,7 @@
 namespace Heidelpay\MGW\Model\Method;
 
 /**
- * Creditcard payment method
+ * Cards payment method
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -25,6 +25,6 @@ namespace Heidelpay\MGW\Model\Method;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class Creditcard extends Base
+class Cards extends Base
 {
 }

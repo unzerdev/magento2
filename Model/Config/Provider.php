@@ -33,8 +33,11 @@ use Magento\Payment\Helper\Data as PaymentHelper;
  */
 class Provider implements ConfigProviderInterface
 {
+    /**
+     * @var array
+     */
     protected $_methodCodes = [
-        Config::METHOD_CREDITCARD,
+        Config::METHOD_CARDS,
         Config::METHOD_DIRECT_DEBIT,
         Config::METHOD_DIRECT_DEBIT_GUARANTEED,
         Config::METHOD_FLEXIPAY_DIRECT,

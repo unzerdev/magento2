@@ -2,18 +2,12 @@
 
 namespace Heidelpay\MGW\Model\Observer;
 
-use heidelpayPHP\Resources\Payment;
-use heidelpayPHP\Resources\TransactionTypes\Charge;
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Authorization;
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
+use heidelpayPHP\Resources\AbstractHeidelpayResource;
+use Magento\Framework\DataObject;
 use Magento\Sales\Model\Order;
 
 /**
- * Observer for payment.failed webhook events
+ * Observer for webhooks about failed and cancelled payments and chargebacks
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -35,56 +29,16 @@ use Magento\Sales\Model\Order;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class PaymentFailedObserver implements ObserverInterface
+class PaymentFailedObserver extends AbstractPaymentWebhookObserver
 {
     /**
-     * @var OrderRepositoryInterface
-     */
-    protected $_orderRepository;
-
-    /**
-     * @var SearchCriteriaBuilder
-     */
-    protected $_searchCriteriaBuilder;
-
-    /**
-     * ShipmentObserver constructor.
-     * @param OrderRepositoryInterface $orderRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     */
-    public function __construct(
-        OrderRepositoryInterface $orderRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder
-    ) {
-        $this->_orderRepository = $orderRepository;
-        $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
-    }
-
-    /**
-     * @param Observer $observer
+     * @param Order $order
+     * @param AbstractHeidelpayResource $resource
+     * @param DataObject $result
      * @return void
      */
-    public function execute(Observer $observer): void
+    public function executeWith(Order $order, AbstractHeidelpayResource $resource, DataObject $result): void
     {
-        /** @var Authorization|Charge|Payment $payment */
-        $payment = $observer->getEvent()->getData('resource');
-
-        if (!$payment instanceof Payment) {
-            $payment = $payment->getPayment();
-        }
-
-        $searchCriteria = $this->_searchCriteriaBuilder
-            ->addFilter('increment_id', $payment->getExternalId(), 'eq')
-            ->create();
-
-        /** @var OrderInterface[] $orders */
-        $orders = $this->_orderRepository->getList($searchCriteria)->getItems();
-
-        if (count($orders) > 0) {
-            $order = $orders[0];
-            $order->setState(Order::STATE_PAYMENT_REVIEW);
-
-            $this->_orderRepository->save($order);
-        }
+        $this->_paymentHelper->handleTransactionError($order);
     }
 }

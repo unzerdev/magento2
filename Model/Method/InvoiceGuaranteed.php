@@ -27,4 +27,11 @@ namespace Heidelpay\MGW\Model\Method;
  */
 class InvoiceGuaranteed extends Invoice
 {
+    /**
+     * @return bool
+     */
+    public function isB2cOnly(): bool
+    {
+        return true;
+    }
 }

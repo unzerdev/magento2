@@ -7,7 +7,7 @@ use Magento\Framework\DataObject;
 use Magento\Sales\Model\Order;
 
 /**
- * Observer for payment.review webhook events
+ * Observer for webhooks about successfull payments
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -29,16 +29,17 @@ use Magento\Sales\Model\Order;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class PaymentReviewObserver extends AbstractPaymentWebhookObserver
+class PaymentSucceededObserver extends AbstractPaymentWebhookObserver
 {
     /**
      * @param Order $order
      * @param AbstractHeidelpayResource $resource
      * @param DataObject $result
      * @return void
+     * @throws \Magento\Framework\Exception\InputException
      */
     public function executeWith(Order $order, AbstractHeidelpayResource $resource, DataObject $result): void
     {
-        $this->_paymentHelper->handleTransactionPending($order);
+        $this->_paymentHelper->handleTransactionSuccess($order, $resource);
     }
 }
