@@ -123,47 +123,32 @@ class Order
      * @throws HeidelpayApiException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function createOrUpdateCustomerFromQuote(Quote $quote, string $email): ?Customer
+    public function createCustomerFromQuote(Quote $quote, string $email): ?Customer
     {
-        /** @var Heidelpay $client */
-        $client = $this->_moduleConfig->getHeidelpayClient();
-
         /** @var Quote\Address $billingAddress */
         $billingAddress = $quote->getBillingAddress();
 
         /** @var Customer $customer */
+        $customer = CustomerFactory::createCustomer(
+            $billingAddress->getFirstname(),
+            $billingAddress->getLastname()
+        );
 
-        try {
-            $customer = $client->fetchCustomerByExtCustomerId($email);
-        } catch (HeidelpayApiException $e) {
-            if ($e->getCode() !== ApiResponseCodes::API_ERROR_CUSTOMER_CAN_NOT_BE_FOUND &&
-                $e->getCode() !== ApiResponseCodes::API_ERROR_CUSTOMER_DOES_NOT_EXIST) {
-                throw $e;
-            }
-
-            $customer = CustomerFactory::createCustomer(
-                $billingAddress->getFirstname(),
-                $billingAddress->getLastname()
-            );
-
-            $customer->setCustomerId($email);
-        }
+        $customer->setEmail($email);
+        $customer->setPhone($billingAddress->getTelephone());
 
         $company = $billingAddress->getCompany();
-        if (empty($company)) {
-            $company = null;
+        if (!empty($company)) {
+            $customer->setCompany($company);
         }
-
-        $customer->setCompany($company);
-        $customer->setEmail($email);
-        $customer->setFirstname($billingAddress->getFirstname());
-        $customer->setLastname($billingAddress->getLastname());
-        $customer->setPhone($billingAddress->getTelephone());
 
         $this->updateGatewayAddressFromMagento($customer->getBillingAddress(), $billingAddress);
         $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $quote->getShippingAddress());
 
-        return $client->createOrUpdateCustomer($customer);
+        /** @var Heidelpay $client */
+        $client = $this->_moduleConfig->getHeidelpayClient();
+
+        return $client->createCustomer($customer);
     }
 
     /**

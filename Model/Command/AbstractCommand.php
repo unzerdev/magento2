@@ -117,27 +117,7 @@ abstract class AbstractCommand implements CommandInterface
      */
     protected function _getCustomerId(InfoInterface $payment): ?string
     {
-        /** @var string|null $customerId */
-        $customerId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
-
-        if (!empty($customerId)) {
-            return $customerId;
-        }
-
-        try {
-            $customer = $this->_orderHelper->createOrUpdateCustomerFromQuote(
-                $this->_checkoutSession->getQuote(),
-                $this->_checkoutSession->getQuote()->getCustomerEmail()
-            );
-
-            if ($customer !== null) {
-                return $customer->getId();
-            }
-
-            return null;
-        } catch (Exception $e) {
-            return null;
-        }
+        return $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
     }
 
     /**
