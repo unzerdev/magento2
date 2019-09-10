@@ -3,7 +3,6 @@
 namespace Heidelpay\MGW\Helper;
 
 use Heidelpay\MGW\Model\Config;
-use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Heidelpay;
 use heidelpayPHP\Resources\Basket;
@@ -11,6 +10,9 @@ use heidelpayPHP\Resources\Customer;
 use heidelpayPHP\Resources\CustomerFactory;
 use heidelpayPHP\Resources\EmbeddedResources;
 use heidelpayPHP\Resources\EmbeddedResources\BasketItem;
+use heidelpayPHP\Resources\Metadata;
+use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\Module\ModuleListInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Sales\Model\Order as OrderModel;
 use Magento\Store\Api\Data\StoreInterface;
@@ -46,6 +48,16 @@ class Order
     private $_moduleConfig;
 
     /**
+     * @var ModuleListInterface
+     */
+    private $_moduleList;
+
+    /**
+     * @var ProductMetadataInterface
+     */
+    private $_productMetadata;
+
+    /**
      * @var StoreInterface
      */
     private $_store;
@@ -55,9 +67,15 @@ class Order
      * @param Config $moduleConfig
      * @param StoreInterface $store
      */
-    public function __construct(Config $moduleConfig, StoreInterface $store)
+    public function __construct(
+        Config $moduleConfig,
+        ModuleListInterface $moduleList,
+        ProductMetadataInterface $productMetadata,
+        StoreInterface $store)
     {
         $this->_moduleConfig = $moduleConfig;
+        $this->_moduleList = $moduleList;
+        $this->_productMetadata = $productMetadata;
         $this->_store = $store;
     }
 
@@ -108,9 +126,16 @@ class Order
     public function createMetadataForOrder(OrderModel $order): array
     {
         return [
-            'customer_id' => $order->getCustomerId(),
-            'customer_group_id' => $order->getCustomerGroupId(),
-            'store_id' => $order->getStoreId(),
+            'customerId' => $order->getCustomerId(),
+            'customerGroupId' => $order->getCustomerGroupId(),
+
+            'pluginType' => 'magento2-merchant-gateway',
+            'pluginVersion' => $this->_moduleList->getOne('Heidelpay_MGW')['setup_version'],
+
+            'shopType' => 'Magento 2',
+            'shopVersion' => $this->_productMetadata->getVersion(),
+
+            'storeId' => $order->getStoreId(),
         ];
     }
 
