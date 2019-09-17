@@ -16,6 +16,12 @@
         </arguments>
     </type>
 
+    <type name="Heidelpay\MGW\Model\Command\AbstractCommand">
+        <arguments>
+            <argument name="logger" xsi:type="object">Heidelpay\MGW\Logger\Logger</argument>
+        </arguments>
+    </type>
+
     <virtualType name="HeidelpayMGWValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">

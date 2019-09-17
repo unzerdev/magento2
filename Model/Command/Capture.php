@@ -71,6 +71,7 @@ class Capture extends AbstractCommand
                 $charge = $this->_chargeNew($payment, $amount);
             }
         } catch (HeidelpayApiException $e) {
+            $this->_logger->error($e->getMerchantMessage(), ['incrementId' => $order->getIncrementId()]);
             throw new LocalizedException(__($e->getClientMessage()));
         }
 
