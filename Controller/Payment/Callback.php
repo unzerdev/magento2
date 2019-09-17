@@ -122,7 +122,7 @@ class Callback extends AbstractPaymentAction
     private function handleErrorMessage(Order $order, string $message): \Magento\Framework\Controller\Result\Redirect
     {
         $this->_checkoutSession->restoreQuote();
-        $this->_messageManager->addError($message);
+        $this->_messageManager->addErrorMessage($message);
 
         $this->_paymentHelper->handleTransactionError($order);
 
