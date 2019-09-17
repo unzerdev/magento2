@@ -53,7 +53,7 @@ class InvoiceGuaranteed extends Invoice
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
      */
-    public function getCustomerBirthdate(): string
+    public function getCustomerBirthdate(): ?string
     {
         return $this->_getPayment()->getCustomer()->getBirthDate();
     }

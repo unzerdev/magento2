@@ -25,7 +25,7 @@ namespace Heidelpay\MGW\Block\Info;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class InvoiceGuaranteedB2b extends Invoice
+class InvoiceGuaranteedB2b extends InvoiceGuaranteed
 {
     protected $_template = 'Heidelpay_MGW::info/invoice_guaranteed_b2b.phtml';
 
@@ -36,25 +36,5 @@ class InvoiceGuaranteedB2b extends Invoice
     {
         $this->setTemplate('Heidelpay_MGW::info/pdf/invoice_guaranteed_b2b.phtml');
         return $this->toHtml();
-    }
-
-    /**
-     * @return string
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
-     */
-    public function getCustomerSalutation(): string
-    {
-        return $this->_getPayment()->getCustomer()->getSalutation();
-    }
-
-    /**
-     * @return string|null
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
-     */
-    public function getCustomerBirthdate(): string
-    {
-        return $this->_getPayment()->getCustomer()->getBirthDate();
     }
 }

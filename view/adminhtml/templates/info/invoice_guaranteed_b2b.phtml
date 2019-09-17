@@ -61,8 +61,10 @@
         <th><?php echo $block->escapeHtml(__('Salutation')); ?>:</th>
         <td><?php echo $block->escapeHtml(__($block->getCustomerSalutation())); ?></td>
     </tr>
-    <tr>
-        <th><?php echo $block->escapeHtml(__('Birthdate')); ?>:</th>
-        <td><?php echo $block->escapeHtml($block->getCustomerBirthdate()); ?></td>
-    </tr>
+    <?php if ($block->getCustomerBirthdate()): ?>
+        <tr>
+            <th><?php echo $block->escapeHtml(__('Birthdate')); ?>:</th>
+            <td><?php echo $block->escapeHtml($block->getCustomerBirthdate()); ?></td>
+        </tr>
+    <?php endif; ?>
 </table>
