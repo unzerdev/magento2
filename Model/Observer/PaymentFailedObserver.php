@@ -34,10 +34,9 @@ class PaymentFailedObserver extends AbstractPaymentWebhookObserver
     /**
      * @param Order $order
      * @param AbstractHeidelpayResource $resource
-     * @param DataObject $result
      * @return void
      */
-    public function executeWith(Order $order, AbstractHeidelpayResource $resource, DataObject $result): void
+    public function executeWith(Order $order, AbstractHeidelpayResource $resource): void
     {
         $this->_paymentHelper->handleTransactionError($order);
     }
