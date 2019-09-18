@@ -109,6 +109,16 @@ class Base extends Adapter
     }
 
     /**
+     * Returns the order state that will be set for pending orders.
+     *
+     * @return string
+     */
+    public function getTransactionPendingState(): string
+    {
+        return Order::STATE_PAYMENT_REVIEW;
+    }
+
+    /**
      * @inheritDoc
      */
     public function isAvailable(CartInterface $quote = null)
