@@ -131,7 +131,7 @@ class Payment
 
         /** @var OrderPayment\Transaction $paymentTransaction */
         $paymentTransaction = $this->_transactionRepository->getByTransactionId(
-            $payment->getLastTransId(),
+            $payment->getTransactionId(),
             $payment->getId(),
             $order->getId()
         );
