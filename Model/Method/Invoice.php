@@ -139,12 +139,4 @@ class Invoice extends Base
             $charge->getDescriptor()
         );
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function getTransactionPendingState(): string
-    {
-        return Order::STATE_PROCESSING;
-    }
 }

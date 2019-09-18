@@ -115,7 +115,7 @@ class Base extends Adapter
      */
     public function getTransactionPendingState(): string
     {
-        return Order::STATE_PAYMENT_REVIEW;
+        return $this->getConfigData('pending_payment_state') ?? Order::STATE_PAYMENT_REVIEW;
     }
 
     /**
