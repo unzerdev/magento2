@@ -72,18 +72,7 @@ class Authorize extends AbstractCommand
             throw new LocalizedException(__('Failed to authorize payment.'));
         }
 
-        /** @var OrderPayment $payment */
-        $payment->setLastTransId($authorization->getUniqueId());
-        $payment->setTransactionId($authorization->getUniqueId());
-
-        if ($authorization->isPending()) {
-            $payment->setIsTransactionClosed(false);
-            $payment->setIsTransactionPending(true);
-        } else {
-            $payment->setIsTransactionClosed(true);
-            $payment->setIsTransactionPending(false);
-        }
-
+        $this->_setPaymentTransaction($payment, $authorization);
         return null;
     }
 }

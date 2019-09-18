@@ -78,18 +78,7 @@ class Capture extends AbstractCommand
             throw new LocalizedException(__('Failed to charge payment.'));
         }
 
-        /** @var OrderPayment $payment */
-        $payment->setLastTransId($charge->getUniqueId());
-        $payment->setTransactionId($charge->getUniqueId());
-
-        if ($charge->isPending()) {
-            $payment->setIsTransactionClosed(false);
-            $payment->setIsTransactionPending(true);
-        } else {
-            $payment->setIsTransactionClosed(true);
-            $payment->setIsTransactionPending(false);
-        }
-
+        $this->_setPaymentTransaction($payment, $charge);
         return null;
     }
 
