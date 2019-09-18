@@ -8,8 +8,6 @@ define(
         'use strict';
 
         return Component.extend({
-            redirectUrl: 'checkout/onepage/success',
-
             defaults: {
                 field: {valid: false},
                 template: 'Heidelpay_MGW/payment/direct_debit'
