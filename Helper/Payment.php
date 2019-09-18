@@ -124,6 +124,11 @@ class Payment
         /** @var OrderPayment $payment */
         $payment = $order->getPayment();
 
+        // Needed for updating the invoice when registering a notification. Since this is not saved as part of the
+        // payment we need to set it manually, otherwise Magento will remove the transaction ID from our invoice which
+        // prevents online refunds.
+        $payment->setTransactionId($resource->getUniqueId());
+
         /** @var OrderPayment\Transaction $paymentTransaction */
         $paymentTransaction = $this->_transactionRepository->getByTransactionId(
             $payment->getLastTransId(),
