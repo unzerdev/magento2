@@ -2,6 +2,7 @@
 
 namespace Heidelpay\MGW\Helper;
 
+use Heidelpay\MGW\Model\Method\Base;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use heidelpayPHP\Resources\TransactionTypes\Authorization;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
@@ -108,7 +109,13 @@ class Payment
      */
     public function handleTransactionPending(Order $order)
     {
-        $order->setState(Order::STATE_PAYMENT_REVIEW);
+        /** @var Base $paymentMethod */
+        $paymentMethod = $order->getPayment()->getMethodInstance();
+
+        /** @var string $state */
+        $state = $paymentMethod->getTransactionPendingState();
+
+        $order->setState($state);
         $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
 
         $this->_orderRepository->save($order);
