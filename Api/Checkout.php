@@ -66,16 +66,16 @@ class Checkout implements CheckoutInterface
         /** @var Quote $quote */
         $quote = $this->_checkoutSession->getQuote();
 
-        $guestEmail = $guestEmail ?? $quote->getCustomerEmail();
+        $email = $guestEmail ?? $quote->getCustomerEmail();
 
-        if ($guestEmail === null) {
+        if ($email === null) {
             return null;
         }
 
         /** @var Customer $customer */
 
         try {
-            $customer = $this->_orderHelper->createOrUpdateCustomerFromQuote($quote, $guestEmail);
+            $customer = $this->_orderHelper->createCustomerFromQuote($quote, $email);
         } catch (Exception $e) {
             return null;
         }

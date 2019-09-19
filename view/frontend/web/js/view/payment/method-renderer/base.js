@@ -44,13 +44,14 @@ define(
                 config: null,
                 customerId: null,
                 customerProvider: null,
+                customerType: 'b2c',
                 customerValid: null,
                 resourceId: null,
                 resourceProvider: null,
                 template: null
             },
 
-            fetchCustomerIdFromQuote: function() {
+            fetchCustomerIdFromQuote: function () {
                 if (this.customerIdPromise === null) {
                     if (this.customerId !== null) {
                         this.customerIdPromise = $.Deferred().resolve(this.customerId);
@@ -76,7 +77,7 @@ define(
 
                 this.customerValid = ko.observable(false);
 
-                this.fetchCustomerIdFromQuote().done(function(customerId) {
+                this.fetchCustomerIdFromQuote().done(function (customerId) {
                     if (customerId !== null) {
                         self.initializeCustomerFormForCustomerId(fieldId, errorFieldId, customerId);
                     }
@@ -86,17 +87,30 @@ define(
             initializeCustomerFormForCustomerId: function (fieldId, errorFieldId, customerId) {
                 var self = this;
 
-                this.customerProvider = this.sdk.Customer();
-                this.customerProvider.update(
-                    customerId,
-                    {
-                        infoBoxText: $t('Your date of birth'),
-                        containerId: fieldId,
-                        errorHolderId: errorFieldId,
-                        fields: ['birthdate'],
-                        showHeader: false
-                    }
-                );
+                if (this.customerType === 'b2b') {
+                    this.customerProvider = this.sdk.B2BCustomer();
+                    this.customerProvider.update(
+                        customerId,
+                        {
+                            containerId: fieldId,
+                            errorHolderId: errorFieldId,
+                            fields: ['companyInfo'],
+                            showHeader: false
+                        }
+                    );
+                } else {
+                    this.customerProvider = this.sdk.Customer();
+                    this.customerProvider.update(
+                        customerId,
+                        {
+                            infoBoxText: $t('Your date of birth'),
+                            containerId: fieldId,
+                            errorHolderId: errorFieldId,
+                            fields: ['birthdate'],
+                            showHeader: false
+                        }
+                    );
+                }
 
                 this.customerProvider.addEventListener('validate', function (event) {
                     self.customerValid("success" in event && event.success);

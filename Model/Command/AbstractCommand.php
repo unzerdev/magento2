@@ -2,7 +2,6 @@
 
 namespace Heidelpay\MGW\Model\Command;
 
-use Exception;
 use Heidelpay\MGW\Helper\Order;
 use Heidelpay\MGW\Model\Config;
 use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
@@ -16,6 +15,7 @@ use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
+use Psr\Log\LoggerInterface;
 
 /**
  * Abstract Command for using the heidelpay SDK
@@ -58,6 +58,11 @@ abstract class AbstractCommand implements CommandInterface
     protected $_config;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
+
+    /**
      * @var Order
      */
     protected $_orderHelper;
@@ -71,17 +76,20 @@ abstract class AbstractCommand implements CommandInterface
      * AbstractCommand constructor.
      * @param Session $checkoutSession
      * @param Config $config
+     * @param LoggerInterface $logger
      * @param Order $orderHelper
      * @param UrlInterface $urlBuilder
      */
     public function __construct(
         Session $checkoutSession,
         Config $config,
+        LoggerInterface $logger,
         Order $orderHelper,
         UrlInterface $urlBuilder
     ) {
         $this->_checkoutSession = $checkoutSession;
         $this->_config = $config;
+        $this->_logger = $logger;
         $this->_orderHelper = $orderHelper;
         $this->_urlBuilder = $urlBuilder;
     }
@@ -117,27 +125,7 @@ abstract class AbstractCommand implements CommandInterface
      */
     protected function _getCustomerId(InfoInterface $payment): ?string
     {
-        /** @var string|null $customerId */
-        $customerId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
-
-        if (!empty($customerId)) {
-            return $customerId;
-        }
-
-        try {
-            $customer = $this->_orderHelper->createOrUpdateCustomerFromQuote(
-                $this->_checkoutSession->getQuote(),
-                $this->_checkoutSession->getQuote()->getCustomerEmail()
-            );
-
-            if ($customer !== null) {
-                return $customer->getId();
-            }
-
-            return null;
-        } catch (Exception $e) {
-            return null;
-        }
+        return $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
     }
 
     /**

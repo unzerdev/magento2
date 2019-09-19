@@ -38,6 +38,10 @@ define(
                 component: 'Heidelpay_MGW/js/view/payment/method-renderer/invoice_guaranteed'
             },
             {
+                type: 'hpmgw_invoice_guaranteed_b2b',
+                component: 'Heidelpay_MGW/js/view/payment/method-renderer/invoice_guaranteed_b2b'
+            },
+            {
                 type: 'hpmgw_paypal',
                 component: 'Heidelpay_MGW/js/view/payment/method-renderer/paypal'
             },
