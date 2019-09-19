@@ -89,9 +89,9 @@ class Callback extends AbstractPaymentAction
         /** @var Authorization|Charge|AbstractHeidelpayResource $resource */
         $resource = $payment->getAuthorization() ?? $payment->getChargeByIndex(0);
 
-        if ($payment->isCompleted()) {
+        if ($resource->isSuccess()) {
             $response = $this->handleSuccess($order, $resource);
-        } elseif ($payment->isPending()) {
+        } elseif ($resource->isPending()) {
             $response = $this->handlePending($order);
         } else {
             $response = $this->handleError($order, $resource);

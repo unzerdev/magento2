@@ -131,9 +131,14 @@ class Payment
         /** @var OrderPayment $payment */
         $payment = $order->getPayment();
 
+        // Needed for updating the invoice when registering a notification. Since this is not saved as part of the
+        // payment we need to set it manually, otherwise Magento will remove the transaction ID from our invoice which
+        // prevents online refunds.
+        $payment->setTransactionId($resource->getUniqueId());
+
         /** @var OrderPayment\Transaction $paymentTransaction */
         $paymentTransaction = $this->_transactionRepository->getByTransactionId(
-            $payment->getLastTransId(),
+            $payment->getTransactionId(),
             $payment->getId(),
             $order->getId()
         );
@@ -144,6 +149,7 @@ class Payment
                 break;
             case $resource instanceof Charge:
                 $payment->registerCaptureNotification($resource->getAmount());
+                $paymentTransaction->setIsClosed(true);
                 break;
             default:
         }
@@ -152,8 +158,6 @@ class Payment
         $order->setCanSendNewEmailFlag($order->getState() !== Order::STATE_PROCESSING);
         $order->setState(Order::STATE_PROCESSING);
         $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
-
-        $paymentTransaction->setIsClosed(true);
 
         $this->_transactionRepository->save($paymentTransaction);
         $this->_paymentRepository->save($payment);

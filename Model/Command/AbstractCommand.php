@@ -7,11 +7,15 @@ use Heidelpay\MGW\Helper\Order;
 use Heidelpay\MGW\Model\Config;
 use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
 use heidelpayPHP\Heidelpay;
+use heidelpayPHP\Resources\AbstractHeidelpayResource;
+use heidelpayPHP\Resources\TransactionTypes\Authorization;
+use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Model\InfoInterface;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
 
 /**
  * Abstract Command for using the heidelpay SDK
@@ -133,6 +137,32 @@ abstract class AbstractCommand implements CommandInterface
             return null;
         } catch (Exception $e) {
             return null;
+        }
+    }
+
+    /**
+     * Sets the transaction information on the given payment from an authorization or charge.
+     *
+     * @param OrderPayment $payment
+     * @param Authorization|Charge|AbstractHeidelpayResource $resource
+     * @param Authorization|Charge|AbstractHeidelpayResource|null $parentResource
+     *
+     * @return void
+     */
+    protected function _setPaymentTransaction(
+        OrderPayment $payment,
+        AbstractHeidelpayResource $resource,
+        ?AbstractHeidelpayResource $parentResource = null
+    ): void
+    {
+        $payment->setLastTransId($resource->getUniqueId());
+        $payment->setTransactionId($resource->getUniqueId());
+        $payment->setIsTransactionClosed(false);
+        $payment->setIsTransactionPending($resource->isPending());
+
+        if ($parentResource !== null) {
+            $payment->setParentTransactionId($parentResource->getUniqueId());
+            $payment->setShouldCloseParentTransaction(true);
         }
     }
 }
