@@ -40,7 +40,7 @@ class Authorize extends AbstractCommand
      */
     public function execute(array $commandSubject)
     {
-        /** @var \Magento\Payment\Model\InfoInterface $payment */
+        /** @var OrderPayment $payment */
         $payment = $commandSubject['payment']->getPayment();
 
         /** @var float $amount */

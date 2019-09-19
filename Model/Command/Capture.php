@@ -45,7 +45,7 @@ class Capture extends AbstractCommand
      */
     public function execute(array $commandSubject)
     {
-        /** @var InfoInterface $payment */
+        /** @var OrderPayment $payment */
         $payment = $commandSubject['payment']->getPayment();
 
         /** @var float $amount */
@@ -65,7 +65,7 @@ class Capture extends AbstractCommand
         }
 
         try {
-            if ($hpPayment !== null) {
+            if ($hpPayment !== null && $hpPayment->getAuthorization() !== null) {
                 $charge = $this->_chargeExisting($hpPayment, $amount);
             } else {
                 $charge = $this->_chargeNew($payment, $amount);
@@ -78,7 +78,11 @@ class Capture extends AbstractCommand
             throw new LocalizedException(__('Failed to charge payment.'));
         }
 
-        $this->_setPaymentTransaction($payment, $charge);
+        $this->_setPaymentTransaction(
+            $payment,
+            $charge,
+            $charge->getPayment()->getAuthorization()
+        );
         return null;
     }
 
@@ -106,7 +110,7 @@ class Capture extends AbstractCommand
      * Charges a new payment.
      *
      * @param InfoInterface $payment
-     * @param $amount
+     * @param float $amount
      * @return Charge
      * @throws HeidelpayApiException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
