@@ -157,11 +157,12 @@ abstract class AbstractCommand implements CommandInterface
     {
         $payment->setLastTransId($resource->getUniqueId());
         $payment->setTransactionId($resource->getUniqueId());
-        $payment->setIsTransactionClosed(!$resource->isPending());
+        $payment->setIsTransactionClosed(false);
         $payment->setIsTransactionPending($resource->isPending());
 
         if ($parentResource !== null) {
             $payment->setParentTransactionId($parentResource->getUniqueId());
+            $payment->setShouldCloseParentTransaction(true);
         }
     }
 }

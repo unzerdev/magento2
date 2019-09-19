@@ -142,6 +142,7 @@ class Payment
                 break;
             case $resource instanceof Charge:
                 $payment->registerCaptureNotification($resource->getAmount());
+                $paymentTransaction->setIsClosed(true);
                 break;
             default:
         }
@@ -150,8 +151,6 @@ class Payment
         $order->setCanSendNewEmailFlag($order->getState() !== Order::STATE_PROCESSING);
         $order->setState(Order::STATE_PROCESSING);
         $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
-
-        $paymentTransaction->setIsClosed(true);
 
         $this->_transactionRepository->save($paymentTransaction);
         $this->_paymentRepository->save($payment);
