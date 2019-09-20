@@ -134,7 +134,7 @@ abstract class AbstractCommand implements CommandInterface
         /** @var string|null $customerId */
         $customerId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
 
-        if ($customerId === null) {
+        if (empty($customerId)) {
             return null;
         }
 
