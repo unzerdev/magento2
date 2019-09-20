@@ -107,6 +107,12 @@ define(
                             showHeader: false
                         }
                     );
+
+                    // The SDK currently always shows these fields, although we don't specify them in the options above.
+                    // Hide them manually since users are not allowed to change them anyways.
+                    var field = $('#' + fieldId);
+                    field.find('.field').filter('.city, .company, :has(.country), .street, .zip').hide();
+                    field.find('.heidelpayUI.divider-horizontal:eq(0)').hide();
                 } else {
                     this.customerProvider = this.sdk.Customer();
                     this.customerProvider.initFormFields(customer);
