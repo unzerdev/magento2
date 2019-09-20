@@ -143,13 +143,13 @@ abstract class AbstractCommand implements CommandInterface
         ?AbstractHeidelpayResource $parentResource = null
     ): void
     {
-        $payment->setLastTransId($resource->getUniqueId());
-        $payment->setTransactionId($resource->getUniqueId());
+        $payment->setLastTransId($resource->getId());
+        $payment->setTransactionId($resource->getId());
         $payment->setIsTransactionClosed(false);
         $payment->setIsTransactionPending($resource->isPending());
 
         if ($parentResource !== null) {
-            $payment->setParentTransactionId($parentResource->getUniqueId());
+            $payment->setParentTransactionId($parentResource->getId());
             $payment->setShouldCloseParentTransaction(true);
         }
     }
