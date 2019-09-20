@@ -53,3 +53,5 @@
 "Comma separated list of IP addresses. See https://docs.heidelpay.com/docs/webhook-overview#section-what-are-webhooks","Komma-separierte Liste von IP-Adressen. Siehe https://docs.heidelpay.com/docs/webhook-overview#section-what-are-webhooks"
 "The SDK provides error and debug information which you can catch and write to your log.","Die Fehler- und Debuginformationen für die Entwickler."
 "Logging and Debugging","Untersuchungsinformation"
+
+"Payment information does not match billing address.","Zahlungsinformationen stimmen nicht mit der Rechnungsadresse überein."
