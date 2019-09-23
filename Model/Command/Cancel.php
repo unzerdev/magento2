@@ -67,7 +67,7 @@ class Cancel extends AbstractCommand
             $cancellation = $this->cancelCharges($hpPayment, $amountToCancel);
         }
 
-        $payment->setLastTransId($cancellation->getUniqueId());
+        $payment->setLastTransId($cancellation->getId());
     }
 
     /**
