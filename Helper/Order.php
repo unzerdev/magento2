@@ -219,7 +219,9 @@ class Order
         $nameValid = $gatewayCustomer->getFirstname() === $order->getBillingAddress()->getFirstname()
             && $gatewayCustomer->getLastname() === $order->getBillingAddress()->getLastname();
 
-        $companyValid = $order->getBillingAddress()->getCompany() === $gatewayCustomer->getCompany();
+        // Magento's getCompany() always returns a string, but the heidelpay Customer Address does not, so we must make
+        // sure that both have the same type.
+        $companyValid = ($order->getBillingAddress()->getCompany() ?? '') === ($gatewayCustomer->getCompany() ?? '');
 
         $billingAddressValid = $this->validateGatewayAddressAgainstOrderAddress(
             $gatewayCustomer->getBillingAddress(),
