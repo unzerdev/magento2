@@ -87,12 +87,12 @@ define(
                         customer.companyInfo = customer.company_info;
                         delete customer.company_info;
 
-                        self.initializeCustomerFormForid(fieldId, errorFieldId, customer);
+                        self.initializeCustomerFormForCustomer(fieldId, errorFieldId, customer);
                     }
                 });
             },
 
-            initializeCustomerFormForid: function (fieldId, errorFieldId, customer) {
+            initializeCustomerFormForCustomer: function (fieldId, errorFieldId, customer) {
                 var self = this;
 
                 if (this.customerType === 'b2b') {
