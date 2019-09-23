@@ -34,7 +34,7 @@ define(
         'use strict';
 
         return Component.extend({
-            customerIdPromise: null,
+            customerPromise: null,
             redirectAfterPlaceOrder: false,
             redirectUrl: 'hpmgw/payment/redirect',
             sdk: new heidelpay(window.checkoutConfig.payment.hpmgw.publicKey),
@@ -42,7 +42,7 @@ define(
 
             defaults: {
                 config: null,
-                customerId: null,
+                customer: null,
                 customerProvider: null,
                 customerType: 'b2c',
                 customerValid: null,
@@ -51,25 +51,21 @@ define(
                 template: null
             },
 
-            fetchCustomerIdFromQuote: function () {
-                if (this.customerIdPromise === null) {
-                    if (this.customerId !== null) {
-                        this.customerIdPromise = $.Deferred().resolve(this.customerId);
-                    } else {
-                        this.customerIdPromise = storage.post(
-                            urlBuilder.createUrl('/hpmgw/get-external-customer-id', {}),
-                            JSON.stringify({
-                                guestEmail: quote.guestEmail,
-                            })
-                        );
+            fetchCustomerFromQuote: function () {
+                if (this.customerPromise === null) {
+                    this.customerPromise = storage.post(
+                        urlBuilder.createUrl('/hpmgw/get-external-customer', {}),
+                        JSON.stringify({
+                            guestEmail: quote.guestEmail,
+                        })
+                    );
 
-                        fullScreenLoader.startLoader();
-                        this.customerIdPromise.always(fullScreenLoader.stopLoader);
-                        this.customerIdPromise.fail(errorProcessor.process);
-                    }
+                    fullScreenLoader.startLoader();
+                    this.customerPromise.always(fullScreenLoader.stopLoader);
+                    this.customerPromise.fail(errorProcessor.process);
                 }
 
-                return this.customerIdPromise;
+                return this.customerPromise;
             },
 
             initializeCustomerForm: function (fieldId, errorFieldId) {
@@ -77,20 +73,33 @@ define(
 
                 this.customerValid = ko.observable(false);
 
-                this.fetchCustomerIdFromQuote().done(function (customerId) {
-                    if (customerId !== null) {
-                        self.initializeCustomerFormForCustomerId(fieldId, errorFieldId, customerId);
+                this.fetchCustomerFromQuote().done(function (customer) {
+                    if (customer !== null) {
+                        // Magento converts camel case to snake case in API responses so we must manually map
+                        // the properties to be consistent with the casing for the heidelpay SDK.
+
+                        customer.billingAddress = customer.billing_address;
+                        delete customer.billing_address;
+
+                        customer.shippingAddress = customer.shipping_address;
+                        delete customer.shipping_address;
+
+                        customer.companyInfo = customer.company_info;
+                        delete customer.company_info;
+
+                        self.initializeCustomerFormForCustomer(fieldId, errorFieldId, customer);
                     }
                 });
             },
 
-            initializeCustomerFormForCustomerId: function (fieldId, errorFieldId, customerId) {
+            initializeCustomerFormForCustomer: function (fieldId, errorFieldId, customer) {
                 var self = this;
 
                 if (this.customerType === 'b2b') {
                     this.customerProvider = this.sdk.B2BCustomer();
+                    this.customerProvider.initFormFields(customer);
                     this.customerProvider.update(
-                        customerId,
+                        customer.id,
                         {
                             containerId: fieldId,
                             errorHolderId: errorFieldId,
@@ -98,10 +107,17 @@ define(
                             showHeader: false
                         }
                     );
+
+                    // The SDK currently always shows these fields, although we don't specify them in the options above.
+                    // Hide them manually since users are not allowed to change them anyways.
+                    var field = $('#' + fieldId);
+                    field.find('.field').filter('.city, .company, :has(.country), .street, .zip').hide();
+                    field.find('.heidelpayUI.divider-horizontal:eq(0)').hide();
                 } else {
                     this.customerProvider = this.sdk.Customer();
+                    this.customerProvider.initFormFields(customer);
                     this.customerProvider.update(
-                        customerId,
+                        customer.id,
                         {
                             infoBoxText: $t('Your date of birth'),
                             containerId: fieldId,
@@ -130,7 +146,7 @@ define(
                     'method': this.item.method,
                     'po_number': null,
                     'additional_data': {
-                        'customer_id': this.customerId,
+                        'customer_id': this.customer !== null ? this.customer.id : null,
                         'resource_id': this.resourceId
                     }
                 };
@@ -151,7 +167,8 @@ define(
                     .then(function (values) {
                         self.resourceId = values[0].id;
                         if (values.length > 1) {
-                            self.customerId = values[1].id;
+                            self.customer = self.customer || {};
+                            self.customer.id = values[1].id;
                         }
 
                         placeOrderAction(self.getData(), self.messageContainer)
@@ -166,7 +183,7 @@ define(
                         deferred.reject($t("There was an error placing your order"));
                     });
 
-                deferred.fail(function(error) {
+                deferred.fail(function (error) {
                     globalMessageList.addErrorMessage({
                         message: error
                     });

@@ -14,6 +14,7 @@ use heidelpayPHP\Resources\Metadata;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Quote\Model\Quote;
+use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Model\Order as OrderModel;
 use Magento\Store\Api\Data\StoreInterface;
 
@@ -187,14 +188,69 @@ class Order
         Quote\Address $magentoAddress
     ): void
     {
-        $streetLines = $magentoAddress->getStreet();
-        $streetLines = array_map('trim', $streetLines);
-        $streetLines = array_unique($streetLines);
-        $street = implode(' ', $streetLines);
+        $street = $this->convertStreetLinesToString($magentoAddress->getStreet());
 
         $gatewayAddress->setCity($magentoAddress->getCity());
         $gatewayAddress->setCountry($magentoAddress->getCountry());
         $gatewayAddress->setStreet($street);
         $gatewayAddress->setZip($magentoAddress->getPostcode());
+    }
+
+    /**
+     * @param array $streetLines
+     * @return string
+     */
+    private function convertStreetLinesToString(array $streetLines): string
+    {
+        $streetLines = array_map('trim', $streetLines);
+        $streetLines = array_unique($streetLines);
+        return implode(' ', $streetLines);
+    }
+
+    /**
+     * Validates that the given Order and Customer have matching data.
+     *
+     * @param OrderModel $order
+     * @param Customer $gatewayCustomer
+     * @return bool
+     */
+    public function validateGatewayCustomerAgainstOrder(OrderModel $order, Customer $gatewayCustomer): bool
+    {
+        $nameValid = $gatewayCustomer->getFirstname() === $order->getBillingAddress()->getFirstname()
+            && $gatewayCustomer->getLastname() === $order->getBillingAddress()->getLastname();
+
+        // Magento's getCompany() always returns a string, but the heidelpay Customer Address does not, so we must make
+        // sure that both have the same type.
+        $companyValid = ($order->getBillingAddress()->getCompany() ?? '') === ($gatewayCustomer->getCompany() ?? '');
+
+        $billingAddressValid = $this->validateGatewayAddressAgainstOrderAddress(
+            $gatewayCustomer->getBillingAddress(),
+            $order->getBillingAddress()
+        );
+
+        $shippingAddressValid = $this->validateGatewayAddressAgainstOrderAddress(
+            $gatewayCustomer->getShippingAddress(),
+            $order->getShippingAddress()
+        );
+
+        return $nameValid && $companyValid && $billingAddressValid && $shippingAddressValid;
+    }
+
+    /**
+     * @param EmbeddedResources\Address $gatewayAddress
+     * @param OrderAddressInterface $magentoAddress
+     * @return bool
+     */
+    private function validateGatewayAddressAgainstOrderAddress(
+        EmbeddedResources\Address $gatewayAddress,
+        OrderAddressInterface $magentoAddress
+    ): bool
+    {
+        $street = $this->convertStreetLinesToString($magentoAddress->getStreet());
+
+        return $gatewayAddress->getCity() === $magentoAddress->getCity()
+            && $gatewayAddress->getCountry() === $magentoAddress->getCountryId()
+            && $gatewayAddress->getStreet() === $street
+            && $gatewayAddress->getZip() === $magentoAddress->getPostcode();
     }
 }

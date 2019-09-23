@@ -115,6 +115,7 @@ class Capture extends AbstractCommand
      * @return Charge
      * @throws HeidelpayApiException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
      */
     protected function _chargeNew(InfoInterface $payment, float $amount): Charge
     {
@@ -129,7 +130,7 @@ class Capture extends AbstractCommand
             $order->getOrderCurrencyCode(),
             $resourceId,
             $this->_getCallbackUrl(),
-            $this->_getCustomerId($payment),
+            $this->_getCustomerId($payment, $order),
             $order->getIncrementId(),
             $this->_orderHelper->createMetadataForOrder($order),
             $this->_orderHelper->createBasketForOrder($order),

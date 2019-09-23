@@ -7,9 +7,11 @@ use Heidelpay\MGW\Model\Config;
 use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
 use heidelpayPHP\Heidelpay;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
+use heidelpayPHP\Resources\Customer;
 use heidelpayPHP\Resources\TransactionTypes\Authorization;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Checkout\Model\Session;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\CommandInterface;
@@ -121,11 +123,29 @@ abstract class AbstractCommand implements CommandInterface
      * Returns the customer ID for given current payment or quote.
      *
      * @param InfoInterface $payment
+     * @param \Magento\Sales\Model\Order $order
      * @return string|null
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
      */
-    protected function _getCustomerId(InfoInterface $payment): ?string
+    protected function _getCustomerId(InfoInterface $payment, \Magento\Sales\Model\Order $order): ?string
     {
-        return $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
+        /** @var string|null $customerId */
+        $customerId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
+
+        if (empty($customerId)) {
+            return null;
+        }
+
+        /** @var Customer $customer */
+        $customer = $this->_getClient()->fetchCustomer($customerId);
+
+        if (!$this->_orderHelper->validateGatewayCustomerAgainstOrder($order, $customer)) {
+            throw new LocalizedException(__('Payment information does not match billing address.'));
+        }
+
+        return $customerId;
     }
 
     /**
