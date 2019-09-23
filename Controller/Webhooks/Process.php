@@ -9,7 +9,10 @@ use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\Http as HttpRequest;
+use Magento\Framework\App\Request\InvalidRequestException;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Response\Http as HttpResponse;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\DataObject;
@@ -39,7 +42,7 @@ use stdClass;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class Process extends Action
+class Process extends Action implements CsrfAwareActionInterface
 {
     /**
      * @var Manager
@@ -63,6 +66,22 @@ class Process extends Action
 
         $this->_eventManager = $eventManager;
         $this->_moduleConfig = $moduleConfig;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
+    {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function validateForCsrf(RequestInterface $request): ?bool
+    {
+        return true;
     }
 
     /**

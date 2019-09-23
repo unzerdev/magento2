@@ -125,16 +125,26 @@ class Payment
      * @param OrderModel $order
      * @param Authorization|Charge|AbstractHeidelpayResource $resource
      * @throws \Magento\Framework\Exception\InputException
+     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
      */
     public function handleTransactionSuccess(Order $order, AbstractHeidelpayResource $resource)
     {
+        $transactionId = $resource->getId();
+
+        if ($resource instanceof Charge) {
+            // For charges, we always use the ID of the first charge as transaction ID.
+            $transactionId = $resource->getPayment()
+                ->getChargeByIndex(0)
+                ->getId();
+        }
+
         /** @var OrderPayment $payment */
         $payment = $order->getPayment();
 
         // Needed for updating the invoice when registering a notification. Since this is not saved as part of the
         // payment we need to set it manually, otherwise Magento will remove the transaction ID from our invoice which
         // prevents online refunds.
-        $payment->setTransactionId($resource->getId());
+        $payment->setTransactionId($transactionId);
 
         /** @var OrderPayment\Transaction $paymentTransaction */
         $paymentTransaction = $this->_transactionRepository->getByTransactionId(
