@@ -3,7 +3,6 @@
 namespace Heidelpay\MGW\Model\Command;
 
 use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
-use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Authorization;
@@ -54,19 +53,12 @@ class Capture extends AbstractCommand
         /** @var Order $order */
         $order = $payment->getOrder();
 
-        try {
-            $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
-        } catch (HeidelpayApiException $e) {
-            if ($e->getCode() !== ApiResponseCodes::API_ERROR_PAYMENT_NOT_FOUND) {
-                throw $e;
-            }
-
-            $hpPayment = null;
-        }
+        /** @var string|null $paymentId */
+        $paymentId = $payment->getAdditionalInformation(self::KEY_PAYMENT_ID);
 
         try {
-            if ($hpPayment !== null && $hpPayment->getAuthorization() !== null) {
-                $charge = $this->_chargeExisting($hpPayment, $amount);
+            if ($paymentId !== null) {
+                $charge = $this->_chargeExisting($paymentId, $amount);
             } else {
                 $charge = $this->_chargeNew($payment, $amount);
             }
@@ -90,13 +82,17 @@ class Capture extends AbstractCommand
     /**
      * Charges an existing payment.
      *
-     * @param Payment $payment
+     * @param string $paymentId
      * @param float $amount
      * @return Charge
      * @throws HeidelpayApiException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function _chargeExisting(Payment $payment, float $amount): Charge
+    protected function _chargeExisting(string $paymentId, float $amount): Charge
     {
+        /** @var Payment $payment */
+        $payment = $this->_getClient()->fetchPayment($paymentId);
+
         /** @var Authorization|null $authorization */
         $authorization = $payment->getAuthorization();
 
@@ -104,7 +100,7 @@ class Capture extends AbstractCommand
             return $authorization->charge($amount);
         }
 
-        return $payment->getChargeByIndex(0);
+        return $payment->charge($amount);
     }
 
     /**
