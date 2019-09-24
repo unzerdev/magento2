@@ -44,6 +44,8 @@ use Psr\Log\LoggerInterface;
  */
 abstract class AbstractCommand implements CommandInterface
 {
+    public const KEY_PAYMENT_ID = 'payment_id';
+
     /**
      * @var Session
      */
@@ -156,6 +158,7 @@ abstract class AbstractCommand implements CommandInterface
      * @param Authorization|Charge|AbstractHeidelpayResource|null $parentResource
      *
      * @return void
+     * @throws LocalizedException
      */
     protected function _setPaymentTransaction(
         OrderPayment $payment,
@@ -167,6 +170,8 @@ abstract class AbstractCommand implements CommandInterface
         $payment->setTransactionId($resource->getId());
         $payment->setIsTransactionClosed(false);
         $payment->setIsTransactionPending($resource->isPending());
+
+        $payment->setAdditionalInformation(static::KEY_PAYMENT_ID, $resource->getPaymentId());
 
         if ($parentResource !== null) {
             $payment->setParentTransactionId($parentResource->getId());
