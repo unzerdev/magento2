@@ -61,7 +61,7 @@ class CountryRestrictionValidator extends CountryValidator
 
         if (!empty($countriesString)) {
             /** @var string[] $countries */
-            $countries = preg_split('\s*,\s*', $countriesString);
+            $countries = preg_split('/\s*,\s*/', $countriesString);
 
             if (!in_array($validationSubject['country'], $countries)) {
                 return $this->createResult(false);
