@@ -135,9 +135,11 @@ define(
                     promises = [this.resourceProvider.createResource()];
                 }
 
-                // Fallback to the Promise implementation from the heidelpay SDK for browsers that have no native
-                // implementation. By accessing the Promise constructor from one of the existing promises we avoid
-                // having to load our own polyfill.
+                // We need to wait for multiple Promises but the jQuery version used by Magento 2 (jQuery 1.x) does not
+                // support non-jQuery Promises in $.when(), so we use the Promise.all method instead.
+                // In case a browser has no native Promise support (IE) we fallback to the Promise implementation
+                // shipped with the heidelpay SDK, by accessing the Promise constructor from one of the existing
+                // promises, to avoid having to implement or load our own implementation of Promise.all.
                 var Promise = window.Promise || promises[0].constructor;
 
                 Promise.all(promises).then(
@@ -159,13 +161,11 @@ define(
                     }
                 );
 
-                deferred.fail(function (error) {
+                return deferred.fail(function (error) {
                     globalMessageList.addErrorMessage({
                         message: error
                     });
                 });
-
-                return $.when(deferred);
             },
         });
     }
