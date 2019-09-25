@@ -11,7 +11,6 @@ define(
         'Magento_Checkout/js/view/payment/default',
         'Magento_Ui/js/model/messageList',
         '//static.heidelpay.com/v1/heidelpay.js',
-        '//cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js'
     ],
     function (
         $,
@@ -24,8 +23,7 @@ define(
         fullScreenLoader,
         Component,
         globalMessageList,
-        heidelpay,
-        Promise
+        heidelpay
     ) {
         'use strict';
 
@@ -128,21 +126,25 @@ define(
 
             getPlaceOrderDeferredObject: function () {
                 var deferred = $.Deferred(),
-                    promises = [],
+                    promises,
                     self = this;
 
-                promises.push(this.resourceProvider.createResource());
-
                 if (this.customerProvider) {
-                    promises.push(this.customerProvider.updateCustomer());
+                    promises = [this.resourceProvider.createResource(), this.customerProvider.updateCustomer()];
+                } else {
+                    promises = [this.resourceProvider.createResource()];
                 }
 
-                Promise.all(promises)
-                    .then(function (values) {
+                // Fallback to the Promise implementation from the heidelpay SDK for browsers that have no native
+                // implementation. By accessing the Promise constructor from one of the existing promises we avoid
+                // having to load our own polyfill.
+                var Promise = window.Promise || promises[0].constructor;
+
+                Promise.all(promises).then(
+                    function (values) {
+                        debugger;
+
                         self.resourceId = values[0].id;
-                        if (values.length > 1) {
-                            self.customerId = values[1].id;
-                        }
 
                         placeOrderAction(self.getData(), self.messageContainer)
                             .done(function () {
@@ -151,10 +153,11 @@ define(
                             .fail(function (request) {
                                 deferred.reject(request.responseJSON.message);
                             });
-                    })
-                    .catch(function (error) {
+                    },
+                    function () {
                         deferred.reject($t("There was an error placing your order"));
-                    });
+                    }
+                );
 
                 deferred.fail(function (error) {
                     globalMessageList.addErrorMessage({
