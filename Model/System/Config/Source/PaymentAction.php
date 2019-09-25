@@ -2,7 +2,7 @@
 
 namespace Heidelpay\MGW\Model\System\Config\Source;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
 /**
  * Payment action source for adminhtml select fields and initializable payment methods
@@ -27,7 +27,7 @@ use Magento\Framework\Option\ArrayInterface;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class PaymentAction implements ArrayInterface
+class PaymentAction implements OptionSourceInterface
 {
     const ACTION_AUTHORIZE = 'authorize';
     const ACTION_AUTHORIZE_CAPTURE = 'authorize_capture';
