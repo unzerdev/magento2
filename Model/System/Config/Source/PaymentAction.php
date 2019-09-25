@@ -39,7 +39,7 @@ class PaymentAction implements ArrayInterface
     {
         return [
             self::ACTION_AUTHORIZE => __('Authorize'),
-            self::ACTION_AUTHORIZE_CAPTURE => __('Capture'),
+            self::ACTION_AUTHORIZE_CAPTURE => __('Charge'),
         ];
     }
 }
