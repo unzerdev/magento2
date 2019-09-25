@@ -5,11 +5,9 @@ define(
         'mage/storage',
         'mage/translate',
         'mage/url',
+        'Heidelpay_MGW/js/model/checkout/customer-loader',
         'Magento_Checkout/js/action/place-order',
-        'Magento_Checkout/js/model/error-processor',
         'Magento_Checkout/js/model/full-screen-loader',
-        'Magento_Checkout/js/model/quote',
-        'Magento_Checkout/js/model/url-builder',
         'Magento_Checkout/js/view/payment/default',
         'Magento_Ui/js/model/messageList',
         '//static.heidelpay.com/v1/heidelpay.js',
@@ -21,11 +19,9 @@ define(
         storage,
         $t,
         url,
+        customerLoader,
         placeOrderAction,
-        errorProcessor,
         fullScreenLoader,
-        quote,
-        urlBuilder,
         Component,
         globalMessageList,
         heidelpay,
@@ -34,7 +30,6 @@ define(
         'use strict';
 
         return Component.extend({
-            customerPromise: null,
             redirectAfterPlaceOrder: false,
             redirectUrl: 'hpmgw/payment/redirect',
             sdk: new heidelpay(window.checkoutConfig.payment.hpmgw.publicKey),
@@ -42,7 +37,7 @@ define(
 
             defaults: {
                 config: null,
-                customer: null,
+                customerId: null,
                 customerProvider: null,
                 customerType: 'b2c',
                 customerValid: null,
@@ -51,44 +46,12 @@ define(
                 template: null
             },
 
-            fetchCustomerFromQuote: function () {
-                if (this.customerPromise === null) {
-                    this.customerPromise = storage.post(
-                        urlBuilder.createUrl('/hpmgw/get-external-customer', {}),
-                        JSON.stringify({
-                            guestEmail: quote.guestEmail,
-                        })
-                    );
-
-                    fullScreenLoader.startLoader();
-                    this.customerPromise.always(fullScreenLoader.stopLoader);
-                    this.customerPromise.fail(errorProcessor.process);
-                }
-
-                return this.customerPromise;
-            },
-
             initializeCustomerForm: function (fieldId, errorFieldId) {
                 var self = this;
-
                 this.customerValid = ko.observable(false);
 
-                this.fetchCustomerFromQuote().done(function (customer) {
-                    if (customer !== null) {
-                        // Magento converts camel case to snake case in API responses so we must manually map
-                        // the properties to be consistent with the casing for the heidelpay SDK.
-
-                        customer.billingAddress = customer.billing_address;
-                        delete customer.billing_address;
-
-                        customer.shippingAddress = customer.shipping_address;
-                        delete customer.shipping_address;
-
-                        customer.companyInfo = customer.company_info;
-                        delete customer.company_info;
-
-                        self.initializeCustomerFormForCustomer(fieldId, errorFieldId, customer);
-                    }
+                customerLoader.loadFromQuote().done(function (customer) {
+                    self.initializeCustomerFormForCustomer(fieldId, errorFieldId, customer);
                 });
             },
 
@@ -146,7 +109,7 @@ define(
                     'method': this.item.method,
                     'po_number': null,
                     'additional_data': {
-                        'customer_id': this.customer !== null ? this.customer.id : null,
+                        'customer_id': this.customerId,
                         'resource_id': this.resourceId
                     }
                 };
@@ -167,8 +130,7 @@ define(
                     .then(function (values) {
                         self.resourceId = values[0].id;
                         if (values.length > 1) {
-                            self.customer = self.customer || {};
-                            self.customer.id = values[1].id;
+                            self.customerId = values[1].id;
                         }
 
                         placeOrderAction(self.getData(), self.messageContainer)
