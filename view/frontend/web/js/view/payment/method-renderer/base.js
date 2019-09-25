@@ -145,6 +145,9 @@ define(
                 Promise.all(promises).then(
                     function (values) {
                         self.resourceId = values[0].id;
+                        if (values.length > 1) {
+                            self.customerId = values[1].id;
+                        }
 
                         placeOrderAction(self.getData(), self.messageContainer)
                             .done(function () {
