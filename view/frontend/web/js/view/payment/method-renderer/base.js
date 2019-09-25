@@ -46,6 +46,15 @@ define(
                 template: null
             },
 
+            initialize: function () {
+                var self = this;
+                this._super();
+
+                customerLoader.loadFromQuote().done(function (customer) {
+                    self.customerId = customer.id;
+                })
+            },
+
             initializeCustomerForm: function (fieldId, errorFieldId) {
                 var self = this;
                 this.customerValid = ko.observable(false);
