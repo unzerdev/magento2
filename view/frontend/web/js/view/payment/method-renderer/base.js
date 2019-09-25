@@ -60,49 +60,51 @@ define(
                 this.customerValid = ko.observable(false);
 
                 customerLoader.loadFromQuote().done(function (customer) {
-                    self.initializeCustomerFormForCustomer(fieldId, errorFieldId, customer);
+                    if (self.customerType === 'b2b') {
+                        self._initializeCustomerFormForB2bCustomer(fieldId, errorFieldId, customer);
+                    } else {
+                        self._initializeCustomerFormForB2cCustomer(fieldId, errorFieldId, customer);
+                    }
+
+                    self.customerProvider.addEventListener('validate', function (event) {
+                        self.customerValid("success" in event && event.success);
+                    });
                 });
             },
 
-            initializeCustomerFormForCustomer: function (fieldId, errorFieldId, customer) {
-                var self = this;
+            _initializeCustomerFormForB2bCustomer: function (fieldId, errorFieldId, customer) {
+                this.customerProvider = this.sdk.B2BCustomer();
+                this.customerProvider.initFormFields(customer);
+                this.customerProvider.update(
+                    customer.id,
+                    {
+                        containerId: fieldId,
+                        errorHolderId: errorFieldId,
+                        fields: ['companyInfo'],
+                        showHeader: false
+                    }
+                );
 
-                if (this.customerType === 'b2b') {
-                    this.customerProvider = this.sdk.B2BCustomer();
-                    this.customerProvider.initFormFields(customer);
-                    this.customerProvider.update(
-                        customer.id,
-                        {
-                            containerId: fieldId,
-                            errorHolderId: errorFieldId,
-                            fields: ['companyInfo'],
-                            showHeader: false
-                        }
-                    );
+                // The SDK currently always shows these fields, although we don't specify them in the options above.
+                // Hide them manually since users are not allowed to change them anyways.
+                var field = $('#' + fieldId);
+                field.find('.field').filter('.city, .company, :has(.country), .street, .zip').hide();
+                field.find('.heidelpayUI.divider-horizontal:eq(0)').hide();
+            },
 
-                    // The SDK currently always shows these fields, although we don't specify them in the options above.
-                    // Hide them manually since users are not allowed to change them anyways.
-                    var field = $('#' + fieldId);
-                    field.find('.field').filter('.city, .company, :has(.country), .street, .zip').hide();
-                    field.find('.heidelpayUI.divider-horizontal:eq(0)').hide();
-                } else {
-                    this.customerProvider = this.sdk.Customer();
-                    this.customerProvider.initFormFields(customer);
-                    this.customerProvider.update(
-                        customer.id,
-                        {
-                            infoBoxText: $t('Your date of birth'),
-                            containerId: fieldId,
-                            errorHolderId: errorFieldId,
-                            fields: ['birthdate'],
-                            showHeader: false
-                        }
-                    );
-                }
-
-                this.customerProvider.addEventListener('validate', function (event) {
-                    self.customerValid("success" in event && event.success);
-                });
+            _initializeCustomerFormForB2cCustomer: function (fieldId, errorFieldId, customer) {
+                this.customerProvider = this.sdk.Customer();
+                this.customerProvider.initFormFields(customer);
+                this.customerProvider.update(
+                    customer.id,
+                    {
+                        infoBoxText: $t('Your date of birth'),
+                        containerId: fieldId,
+                        errorHolderId: errorFieldId,
+                        fields: ['birthdate'],
+                        showHeader: false
+                    }
+                );
             },
 
             initializeForm: function () {
