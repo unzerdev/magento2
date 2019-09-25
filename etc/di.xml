@@ -393,7 +393,7 @@
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWPaypalValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
+            <argument name="commandPool" xsi:type="object">HeidelpayMGWAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </type>
 
@@ -427,7 +427,7 @@
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWSofortValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayMGWAuthorizeAndCaptureCommandPool</argument>
+            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
 </config>
