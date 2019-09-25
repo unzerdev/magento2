@@ -144,8 +144,6 @@ define(
 
                 Promise.all(promises).then(
                     function (values) {
-                        debugger;
-
                         self.resourceId = values[0].id;
 
                         placeOrderAction(self.getData(), self.messageContainer)
