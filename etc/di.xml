@@ -22,14 +22,6 @@
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayMGWValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
-        <arguments>
-            <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">Heidelpay\MGW\Model\Validator\CountryRestrictionValidator</item>
-            </argument>
-        </arguments>
-    </virtualType>
-
     <virtualType name="HeidelpayMGWAuthorizeAndCaptureCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
@@ -80,13 +72,27 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="HeidelpayMGWBaseValidatorCountry" type="Heidelpay\MGW\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">HeidelpayMGWBaseConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWBaseValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">HeidelpayMGWBaseValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <type name="Heidelpay\MGW\Model\Method\Base">
         <arguments>
             <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_BASE</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWBaseValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWBaseValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">HeidelpayMGWAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </type>
@@ -114,13 +120,27 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="HeidelpayMGWCardsValidatorCountry" type="Heidelpay\MGW\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">HeidelpayMGWCardsConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWCardsValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">HeidelpayMGWCardsValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <type name="Heidelpay\MGW\Model\Method\Cards">
         <arguments>
             <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_CARDS</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWCardsValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWCardsValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">HeidelpayMGWAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </type>
@@ -148,13 +168,27 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="HeidelpayMGWDirectDebitValidatorCountry" type="Heidelpay\MGW\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">HeidelpayMGWDirectDebitConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWDirectDebitValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">HeidelpayMGWDirectDebitValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <type name="Heidelpay\MGW\Model\Method\DirectDebit">
         <arguments>
             <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_DIRECT_DEBIT</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWDirectDebitValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWDirectDebitValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
@@ -182,13 +216,27 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="HeidelpayMGWDirectDebitGuaranteedValidatorCountry" type="Heidelpay\MGW\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">HeidelpayMGWDirectDebitGuaranteedConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWDirectDebitGuaranteedValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">HeidelpayMGWDirectDebitGuaranteedValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <type name="Heidelpay\MGW\Model\Method\DirectDebitGuaranteed">
         <arguments>
             <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_DIRECT_DEBIT_GUARANTEED</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWDirectDebitGuaranteedValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWDirectDebitGuaranteedValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
@@ -216,13 +264,27 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="HeidelpayMGWFlexipayDirectValidatorCountry" type="Heidelpay\MGW\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">HeidelpayMGWFlexipayDirectConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWFlexipayDirectValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">HeidelpayMGWFlexipayDirectValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <type name="Heidelpay\MGW\Model\Method\FlexipayDirect">
         <arguments>
             <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_FLEXIPAY_DIRECT</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWFlexipayDirectValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWFlexipayDirectValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
@@ -250,13 +312,27 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="HeidelpayMGWIdealValidatorCountry" type="Heidelpay\MGW\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">HeidelpayMGWIdealConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWIdealValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">HeidelpayMGWIdealValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <type name="Heidelpay\MGW\Model\Method\Ideal">
         <arguments>
             <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_IDEAL</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWIdealValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWIdealValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
@@ -284,13 +360,27 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="HeidelpayMGWInvoiceValidatorCountry" type="Heidelpay\MGW\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">HeidelpayMGWInvoiceConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWInvoiceValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">HeidelpayMGWInvoiceValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <type name="Heidelpay\MGW\Model\Method\Invoice">
         <arguments>
             <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_INVOICE</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Heidelpay\MGW\Block\Info\Invoice</argument>
             <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWInvoiceValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWInvoiceValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
@@ -318,13 +408,27 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="HeidelpayMGWInvoiceGuaranteedB2bValidatorCountry" type="Heidelpay\MGW\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">HeidelpayMGWInvoiceGuaranteedB2bConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWInvoiceGuaranteedB2bValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">HeidelpayMGWInvoiceGuaranteedB2bValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <type name="Heidelpay\MGW\Model\Method\InvoiceGuaranteedB2b">
         <arguments>
             <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_INVOICE_GUARANTEED_B2B</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Heidelpay\MGW\Block\Info\InvoiceGuaranteedB2b</argument>
             <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWInvoiceGuaranteedB2bValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWInvoiceGuaranteedB2bValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
@@ -352,13 +456,27 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="HeidelpayMGWInvoiceGuaranteedValidatorCountry" type="Heidelpay\MGW\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">HeidelpayMGWInvoiceGuaranteedConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWInvoiceGuaranteedValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">HeidelpayMGWInvoiceGuaranteedValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <type name="Heidelpay\MGW\Model\Method\InvoiceGuaranteed">
         <arguments>
             <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_INVOICE_GUARANTEED</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Heidelpay\MGW\Block\Info\InvoiceGuaranteed</argument>
             <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWInvoiceGuaranteedValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWInvoiceGuaranteedValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
@@ -386,13 +504,27 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="HeidelpayMGWPaypalValidatorCountry" type="Heidelpay\MGW\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">HeidelpayMGWPaypalConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWPaypalValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">HeidelpayMGWPaypalValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <type name="Heidelpay\MGW\Model\Method\Paypal">
         <arguments>
             <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_PAYPAL</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWPaypalValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWPaypalValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">HeidelpayMGWAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </type>
@@ -420,13 +552,27 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="HeidelpayMGWSofortValidatorCountry" type="Heidelpay\MGW\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">HeidelpayMGWSofortConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="HeidelpayMGWSofortValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">HeidelpayMGWSofortValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <type name="Heidelpay\MGW\Model\Method\Sofort">
         <arguments>
             <argument name="code" xsi:type="const">Heidelpay\MGW\Model\Config::METHOD_SOFORT</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWSofortValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWValidatorPool</argument>
+            <argument name="validatorPool" xsi:type="object">HeidelpayMGWSofortValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
         </arguments>
     </type>
