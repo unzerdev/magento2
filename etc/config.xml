@@ -101,6 +101,7 @@
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
+                <after_shipment_state>payment_review</after_shipment_state>
                 <pending_payment_state>processing</pending_payment_state>
                 <model>Heidelpay\MGW\Model\Method\Invoice</model>
             </hpmgw_invoice>
@@ -118,6 +119,7 @@
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
+                <after_shipment_state>payment_review</after_shipment_state>
                 <pending_payment_state>processing</pending_payment_state>
                 <model>Heidelpay\MGW\Model\Method\InvoiceGuaranteed</model>
             </hpmgw_invoice_guaranteed>
@@ -135,6 +137,7 @@
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
+                <after_shipment_state>payment_review</after_shipment_state>
                 <pending_payment_state>processing</pending_payment_state>
                 <model>Heidelpay\MGW\Model\Method\InvoiceGuaranteedB2b</model>
             </hpmgw_invoice_guaranteed_b2b>

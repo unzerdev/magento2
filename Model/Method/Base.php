@@ -110,6 +110,18 @@ class Base extends Adapter
     }
 
     /**
+     * Returns the order state that will be set after shipment.
+     *
+     * If null is returned, the state will be the default state (completed).
+     *
+     * @return string|null
+     */
+    public function getAfterShipmentOrderState(): ?string
+    {
+        return $this->getConfigData('after_shipment_state');
+    }
+
+    /**
      * Returns the order state that will be set for pending orders.
      *
      * @return string
