@@ -124,7 +124,10 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      */
     public function getWebhooksSourceIps(): array
     {
-        return preg_split('/\s*,\s*/', $this->getValue(self::KEY_WEBHOOKS_SOURCE_IPS));
+        return preg_split(
+            '/\s*,\s*/',
+            $this->_scopeConfig->getValue(self::BASE_CONFIGURATION_PATH . self::KEY_WEBHOOKS_SOURCE_IPS)
+        );
     }
 
     /**
