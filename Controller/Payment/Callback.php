@@ -83,15 +83,16 @@ class Callback extends AbstractPaymentAction
     /**
      * @inheritDoc
      * @throws HeidelpayApiException
+     * @throws \Magento\Framework\Exception\InputException
      */
     public function executeWith(Order $order, Payment $payment)
     {
         /** @var Authorization|Charge|AbstractHeidelpayResource $resource */
         $resource = $payment->getAuthorization() ?? $payment->getChargeByIndex(0);
 
-        if ($payment->isCompleted()) {
+        if ($resource->isSuccess()) {
             $response = $this->handleSuccess($order, $resource);
-        } elseif ($payment->isPending()) {
+        } elseif ($resource->isPending()) {
             $response = $this->handlePending($order);
         } else {
             $response = $this->handleError($order, $resource);
@@ -121,7 +122,7 @@ class Callback extends AbstractPaymentAction
     private function handleErrorMessage(Order $order, string $message): \Magento\Framework\Controller\Result\Redirect
     {
         $this->_checkoutSession->restoreQuote();
-        $this->_messageManager->addError($message);
+        $this->_messageManager->addErrorMessage($message);
 
         $this->_paymentHelper->handleTransactionError($order);
 
@@ -131,7 +132,6 @@ class Callback extends AbstractPaymentAction
     }
 
     /**
-     * @param Order $order
      * @return \Magento\Framework\Controller\Result\Redirect
      */
     protected function handlePending(Order $order): \Magento\Framework\Controller\Result\Redirect
@@ -147,6 +147,7 @@ class Callback extends AbstractPaymentAction
      * @param Order $order
      * @param Authorization|Charge|AbstractHeidelpayResource $resource
      * @return \Magento\Framework\Controller\Result\Redirect
+     * @throws \Magento\Framework\Exception\InputException
      */
     protected function handleSuccess(
         Order $order,

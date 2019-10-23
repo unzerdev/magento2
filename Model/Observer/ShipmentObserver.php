@@ -3,13 +3,16 @@
 namespace Heidelpay\MGW\Model\Observer;
 
 use Heidelpay\MGW\Model\Config;
+use Heidelpay\MGW\Model\Method\Base;
 use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Shipment;
+use Magento\Sales\Model\Order\StatusResolver;
 
 /**
  * Observer for automatically tracking shipments in the Gateway
@@ -42,12 +45,19 @@ class ShipmentObserver implements ObserverInterface
     protected $_moduleConfig;
 
     /**
+     * @var StatusResolver
+     */
+    protected $_orderStatusResolver;
+
+    /**
      * ShipmentObserver constructor.
      * @param Config $moduleConfig
+     * @param StatusResolver $orderStatusResolver
      */
-    public function __construct(Config $moduleConfig)
+    public function __construct(Config $moduleConfig, StatusResolver $orderStatusResolver)
     {
         $this->_moduleConfig = $moduleConfig;
+        $this->_orderStatusResolver = $orderStatusResolver;
     }
 
     /**
@@ -67,6 +77,21 @@ class ShipmentObserver implements ObserverInterface
 
         /** @var Order $order */
         $order = $shipment->getOrder();
+
+        /** @var MethodInterface $methodInstance */
+        $methodInstance = $order->getPayment()->getMethodInstance();
+
+        if (!$methodInstance instanceof Base) {
+            return;
+        }
+
+        /** @var string|null $afterShipmentState */
+        $afterShipmentState = $methodInstance->getAfterShipmentOrderState();
+
+        if ($afterShipmentState !== null) {
+            $order->setState($afterShipmentState);
+            $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $afterShipmentState));
+        }
 
         /** @var Order\Invoice $invoice */
         $invoice = $order

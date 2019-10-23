@@ -34,11 +34,10 @@ class PaymentSucceededObserver extends AbstractPaymentWebhookObserver
     /**
      * @param Order $order
      * @param AbstractHeidelpayResource $resource
-     * @param DataObject $result
      * @return void
      * @throws \Magento\Framework\Exception\InputException
      */
-    public function executeWith(Order $order, AbstractHeidelpayResource $resource, DataObject $result): void
+    public function executeWith(Order $order, AbstractHeidelpayResource $resource): void
     {
         $this->_paymentHelper->handleTransactionSuccess($order, $resource);
     }

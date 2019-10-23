@@ -2,7 +2,7 @@
 
 namespace Heidelpay\MGW\Api;
 
-use heidelpayPHP\Resources\Customer;
+use Heidelpay\MGW\Api\Data\Customer;
 
 /**
  * Checkout API Interface.
@@ -34,7 +34,7 @@ interface CheckoutInterface
      *
      * @param string|null $guestEmail Customer E-Mail address.
      *
-     * @return string|null
+     * @return Customer|null
      */
-    public function getExternalCustomerId(?string $guestEmail = null): ?string;
+    public function getExternalCustomer(?string $guestEmail = null): ?Customer;
 }

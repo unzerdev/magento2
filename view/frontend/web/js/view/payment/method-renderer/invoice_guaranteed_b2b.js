@@ -7,14 +7,17 @@ define(
         'use strict';
 
         return Component.extend({
+            redirectUrl: 'checkout/onepage/success',
+
             defaults: {
-                template: 'Heidelpay_MGW/payment/invoice_guaranteed'
+                customerType: 'b2b',
+                template: 'Heidelpay_MGW/payment/invoice_guaranteed_b2b'
             },
 
             initializeForm: function () {
                 this.initializeCustomerForm(
-                    'invoice-guaranteed-customer',
-                    'invoice-guaranteed-customer-error'
+                    'invoice-guaranteed-b2b-customer',
+                    'invoice-guaranteed-b2b-customer-error'
                 );
                 this.resourceProvider = this.sdk.InvoiceGuaranteed();
             },

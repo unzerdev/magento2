@@ -3,8 +3,8 @@
 namespace Heidelpay\MGW\Api;
 
 use Exception;
+use Heidelpay\MGW\Api\Data\Customer;
 use Heidelpay\MGW\Helper\Order as OrderHelper;
-use heidelpayPHP\Resources\Customer;
 use Magento\Checkout\Model\Session;
 use Magento\Quote\Model\Quote;
 
@@ -55,31 +55,32 @@ class Checkout implements CheckoutInterface
     }
 
     /**
-     * Returns the external customer ID for the current quote.
+     * Returns the external customer for the current quote.
      *
      * @param string|null $guestEmail E-Mail address used for quote, in case customer is not logged in.
      *
-     * @return string|null
+     * @return Customer|null
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getExternalCustomerId(?string $guestEmail = null): ?string
+    public function getExternalCustomer(?string $guestEmail = null): ?Customer
     {
         /** @var Quote $quote */
         $quote = $this->_checkoutSession->getQuote();
 
-        $guestEmail = $guestEmail ?? $quote->getCustomerEmail();
+        $email = $guestEmail ?? $quote->getCustomerEmail();
 
-        if ($guestEmail === null) {
+        if ($email === null) {
             return null;
         }
-
-        /** @var Customer $customer */
 
         try {
-            $customer = $this->_orderHelper->createOrUpdateCustomerFromQuote($quote, $guestEmail);
+            $customerResource = $this->_orderHelper->createCustomerFromQuote($quote, $email);
         } catch (Exception $e) {
-            return null;
+            $customerResource = null;
         }
 
-        return $customer !== null ? $customer->getId() : null;
+        return $customerResource !== null ? Customer::fromResource($customerResource) : null;
     }
 }

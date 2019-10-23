@@ -1,13 +1,9 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Observer;
-
-use heidelpayPHP\Resources\AbstractHeidelpayResource;
-use Magento\Framework\DataObject;
-use Magento\Sales\Model\Order;
+namespace Heidelpay\MGW\Model\Method;
 
 /**
- * Observer for webhooks about failed and cancelled payments and chargebacks
+ * Invoice (factoring) payment method
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -29,15 +25,13 @@ use Magento\Sales\Model\Order;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class PaymentFailedObserver extends AbstractPaymentWebhookObserver
+class InvoiceGuaranteedB2b extends Invoice
 {
     /**
-     * @param Order $order
-     * @param AbstractHeidelpayResource $resource
-     * @return void
+     * @return bool
      */
-    public function executeWith(Order $order, AbstractHeidelpayResource $resource): void
+    public function isB2bOnly(): bool
     {
-        $this->_paymentHelper->handleTransactionError($order);
+        return true;
     }
 }

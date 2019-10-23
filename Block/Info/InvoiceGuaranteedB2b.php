@@ -1,13 +1,9 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Observer;
-
-use heidelpayPHP\Resources\AbstractHeidelpayResource;
-use Magento\Framework\DataObject;
-use Magento\Sales\Model\Order;
+namespace Heidelpay\MGW\Block\Info;
 
 /**
- * Observer for webhooks about failed and cancelled payments and chargebacks
+ * Customer Account Order Invoice Information Block
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -29,15 +25,16 @@ use Magento\Sales\Model\Order;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class PaymentFailedObserver extends AbstractPaymentWebhookObserver
+class InvoiceGuaranteedB2b extends InvoiceGuaranteed
 {
+    protected $_template = 'Heidelpay_MGW::info/invoice_guaranteed_b2b.phtml';
+
     /**
-     * @param Order $order
-     * @param AbstractHeidelpayResource $resource
-     * @return void
+     * @inheritDoc
      */
-    public function executeWith(Order $order, AbstractHeidelpayResource $resource): void
+    public function toPdf(): string
     {
-        $this->_paymentHelper->handleTransactionError($order);
+        $this->setTemplate('Heidelpay_MGW::info/pdf/invoice_guaranteed_b2b.phtml');
+        return $this->toHtml();
     }
 }

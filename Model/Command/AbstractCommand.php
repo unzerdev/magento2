@@ -2,16 +2,22 @@
 
 namespace Heidelpay\MGW\Model\Command;
 
-use Exception;
 use Heidelpay\MGW\Helper\Order;
 use Heidelpay\MGW\Model\Config;
 use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
 use heidelpayPHP\Heidelpay;
+use heidelpayPHP\Resources\AbstractHeidelpayResource;
+use heidelpayPHP\Resources\Customer;
+use heidelpayPHP\Resources\TransactionTypes\Authorization;
+use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Checkout\Model\Session;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Model\InfoInterface;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
+use Psr\Log\LoggerInterface;
 
 /**
  * Abstract Command for using the heidelpay SDK
@@ -38,6 +44,8 @@ use Magento\Payment\Model\InfoInterface;
  */
 abstract class AbstractCommand implements CommandInterface
 {
+    public const KEY_PAYMENT_ID = 'payment_id';
+
     /**
      * @var Session
      */
@@ -54,6 +62,11 @@ abstract class AbstractCommand implements CommandInterface
     protected $_config;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
+
+    /**
      * @var Order
      */
     protected $_orderHelper;
@@ -67,17 +80,20 @@ abstract class AbstractCommand implements CommandInterface
      * AbstractCommand constructor.
      * @param Session $checkoutSession
      * @param Config $config
+     * @param LoggerInterface $logger
      * @param Order $orderHelper
      * @param UrlInterface $urlBuilder
      */
     public function __construct(
         Session $checkoutSession,
         Config $config,
+        LoggerInterface $logger,
         Order $orderHelper,
         UrlInterface $urlBuilder
     ) {
         $this->_checkoutSession = $checkoutSession;
         $this->_config = $config;
+        $this->_logger = $logger;
         $this->_orderHelper = $orderHelper;
         $this->_urlBuilder = $urlBuilder;
     }
@@ -109,30 +125,57 @@ abstract class AbstractCommand implements CommandInterface
      * Returns the customer ID for given current payment or quote.
      *
      * @param InfoInterface $payment
+     * @param \Magento\Sales\Model\Order $order
      * @return string|null
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
      */
-    protected function _getCustomerId(InfoInterface $payment): ?string
+    protected function _getCustomerId(InfoInterface $payment, \Magento\Sales\Model\Order $order): ?string
     {
         /** @var string|null $customerId */
         $customerId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
 
-        if (!empty($customerId)) {
-            return $customerId;
+        if (empty($customerId)) {
+            return null;
         }
 
-        try {
-            $customer = $this->_orderHelper->createOrUpdateCustomerFromQuote(
-                $this->_checkoutSession->getQuote(),
-                $this->_checkoutSession->getQuote()->getCustomerEmail()
-            );
+        /** @var Customer $customer */
+        $customer = $this->_getClient()->fetchCustomer($customerId);
 
-            if ($customer !== null) {
-                return $customer->getId();
-            }
+        if (!$this->_orderHelper->validateGatewayCustomerAgainstOrder($order, $customer)) {
+            throw new LocalizedException(__('Payment information does not match billing address.'));
+        }
 
-            return null;
-        } catch (Exception $e) {
-            return null;
+        return $customerId;
+    }
+
+    /**
+     * Sets the transaction information on the given payment from an authorization or charge.
+     *
+     * @param OrderPayment $payment
+     * @param Authorization|Charge|AbstractHeidelpayResource $resource
+     * @param Authorization|Charge|AbstractHeidelpayResource|null $parentResource
+     *
+     * @return void
+     * @throws LocalizedException
+     */
+    protected function _setPaymentTransaction(
+        OrderPayment $payment,
+        AbstractHeidelpayResource $resource,
+        ?AbstractHeidelpayResource $parentResource = null
+    ): void
+    {
+        $payment->setLastTransId($resource->getId());
+        $payment->setTransactionId($resource->getId());
+        $payment->setIsTransactionClosed(false);
+        $payment->setIsTransactionPending($resource->isPending());
+
+        $payment->setAdditionalInformation(static::KEY_PAYMENT_ID, $resource->getPaymentId());
+
+        if ($parentResource !== null) {
+            $payment->setParentTransactionId($parentResource->getId());
+            $payment->setShouldCloseParentTransaction(true);
         }
     }
 }

@@ -70,7 +70,8 @@ class Base extends Adapter
         ValidatorPoolInterface $validatorPool = null,
         CommandManagerInterface $commandExecutor = null,
         LoggerInterface $logger = null
-    ) {
+    )
+    {
         parent::__construct(
             $eventManager,
             $valueHandlerPool,
@@ -109,19 +110,59 @@ class Base extends Adapter
     }
 
     /**
+     * Returns the order state that will be set after shipment.
+     *
+     * If null is returned, the state will be the default state (completed).
+     *
+     * @return string|null
+     */
+    public function getAfterShipmentOrderState(): ?string
+    {
+        return $this->getConfigData('after_shipment_state');
+    }
+
+    /**
+     * Returns the order state that will be set for pending orders.
+     *
+     * @return string
+     */
+    public function getTransactionPendingState(): string
+    {
+        return $this->getConfigData('pending_payment_state') ?? Order::STATE_PAYMENT_REVIEW;
+    }
+
+    /**
      * @inheritDoc
      */
     public function isAvailable(CartInterface $quote = null)
     {
-        if ($this->isB2cOnly()) {
-            $isAvailable = $quote === null || empty($quote->getBillingAddress()->getCompany());
+        if ($quote === null) {
+            return parent::isAvailable($quote);
+        }
 
-            if (!$isAvailable) {
+        $hasCompany = !empty($quote->getBillingAddress()->getCompany());
+
+        if ($hasCompany) {
+            if ($this->isB2cOnly()) {
+                return false;
+            }
+        } else {
+            if ($this->isB2bOnly()) {
                 return false;
             }
         }
 
         return parent::isAvailable($quote);
+    }
+
+    /**
+     * Returns whether the payment method is only available for B2B customers.
+     *
+     * @return bool
+     */
+    public function isB2bOnly(): bool
+    {
+        return false;
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace Heidelpay\MGW\Model\Command;
 
 use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
-use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Authorization;
@@ -45,7 +44,7 @@ class Capture extends AbstractCommand
      */
     public function execute(array $commandSubject)
     {
-        /** @var InfoInterface $payment */
+        /** @var OrderPayment $payment */
         $payment = $commandSubject['payment']->getPayment();
 
         /** @var float $amount */
@@ -54,23 +53,17 @@ class Capture extends AbstractCommand
         /** @var Order $order */
         $order = $payment->getOrder();
 
-        try {
-            $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
-        } catch (HeidelpayApiException $e) {
-            if ($e->getCode() !== ApiResponseCodes::API_ERROR_PAYMENT_NOT_FOUND) {
-                throw $e;
-            }
-
-            $hpPayment = null;
-        }
+        /** @var string|null $paymentId */
+        $paymentId = $payment->getAdditionalInformation(self::KEY_PAYMENT_ID);
 
         try {
-            if ($hpPayment !== null) {
-                $charge = $this->_chargeExisting($hpPayment, $amount);
+            if ($paymentId !== null) {
+                $charge = $this->_chargeExisting($paymentId, $amount);
             } else {
                 $charge = $this->_chargeNew($payment, $amount);
             }
         } catch (HeidelpayApiException $e) {
+            $this->_logger->error($e->getMerchantMessage(), ['incrementId' => $order->getIncrementId()]);
             throw new LocalizedException(__($e->getClientMessage()));
         }
 
@@ -78,31 +71,28 @@ class Capture extends AbstractCommand
             throw new LocalizedException(__('Failed to charge payment.'));
         }
 
-        /** @var OrderPayment $payment */
-        $payment->setLastTransId($charge->getUniqueId());
-        $payment->setTransactionId($charge->getUniqueId());
-
-        if ($charge->isPending()) {
-            $payment->setIsTransactionClosed(false);
-            $payment->setIsTransactionPending(true);
-        } else {
-            $payment->setIsTransactionClosed(true);
-            $payment->setIsTransactionPending(false);
-        }
-
+        $this->_setPaymentTransaction(
+            $payment,
+            $charge,
+            $charge->getPayment()->getAuthorization()
+        );
         return null;
     }
 
     /**
      * Charges an existing payment.
      *
-     * @param Payment $payment
+     * @param string $paymentId
      * @param float $amount
      * @return Charge
      * @throws HeidelpayApiException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function _chargeExisting(Payment $payment, float $amount): Charge
+    protected function _chargeExisting(string $paymentId, float $amount): Charge
     {
+        /** @var Payment $payment */
+        $payment = $this->_getClient()->fetchPayment($paymentId);
+
         /** @var Authorization|null $authorization */
         $authorization = $payment->getAuthorization();
 
@@ -110,17 +100,18 @@ class Capture extends AbstractCommand
             return $authorization->charge($amount);
         }
 
-        return $payment->getChargeByIndex(0);
+        return $payment->charge($amount);
     }
 
     /**
      * Charges a new payment.
      *
      * @param InfoInterface $payment
-     * @param $amount
+     * @param float $amount
      * @return Charge
      * @throws HeidelpayApiException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
      */
     protected function _chargeNew(InfoInterface $payment, float $amount): Charge
     {
@@ -135,7 +126,7 @@ class Capture extends AbstractCommand
             $order->getOrderCurrencyCode(),
             $resourceId,
             $this->_getCallbackUrl(),
-            $this->_getCustomerId($payment),
+            $this->_getCustomerId($payment, $order),
             $order->getIncrementId(),
             $this->_orderHelper->createMetadataForOrder($order),
             $this->_orderHelper->createBasketForOrder($order),

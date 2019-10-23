@@ -110,7 +110,7 @@ abstract class AbstractPaymentWebhookObserver implements ObserverInterface
         $order = reset($orders);
 
         try {
-            $this->executeWith($order, $resource, $result);
+            $this->executeWith($order, $resource);
             $this->_orderRepository->save($order);
         } catch (Exception $e) {
             $result->setData('message', 'Internal server error');
@@ -134,7 +134,6 @@ abstract class AbstractPaymentWebhookObserver implements ObserverInterface
     /**
      * @param Order $order
      * @param AbstractHeidelpayResource $resource
-     * @param DataObject $result
      */
-    abstract public function executeWith(Order $order, AbstractHeidelpayResource $resource, DataObject $result): void;
+    abstract public function executeWith(Order $order, AbstractHeidelpayResource $resource): void;
 }

@@ -47,6 +47,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     const METHOD_FLEXIPAY_DIRECT = 'hpmgw_flexipay_direct';
     const METHOD_IDEAL = 'hpmgw_ideal';
     const METHOD_INVOICE = 'hpmgw_invoice';
+    const METHOD_INVOICE_GUARANTEED_B2B = 'hpmgw_invoice_guaranteed_b2b';
     const METHOD_INVOICE_GUARANTEED = 'hpmgw_invoice_guaranteed';
     const METHOD_PAYPAL = 'hpmgw_paypal';
     const METHOD_SOFORT = 'hpmgw_sofort';
@@ -123,7 +124,10 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      */
     public function getWebhooksSourceIps(): array
     {
-        return preg_split('/\s*,\s*/', $this->getValue(self::KEY_WEBHOOKS_SOURCE_IPS));
+        return preg_split(
+            '/\s*,\s*/',
+            $this->_scopeConfig->getValue(self::BASE_CONFIGURATION_PATH . self::KEY_WEBHOOKS_SOURCE_IPS)
+        );
     }
 
     /**

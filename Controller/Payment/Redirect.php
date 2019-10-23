@@ -45,6 +45,10 @@ class Redirect extends AbstractPaymentAction
         /** @var string|null $redirectUrl */
         $redirectUrl = $transaction->getRedirectUrl();
 
+        if (empty($redirectUrl)) {
+            $redirectUrl = $transaction->getReturnUrl();
+        }
+
         $redirect = $this->resultRedirectFactory->create();
         $redirect->setUrl($redirectUrl);
         return $redirect;
