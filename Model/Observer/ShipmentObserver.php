@@ -7,6 +7,8 @@ use Heidelpay\MGW\Model\Method\Base;
 use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
+use heidelpayPHP\Resources\PaymentTypes\InvoiceFactoring;
+use heidelpayPHP\Resources\PaymentTypes\InvoiceGuaranteed;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Payment\Model\MethodInterface;
@@ -39,6 +41,13 @@ use Magento\Sales\Model\Order\StatusResolver;
  */
 class ShipmentObserver implements ObserverInterface
 {
+    /**
+     * List of payment method codes for which the shipment can be tracked in the gateway.
+     */
+    const SHIPPABLE_PAYMENT_METHODS = [
+        Config::METHOD_INVOICE_GUARANTEED,
+    ];
+
     /**
      * @var Config
      */
@@ -91,6 +100,10 @@ class ShipmentObserver implements ObserverInterface
         if ($afterShipmentState !== null) {
             $order->setState($afterShipmentState);
             $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $afterShipmentState));
+        }
+
+        if (!in_array($order->getPayment()->getMethod(), self::SHIPPABLE_PAYMENT_METHODS)) {
+            return;
         }
 
         /** @var Order\Invoice $invoice */
