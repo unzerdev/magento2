@@ -178,8 +178,6 @@ class Capture extends AbstractCommand
 
         if ($resource->getPayment()->getAuthorization()) {
             $parentTransactionId = $resource->getPayment()->getAuthorization();
-
-            $payment->setShouldCloseParentTransaction(true);
         } else {
             $parentTransactionId = $resource->getId() . '-aut';
 
@@ -191,15 +189,13 @@ class Capture extends AbstractCommand
 
             /** @var Transaction $parentTransaction */
             $parentTransaction = $this->_transactionBuilder->build(Transaction::TYPE_AUTH);
-            $parentTransaction->setIsClosed(true);
+            $parentTransaction->setIsClosed(false);
 
-            // Make sure we reset the builder since it ma be reused and could override data in our transaction.
+            // Make sure we reset the builder since it may be reused and could override data in our transaction.
             $this->_transactionBuilder->reset();
-
-            // We already set is_closed to true when creating the transaction.
-            $payment->setShouldCloseParentTransaction(false);
         }
 
         $payment->setParentTransactionId($parentTransactionId);
+        $payment->setShouldCloseParentTransaction(false);
     }
 }
