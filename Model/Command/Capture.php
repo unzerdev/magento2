@@ -2,15 +2,24 @@
 
 namespace Heidelpay\MGW\Model\Command;
 
+use Heidelpay\MGW\Model\Config;
 use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
+use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Authorization;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
+use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\UrlInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
+use Magento\Sales\Model\Order\Payment\Transaction;
+use Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface;
+use Magento\Sales\Model\Order\Payment\TransactionFactory;
+use Psr\Log\LoggerInterface;
 
 /**
  * Capture Command for payments
@@ -37,6 +46,29 @@ use Magento\Sales\Model\Order\Payment as OrderPayment;
  */
 class Capture extends AbstractCommand
 {
+    /**
+     * @var BuilderInterface
+     */
+    private $_transactionBuilder;
+
+    /**
+     * @inheritDoc
+     * @param TransactionFactory $_transactionFactory
+     */
+    public function __construct(
+        Session $checkoutSession,
+        Config $config,
+        LoggerInterface $logger,
+        \Heidelpay\MGW\Helper\Order $orderHelper,
+        UrlInterface $urlBuilder,
+        BuilderInterface $transactionBuilder
+    )
+    {
+        parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder);
+
+        $this->_transactionBuilder = $transactionBuilder;
+    }
+
     /**
      * @inheritDoc
      * @throws LocalizedException
@@ -71,11 +103,7 @@ class Capture extends AbstractCommand
             throw new LocalizedException(__('Failed to charge payment.'));
         }
 
-        $this->_setPaymentTransaction(
-            $payment,
-            $charge,
-            $charge->getPayment()->getAuthorization()
-        );
+        $this->_setPaymentTransaction($payment, $charge);
         return null;
     }
 
@@ -86,7 +114,7 @@ class Capture extends AbstractCommand
      * @param float $amount
      * @return Charge
      * @throws HeidelpayApiException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     protected function _chargeExisting(string $paymentId, float $amount): Charge
     {
@@ -110,7 +138,7 @@ class Capture extends AbstractCommand
      * @param float $amount
      * @return Charge
      * @throws HeidelpayApiException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      * @throws LocalizedException
      */
     protected function _chargeNew(InfoInterface $payment, float $amount): Charge
@@ -134,5 +162,40 @@ class Capture extends AbstractCommand
             null,
             null
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function _setPaymentTransaction(
+        OrderPayment $payment,
+        AbstractHeidelpayResource $resource
+    ): void
+    {
+        parent::_setPaymentTransaction($payment, $resource);
+
+        $parentTransactionId = null;
+
+        if ($resource->getPayment()->getAuthorization()) {
+            $parentTransactionId = $resource->getPayment()->getAuthorization();
+        } else {
+            $parentTransactionId = $resource->getId() . '-aut';
+
+            $this->_transactionBuilder
+                ->setFailSafe(false)
+                ->setOrder($payment->getOrder())
+                ->setPayment($payment)
+                ->setTransactionId($parentTransactionId);
+
+            /** @var Transaction $parentTransaction */
+            $parentTransaction = $this->_transactionBuilder->build(Transaction::TYPE_AUTH);
+            $parentTransaction->setIsClosed(false);
+
+            // Make sure we reset the builder since it may be reused and could override data in our transaction.
+            $this->_transactionBuilder->reset();
+        }
+
+        $payment->setParentTransactionId($parentTransactionId);
+        $payment->setShouldCloseParentTransaction(false);
     }
 }

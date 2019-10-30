@@ -156,6 +156,8 @@ class Payment
         switch (true) {
             case $resource instanceof Authorization:
                 $payment->registerAuthorizationNotification($resource->getAmount());
+                // We don't close the authorization transaction since we need an open authorization transaction to
+                // be able to cancel a payment.
                 break;
             case $resource instanceof Charge:
                 $payment->registerCaptureNotification($resource->getAmount());
