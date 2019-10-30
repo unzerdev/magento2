@@ -7,8 +7,6 @@ use Heidelpay\MGW\Model\Method\Base;
 use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
-use heidelpayPHP\Resources\PaymentTypes\InvoiceFactoring;
-use heidelpayPHP\Resources\PaymentTypes\InvoiceGuaranteed;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Payment\Model\MethodInterface;
@@ -46,6 +44,7 @@ class ShipmentObserver implements ObserverInterface
      */
     const SHIPPABLE_PAYMENT_METHODS = [
         Config::METHOD_INVOICE_GUARANTEED,
+        Config::METHOD_INVOICE_GUARANTEED_B2B,
     ];
 
     /**
