@@ -155,7 +155,7 @@ class Payment
 
         if ($resource->getPayment()->isCompleted()) {
             /** @var Order\Invoice $invoice */
-            $invoice = $invoice->getItemByColumnValue('transaction_id', $transactionId);
+            $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
             $invoice->pay();
 
             $paymentTransaction->setIsClosed(true);
