@@ -153,22 +153,21 @@ class Payment
             $order->getId()
         );
 
-        switch (true) {
-            case $resource instanceof Authorization:
-                $payment->registerAuthorizationNotification($resource->getAmount());
-                // We don't close the authorization transaction since we need an open authorization transaction to
-                // be able to cancel a payment.
-                break;
-            case $resource instanceof Charge:
-                $payment->registerCaptureNotification($resource->getAmount());
-                $paymentTransaction->setIsClosed(true);
-                break;
-            default:
+        if ($resource->getPayment()->isCompleted()) {
+            /** @var Order\Invoice $invoice */
+            $invoice = $invoice->getItemByColumnValue('transaction_id', $transactionId);
+            $invoice->pay();
+
+            $paymentTransaction->setIsClosed(true);
+
+            $newOrderState = Order::STATE_COMPLETE;
+        } else {
+            $newOrderState = Order::STATE_PROCESSING;
         }
 
-        // Only send once for payment methods that use have separate authorization and capture
+        // Only send once for payment methods that have separate authorization and capture
         $order->setCanSendNewEmailFlag($order->getState() !== Order::STATE_PROCESSING);
-        $order->setState(Order::STATE_PROCESSING);
+        $order->setState($newOrderState);
         $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
 
         $this->_transactionRepository->save($paymentTransaction);
