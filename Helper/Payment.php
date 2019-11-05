@@ -13,6 +13,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order as OrderModel;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
+use Magento\Sales\Model\Order\StateResolver;
 use Magento\Sales\Model\Order\StatusResolver;
 
 /**
@@ -41,6 +42,11 @@ use Magento\Sales\Model\Order\StatusResolver;
 class Payment
 {
     /**
+     * @var Order\InvoiceRepository
+     */
+    protected $_invoiceRepository;
+
+    /**
      * @var OrderManagementInterface
      */
     protected $_orderManagement;
@@ -54,6 +60,11 @@ class Payment
      * @var OrderSender
      */
     protected $_orderSender;
+
+    /**
+     * @var StateResolver
+     */
+    protected $_orderStateResolver;
 
     /**
      * @var StatusResolver
@@ -72,25 +83,31 @@ class Payment
 
     /**
      * Payment constructor.
+     * @param Order\InvoiceRepository $invoiceRepository
      * @param OrderManagementInterface $orderManagement
      * @param OrderRepositoryInterface $orderRepository
      * @param OrderSender $orderSender
+     * @param StateResolver $orderStateResolver
      * @param StatusResolver $orderStatusResolver
      * @param OrderPaymentRepositoryInterface $paymentRepository
      * @param OrderPayment\Transaction\Repository $transactionRepository
      */
     public function __construct(
+        Order\InvoiceRepository $invoiceRepository,
         OrderManagementInterface $orderManagement,
         OrderRepositoryInterface $orderRepository,
         OrderSender $orderSender,
+        StateResolver $orderStateResolver,
         StatusResolver $orderStatusResolver,
         OrderPaymentRepositoryInterface $paymentRepository,
         OrderPayment\Transaction\Repository $transactionRepository
     )
     {
+        $this->_invoiceRepository = $invoiceRepository;
         $this->_orderManagement = $orderManagement;
         $this->_orderRepository = $orderRepository;
         $this->_orderSender = $orderSender;
+        $this->_orderStateResolver = $orderStateResolver;
         $this->_orderStatusResolver = $orderStatusResolver;
         $this->_paymentRepository = $paymentRepository;
         $this->_transactionRepository = $transactionRepository;
@@ -146,33 +163,34 @@ class Payment
         // prevents online refunds.
         $payment->setTransactionId($transactionId);
 
-        /** @var OrderPayment\Transaction $paymentTransaction */
-        $paymentTransaction = $this->_transactionRepository->getByTransactionId(
-            $payment->getTransactionId(),
-            $payment->getId(),
-            $order->getId()
-        );
+        if ($resource->getPayment()->isCompleted()) {
+            /** @var Order\Invoice $invoice */
+            $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
+            $invoice->pay();
 
-        switch (true) {
-            case $resource instanceof Authorization:
-                $payment->registerAuthorizationNotification($resource->getAmount());
-                // We don't close the authorization transaction since we need an open authorization transaction to
-                // be able to cancel a payment.
-                break;
-            case $resource instanceof Charge:
-                $payment->registerCaptureNotification($resource->getAmount());
-                $paymentTransaction->setIsClosed(true);
-                break;
-            default:
+            /** @var OrderPayment\Transaction $paymentTransaction */
+            $paymentTransaction = $this->_transactionRepository->getByTransactionId(
+                $payment->getTransactionId(),
+                $payment->getId(),
+                $order->getId()
+            );
+
+            $paymentTransaction->setIsClosed(true);
+
+            $this->_invoiceRepository->save($invoice);
+            $this->_paymentRepository->save($payment);
+            $this->_transactionRepository->save($paymentTransaction);
         }
 
-        // Only send once for payment methods that use have separate authorization and capture
+        $orderState = $this->_orderStateResolver->getStateForOrder($order, [
+            $this->_orderStateResolver::IN_PROGRESS,
+        ]);
+
+        // Only send once for payment methods that have separate authorization and capture
         $order->setCanSendNewEmailFlag($order->getState() !== Order::STATE_PROCESSING);
-        $order->setState(Order::STATE_PROCESSING);
+        $order->setState($orderState);
         $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
 
-        $this->_transactionRepository->save($paymentTransaction);
-        $this->_paymentRepository->save($payment);
         $this->_orderRepository->save($order);
         $this->_orderSender->send($order);
     }
