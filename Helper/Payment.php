@@ -203,7 +203,7 @@ class Payment
         ]);
 
         // Only send once for payment methods that have separate authorization and capture
-        $order->setCanSendNewEmailFlag($order->getState() !== Order::STATE_PROCESSING);
+        $order->setCanSendNewEmailFlag(!in_array($order->getState(), [Order::STATE_NEW, Order::STATE_PROCESSING]));
         $order->setState($orderState);
         $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
 
