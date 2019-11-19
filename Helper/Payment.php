@@ -132,6 +132,11 @@ class Payment
         /** @var string $state */
         $state = $paymentMethod->getTransactionPendingState();
 
+        // If we have already shipped use the correct state for after shipment if set.
+        if ($order->getShipmentsCollection()->count() > 0) {
+            $state = $paymentMethod->getAfterShipmentOrderState() ?? $state;
+        }
+
         $order->setState($state);
         $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
 
