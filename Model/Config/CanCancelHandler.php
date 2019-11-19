@@ -6,7 +6,7 @@ use Magento\Payment\Gateway\Config\ValueHandlerInterface;
 use Magento\Sales\Model\Order\Payment;
 
 /**
- * Handler for checking if payments can be voided
+ * Handler for checking if payments can be canceled
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -28,7 +28,7 @@ use Magento\Sales\Model\Order\Payment;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class CanVoidHandler implements ValueHandlerInterface
+class CanCancelHandler extends CanRefundHandler
 {
     /**
      * @inheritDoc
@@ -39,7 +39,8 @@ class CanVoidHandler implements ValueHandlerInterface
         if (!$payment instanceof Payment) {
             return false;
         }
-        if ($payment->getBaseAmountAuthorized() > $payment->getBaseAmountCanceled()) {
+        if ($payment->getBaseAmountAuthorized() > $payment->getBaseAmountCanceled() ||
+            $payment->getBaseAmountPaid() > $payment->getBaseAmountCanceled()) {
             return true;
         }
         return false;
