@@ -186,6 +186,13 @@ class Payment
             $this->_paymentRepository->save($payment);
             $this->_transactionRepository->save($paymentTransaction);
 
+            $parentTransaction = $paymentTransaction->getParentTransaction();
+            if ($parentTransaction !== null &&
+                $parentTransaction->getIsClosed() == false) {
+                $parentTransaction->setIsClosed(true);
+                $this->_transactionRepository->save($parentTransaction);
+            }
+
             // Need to set to processing, otherwise the state resolver will not complete the order, when we are
             // currently in payment review (e.g. with invoice).
             $order->setState(Order::STATE_PROCESSING);
