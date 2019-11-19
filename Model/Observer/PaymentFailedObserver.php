@@ -35,9 +35,10 @@ class PaymentFailedObserver extends AbstractPaymentWebhookObserver
      * @param Order $order
      * @param AbstractHeidelpayResource $resource
      * @return void
+     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
      */
     public function executeWith(Order $order, AbstractHeidelpayResource $resource): void
     {
-        $this->_paymentHelper->handleTransactionError($order);
+        $this->_paymentHelper->handleTransactionError($order, $resource);
     }
 }

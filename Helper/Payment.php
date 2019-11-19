@@ -5,6 +5,7 @@ namespace Heidelpay\MGW\Helper;
 use Heidelpay\MGW\Model\Method\Base;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use heidelpayPHP\Resources\TransactionTypes\Authorization;
+use heidelpayPHP\Resources\TransactionTypes\Cancellation;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
@@ -114,10 +115,48 @@ class Payment
     }
 
     /**
-     * @param OrderModel $order
+     * Returns the transaction ID for the given resource.
+     *
+     * @param AbstractHeidelpayResource $resource
+     * @return string
+     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
      */
-    public function handleTransactionError(Order $order)
+    private function _getTransactionIdForResource(AbstractHeidelpayResource $resource): string
     {
+        if ($resource instanceof Charge) {
+            // For charges, we always use the ID of the first charge as transaction ID.
+            return $resource->getPayment()
+                ->getChargeByIndex(0)
+                ->getId();
+        }
+
+        return $resource->getId();
+    }
+
+    /**
+     * @param OrderModel $order
+     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     */
+    public function handleTransactionError(Order $order, AbstractHeidelpayResource $resource)
+    {
+        if ($resource instanceof Cancellation) {
+            $resource = $resource->getParentResource();
+        }
+
+        if ($resource instanceof Charge) {
+            // For charges we need to manually cancel the invoice, since cancelling the order may be a no-op in case
+            // we already have invoices for all items.
+
+            $transactionId = $this->_getTransactionIdForResource($resource);
+
+            /** @var Order\Invoice $invoice */
+            $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
+            $invoice->cancel();
+
+            $this->_invoiceRepository->save($invoice);
+            $this->_orderRepository->save($order);
+        }
+
         $this->_orderManagement->cancel($order->getId());
     }
 
@@ -146,14 +185,8 @@ class Payment
      */
     public function handleTransactionSuccess(Order $order, AbstractHeidelpayResource $resource)
     {
-        $transactionId = $resource->getId();
-
-        if ($resource instanceof Charge) {
-            // For charges, we always use the ID of the first charge as transaction ID.
-            $transactionId = $resource->getPayment()
-                ->getChargeByIndex(0)
-                ->getId();
-        }
+        /** @var string $transactionId */
+        $transactionId = $this->_getTransactionIdForResource($resource);
 
         /** @var OrderPayment $payment */
         $payment = $order->getPayment();
