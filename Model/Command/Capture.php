@@ -177,7 +177,7 @@ class Capture extends AbstractCommand
         $parentTransactionId = null;
 
         if ($resource->getPayment()->getAuthorization()) {
-            $parentTransactionId = $resource->getPayment()->getAuthorization();
+            $parentTransactionId = $resource->getPayment()->getAuthorization()->getId();
         } else {
             $parentTransactionId = $resource->getId() . '-aut';
 
