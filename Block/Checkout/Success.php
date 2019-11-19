@@ -2,9 +2,11 @@
 
 namespace Heidelpay\MGW\Block\Checkout;
 
+use Heidelpay\MGW\Model\Method\Base;
 use heidelpayPHP\Resources\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\View\Element\Template\Context;
+use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderFactory;
 
@@ -61,16 +63,22 @@ class Success extends \Magento\Checkout\Block\Success
     /**
      * Returns additional payment information.
      *
-     * @return string
+     * @return string|null
      */
-    public function getAdditionalPaymentInformation(): string
+    public function getAdditionalPaymentInformation(): ?string
     {
         /** @var Order $order */
         $order = $this->_checkoutSession->getLastRealOrder();
 
-        return $order
+        /** @var MethodInterface $methodInstance */
+        $methodInstance = $order
             ->getPayment()
-            ->getMethodInstance()
-            ->getAdditionalPaymentInformation($order);
+            ->getMethodInstance();
+
+        if (!$methodInstance instanceof Base) {
+            return null;
+        }
+
+        return $methodInstance->getAdditionalPaymentInformation($order);
     }
 }
