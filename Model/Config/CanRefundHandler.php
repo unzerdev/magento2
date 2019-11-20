@@ -39,7 +39,7 @@ class CanRefundHandler implements ValueHandlerInterface
         if (!$payment instanceof Payment) {
             return false;
         }
-        if ($payment->getBaseAmountPaid() > 0) {
+        if ($payment->getBaseAmountPaid() > $payment->getBaseAmountRefunded()) {
             return true;
         }
         return false;
