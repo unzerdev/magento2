@@ -132,6 +132,11 @@ class Payment
         /** @var string $state */
         $state = $paymentMethod->getTransactionPendingState();
 
+        // If we have already shipped use the correct state for after shipment if set.
+        if ($order->getShipmentsCollection()->count() > 0) {
+            $state = $paymentMethod->getAfterShipmentOrderState() ?? $state;
+        }
+
         $order->setState($state);
         $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
 
@@ -181,6 +186,13 @@ class Payment
             $this->_paymentRepository->save($payment);
             $this->_transactionRepository->save($paymentTransaction);
 
+            $parentTransaction = $paymentTransaction->getParentTransaction();
+            if ($parentTransaction !== null &&
+                $parentTransaction->getIsClosed() == false) {
+                $parentTransaction->setIsClosed(true);
+                $this->_transactionRepository->save($parentTransaction);
+            }
+
             // Need to set to processing, otherwise the state resolver will not complete the order, when we are
             // currently in payment review (e.g. with invoice).
             $order->setState(Order::STATE_PROCESSING);
@@ -190,12 +202,13 @@ class Payment
             $this->_orderStateResolver::IN_PROGRESS,
         ]);
 
-        // Only send once for payment methods that have separate authorization and capture
-        $order->setCanSendNewEmailFlag($order->getState() !== Order::STATE_PROCESSING);
         $order->setState($orderState);
         $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
 
         $this->_orderRepository->save($order);
-        $this->_orderSender->send($order);
+
+        if (!$order->getEmailSent()) {
+            $this->_orderSender->send($order);
+        }
     }
 }
