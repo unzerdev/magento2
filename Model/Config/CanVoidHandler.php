@@ -39,7 +39,7 @@ class CanVoidHandler implements ValueHandlerInterface
         if (!$payment instanceof Payment) {
             return false;
         }
-        if ($payment->getBaseAmountAuthorized() > $payment->getBaseAmountCanceled()) {
+        if ($payment->getBaseAmountAuthorized() > 0) {
             return true;
         }
         return false;
