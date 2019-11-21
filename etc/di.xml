@@ -67,9 +67,9 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">HeidelpayMGWBaseConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
                 <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -116,9 +116,9 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">HeidelpayMGWCardsConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
                 <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -165,9 +165,9 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">HeidelpayMGWDirectDebitConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
                 <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -214,9 +214,9 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">HeidelpayMGWDirectDebitGuaranteedConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
                 <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -263,9 +263,9 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">HeidelpayMGWFlexipayDirectConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
                 <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -312,9 +312,9 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">HeidelpayMGWIdealConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
                 <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -361,10 +361,10 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">HeidelpayMGWInvoiceConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanCancelHandler</item>
                 <item name="can_capture" xsi:type="string">Heidelpay\MGW\Model\Config\InvoiceCaptureHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
                 <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -411,10 +411,10 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">HeidelpayMGWInvoiceGuaranteedB2bConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanCancelHandler</item>
                 <item name="can_capture" xsi:type="string">Heidelpay\MGW\Model\Config\InvoiceCaptureHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
                 <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -461,10 +461,10 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">HeidelpayMGWInvoiceGuaranteedConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanCancelHandler</item>
                 <item name="can_capture" xsi:type="string">Heidelpay\MGW\Model\Config\InvoiceCaptureHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
                 <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -511,9 +511,9 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">HeidelpayMGWPaypalConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
                 <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -560,9 +560,9 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">HeidelpayMGWSofortConfigValueHandler</item>
-                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">Heidelpay\MGW\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Heidelpay\MGW\Model\Config\CanRefundHandler</item>
                 <item name="can_void" xsi:type="string">Heidelpay\MGW\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>

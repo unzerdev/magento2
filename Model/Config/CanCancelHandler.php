@@ -1,13 +1,12 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Observer;
+namespace Heidelpay\MGW\Model\Config;
 
-use heidelpayPHP\Resources\AbstractHeidelpayResource;
-use Magento\Framework\DataObject;
-use Magento\Sales\Model\Order;
+use Magento\Payment\Gateway\Config\ValueHandlerInterface;
+use Magento\Sales\Model\Order\Payment;
 
 /**
- * Observer for webhooks about failed and cancelled payments and chargebacks
+ * Handler for checking if payments can be canceled
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -29,16 +28,21 @@ use Magento\Sales\Model\Order;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class PaymentFailedObserver extends AbstractPaymentWebhookObserver
+class CanCancelHandler extends CanRefundHandler
 {
     /**
-     * @param Order $order
-     * @param AbstractHeidelpayResource $resource
-     * @return void
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @inheritDoc
      */
-    public function executeWith(Order $order, AbstractHeidelpayResource $resource): void
+    public function handle(array $subject, $storeId = null)
     {
-        $this->_paymentHelper->handleTransactionError($order, $resource);
+        $payment = $subject['payment']->getPayment();
+        if (!$payment instanceof Payment) {
+            return false;
+        }
+        if ($payment->getBaseAmountAuthorized() > $payment->getBaseAmountCanceled() ||
+            $payment->getBaseAmountPaid() > $payment->getBaseAmountCanceled()) {
+            return true;
+        }
+        return false;
     }
 }
