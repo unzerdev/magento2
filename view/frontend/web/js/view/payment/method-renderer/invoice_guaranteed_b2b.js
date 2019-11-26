@@ -7,8 +7,6 @@ define(
         'use strict';
 
         return Component.extend({
-            redirectUrl: 'checkout/onepage/success',
-
             defaults: {
                 customerType: 'b2b',
                 template: 'Heidelpay_MGW/payment/invoice_guaranteed_b2b'
