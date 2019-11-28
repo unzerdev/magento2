@@ -1,68 +1,19 @@
-@import url(https://fonts.googleapis.com/css?family=Open+Sans);
-
-.heidelpayUI {
-    color: #000;
-    font-family: Open Sans, Arial, sans-serif;
-    font-size: 16px;
-    font-smoothing: antialiased;
-    line-height: 1.2em;
-    padding: 0;
-}
-
-.heidelpayUI.form {
+.heidelpayUI.input {
     position: relative;
-    max-width: 100%
+    font-weight: 400;
+    font-style: normal;
+    display: inline-flex
 }
 
-.heidelpayUI.form > p {
-    margin: 1em 0
-}
-
-.heidelpayUI.form .field {
-    clear: both;
-    margin: 0 0 1em
-}
-
-.heidelpayUI.form .field:last-child, .heidelpayUI.form .fields:last-child, .heidelpayUI.form .fields:last-child .field {
-    margin-bottom: 0
-}
-
-.heidelpayUI.form .fields .field {
-    clear: both;
-    margin: 0
-}
-
-.heidelpayUI.form .field > label {
-    display: block;
-    margin: 0 0 .28571429rem;
-    color: #000;
-    text-transform: none
-}
-
-.heidelpayUI.label.subtitle {
-    display: block;
-    margin: 0 0 1.5rem;
-    color: #002c44;
-    text-transform: none;
-    font-weight: 600;
-    line-height: 1.25
-}
-
-.heidelpayUI.form input:not([type]), .heidelpayUI.form input[type=date], .heidelpayUI.form input[type=datetime-local], .heidelpayUI.form input[type=email], .heidelpayUI.form input[type=file], .heidelpayUI.form input[type=number], .heidelpayUI.form input[type=password], .heidelpayUI.form input[type=search], .heidelpayUI.form input[type=tel], .heidelpayUI.form input[type=text], .heidelpayUI.form input[type=time], .heidelpayUI.form input[type=url], .heidelpayUI.form textarea {
-    width: 100%;
-    vertical-align: top
-}
-
-,
-.heidelpayUI.form .heidelpayInput, .heidelpayUI.form input:not(.heidelpayChoices__input), .heidelpayUI.form input:not([type]), .heidelpayUI.form input[type=date], .heidelpayUI.form input[type=datetime-local], .heidelpayUI.form input[type=email], .heidelpayUI.form input[type=file], .heidelpayUI.form input[type=number], .heidelpayUI.form input[type=password], .heidelpayUI.form input[type=search], .heidelpayUI.form input[type=tel], .heidelpayUI.form input[type=text], .heidelpayUI.form input[type=time], .heidelpayUI.form input[type=url] {
+.heidelpayUI.input > .heidelpayInput, .heidelpayUI.input > input {
     margin: 0;
+    max-width: 100%;
+    flex: 1 0 auto;
     outline: none;
-    -webkit-appearance: none;
-    tap-highlight-color: hsla(0, 0%, 100%, 0);
-    line-height: normal;
-    height: 1rem;
-    padding: 11px 1rem;
-    font-size: 1em;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    text-align: left;
+    line-height: 1.2em;
+    padding: 10px 16px;
     background: #fff;
     border: 1px solid #dadada;
     color: #000;
@@ -70,426 +21,102 @@
     box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, .2)
 }
 
-.heidelpayUI.form select {
-    display: block;
-    height: auto;
-    width: 100%;
-    background: #fff;
-    border: 1px solid rgba(34, 36, 38, .15);
-    border-radius: 2px;
-    box-shadow: inset 0 0 0 0 transparent;
-    padding: .62em 1em;
-    color: rgba(0, 0, 0, .87);
-    transition: color .1s ease, border-color .1s ease
+.heidelpayUI.input > input::-webkit-input-placeholder {
+    color: #999;
+    line-height: normal !important
 }
 
-.heidelpayUI.form .field > .heidelpayChoices, .heidelpayUI.form .field > .selection.dropdown {
-    width: 100%;
-    box-sizing: border-box;
-    height: 40px
-}
-
-.heidelpayUI.form .field > .selection.dropdown i.icon:before {
-    margin-left: 0
-}
-
-.heidelpayUI.form .field > .selection.dropdown > .dropdown.icon {
-    float: right
-}
-
-.heidelpayUI.form .inline.field > .selection.dropdown, .heidelpayUI.form .inline.fields .field > .selection.dropdown {
-    width: auto
-}
-
-.heidelpayUI.form .inline.field > .selection.dropdown > .dropdown.icon, .heidelpayUI.form .inline.fields .field > .selection.dropdown > .dropdown.icon {
-    float: none
-}
-
-.heidelpayUI.form .field .heidelpayUI.input, .heidelpayUI.form .fields .field .heidelpayUI.input, .heidelpayUI.form .wide.field .heidelpayUI.input {
-    width: 100%
-}
-
-.heidelpayUI.form .inline.field:not(.wide) .heidelpayUI.input, .heidelpayUI.form .inline.fields .field:not(.wide) .heidelpayUI.input {
-    width: auto;
-    vertical-align: middle
-}
-
-.heidelpayUI.form .field .heidelpayUI.input input, .heidelpayUI.form .fields .field .heidelpayUI.input input {
-    width: auto
-}
-
-.heidelpayUI.form .eight.fields .heidelpayUI.input input, .heidelpayUI.form .five.fields .heidelpayUI.input input, .heidelpayUI.form .four.fields .heidelpayUI.input input, .heidelpayUI.form .nine.fields .heidelpayUI.input input, .heidelpayUI.form .seven.fields .heidelpayUI.input input, .heidelpayUI.form .six.fields .heidelpayUI.input input, .heidelpayUI.form .ten.fields .heidelpayUI.input input, .heidelpayUI.form .three.fields .heidelpayUI.input input, .heidelpayUI.form .two.fields .heidelpayUI.input input, .heidelpayUI.form .wide.field .heidelpayUI.input .heidelpayInput, .heidelpayUI.form .wide.field .heidelpayUI.input input {
-    flex: 1 0 auto;
-    width: 0
-}
-
-.heidelpayUI.form .error.message, .heidelpayUI.form .success.message, .heidelpayUI.form .warning.message {
-    display: none;
-    margin-top: .5rem;
-    min-height: 1rem;
-    background: transparent;
-    border: none;
-    padding: 0;
-    line-height: 1rem;
-    font-size: 1em;
-    border-radius: 0;
-    box-shadow: none
-}
-
-.heidelpayUI.form .error.message {
-    color: #d0021b
-}
-
-.heidelpayUI.form .message:first-child {
-    margin-top: 0
-}
-
-.heidelpayUI.form .field .prompt.label {
-    white-space: normal;
-    background: #fff !important;
-    border: 1px solid #e0b4b4 !important;
-    color: #d0021b !important
-}
-
-.heidelpayUI.form .inline.field .prompt, .heidelpayUI.form .inline.fields .field .prompt {
-    vertical-align: top;
-    margin: -.25em 0 -.5em .5em
-}
-
-.heidelpayUI.form .inline.field .prompt:before, .heidelpayUI.form .inline.fields .field .prompt:before {
-    border-width: 0 0 1px 1px;
-    bottom: auto;
-    right: auto;
-    top: 50%;
-    left: 0
-}
-
-.heidelpayUI.form ::-webkit-input-placeholder {
+.heidelpayUI.input > input::-moz-placeholder {
     color: #999
 }
 
-.heidelpayUI.form :-ms-input-placeholder {
-    color: #999 !important
-}
-
-.heidelpayUI.form ::-moz-placeholder {
+.heidelpayUI.input > input:-ms-input-placeholder {
     color: #999
 }
 
-.heidelpayUI.form.success .success.message:not(:empty) {
-    display: block
+.heidelpayUI.input > input:focus::-webkit-input-placeholder {
+    color: transparent
 }
 
-.heidelpayUI.form.success .compact.success.message:not(:empty) {
-    display: inline-block
+.heidelpayUI.input > input:focus:-moz-placeholder, .heidelpayUI.input > input:focus::-moz-placeholder {
+    color: transparent
 }
 
-.heidelpayUI.form.success .icon.success.message:not(:empty) {
-    display: flex
+.heidelpayUI.input > input:focus:-ms-input-placeholder {
+    color: transparent
 }
 
-.heidelpayUI.form.error .error.message:not(:empty) {
-    display: block
-}
-
-.heidelpayUI.form.error .compact.error.message:not(:empty) {
-    display: inline-block
-}
-
-.heidelpayUI.form.error .icon.error.message:not(:empty) {
-    display: flex
-}
-
-.heidelpayUI.form .field.error .error.message:not(:empty), .heidelpayUI.form .fields.error .field .error.message:not(:empty) {
-    display: block
-}
-
-.heidelpayUI.form .field.error .compact.error.message:not(:empty), .heidelpayUI.form .fields.error .field .compact.error.message:not(:empty) {
-    display: inline-block
-}
-
-.heidelpayUI.form .field.error icon.error.message:not(:empty), .heidelpayUI.form .fields.error .field icon.error.message:not(:empty) {
-    display: flex
-}
-
-.heidelpayUI.form .field.error .input, .heidelpayUI.form .field.error label, .heidelpayUI.form .fields.error .field .input, .heidelpayUI.form .fields.error .field label {
-    color: #d0021b
-}
-
-.heidelpayUI.form .field.error .corner.label, .heidelpayUI.form .fields.error .field .corner.label {
-    border-color: #d0021b;
-    color: #fff
-}
-
-.heidelpayUI.form .field.error .heidelpayInput, .heidelpayUI.form .field.error input:not([type]), .heidelpayUI.form .field.error input[type=date], .heidelpayUI.form .field.error input[type=datetime-local], .heidelpayUI.form .field.error input[type=email], .heidelpayUI.form .field.error input[type=file], .heidelpayUI.form .field.error input[type=number], .heidelpayUI.form .field.error input[type=password], .heidelpayUI.form .field.error input[type=search], .heidelpayUI.form .field.error input[type=tel], .heidelpayUI.form .field.error input[type=text], .heidelpayUI.form .field.error input[type=time], .heidelpayUI.form .field.error input[type=url], .heidelpayUI.form .field.error select, .heidelpayUI.form .field.error textarea, .heidelpayUI.form .fields.error .field .heidelpayInput, .heidelpayUI.form .fields.error .field input:not([type]), .heidelpayUI.form .fields.error .field input[type=date], .heidelpayUI.form .fields.error .field input[type=datetime-local], .heidelpayUI.form .fields.error .field input[type=email], .heidelpayUI.form .fields.error .field input[type=file], .heidelpayUI.form .fields.error .field input[type=number], .heidelpayUI.form .fields.error .field input[type=password], .heidelpayUI.form .fields.error .field input[type=search], .heidelpayUI.form .fields.error .field input[type=tel], .heidelpayUI.form .fields.error .field input[type=text], .heidelpayUI.form .fields.error .field input[type=time], .heidelpayUI.form .fields.error .field input[type=url], .heidelpayUI.form .fields.error .field select, .heidelpayUI.form .fields.error .field textarea {
-    background: #fff6f6;
+.heidelpayUI.input.error > .heidelpayInput, .heidelpayUI.input.error > input {
+    background-color: #fff6f6;
     border-color: #d0021b;
     box-shadow: none
 }
 
-.heidelpayUI.form .field.error select {
-    -webkit-appearance: menulist-button
+.heidelpayUI.input.error > input::-webkit-input-placeholder {
+    color: #e7bdbc
 }
 
-.heidelpayUI.form .field.error .heidelpayUI.dropdown, .heidelpayUI.form .field.error .heidelpayUI.dropdown .item, .heidelpayUI.form .field.error .heidelpayUI.dropdown .text, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown .item {
-    background: #fff6f6
+.heidelpayUI.input.error > input::-moz-placeholder {
+    color: #e7bdbc
 }
 
-.heidelpayUI.form .field.error .heidelpayUI.dropdown, .heidelpayUI.form .field.error .heidelpayUI.dropdown:hover, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown:hover {
-    border-color: #d0021b !important
+.heidelpayUI.input.error > input:-ms-input-placeholder {
+    color: #e7bdbc !important
 }
 
-.heidelpayUI.form .field.error .heidelpayUI.dropdown:hover .menu, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown:hover .menu {
-    border-color: #d0021b
-}
-
-.heidelpayUI.form .field.error .heidelpayUI.multiple.selection.dropdown > .label, .heidelpayUI.form .fields.error .field .heidelpayUI.multiple.selection.dropdown > .label {
-    background-color: #fff6f6
-}
-
-.heidelpayUI.form .field.error .heidelpayUI.dropdown .menu .item:hover, .heidelpayUI.form .field.error .heidelpayUI.dropdown .menu .selected.item, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown .menu .item:hover, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown .menu .selected.item {
-    background-color: #fbe7e7
-}
-
-.heidelpayUI.form .field.error .heidelpayUI.dropdown .menu .active.item, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown .menu .active.item {
-    background-color: #fdcfcf !important
-}
-
-.heidelpayUI.form .field.error .checkbox:not(.toggle):not(.slider) .box, .heidelpayUI.form .field.error .checkbox:not(.toggle):not(.slider) label, .heidelpayUI.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box, .heidelpayUI.form .fields.error .field .checkbox:not(.toggle):not(.slider) label {
-    color: #d0021b
-}
-
-.heidelpayUI.form .field.error .checkbox:not(.toggle):not(.slider) .box:before, .heidelpayUI.form .field.error .checkbox:not(.toggle):not(.slider) label:before, .heidelpayUI.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box:before, .heidelpayUI.form .fields.error .field .checkbox:not(.toggle):not(.slider) label:before {
-    background: #fff6f6;
-    border-color: #e0b4b4
-}
-
-.heidelpayUI.form .field.error .checkbox .box:after, .heidelpayUI.form .field.error .checkbox label:after, .heidelpayUI.form .fields.error .field .checkbox .box:after, .heidelpayUI.form .fields.error .field .checkbox label:after {
-    color: #d0021b
-}
-
-.heidelpayUI.form .disabled.field, .heidelpayUI.form .disabled.fields .field, .heidelpayUI.form .field :disabled {
-    pointer-events: none;
-    opacity: .45
-}
-
-.heidelpayUI.form .field.disabled > label, .heidelpayUI.form .fields.disabled > label {
-    opacity: .45
-}
-
-.heidelpayUI.form .field.disabled :disabled {
-    opacity: 1
-}
-
-.heidelpayUI.form .fields {
-    display: flex;
-    flex-direction: row;
-    margin: 0 -.5em 1em
-}
-
-@media only screen and (max-width: 767px) {
-    .heidelpayUI.form .fields {
-        flex-direction: column
-    }
-}
-
-.heidelpayUI.form .fields > .field {
-    flex: 0 1 auto;
-    padding-left: .5em;
-    padding-right: .5em
-}
-
-.heidelpayUI.form .fields > .field:first-child {
-    border-left: none;
-    box-shadow: none
-}
-
-.heidelpayUI.form .two.fields > .field, .heidelpayUI.form .two.fields > .fields {
-    width: 50%
-}
-
-.heidelpayUI.form .three.fields > .field, .heidelpayUI.form .three.fields > .fields {
-    width: 33.33333333%
-}
-
-.heidelpayUI.form .four.fields > .field, .heidelpayUI.form .four.fields > .fields {
-    width: 25%
-}
-
-.heidelpayUI.form .five.fields > .field, .heidelpayUI.form .five.fields > .fields {
-    width: 20%
-}
-
-.heidelpayUI.form .six.fields > .field, .heidelpayUI.form .six.fields > .fields {
-    width: 16.66666667%
-}
-
-.heidelpayUI.form .seven.fields > .field, .heidelpayUI.form .seven.fields > .fields {
-    width: 14.28571429%
-}
-
-.heidelpayUI.form .eight.fields > .field, .heidelpayUI.form .eight.fields > .fields {
-    width: 12.5%
-}
-
-.heidelpayUI.form .nine.fields > .field, .heidelpayUI.form .nine.fields > .fields {
-    width: 11.11111111%
-}
-
-.heidelpayUI.form .ten.fields > .field, .heidelpayUI.form .ten.fields > .fields {
-    width: 10%
-}
-
-@media only screen and (max-width: 767px) {
-    .heidelpayUI.form .fields {
-        flex-wrap: wrap
-    }
-
-    .heidelpayUI.form:not(.unstackable) .eight.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .eight.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .five.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .five.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .four.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .four.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .nine.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .nine.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .seven.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .seven.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .six.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .six.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .ten.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .ten.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .three.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .three.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .two.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .two.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) [class*="equal width"].fields:not(.unstackable) > .field, .heidelpayUI[class*="equal width"].form:not(.unstackable) .fields > .field {
-        width: 100% !important;
-        margin: 0 0 1em
-    }
-
-    .heidelpayUI.form .inline.field > label, .heidelpayUI.form .inline.field > p, .heidelpayUI.form .inline.fields .field > label, .heidelpayUI.form .inline.fields .field > p, .heidelpayUI.form .inline.fields > label {
-        display: none !important;
-        opacity: 0
-    }
-}
-
-.heidelpayUI.form .fields .wide.field {
-    width: 6.25%;
-    padding-left: .5em;
-    padding-right: .5em
-}
-
-.heidelpayUI.form .one.wide.field {
-    width: 6.25% !important
-}
-
-.heidelpayUI.form .two.wide.field {
-    width: 12.5% !important
-}
-
-.heidelpayUI.form .three.wide.field {
-    width: 18.75% !important
-}
-
-.heidelpayUI.form .four.wide.field {
-    width: 25% !important
-}
-
-.heidelpayUI.form .five.wide.field {
-    width: 31.25% !important
-}
-
-.heidelpayUI.form .six.wide.field {
-    width: 37.5% !important
-}
-
-.heidelpayUI.form .seven.wide.field {
-    width: 43.75% !important
-}
-
-.heidelpayUI.form .eight.wide.field {
-    width: 50% !important
-}
-
-.heidelpayUI.form .nine.wide.field {
-    width: 56.25% !important
-}
-
-.heidelpayUI.form .ten.wide.field {
-    width: 62.5% !important
-}
-
-.heidelpayUI.form .eleven.wide.field {
-    width: 68.75% !important
-}
-
-.heidelpayUI.form .twelve.wide.field {
-    width: 75% !important
-}
-
-.heidelpayUI.form .thirteen.wide.field {
-    width: 81.25% !important
-}
-
-.heidelpayUI.form .fourteen.wide.field {
-    width: 87.5% !important
-}
-
-.heidelpayUI.form .fifteen.wide.field {
-    width: 93.75% !important
-}
-
-.heidelpayUI.form .sixteen.wide.field {
-    width: 100% !important
-}
-
-@media only screen and (max-width: 767px) {
-    .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .eight.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .eleven.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .fifteen.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .five.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .four.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .fourteen.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .nine.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .seven.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .six.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .sixteen.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .ten.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .thirteen.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .three.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .twelve.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .two.wide.field, .heidelpayUI.form:not(.unstackable) .five.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .five.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .four.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .four.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .three.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .three.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .two.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .two.fields:not(.unstackable) > .fields {
-        width: 100% !important
-    }
-
-    .heidelpayUI.form .fields {
-        margin-bottom: 0
-    }
-}
-
-.heidelpayUI.form [class*="equal width"].fields > .field, .heidelpayUI[class*="equal width"].form .fields > .field {
-    width: 100%;
-    flex: 1 1 auto
-}
-
-.heidelpayUI.form .inline.fields {
-    margin: 0 0 1em;
-    align-items: flex-start
-}
-
-.heidelpayUI.form .inline.fields .field {
+.heidelpayUI.icon.input > i.icon {
+    cursor: default;
+    position: absolute;
+    line-height: 1;
+    text-align: center;
+    top: 0;
+    right: 0;
     margin: 0;
-    padding: 0 1em 0 0
+    height: 100%;
+    width: 2.67142857em;
+    border-radius: 0 .28571429rem .28571429rem 0;
+    transition: opacity .3s ease
 }
 
-.heidelpayUI.form .inline.field > label, .heidelpayUI.form .inline.field > p, .heidelpayUI.form .inline.fields .field > label, .heidelpayUI.form .inline.fields .field > p, .heidelpayUI.form .inline.fields > label {
-    display: inline-block;
-    width: auto;
-    margin-top: 0;
-    margin-bottom: 0;
-    vertical-align: baseline;
-    font-size: 1em;
-    color: #000;
-    text-transform: none
+.heidelpayUI.icon.input > i.icon:not(.link) {
+    pointer-events: none
 }
 
-.heidelpayUI.form .inline.fields > label {
-    margin: .035714em 1em 0 0
+.heidelpayUI.icon.input > .heidelpayInput, .heidelpayUI.icon.input > input {
+    padding-right: 50px !important
 }
 
-.heidelpayUI.form .inline.field > input, .heidelpayUI.form .inline.field > select, .heidelpayUI.form .inline.fields .field > input, .heidelpayUI.form .inline.fields .field > select {
-    display: inline-block;
-    width: auto;
-    margin-top: 0;
-    margin-bottom: 0;
-    vertical-align: middle;
-    font-size: 1em
+.heidelpayUI.icon.input > i.icon:after, .heidelpayUI.icon.input > i.icon:before {
+    left: .4em;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    width: 100%;
+    margin-top: -.5em
 }
 
-.heidelpayUI.form .inline.field > :first-child, .heidelpayUI.form .inline.fields .field > :first-child {
-    margin: 0 .85714286em 0 0
+.heidelpayUI.icon.input > i.link.icon {
+    cursor: pointer
 }
 
-.heidelpayUI.form .inline.field > :only-child, .heidelpayUI.form .inline.fields .field > :only-child {
-    margin: 0
+.heidelpayUI.icon.input > i.circular.icon {
+    top: .35em;
+    right: .5em
 }
 
-.heidelpayUI.form .inline.fields .wide.field {
-    display: flex;
-    align-items: center
+.heidelpayUI[class*="left icon"].input > i.icon {
+    right: auto;
+    left: 8px
 }
 
-.heidelpayUI.form .inline.fields .wide.field > input, .heidelpayUI.form .inline.fields .wide.field > select {
-    width: 100%
+.heidelpayUI[class*="left icon"].input > i.circular.icon {
+    right: auto;
+    left: .5em
+}
+
+.heidelpayUI[class*="left icon"].input > .heidelpayInput, .heidelpayUI[class*="left icon"].input > input {
+    padding-left: 50px !important;
+    padding-right: 1em !important
 }
 
 [class*=" h-iconideal-"], [class^=h-iconideal-] {
@@ -562,31 +189,6 @@ i.h-iconideal-triodos-bank:before {
 
 i.h-iconideal-van-lanschot:before {
     background-image: url(https://static.heidelpay.com/assets/images/ideal/logo-van-lanschot-square.svg) !important
-}
-
-.heidelpaySandboxNotify {
-    display: block;
-    width: 100%;
-    background-color: #ff8005;
-    z-index: 9999;
-    text-align: center;
-    padding: 15px 0;
-    margin: 0 0 20px
-}
-
-.heidelpaySandboxNotify p {
-    margin: 0;
-    padding: 0
-}
-
-.heidelpayUIIframe {
-    border: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 1px !important;
-    min-width: 100% !important;
-    overflow: hidden !important;
-    display: block !important;
 }
 
 .heidelpayUI.divider {
@@ -1092,131 +694,553 @@ i.h-iconideal-van-lanschot:before {
     color: #935b38
 }
 
-.heidelpayUI.input {
+.heidelpayUI.form {
     position: relative;
-    font-weight: 400;
-    font-style: normal;
-    display: inline-flex;
-    height: 40px
+    max-width: 100%
 }
 
-.heidelpayUI.input > input {
-    height: 40px;
+.heidelpayUI.form > p {
+    margin: 1em 0
 }
 
-.heidelpayUI.input > .heidelpayInput, .heidelpayUI.input > input {
+.heidelpayUI.form .field {
+    clear: both;
+    box-sizing: border-box;
+    margin: 0 0 1em
+}
+
+.heidelpayUI.form .field:last-child, .heidelpayUI.form .fields:last-child, .heidelpayUI.form .fields:last-child .field {
+    margin-bottom: 0
+}
+
+.heidelpayUI.form .fields .field {
+    clear: both;
+    margin: 0
+}
+
+.heidelpayDisplayNone {
+    display: none
+}
+
+.heidelpayUI.form .field > label {
+    display: block;
+    margin: 0 0 .28571429rem;
+    color: #000;
+    text-transform: none
+}
+
+.heidelpayUI.label.subtitle {
+    display: block;
+    margin: 0 0 1.5rem;
+    color: #002c44;
+    text-transform: none;
+    font-weight: 600;
+    line-height: 1.25
+}
+
+.heidelpayUI.form input:not([type]), .heidelpayUI.form input[type=date], .heidelpayUI.form input[type=datetime-local], .heidelpayUI.form input[type=email], .heidelpayUI.form input[type=file], .heidelpayUI.form input[type=number], .heidelpayUI.form input[type=password], .heidelpayUI.form input[type=search], .heidelpayUI.form input[type=tel], .heidelpayUI.form input[type=text], .heidelpayUI.form input[type=time], .heidelpayUI.form input[type=url], .heidelpayUI.form textarea {
+    font-family: inherit;
+    width: 100%;
+    vertical-align: top
+}
+
+.heidelpayUI.form input:not(.heidelpayChoices__input), .heidelpayUI.form input:not([type]), .heidelpayUI.form input[type=date], .heidelpayUI.form input[type=datetime-local], .heidelpayUI.form input[type=email], .heidelpayUI.form input[type=file], .heidelpayUI.form input[type=number], .heidelpayUI.form input[type=password], .heidelpayUI.form input[type=search], .heidelpayUI.form input[type=tel], .heidelpayUI.form input[type=text], .heidelpayUI.form input[type=time], .heidelpayUI.form input[type=url] {
     margin: 0;
-    max-width: 100%;
-    flex: 1 0 auto;
     outline: none;
-    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-    text-align: left;
-    line-height: 1em;
-    padding: 11px 16px;
+    -webkit-appearance: none;
+    line-height: 1rem;
+    height: 4rem;
+    padding: 11px 1rem;
+    font-size: 1em;
     background: #fff;
     border: 1px solid #dadada;
     color: #000;
     border-radius: 2px;
-    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, .2);
-    overflow: hidden;
+    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, .2)
 }
 
-.heidelpayUI.input > input::-webkit-input-placeholder {
-    color: #999;
-    line-height: normal !important
+.heidelpayUI.form select {
+    font-size: 1em;
+    display: block;
+    height: auto;
+    width: 100%;
+    background: #fff;
+    border: 1px solid rgba(34, 36, 38, .15);
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 0 transparent;
+    padding: .62em 1em;
+    color: rgba(0, 0, 0, .87);
+    transition: color .1s ease, border-color .1s ease
 }
 
-.heidelpayUI.input > input::-moz-placeholder {
+.heidelpayUI.form .field > .heidelpayChoices, .heidelpayUI.form .field > .selection.dropdown {
+    width: 100%;
+    box-sizing: border-box;
+    height: 40px
+}
+
+.heidelpayUI.form .field > .selection.dropdown i.icon:before {
+    margin-left: 0
+}
+
+.heidelpayUI.form .field > .selection.dropdown > .dropdown.icon {
+    float: right
+}
+
+.heidelpayUI.form .inline.field > .selection.dropdown, .heidelpayUI.form .inline.fields .field > .selection.dropdown {
+    width: auto
+}
+
+.heidelpayUI.form .inline.field > .selection.dropdown > .dropdown.icon, .heidelpayUI.form .inline.fields .field > .selection.dropdown > .dropdown.icon {
+    float: none
+}
+
+.heidelpayUI.form .field .heidelpayUI.input, .heidelpayUI.form .fields .field .heidelpayUI.input, .heidelpayUI.form .wide.field .heidelpayUI.input {
+    width: 100%
+}
+
+.heidelpayUI.form .inline.field:not(.wide) .heidelpayUI.input, .heidelpayUI.form .inline.fields .field:not(.wide) .heidelpayUI.input {
+    width: auto;
+    vertical-align: middle
+}
+
+.heidelpayUI.form .field .heidelpayUI.input input, .heidelpayUI.form .fields .field .heidelpayUI.input input {
+    width: auto
+}
+
+.heidelpayUI.form .eight.fields .heidelpayUI.input input, .heidelpayUI.form .five.fields .heidelpayUI.input input, .heidelpayUI.form .four.fields .heidelpayUI.input input, .heidelpayUI.form .nine.fields .heidelpayUI.input input, .heidelpayUI.form .seven.fields .heidelpayUI.input input, .heidelpayUI.form .six.fields .heidelpayUI.input input, .heidelpayUI.form .ten.fields .heidelpayUI.input input, .heidelpayUI.form .three.fields .heidelpayUI.input input, .heidelpayUI.form .two.fields .heidelpayUI.input input, .heidelpayUI.form .wide.field .heidelpayUI.input .heidelpayInput, .heidelpayUI.form .wide.field .heidelpayUI.input input {
+    flex: 1 0 auto;
+    width: 0
+}
+
+.heidelpayUI.form .error.message, .heidelpayUI.form .success.message, .heidelpayUI.form .warning.message {
+    display: none;
+    margin-top: .5rem;
+    min-height: 1rem;
+    background: transparent;
+    border: none;
+    padding: 0;
+    line-height: 1rem;
+    font-size: 1em;
+    border-radius: 0;
+    box-shadow: none
+}
+
+.heidelpayUI.form .error.message {
+    color: #d0021b
+}
+
+.heidelpayUI.form .message:first-child {
+    margin-top: 0
+}
+
+.heidelpayUI.form .field .prompt.label {
+    white-space: normal;
+    background: #fff !important;
+    border: 1px solid #e0b4b4 !important;
+    color: #d0021b !important
+}
+
+.heidelpayUI.form .inline.field .prompt, .heidelpayUI.form .inline.fields .field .prompt {
+    vertical-align: top;
+    margin: -.25em 0 -.5em .5em
+}
+
+.heidelpayUI.form .inline.field .prompt:before, .heidelpayUI.form .inline.fields .field .prompt:before {
+    border-width: 0 0 1px 1px;
+    bottom: auto;
+    right: auto;
+    top: 50%;
+    left: 0
+}
+
+.heidelpayUI.form ::-webkit-input-placeholder {
     color: #999
 }
 
-.heidelpayUI.input > input:-ms-input-placeholder {
+.heidelpayUI.form :-ms-input-placeholder {
+    color: #999 !important
+}
+
+.heidelpayUI.form ::-moz-placeholder {
     color: #999
 }
 
-.heidelpayUI.input > input:focus::-webkit-input-placeholder {
-    color: transparent
+.heidelpayUI.form.success .success.message:not(:empty) {
+    display: block
 }
 
-.heidelpayUI.input > input:focus:-moz-placeholder, .heidelpayUI.input > input:focus::-moz-placeholder {
-    color: transparent
+.heidelpayUI.form.success .compact.success.message:not(:empty) {
+    display: inline-block
 }
 
-.heidelpayUI.input > input:focus:-ms-input-placeholder {
-    color: transparent
+.heidelpayUI.form.success .icon.success.message:not(:empty) {
+    display: flex
 }
 
-.heidelpayUI.input.error > .heidelpayInput, .heidelpayUI.input.error > input {
-    background-color: #fff6f6;
+.heidelpayUI.form.error .error.message:not(:empty) {
+    display: block
+}
+
+.heidelpayUI.form.error .compact.error.message:not(:empty) {
+    display: inline-block
+}
+
+.heidelpayUI.form.error .icon.error.message:not(:empty) {
+    display: flex
+}
+
+.heidelpayUI.form .field.error .error.message:not(:empty), .heidelpayUI.form .fields.error .field .error.message:not(:empty) {
+    display: block
+}
+
+.heidelpayUI.form .field.error .compact.error.message:not(:empty), .heidelpayUI.form .fields.error .field .compact.error.message:not(:empty) {
+    display: inline-block
+}
+
+.heidelpayUI.form .field.error icon.error.message:not(:empty), .heidelpayUI.form .fields.error .field icon.error.message:not(:empty) {
+    display: flex
+}
+
+.heidelpayUI.form .field.error .input, .heidelpayUI.form .field.error label, .heidelpayUI.form .fields.error .field .input, .heidelpayUI.form .fields.error .field label {
+    color: #d0021b
+}
+
+.heidelpayUI.form .field.error .corner.label, .heidelpayUI.form .fields.error .field .corner.label {
+    border-color: #d0021b;
+    color: #fff
+}
+
+.heidelpayUI.form .field.error .heidelpayInput, .heidelpayUI.form .field.error input:not([type]), .heidelpayUI.form .field.error input[type=date], .heidelpayUI.form .field.error input[type=datetime-local], .heidelpayUI.form .field.error input[type=email], .heidelpayUI.form .field.error input[type=file], .heidelpayUI.form .field.error input[type=number], .heidelpayUI.form .field.error input[type=password], .heidelpayUI.form .field.error input[type=search], .heidelpayUI.form .field.error input[type=tel], .heidelpayUI.form .field.error input[type=text], .heidelpayUI.form .field.error input[type=time], .heidelpayUI.form .field.error input[type=url], .heidelpayUI.form .field.error select, .heidelpayUI.form .field.error textarea, .heidelpayUI.form .fields.error .field .heidelpayInput, .heidelpayUI.form .fields.error .field input:not([type]), .heidelpayUI.form .fields.error .field input[type=date], .heidelpayUI.form .fields.error .field input[type=datetime-local], .heidelpayUI.form .fields.error .field input[type=email], .heidelpayUI.form .fields.error .field input[type=file], .heidelpayUI.form .fields.error .field input[type=number], .heidelpayUI.form .fields.error .field input[type=password], .heidelpayUI.form .fields.error .field input[type=search], .heidelpayUI.form .fields.error .field input[type=tel], .heidelpayUI.form .fields.error .field input[type=text], .heidelpayUI.form .fields.error .field input[type=time], .heidelpayUI.form .fields.error .field input[type=url], .heidelpayUI.form .fields.error .field select, .heidelpayUI.form .fields.error .field textarea {
+    background: #fff6f6;
     border-color: #d0021b;
     box-shadow: none
 }
 
-.heidelpayUI.input.error > input::-webkit-input-placeholder {
-    color: #e7bdbc
+.heidelpayUI.form .field.error select {
+    -webkit-appearance: menulist-button
 }
 
-.heidelpayUI.input.error > input::-moz-placeholder {
-    color: #e7bdbc
+.heidelpayUI.form .field.error .heidelpayUI.dropdown, .heidelpayUI.form .field.error .heidelpayUI.dropdown .item, .heidelpayUI.form .field.error .heidelpayUI.dropdown .text, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown .item {
+    background: #fff6f6
 }
 
-.heidelpayUI.input.error > input:-ms-input-placeholder {
-    color: #e7bdbc !important
+.heidelpayUI.form .field.error .heidelpayUI.dropdown, .heidelpayUI.form .field.error .heidelpayUI.dropdown:hover, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown:hover {
+    border-color: #d0021b !important
 }
 
-.heidelpayUI.icon.input > i.icon {
-    cursor: default;
-    position: absolute;
-    line-height: 1;
-    text-align: center;
-    top: 0;
-    right: 0;
-    margin: 0;
-    height: 100%;
-    width: 2.67142857em;
-    border-radius: 0 .28571429rem .28571429rem 0;
-    transition: opacity .3s ease
+.heidelpayUI.form .field.error .heidelpayUI.dropdown:hover .menu, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown:hover .menu {
+    border-color: #d0021b
 }
 
-.heidelpayUI.icon.input > i.icon:not(.link) {
-    pointer-events: none
+.heidelpayUI.form .field.error .heidelpayUI.multiple.selection.dropdown > .label, .heidelpayUI.form .fields.error .field .heidelpayUI.multiple.selection.dropdown > .label {
+    background-color: #fff6f6
 }
 
-.heidelpayUI.icon.input > .heidelpayInput, .heidelpayUI.icon.input > input {
-    padding-right: 3.3em !important
+.heidelpayUI.form .field.error .heidelpayUI.dropdown .menu .item:hover, .heidelpayUI.form .field.error .heidelpayUI.dropdown .menu .selected.item, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown .menu .item:hover, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown .menu .selected.item {
+    background-color: #fbe7e7
 }
 
-.heidelpayUI.icon.input > i.icon:after, .heidelpayUI.icon.input > i.icon:before {
-    left: .4em;
-    position: absolute;
-    text-align: center;
-    top: 50%;
+.heidelpayUI.form .field.error .heidelpayUI.dropdown .menu .active.item, .heidelpayUI.form .fields.error .field .heidelpayUI.dropdown .menu .active.item {
+    background-color: #fdcfcf !important
+}
+
+.heidelpayUI.form .field.error .checkbox:not(.toggle):not(.slider) .box, .heidelpayUI.form .field.error .checkbox:not(.toggle):not(.slider) label, .heidelpayUI.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box, .heidelpayUI.form .fields.error .field .checkbox:not(.toggle):not(.slider) label {
+    color: #d0021b
+}
+
+.heidelpayUI.form .field.error .checkbox:not(.toggle):not(.slider) .box:before, .heidelpayUI.form .field.error .checkbox:not(.toggle):not(.slider) label:before, .heidelpayUI.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box:before, .heidelpayUI.form .fields.error .field .checkbox:not(.toggle):not(.slider) label:before {
+    background: #fff6f6;
+    border-color: #e0b4b4
+}
+
+.heidelpayUI.form .field.error .checkbox .box:after, .heidelpayUI.form .field.error .checkbox label:after, .heidelpayUI.form .fields.error .field .checkbox .box:after, .heidelpayUI.form .fields.error .field .checkbox label:after {
+    color: #d0021b
+}
+
+.heidelpayUI.form .disabled.field, .heidelpayUI.form .disabled.fields .field, .heidelpayUI.form .field :disabled {
+    pointer-events: none;
+    opacity: .45
+}
+
+.heidelpayUI.form .field.disabled > label, .heidelpayUI.form .fields.disabled > label {
+    opacity: .45
+}
+
+.heidelpayUI.form .field.disabled :disabled {
+    opacity: 1
+}
+
+.heidelpayUI.form .fields {
+    display: flex;
+    flex-direction: row;
+    margin: 0 -.5em 1em
+}
+
+@media only screen and (max-width: 767px) {
+    .heidelpayUI.form .fields {
+        flex-direction: column
+    }
+}
+
+.heidelpayUI.form .fields > .field {
+    flex: 0 1 auto;
+    padding-left: .5em;
+    padding-right: .5em
+}
+
+.heidelpayUI.form .fields > .field:first-child {
+    border-left: none;
+    box-shadow: none
+}
+
+.heidelpayUI.form .two.fields > .field, .heidelpayUI.form .two.fields > .fields {
+    width: 50%
+}
+
+.heidelpayUI.form .three.fields > .field, .heidelpayUI.form .three.fields > .fields {
+    width: 33.33333333%
+}
+
+.heidelpayUI.form .four.fields > .field, .heidelpayUI.form .four.fields > .fields {
+    width: 25%
+}
+
+.heidelpayUI.form .five.fields > .field, .heidelpayUI.form .five.fields > .fields {
+    width: 20%
+}
+
+.heidelpayUI.form .six.fields > .field, .heidelpayUI.form .six.fields > .fields {
+    width: 16.66666667%
+}
+
+.heidelpayUI.form .seven.fields > .field, .heidelpayUI.form .seven.fields > .fields {
+    width: 14.28571429%
+}
+
+.heidelpayUI.form .eight.fields > .field, .heidelpayUI.form .eight.fields > .fields {
+    width: 12.5%
+}
+
+.heidelpayUI.form .nine.fields > .field, .heidelpayUI.form .nine.fields > .fields {
+    width: 11.11111111%
+}
+
+.heidelpayUI.form .ten.fields > .field, .heidelpayUI.form .ten.fields > .fields {
+    width: 10%
+}
+
+@media only screen and (max-width: 767px) {
+    .heidelpayUI.form .fields {
+        flex-wrap: wrap
+    }
+
+    .heidelpayUI.form:not(.unstackable) .eight.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .eight.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .five.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .five.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .four.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .four.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .nine.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .nine.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .seven.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .seven.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .six.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .six.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .ten.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .ten.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .three.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .three.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .two.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .two.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) [class*="equal width"].fields:not(.unstackable) > .field, .heidelpayUI[class*="equal width"].form:not(.unstackable) .fields > .field {
+        width: 100% !important;
+        margin: 0 0 1em
+    }
+
+    .heidelpayUI.form .inline.field > label, .heidelpayUI.form .inline.field > p, .heidelpayUI.form .inline.fields .field > label, .heidelpayUI.form .inline.fields .field > p, .heidelpayUI.form .inline.fields > label {
+        display: none !important;
+        opacity: 0
+    }
+}
+
+.heidelpayUI.form .fields .wide.field {
+    width: 6.25%;
+    padding-left: .5em;
+    padding-right: .5em
+}
+
+.heidelpayUI.form .one.wide.field {
+    width: 6.25% !important
+}
+
+.heidelpayUI.form .two.wide.field {
+    width: 12.5% !important
+}
+
+.heidelpayUI.form .three.wide.field {
+    width: 18.75% !important
+}
+
+.heidelpayUI.form .four.wide.field {
+    width: 25% !important
+}
+
+.heidelpayUI.form .five.wide.field {
+    width: 31.25% !important
+}
+
+.heidelpayUI.form .six.wide.field {
+    width: 37.5% !important
+}
+
+.heidelpayUI.form .seven.wide.field {
+    width: 43.75% !important
+}
+
+.heidelpayUI.form .eight.wide.field {
+    width: 50% !important
+}
+
+.heidelpayUI.form .nine.wide.field {
+    width: 56.25% !important
+}
+
+.heidelpayUI.form .ten.wide.field {
+    width: 62.5% !important
+}
+
+.heidelpayUI.form .eleven.wide.field {
+    width: 68.75% !important
+}
+
+.heidelpayUI.form .twelve.wide.field {
+    width: 75% !important
+}
+
+.heidelpayUI.form .thirteen.wide.field {
+    width: 81.25% !important
+}
+
+.heidelpayUI.form .fourteen.wide.field {
+    width: 87.5% !important
+}
+
+.heidelpayUI.form .fifteen.wide.field {
+    width: 93.75% !important
+}
+
+.heidelpayUI.form .sixteen.wide.field {
+    width: 100% !important
+}
+
+@media only screen and (max-width: 767px) {
+    .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .eight.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .eleven.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .fifteen.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .five.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .four.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .fourteen.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .nine.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .seven.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .six.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .sixteen.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .ten.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .thirteen.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .three.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .twelve.wide.field, .heidelpayUI.form:not(.unstackable) .fields:not(.unstackable) > .two.wide.field, .heidelpayUI.form:not(.unstackable) .five.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .five.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .four.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .four.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .three.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .three.fields:not(.unstackable) > .fields, .heidelpayUI.form:not(.unstackable) .two.fields:not(.unstackable) > .field, .heidelpayUI.form:not(.unstackable) .two.fields:not(.unstackable) > .fields {
+        width: 100% !important
+    }
+
+    .heidelpayUI.form .fields {
+        margin-bottom: 0
+    }
+}
+
+.heidelpayUI.form [class*="equal width"].fields > .field, .heidelpayUI[class*="equal width"].form .fields > .field {
     width: 100%;
-    margin-top: -.55em
+    flex: 1 1 auto
 }
 
-.heidelpayUI.icon.input > i.link.icon {
-    cursor: pointer
+.heidelpayUI.form .inline.fields {
+    margin: 0 0 1em;
+    align-items: flex-start
 }
 
-.heidelpayUI.icon.input > i.circular.icon {
-    top: .35em;
-    right: .5em
+.heidelpayUI.form .inline.fields .field {
+    margin: 0;
+    padding: 0 1em 0 0
 }
 
-.heidelpayUI[class*="left icon"].input > i.icon {
-    right: auto;
-    left: 8px
+.heidelpayUI.form .inline.field > label, .heidelpayUI.form .inline.field > p, .heidelpayUI.form .inline.fields .field > label, .heidelpayUI.form .inline.fields .field > p, .heidelpayUI.form .inline.fields > label {
+    display: inline-block;
+    width: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    vertical-align: baseline;
+    font-size: 1em;
+    color: #000;
+    text-transform: none
 }
 
-.heidelpayUI[class*="left icon"].input > i.circular.icon {
-    right: auto;
-    left: .5em
+.heidelpayUI.form .inline.fields > label {
+    margin: .035714em 1em 0 0
 }
 
-.heidelpayUI[class*="left icon"].input > .heidelpayInput, .heidelpayUI[class*="left icon"].input > input {
-    padding-left: 3.3em !important;
-    padding-right: 1em !important
+.heidelpayUI.form .inline.field > input, .heidelpayUI.form .inline.field > select, .heidelpayUI.form .inline.fields .field > input, .heidelpayUI.form .inline.fields .field > select {
+    display: inline-block;
+    width: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    vertical-align: middle;
+    font-size: 1em
+}
+
+.heidelpayUI.form .inline.field > :first-child, .heidelpayUI.form .inline.fields .field > :first-child {
+    margin: 0 .85714286em 0 0
+}
+
+.heidelpayUI.form .inline.field > :only-child, .heidelpayUI.form .inline.fields .field > :only-child {
+    margin: 0
+}
+
+.heidelpayUI.form .inline.fields .wide.field {
+    display: flex;
+    align-items: center
+}
+
+.heidelpayUI.form .inline.fields .wide.field > input, .heidelpayUI.form .inline.fields .wide.field > select {
+    width: 100%
+}
+
+@font-face {
+    font-family: Open Sans;
+    src: url(https://static.heidelpay.com/assets/fonts/OpenSans-Regular-webfont.eot);
+    src: url(https://static.heidelpay.com/assets/fonts/OpenSans-Regular-webfont.eot?#iefix) format("embedded-opentype"), url(https://static.heidelpay.com/assets/fonts/OpenSans-Regular-webfont.woff) format("woff"), url(https://static.heidelpay.com/assets/fonts/OpenSans-Regular-webfont.ttf) format("truetype"), url(https://static.heidelpay.com/assets/fonts/OpenSans-Regular-webfont.svg#open_sansregular) format("svg");
+    font-weight: 400;
+    font-style: normal
+}
+
+@font-face {
+    font-family: Open Sans;
+    src: url(https://static.heidelpay.com/assets/fonts/OpenSans-Semibold-webfont.eot);
+    src: url(https://static.heidelpay.com/assets/fonts/OpenSans-Semibold-webfont.eot?#iefix) format("embedded-opentype"), url(https://static.heidelpay.com/assets/fonts/OpenSans-Semibold-webfont.woff) format("woff"), url(https://static.heidelpay.com/assets/fonts/OpenSans-Semibold-webfont.ttf) format("truetype"), url(https://static.heidelpay.com/assets/fonts/OpenSans-Semibold-webfont.svg#open_sanssemibold) format("svg");
+    font-weight: 600;
+    font-style: normal
+}
+
+@font-face {
+    font-family: Open Sans;
+    src: url(https://static.heidelpay.com/assets/fonts/OpenSans-Bold-webfont.eot);
+    src: url(https://static.heidelpay.com/assets/fonts/OpenSans-Bold-webfont.eot?#iefix) format("embedded-opentype"), url(https://static.heidelpay.com/assets/fonts/OpenSans-Bold-webfont.woff) format("woff"), url(https://static.heidelpay.com/assets/fonts/OpenSans-Bold-webfont.ttf) format("truetype"), url(https://static.heidelpay.com/assets/fonts/OpenSans-Bold-webfont.svg#open_sansbold) format("svg");
+    font-weight: 800;
+    font-style: normal
+}
+
+.heidelpayChoices, .heidelpayUI {
+    font-family: Open Sans, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.2em;
+    color: #000
+}
+
+.heidelpayChoices input.heidelpayChoices__input, .heidelpayUI * {
+    box-sizing: content-box
+}
+
+.heidelpaySandboxNotify {
+    display: block;
+    width: 100%;
+    background-color: #ff8005;
+    z-index: 9999;
+    text-align: center;
+    padding: 15px 0;
+    margin: 0 0 20px
+}
+
+.heidelpaySandboxNotify p {
+    margin: 0;
+    padding: 0
+}
+
+.heidelpayUIIframe {
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 1px !important;
+    min-width: 100% !important;
+    overflow: hidden !important;
+    display: block !important;
+    height: 1.2em
 }
 
 .heidelpayUI.checkbox {
@@ -1311,6 +1335,7 @@ i.h-iconideal-van-lanschot:before {
  *
  */
 .heidelpayUI.button {
+    font-family: inherit;
     box-sizing: border-box;
     cursor: pointer;
     display: inline-block;
@@ -4221,15 +4246,15 @@ a.heidelpayUI.button:any-link {
 [class*=" h-iconimg-"], [class^=h-iconimg-] {
     position: relative;
     display: inline-block;
-    height: 16px;
-    width: 16px;
+    height: 1rem;
+    width: 1rem;
     margin-left: .4rem;
     margin-right: .4rem;
-    line-height: 16px
+    line-height: 1rem
 }
 
 [class*=" h-iconimg-"]:before, [class^=h-iconimg-]:before, i.icon[class*=" h-iconimg-"]:before, i.icon[class^=h-iconimg-]:before {
-    font-size: 16px;
+    font-size: 1rem;
     display: inline-block;
     text-decoration: inherit;
     text-align: center;
@@ -4239,11 +4264,11 @@ a.heidelpayUI.button:any-link {
     top: 50%;
     margin-top: -.5rem;
     left: 0;
-    height: 16px;
-    width: 16px;
+    height: 1rem;
+    width: 1rem;
     background-position: 0 0;
     background-repeat: no-repeat;
-    background-size: auto 16px;
+    background-size: auto 1rem;
     content: " "
 }
 
@@ -4265,6 +4290,10 @@ i.h-iconimg-card-cvc:before {
 
 i.h-iconimg-card-expiry:before {
     background-image: url(https://static.heidelpay.com/assets/images/common/group-4.svg)
+}
+
+i.h-iconimg-card-holder:before {
+    background-image: url(https://static.heidelpay.com/assets/images/common/name-copy.svg)
 }
 
 i.h-iconimg-card-error:before {
@@ -4911,16 +4940,16 @@ i.h-iconimg-eps-vr-braunau:before {
     outline: none
 }
 
-.heidelpayChoices__input {
+.heidelpayChoices__input, .heidelpayUI.form input.heidelpayChoices__input {
     display: inline-block;
     vertical-align: baseline;
     border: 0;
+    border-bottom: 1px solid #dadada;
     border-radius: 0;
     max-width: calc(100% - 32px);
     padding: 10px 1rem;
     outline: none;
     -webkit-appearance: none;
-    tap-highlight-color: hsla(0, 0%, 100%, 0);
     line-height: 20px;
     height: 20px;
     font-size: 1em;
@@ -5001,7 +5030,9 @@ i.h-iconimg-eps-vr-braunau:before {
     min-width: 80px;
     display: inline-flex;
     justify-content: center;
-    align-items: center
+    align-items: center;
+    box-sizing: border-box;
+    line-height: 1.5
 }
 
 .heidelpayUI-hirepurchase__change-button:hover {

@@ -155,15 +155,13 @@ abstract class AbstractCommand implements CommandInterface
      *
      * @param OrderPayment $payment
      * @param Authorization|Charge|AbstractHeidelpayResource $resource
-     * @param Authorization|Charge|AbstractHeidelpayResource|null $parentResource
      *
      * @return void
      * @throws LocalizedException
      */
     protected function _setPaymentTransaction(
         OrderPayment $payment,
-        AbstractHeidelpayResource $resource,
-        ?AbstractHeidelpayResource $parentResource = null
+        AbstractHeidelpayResource $resource
     ): void
     {
         $payment->setLastTransId($resource->getId());
@@ -172,10 +170,5 @@ abstract class AbstractCommand implements CommandInterface
         $payment->setIsTransactionPending($resource->isPending());
 
         $payment->setAdditionalInformation(static::KEY_PAYMENT_ID, $resource->getPaymentId());
-
-        if ($parentResource !== null) {
-            $payment->setParentTransactionId($parentResource->getId());
-            $payment->setShouldCloseParentTransaction(true);
-        }
     }
 }

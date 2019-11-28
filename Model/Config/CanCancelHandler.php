@@ -1,6 +1,12 @@
 <?php
+
+namespace Heidelpay\MGW\Model\Config;
+
+use Magento\Payment\Gateway\Config\ValueHandlerInterface;
+use Magento\Sales\Model\Order\Payment;
+
 /**
- * Onepage Checkout Success Information Block
+ * Handler for checking if payments can be canceled
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -22,30 +28,21 @@
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-
-/**
- * @var $block \Heidelpay\MGW\Block\Checkout\Success
- */
-
-/** @var string $additionalInformation */
-$additionalInformation = $block->getAdditionalPaymentInformation();
-if (!empty($additionalInformation)):
-    ?>
-    <div class="heidelpay-additional-payment-information">
-        <h3 class="heidelpay-additional-payment-information-title">
-            <?php echo __('Payment information'); ?>
-        </h3>
-
-        <p>
-            <?php echo $additionalInformation ?>
-        </p>
-    </div>
-<?php endif; ?>
-
-<script>
-    require([
-        'Magento_Customer/js/customer-data'
-    ], function (customerData) {
-        customerData.invalidate(['cart']);
-    })
-</script>
+class CanCancelHandler extends CanRefundHandler
+{
+    /**
+     * @inheritDoc
+     */
+    public function handle(array $subject, $storeId = null)
+    {
+        $payment = $subject['payment']->getPayment();
+        if (!$payment instanceof Payment) {
+            return false;
+        }
+        if ($payment->getBaseAmountAuthorized() > $payment->getBaseAmountCanceled() ||
+            $payment->getBaseAmountPaid() > $payment->getBaseAmountCanceled()) {
+            return true;
+        }
+        return false;
+    }
+}

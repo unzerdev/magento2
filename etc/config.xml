@@ -92,12 +92,11 @@
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[Invoice]]></title>
+                <title><![CDATA[Invoice Simple]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
                 <can_authorize>0</can_authorize>
-                <can_capture>1</can_capture>
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
@@ -115,7 +114,6 @@
                 <max_order_total>0</max_order_total>
                 <country_restrictions>AT,DE</country_restrictions>
                 <can_authorize>0</can_authorize>
-                <can_capture>1</can_capture>
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>
@@ -133,7 +131,6 @@
                 <max_order_total>0</max_order_total>
                 <country_restrictions>AT,DE</country_restrictions>
                 <can_authorize>0</can_authorize>
-                <can_capture>1</can_capture>
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>1</can_use_internal>

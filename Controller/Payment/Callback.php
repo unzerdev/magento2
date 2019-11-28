@@ -105,26 +105,33 @@ class Callback extends AbstractPaymentAction
      * @param Order $order
      * @param Authorization|Charge|AbstractHeidelpayResource $resource
      * @return \Magento\Framework\Controller\Result\Redirect
+     * @throws HeidelpayApiException
      */
     protected function handleError(
         Order $order,
         AbstractHeidelpayResource $resource
     ): \Magento\Framework\Controller\Result\Redirect
     {
-        return $this->handleErrorMessage($order, $resource->getMessage()->getCustomer());
+        return $this->handleErrorMessage($order, $resource, $resource->getMessage()->getCustomer());
     }
 
     /**
      * @param Order $order
+     * @param Authorization|Charge|AbstractHeidelpayResource $resource
      * @param string $message
      * @return \Magento\Framework\Controller\Result\Redirect
+     * @throws HeidelpayApiException
      */
-    private function handleErrorMessage(Order $order, string $message): \Magento\Framework\Controller\Result\Redirect
+    private function handleErrorMessage(
+        Order $order,
+        AbstractHeidelpayResource $resource,
+        string $message
+    ): \Magento\Framework\Controller\Result\Redirect
     {
         $this->_checkoutSession->restoreQuote();
         $this->_messageManager->addErrorMessage($message);
 
-        $this->_paymentHelper->handleTransactionError($order);
+        $this->_paymentHelper->handleTransactionError($order, $resource);
 
         $redirect = $this->resultRedirectFactory->create();
         $redirect->setPath('checkout/cart');
@@ -148,6 +155,7 @@ class Callback extends AbstractPaymentAction
      * @param Authorization|Charge|AbstractHeidelpayResource $resource
      * @return \Magento\Framework\Controller\Result\Redirect
      * @throws \Magento\Framework\Exception\InputException
+     * @throws HeidelpayApiException
      */
     protected function handleSuccess(
         Order $order,
@@ -157,7 +165,7 @@ class Callback extends AbstractPaymentAction
         try {
             $this->_paymentHelper->handleTransactionSuccess($order, $resource);
         } catch (Exception $e) {
-            return $this->handleErrorMessage($order, $e->getMessage());
+            return $this->handleErrorMessage($order, $resource, $e->getMessage());
         }
 
         $redirect = $this->resultRedirectFactory->create();

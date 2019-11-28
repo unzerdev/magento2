@@ -1,13 +1,12 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Observer;
+namespace Heidelpay\MGW\Model\Config;
 
-use heidelpayPHP\Resources\AbstractHeidelpayResource;
-use Magento\Framework\DataObject;
-use Magento\Sales\Model\Order;
+use Magento\Payment\Gateway\Config\ValueHandlerInterface;
+use Magento\Sales\Model\Order\Payment;
 
 /**
- * Observer for webhooks about failed and cancelled payments and chargebacks
+ * Handler for checking if invoice payments can be captured.
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -29,16 +28,26 @@ use Magento\Sales\Model\Order;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class PaymentFailedObserver extends AbstractPaymentWebhookObserver
+class InvoiceCaptureHandler implements ValueHandlerInterface
 {
     /**
-     * @param Order $order
-     * @param AbstractHeidelpayResource $resource
-     * @return void
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * Retrieve method configured value
+     *
+     * @param array $subject
+     * @param int|null $storeId
+     *
+     * @return mixed
      */
-    public function executeWith(Order $order, AbstractHeidelpayResource $resource): void
+    public function handle(array $subject, $storeId = null)
     {
-        $this->_paymentHelper->handleTransactionError($order, $resource);
+        /** @var Payment $payment */
+        $payment = $subject['payment']->getPayment();
+
+        $invoiceCount = (int) $payment
+            ->getOrder()
+            ->getInvoiceCollection()
+            ->getSize();
+
+        return $invoiceCount === 0;
     }
 }

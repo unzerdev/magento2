@@ -1,15 +1,16 @@
 <?php
 
-namespace Heidelpay\MGW\Block\Checkout;
+namespace Heidelpay\MGW\Block\Checkout\Success;
 
-use heidelpayPHP\Resources\Payment;
+use Heidelpay\MGW\Model\Method\Base;
 use Magento\Checkout\Model\Session;
+use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
+use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\OrderFactory;
 
 /**
- * Onepage Checkout Success Information Block
+ * Onepage Checkout Success Payment Information Block
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -31,9 +32,9 @@ use Magento\Sales\Model\OrderFactory;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class Success extends \Magento\Checkout\Block\Success
+class AdditionalPaymentInformation extends Template
 {
-    protected $_template = 'Heidelpay_MGW::info/invoice.phtml';
+    protected $_template = 'Heidelpay_MGW::success/additional_payment_information.phtml';
 
     /**
      * @var Session|null
@@ -41,36 +42,37 @@ class Success extends \Magento\Checkout\Block\Success
     protected $_checkoutSession = null;
 
     /**
-     * Success constructor.
+     * AdditionalPaymentInformation constructor.
      * @param Context $context
-     * @param OrderFactory $orderFactory
      * @param Session $checkoutSession
      * @param array $data
      */
-    public function __construct(
-        Context $context,
-        OrderFactory $orderFactory,
-        Session $checkoutSession,
-        array $data = []
-    ) {
-        parent::__construct($context, $orderFactory, $data);
+    public function __construct(Context $context, Session $checkoutSession, array $data = [])
+    {
+        parent::__construct($context, $data);
 
         $this->_checkoutSession = $checkoutSession;
     }
 
     /**
-     * Returns additional payment information.
+     * Returns additional payment information for the customer.
      *
-     * @return string
+     * @return string|null
      */
-    public function getAdditionalPaymentInformation(): string
+    public function getAdditionalPaymentInformation(): ?string
     {
         /** @var Order $order */
         $order = $this->_checkoutSession->getLastRealOrder();
 
-        return $order
+        /** @var MethodInterface $methodInstance */
+        $methodInstance = $order
             ->getPayment()
-            ->getMethodInstance()
-            ->getAdditionalPaymentInformation($order);
+            ->getMethodInstance();
+
+        if (!$methodInstance instanceof Base) {
+            return null;
+        }
+
+        return $methodInstance->getAdditionalPaymentInformation($order);
     }
 }

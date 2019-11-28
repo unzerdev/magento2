@@ -5,6 +5,7 @@ namespace Heidelpay\MGW\Helper;
 use Heidelpay\MGW\Model\Method\Base;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use heidelpayPHP\Resources\TransactionTypes\Authorization;
+use heidelpayPHP\Resources\TransactionTypes\Cancellation;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
@@ -13,6 +14,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order as OrderModel;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
+use Magento\Sales\Model\Order\StateResolver;
 use Magento\Sales\Model\Order\StatusResolver;
 
 /**
@@ -41,6 +43,11 @@ use Magento\Sales\Model\Order\StatusResolver;
 class Payment
 {
     /**
+     * @var Order\InvoiceRepository
+     */
+    protected $_invoiceRepository;
+
+    /**
      * @var OrderManagementInterface
      */
     protected $_orderManagement;
@@ -54,6 +61,11 @@ class Payment
      * @var OrderSender
      */
     protected $_orderSender;
+
+    /**
+     * @var StateResolver
+     */
+    protected $_orderStateResolver;
 
     /**
      * @var StatusResolver
@@ -72,35 +84,79 @@ class Payment
 
     /**
      * Payment constructor.
+     * @param Order\InvoiceRepository $invoiceRepository
      * @param OrderManagementInterface $orderManagement
      * @param OrderRepositoryInterface $orderRepository
      * @param OrderSender $orderSender
+     * @param StateResolver $orderStateResolver
      * @param StatusResolver $orderStatusResolver
      * @param OrderPaymentRepositoryInterface $paymentRepository
      * @param OrderPayment\Transaction\Repository $transactionRepository
      */
     public function __construct(
+        Order\InvoiceRepository $invoiceRepository,
         OrderManagementInterface $orderManagement,
         OrderRepositoryInterface $orderRepository,
         OrderSender $orderSender,
+        StateResolver $orderStateResolver,
         StatusResolver $orderStatusResolver,
         OrderPaymentRepositoryInterface $paymentRepository,
         OrderPayment\Transaction\Repository $transactionRepository
     )
     {
+        $this->_invoiceRepository = $invoiceRepository;
         $this->_orderManagement = $orderManagement;
         $this->_orderRepository = $orderRepository;
         $this->_orderSender = $orderSender;
+        $this->_orderStateResolver = $orderStateResolver;
         $this->_orderStatusResolver = $orderStatusResolver;
         $this->_paymentRepository = $paymentRepository;
         $this->_transactionRepository = $transactionRepository;
     }
 
     /**
-     * @param OrderModel $order
+     * Returns the transaction ID for the given resource.
+     *
+     * @param AbstractHeidelpayResource $resource
+     * @return string
+     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
      */
-    public function handleTransactionError(Order $order)
+    private function _getTransactionIdForResource(AbstractHeidelpayResource $resource): string
     {
+        if ($resource instanceof Charge) {
+            // For charges, we always use the ID of the first charge as transaction ID.
+            return $resource->getPayment()
+                ->getChargeByIndex(0)
+                ->getId();
+        }
+
+        return $resource->getId();
+    }
+
+    /**
+     * @param OrderModel $order
+     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     */
+    public function handleTransactionError(Order $order, AbstractHeidelpayResource $resource)
+    {
+        if ($resource instanceof Cancellation) {
+            $resource = $resource->getParentResource();
+        }
+
+        if ($resource instanceof Charge) {
+            // For charges we need to manually cancel the invoice, since cancelling the order may be a no-op in case
+            // we already have invoices for all items.
+
+            $transactionId = $this->_getTransactionIdForResource($resource);
+
+            /** @var Order\Invoice $invoice */
+            $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
+            $invoice->cancel();
+
+            $this->_invoiceRepository->save($invoice);
+            $this->_orderRepository->save($order);
+        }
+
         $this->_orderManagement->cancel($order->getId());
     }
 
@@ -114,6 +170,11 @@ class Payment
 
         /** @var string $state */
         $state = $paymentMethod->getTransactionPendingState();
+
+        // If we have already shipped use the correct state for after shipment if set.
+        if ($order->getShipmentsCollection()->count() > 0) {
+            $state = $paymentMethod->getAfterShipmentOrderState() ?? $state;
+        }
 
         $order->setState($state);
         $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
@@ -129,14 +190,8 @@ class Payment
      */
     public function handleTransactionSuccess(Order $order, AbstractHeidelpayResource $resource)
     {
-        $transactionId = $resource->getId();
-
-        if ($resource instanceof Charge) {
-            // For charges, we always use the ID of the first charge as transaction ID.
-            $transactionId = $resource->getPayment()
-                ->getChargeByIndex(0)
-                ->getId();
-        }
+        /** @var string $transactionId */
+        $transactionId = $this->_getTransactionIdForResource($resource);
 
         /** @var OrderPayment $payment */
         $payment = $order->getPayment();
@@ -146,32 +201,47 @@ class Payment
         // prevents online refunds.
         $payment->setTransactionId($transactionId);
 
-        /** @var OrderPayment\Transaction $paymentTransaction */
-        $paymentTransaction = $this->_transactionRepository->getByTransactionId(
-            $payment->getTransactionId(),
-            $payment->getId(),
-            $order->getId()
-        );
+        if ($resource->getPayment()->isCompleted()) {
+            /** @var Order\Invoice $invoice */
+            $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
+            $invoice->pay();
 
-        switch (true) {
-            case $resource instanceof Authorization:
-                $payment->registerAuthorizationNotification($resource->getAmount());
-                break;
-            case $resource instanceof Charge:
-                $payment->registerCaptureNotification($resource->getAmount());
-                $paymentTransaction->setIsClosed(true);
-                break;
-            default:
+            /** @var OrderPayment\Transaction $paymentTransaction */
+            $paymentTransaction = $this->_transactionRepository->getByTransactionId(
+                $payment->getTransactionId(),
+                $payment->getId(),
+                $order->getId()
+            );
+
+            $paymentTransaction->setIsClosed(true);
+
+            $this->_invoiceRepository->save($invoice);
+            $this->_paymentRepository->save($payment);
+            $this->_transactionRepository->save($paymentTransaction);
+
+            $parentTransaction = $paymentTransaction->getParentTransaction();
+            if ($parentTransaction !== null &&
+                $parentTransaction->getIsClosed() == false) {
+                $parentTransaction->setIsClosed(true);
+                $this->_transactionRepository->save($parentTransaction);
+            }
+
+            // Need to set to processing, otherwise the state resolver will not complete the order, when we are
+            // currently in payment review (e.g. with invoice).
+            $order->setState(Order::STATE_PROCESSING);
         }
 
-        // Only send once for payment methods that use have separate authorization and capture
-        $order->setCanSendNewEmailFlag($order->getState() !== Order::STATE_PROCESSING);
-        $order->setState(Order::STATE_PROCESSING);
+        $orderState = $this->_orderStateResolver->getStateForOrder($order, [
+            $this->_orderStateResolver::IN_PROGRESS,
+        ]);
+
+        $order->setState($orderState);
         $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
 
-        $this->_transactionRepository->save($paymentTransaction);
-        $this->_paymentRepository->save($payment);
         $this->_orderRepository->save($order);
-        $this->_orderSender->send($order);
+
+        if (!$order->getEmailSent()) {
+            $this->_orderSender->send($order);
+        }
     }
 }
