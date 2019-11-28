@@ -27,4 +27,11 @@ namespace Heidelpay\MGW\Model\Method;
  */
 class Paypal extends Base
 {
+    /**
+     * @inheritDoc
+     */
+    public function hasRedirect(): bool
+    {
+        return true;
+    }
 }
