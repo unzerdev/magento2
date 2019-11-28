@@ -132,6 +132,16 @@ class Base extends Adapter
     }
 
     /**
+     * Returns whether a redirect is required when making a payment.
+     *
+     * @return bool
+     */
+    public function hasRedirect(): bool
+    {
+        return false;
+    }
+
+    /**
      * @inheritDoc
      */
     public function isAvailable(CartInterface $quote = null)
