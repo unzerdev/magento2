@@ -29,13 +29,14 @@ use Magento\Sales\Model\Order;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class PaymentSucceededObserver extends AbstractPaymentWebhookObserver
+class TransactionSucceededObserver extends AbstractPaymentWebhookObserver
 {
     /**
      * @param Order $order
      * @param AbstractHeidelpayResource $resource
      * @return void
      * @throws \Magento\Framework\Exception\InputException
+     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
      */
     public function executeWith(Order $order, AbstractHeidelpayResource $resource): void
     {

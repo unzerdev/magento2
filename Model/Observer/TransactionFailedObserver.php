@@ -3,7 +3,6 @@
 namespace Heidelpay\MGW\Model\Observer;
 
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
-use Magento\Framework\DataObject;
 use Magento\Sales\Model\Order;
 
 /**
@@ -29,7 +28,7 @@ use Magento\Sales\Model\Order;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class PaymentFailedObserver extends AbstractPaymentWebhookObserver
+class TransactionFailedObserver extends AbstractPaymentWebhookObserver
 {
     /**
      * @param Order $order
