@@ -3,10 +3,12 @@
 namespace Heidelpay\MGW\Helper;
 
 use Heidelpay\MGW\Model\Method\Base;
+use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use heidelpayPHP\Resources\TransactionTypes\Authorization;
 use heidelpayPHP\Resources\TransactionTypes\Cancellation;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
+use Magento\Framework\Exception\InputException;
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -119,7 +121,7 @@ class Payment
      *
      * @param AbstractHeidelpayResource $resource
      * @return string
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws HeidelpayApiException
      */
     private function _getTransactionIdForResource(AbstractHeidelpayResource $resource): string
     {
@@ -135,12 +137,22 @@ class Payment
 
     /**
      * @param OrderModel $order
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @param AbstractHeidelpayResource $resource
+     * @throws HeidelpayApiException
      */
     public function handleTransactionError(Order $order, AbstractHeidelpayResource $resource)
     {
         if ($resource instanceof Cancellation) {
             $resource = $resource->getParentResource();
+        }
+
+        if (!$resource instanceof Authorization &&
+            !$resource instanceof Charge) {
+            return;
+        }
+
+        if (!$resource->getPayment()->isCanceled()) {
+            return;
         }
 
         if ($resource instanceof Charge) {
@@ -185,8 +197,8 @@ class Payment
     /**
      * @param OrderModel $order
      * @param Authorization|Charge|AbstractHeidelpayResource $resource
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws InputException
+     * @throws HeidelpayApiException
      */
     public function handleTransactionSuccess(Order $order, AbstractHeidelpayResource $resource)
     {
