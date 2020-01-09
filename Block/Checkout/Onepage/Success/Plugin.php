@@ -80,7 +80,7 @@ class Plugin
             ->getPayment()
             ->getMethodInstance();
 
-        if ($methodInstance instanceof Base) {
+        if ($methodInstance instanceof Base && $methodInstance->hasRedirect()) {
             /** @var Payment $payment */
             try {
                 $payment = $this->_moduleConfig
