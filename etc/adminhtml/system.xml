@@ -7,13 +7,13 @@
                 <comment>
                     <![CDATA[HPMGW_ABOUT_US]]>
                 </comment>
-                <group id="global" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="global" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>HPMGW_MAIN</label>
-                    <field id="public_key" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="public_key" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                         <label>Public Key</label>
                         <config_path>payment/hpmgw/public_key</config_path>
                     </field>
-                    <field id="private_key" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="private_key" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                         <label>Private Key</label>
                         <config_path>payment/hpmgw/private_key</config_path>
                     </field>
