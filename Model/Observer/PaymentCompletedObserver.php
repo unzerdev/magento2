@@ -5,6 +5,7 @@ namespace Heidelpay\MGW\Model\Observer;
 use Heidelpay\MGW\Helper\Payment;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
+use heidelpayPHP\Resources\TransactionTypes\AbstractTransactionType;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\ObjectManagerInterface;
