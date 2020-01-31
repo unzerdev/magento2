@@ -8,11 +8,13 @@ use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use heidelpayPHP\Resources\TransactionTypes\Authorization;
 use heidelpayPHP\Resources\TransactionTypes\Cancellation;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
+use Magento\Framework\Exception\InputException;
 use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Magento\Sales\Model\Order\StateResolver;
 use Magento\Sales\Model\Order\StatusResolver;
 
@@ -77,6 +79,11 @@ class Payment
     protected $_paymentRepository;
 
     /**
+     * @var OrderPayment\Transaction\Repository
+     */
+    private $_transactionRepository;
+
+    /**
      * Payment constructor.
      * @param Order\InvoiceRepository $invoiceRepository
      * @param OrderManagementInterface $orderManagement
@@ -85,6 +92,7 @@ class Payment
      * @param StateResolver $orderStateResolver
      * @param StatusResolver $orderStatusResolver
      * @param OrderPaymentRepositoryInterface $paymentRepository
+     * @param OrderPayment\Transaction\Repository $transactionRepository
      */
     public function __construct(
         Order\InvoiceRepository $invoiceRepository,
@@ -93,7 +101,8 @@ class Payment
         OrderSender $orderSender,
         StateResolver $orderStateResolver,
         StatusResolver $orderStatusResolver,
-        OrderPaymentRepositoryInterface $paymentRepository
+        OrderPaymentRepositoryInterface $paymentRepository,
+        OrderPayment\Transaction\Repository $transactionRepository
     )
     {
         $this->_invoiceRepository = $invoiceRepository;
@@ -103,6 +112,59 @@ class Payment
         $this->_orderStateResolver = $orderStateResolver;
         $this->_orderStatusResolver = $orderStatusResolver;
         $this->_paymentRepository = $paymentRepository;
+        $this->_transactionRepository = $transactionRepository;
+    }
+
+    /**
+     * @param Order $order
+     * @param \heidelpayPHP\Resources\Payment $payment
+     * @return void
+     * @throws HeidelpayApiException
+     * @throws InputException
+     */
+    public function handlePaymentCompletion(Order $order, \heidelpayPHP\Resources\Payment $payment): void
+    {
+        $transactionId = $payment->getChargeByIndex(0)->getId();
+
+        /** @var OrderPayment $payment */
+        $payment = $order->getPayment();
+
+        // Needed for updating the invoice when registering a notification. Since this is not saved as part of the
+        // payment we need to set it manually, otherwise Magento will remove the transaction ID from our invoice which
+        // prevents online refunds.
+        $payment->setTransactionId($transactionId);
+
+        /** @var Order\Invoice $invoice */
+        $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
+        if ((int)$invoice->getState() === Order\Invoice::STATE_OPEN) {
+            $invoice->pay();
+        }
+
+        /** @var OrderPayment\Transaction $paymentTransaction */
+        $paymentTransaction = $this->_transactionRepository->getByTransactionId(
+            $payment->getTransactionId(),
+            $payment->getId(),
+            $order->getId()
+        );
+
+        $paymentTransaction->setIsClosed(true);
+
+        $this->_invoiceRepository->save($invoice);
+        $this->_paymentRepository->save($payment);
+        $this->_transactionRepository->save($paymentTransaction);
+
+        $parentTransaction = $paymentTransaction->getParentTransaction();
+        if ($parentTransaction !== null &&
+            $parentTransaction->getIsClosed() == false) {
+            $parentTransaction->setIsClosed(true);
+            $this->_transactionRepository->save($parentTransaction);
+        }
+
+        // Need to set to processing, otherwise the state resolver will not complete the order, when we are
+        // currently in payment review (e.g. with invoice).
+        $order->setState(Order::STATE_PROCESSING);
+
+        $this->handleTransactionSuccess($order);
     }
 
     /**
@@ -169,9 +231,8 @@ class Payment
 
     /**
      * @param Order $order
-     * @param Authorization|Charge|AbstractHeidelpayResource $resource
      */
-    public function handleTransactionSuccess(Order $order, AbstractHeidelpayResource $resource)
+    public function handleTransactionSuccess(Order $order)
     {
         $orderState = $this->_orderStateResolver->getStateForOrder($order, [
             $this->_orderStateResolver::IN_PROGRESS,

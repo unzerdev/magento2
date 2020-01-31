@@ -40,6 +40,6 @@ class TransactionSucceededObserver extends AbstractPaymentWebhookObserver
      */
     public function executeWith(Order $order, AbstractHeidelpayResource $resource): void
     {
-        $this->_paymentHelper->handleTransactionSuccess($order, $resource);
+        $this->_paymentHelper->handleTransactionSuccess($order);
     }
 }
