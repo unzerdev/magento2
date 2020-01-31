@@ -110,7 +110,9 @@ class PaymentCompletedObserver extends AbstractPaymentWebhookObserver
 
         /** @var Order\Invoice $invoice */
         $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
-        $invoice->pay();
+        if ((int)$invoice->getState() === Order\Invoice::STATE_OPEN) {
+            $invoice->pay();
+        }
 
         /** @var OrderPayment\Transaction $paymentTransaction */
         $paymentTransaction = $this->_transactionRepository->getByTransactionId(
