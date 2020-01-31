@@ -48,7 +48,14 @@ class PaymentCompletedObserver extends AbstractPaymentWebhookObserver
      */
     public function executeWith(Order $order, AbstractHeidelpayResource $resource): void
     {
-        /** @var \heidelpayPHP\Resources\Payment $resource  */
-        $this->_paymentHelper->handlePaymentCompletion($order, $resource);
+        $payment = $resource;
+
+        if ($resource instanceof AbstractTransactionType) {
+            $payment = $resource->getPayment();
+        }
+
+        if ($payment instanceof Payment && $payment->isCompleted()) {
+            $this->_paymentHelper->handlePaymentCompletion($order, $payment);
+        }
     }
 }
