@@ -11,6 +11,7 @@ use heidelpayPHP\Resources\TransactionTypes\Authorization;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Exception\InputException;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Sales\Model\Order;
@@ -83,7 +84,6 @@ class Callback extends AbstractPaymentAction
     /**
      * @inheritDoc
      * @throws HeidelpayApiException
-     * @throws \Magento\Framework\Exception\InputException
      */
     public function executeWith(Order $order, Payment $payment)
     {
@@ -139,6 +139,7 @@ class Callback extends AbstractPaymentAction
     }
 
     /**
+     * @param Order $order
      * @return \Magento\Framework\Controller\Result\Redirect
      */
     protected function handlePending(Order $order): \Magento\Framework\Controller\Result\Redirect
@@ -154,7 +155,6 @@ class Callback extends AbstractPaymentAction
      * @param Order $order
      * @param Authorization|Charge|AbstractHeidelpayResource $resource
      * @return \Magento\Framework\Controller\Result\Redirect
-     * @throws \Magento\Framework\Exception\InputException
      * @throws HeidelpayApiException
      */
     protected function handleSuccess(
@@ -163,7 +163,13 @@ class Callback extends AbstractPaymentAction
     ): \Magento\Framework\Controller\Result\Redirect
     {
         try {
-            $this->_paymentHelper->handleTransactionSuccess($order, $resource);
+            $payment = $resource->getPayment();
+
+            if ($payment->isCompleted()) {
+                $this->_paymentHelper->handlePaymentCompletion($order, $payment);
+            } else {
+                $this->_paymentHelper->handleTransactionSuccess($order);
+            }
         } catch (Exception $e) {
             return $this->handleErrorMessage($order, $resource, $e->getMessage());
         }
