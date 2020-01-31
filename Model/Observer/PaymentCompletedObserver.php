@@ -2,9 +2,9 @@
 
 namespace Heidelpay\MGW\Model\Observer;
 
-use Heidelpay\MGW\Helper\Payment;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
+use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\AbstractTransactionType;
 use Magento\Framework\Exception\InputException;
 use Magento\Sales\Model\Order;
