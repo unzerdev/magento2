@@ -6,14 +6,8 @@ use Heidelpay\MGW\Helper\Payment;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use heidelpayPHP\Resources\TransactionTypes\AbstractTransactionType;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\InputException;
-use Magento\Framework\ObjectManagerInterface;
-use Magento\Sales\Api\OrderPaymentRepositoryInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\InvoiceRepository;
-use Magento\Sales\Model\Order\Payment as OrderPayment;
 
 /**
  * Observer for webhooks about completed payments
