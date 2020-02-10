@@ -95,17 +95,11 @@ class Process extends Action implements CsrfAwareActionInterface
         /** @var HttpResponse $response */
         $response = $this->getResponse();
 
-        if (!$this->_isRequestFromValidIp($request)) {
-            $response->setStatusCode(401);
-            $response->setBody('Unauthorized');
-            return $response;
-        }
-
         /** @var string $requestBody */
         $requestBody = $request->getContent();
 
         /** @var stdClass $event */
-        $event = json_decode($requestBody);
+        $event = json_decode($requestBody, false);
 
         if (!$event  || !$this->_isValidEvent($event)) {
             $response->setStatusCode(400);
@@ -150,23 +144,6 @@ class Process extends Action implements CsrfAwareActionInterface
         $response->setBody($result->getData('message'));
 
         return $response;
-    }
-
-    /**
-     * Returns whether the given request comes from one of the IP addresses used by the Heidelpay Gateway.
-     *
-     * See https://docs.heidelpay.com/docs/webhook-overview#section-what-are-webhooks
-     *
-     * @param HttpRequest $request
-     *
-     * @return bool
-     */
-    protected function _isRequestFromValidIp(HttpRequest $request): bool
-    {
-        /** @var string[] $clientIps */
-        $clientIps = preg_split('/\s*,\s*/', $request->getClientIp(true));
-
-        return count(array_intersect($clientIps, $this->_moduleConfig->getWebhooksSourceIps())) > 0;
     }
 
     /**

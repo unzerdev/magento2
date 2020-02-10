@@ -5,7 +5,6 @@
                 <active>0</active>
                 <public_key>s-pub-2a10ifVINFAjpQJ9qW8jBe5OJPBx6Gxa</public_key>
                 <private_key>s-priv-2a102ZMq3gV4I3zJ888J7RR6u75oqK3n</private_key>
-                <webhooks_source_ips>3.120.62.83,18.196.35.212</webhooks_source_ips>
                 <model>Heidelpay\MGW\Model\Method\Base</model>
                 <logging>0</logging>
             </hpmgw>
@@ -59,7 +58,7 @@
                 <active>0</active>
                 <payment_action>order</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[Flexipay Direct]]></title>
+                <title><![CDATA[FlexiPay Direct]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
