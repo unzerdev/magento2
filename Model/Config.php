@@ -37,7 +37,6 @@ class Config extends \Magento\Payment\Gateway\Config\Config
 
     const KEY_PUBLIC_KEY = 'public_key';
     const KEY_PRIVATE_KEY = 'private_key';
-    const KEY_WEBHOOKS_SOURCE_IPS = 'webhooks_source_ips';
     const KEY_LOGGING = 'logging';
 
     const METHOD_BASE = 'hpmgw';
@@ -115,19 +114,6 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public function getPrivateKey(): string
     {
         return $this->_scopeConfig->getValue(self::BASE_CONFIGURATION_PATH . self::KEY_PRIVATE_KEY);
-    }
-
-    /**
-     * Returns the list of valid source IPs for webhook events.
-     *
-     * @return string[]
-     */
-    public function getWebhooksSourceIps(): array
-    {
-        return preg_split(
-            '/\s*,\s*/',
-            $this->_scopeConfig->getValue(self::BASE_CONFIGURATION_PATH . self::KEY_WEBHOOKS_SOURCE_IPS)
-        );
     }
 
     /**

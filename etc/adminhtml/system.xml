@@ -21,11 +21,6 @@
                         <label>Webhooks</label>
                         <frontend_model>Heidelpay\MGW\Block\System\Config\WebhooksButtons</frontend_model>
                     </field>
-                    <field id="webhooks_source_ips" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
-                        <label>Webhooks IP Whitelist</label>
-                        <comment>Comma separated list of IP addresses. See https://docs.heidelpay.com/docs/webhook-overview#section-what-are-webhooks</comment>
-                        <config_path>payment/hpmgw/webhooks_source_ips</config_path>
-                    </field>
                     <field id="logging" translate="label,comment" type="select" sortOrder="50"  showInDefault="1" showInWebsite="0" showInStore="0">
                         <label>Logging and Debugging</label>
                         <comment>The SDK provides error and debug information which you can catch and write to your log.</comment>
