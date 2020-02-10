@@ -13,7 +13,6 @@ use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order as OrderModel;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Magento\Sales\Model\Order\StateResolver;
@@ -82,7 +81,7 @@ class Payment
     /**
      * @var OrderPayment\Transaction\Repository
      */
-    protected $_transactionRepository;
+    private $_transactionRepository;
 
     /**
      * Payment constructor.
@@ -117,26 +116,59 @@ class Payment
     }
 
     /**
-     * Returns the transaction ID for the given resource.
-     *
-     * @param AbstractHeidelpayResource $resource
-     * @return string
+     * @param Order $order
+     * @param \heidelpayPHP\Resources\Payment $payment
+     * @return void
      * @throws HeidelpayApiException
+     * @throws InputException
      */
-    private function _getTransactionIdForResource(AbstractHeidelpayResource $resource): string
+    public function handlePaymentCompletion(Order $order, \heidelpayPHP\Resources\Payment $payment): void
     {
-        if ($resource instanceof Charge) {
-            // For charges, we always use the ID of the first charge as transaction ID.
-            return $resource->getPayment()
-                ->getChargeByIndex(0)
-                ->getId();
+        $transactionId = $payment->getChargeByIndex(0)->getId();
+
+        /** @var OrderPayment $payment */
+        $payment = $order->getPayment();
+
+        // Needed for updating the invoice when registering a notification. Since this is not saved as part of the
+        // payment we need to set it manually, otherwise Magento will remove the transaction ID from our invoice which
+        // prevents online refunds.
+        $payment->setTransactionId($transactionId);
+
+        /** @var Order\Invoice $invoice */
+        $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
+        if ((int)$invoice->getState() === Order\Invoice::STATE_OPEN) {
+            $invoice->pay();
         }
 
-        return $resource->getId();
+        /** @var OrderPayment\Transaction $paymentTransaction */
+        $paymentTransaction = $this->_transactionRepository->getByTransactionId(
+            $payment->getTransactionId(),
+            $payment->getId(),
+            $order->getId()
+        );
+
+        $paymentTransaction->setIsClosed(true);
+
+        $this->_invoiceRepository->save($invoice);
+        $this->_paymentRepository->save($payment);
+        $this->_transactionRepository->save($paymentTransaction);
+
+        $parentTransaction = $paymentTransaction->getParentTransaction();
+        if ($parentTransaction !== null &&
+            $parentTransaction->getIsClosed() == false) {
+            $parentTransaction->setIsClosed(true);
+            $this->_transactionRepository->save($parentTransaction);
+        }
+
+        // Need to set to processing, otherwise the state resolver will not complete the order, when we are
+        // currently in payment review (e.g. with invoice).
+        $order->setState(Order::STATE_PROCESSING);
+
+        $this->handleTransactionSuccess($order);
     }
 
     /**
-     * @param OrderModel $order
+     * @param Order $order
      * @param AbstractHeidelpayResource $resource
      * @throws HeidelpayApiException
      */
@@ -159,7 +191,10 @@ class Payment
             // For charges we need to manually cancel the invoice, since cancelling the order may be a no-op in case
             // we already have invoices for all items.
 
-            $transactionId = $this->_getTransactionIdForResource($resource);
+            $transactionId = $resource
+                ->getPayment()
+                ->getChargeByIndex(0)
+                ->getId();
 
             /** @var Order\Invoice $invoice */
             $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
@@ -173,7 +208,7 @@ class Payment
     }
 
     /**
-     * @param OrderModel $order
+     * @param Order $order
      */
     public function handleTransactionPending(Order $order)
     {
@@ -195,54 +230,10 @@ class Payment
     }
 
     /**
-     * @param OrderModel $order
-     * @param Authorization|Charge|AbstractHeidelpayResource $resource
-     * @throws InputException
-     * @throws HeidelpayApiException
+     * @param Order $order
      */
-    public function handleTransactionSuccess(Order $order, AbstractHeidelpayResource $resource)
+    public function handleTransactionSuccess(Order $order)
     {
-        /** @var string $transactionId */
-        $transactionId = $this->_getTransactionIdForResource($resource);
-
-        /** @var OrderPayment $payment */
-        $payment = $order->getPayment();
-
-        // Needed for updating the invoice when registering a notification. Since this is not saved as part of the
-        // payment we need to set it manually, otherwise Magento will remove the transaction ID from our invoice which
-        // prevents online refunds.
-        $payment->setTransactionId($transactionId);
-
-        if ($resource->getPayment()->isCompleted()) {
-            /** @var Order\Invoice $invoice */
-            $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
-            $invoice->pay();
-
-            /** @var OrderPayment\Transaction $paymentTransaction */
-            $paymentTransaction = $this->_transactionRepository->getByTransactionId(
-                $payment->getTransactionId(),
-                $payment->getId(),
-                $order->getId()
-            );
-
-            $paymentTransaction->setIsClosed(true);
-
-            $this->_invoiceRepository->save($invoice);
-            $this->_paymentRepository->save($payment);
-            $this->_transactionRepository->save($paymentTransaction);
-
-            $parentTransaction = $paymentTransaction->getParentTransaction();
-            if ($parentTransaction !== null &&
-                $parentTransaction->getIsClosed() == false) {
-                $parentTransaction->setIsClosed(true);
-                $this->_transactionRepository->save($parentTransaction);
-            }
-
-            // Need to set to processing, otherwise the state resolver will not complete the order, when we are
-            // currently in payment review (e.g. with invoice).
-            $order->setState(Order::STATE_PROCESSING);
-        }
-
         $orderState = $this->_orderStateResolver->getStateForOrder($order, [
             $this->_orderStateResolver::IN_PROGRESS,
         ]);

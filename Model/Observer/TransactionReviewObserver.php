@@ -29,7 +29,7 @@ use Magento\Sales\Model\Order;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class PaymentReviewObserver extends AbstractPaymentWebhookObserver
+class TransactionReviewObserver extends AbstractPaymentWebhookObserver
 {
     /**
      * @param Order $order

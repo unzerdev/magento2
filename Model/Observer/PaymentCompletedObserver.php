@@ -2,12 +2,15 @@
 
 namespace Heidelpay\MGW\Model\Observer;
 
+use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
-use Magento\Framework\DataObject;
+use heidelpayPHP\Resources\Payment;
+use heidelpayPHP\Resources\TransactionTypes\AbstractTransactionType;
+use Magento\Framework\Exception\InputException;
 use Magento\Sales\Model\Order;
 
 /**
- * Observer for webhooks about failed and cancelled payments and chargebacks
+ * Observer for webhooks about completed payments
  *
  * Copyright (C) 2019 heidelpay GmbH
  *
@@ -29,16 +32,25 @@ use Magento\Sales\Model\Order;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class PaymentFailedObserver extends AbstractPaymentWebhookObserver
+class PaymentCompletedObserver extends AbstractPaymentWebhookObserver
 {
     /**
      * @param Order $order
      * @param AbstractHeidelpayResource $resource
      * @return void
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws InputException
+     * @throws HeidelpayApiException
      */
     public function executeWith(Order $order, AbstractHeidelpayResource $resource): void
     {
-        $this->_paymentHelper->handleTransactionError($order, $resource);
+        $payment = $resource;
+
+        if ($resource instanceof AbstractTransactionType) {
+            $payment = $resource->getPayment();
+        }
+
+        if ($payment instanceof Payment && $payment->isCompleted()) {
+            $this->_paymentHelper->handlePaymentCompletion($order, $payment);
+        }
     }
 }
