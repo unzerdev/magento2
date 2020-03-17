@@ -30,38 +30,4 @@
     <event name="payment_method_assign_data_hpmgw_sofort">
         <observer name="hpmgw_sofort_data_assign" instance="Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-
-    <event name="hpmgw_authorize_canceled">
-        <observer name="hpmgw_authorize_canceled" instance="Heidelpay\MGW\Model\Observer\TransactionFailedObserver" />
-    </event>
-    <event name="hpmgw_authorize_failed">
-        <observer name="hpmgw_authorize_failed" instance="Heidelpay\MGW\Model\Observer\TransactionFailedObserver" />
-    </event>
-    <event name="hpmgw_authorize_expired">
-        <observer name="hpmgw_authorize_expired" instance="Heidelpay\MGW\Model\Observer\TransactionFailedObserver" />
-    </event>
-    <event name="hpmgw_charge_canceled">
-        <observer name="hpmgw_charge_canceled" instance="Heidelpay\MGW\Model\Observer\TransactionFailedObserver" />
-    </event>
-    <event name="hpmgw_charge_failed">
-        <observer name="hpmgw_charge_failed" instance="Heidelpay\MGW\Model\Observer\TransactionFailedObserver" />
-    </event>
-    <event name="hpmgw_chargeback">
-        <observer name="hpmgw_chargeback" instance="Heidelpay\MGW\Model\Observer\TransactionFailedObserver" />
-    </event>
-
-    <event name="hpmgw_authorize_succeeded">
-        <observer name="hpmgw_authorize_succeeded" instance="Heidelpay\MGW\Model\Observer\TransactionSucceededObserver" />
-    </event>
-    <event name="hpmgw_charge_succeeded">
-        <observer name="hpmgw_charge_succeeded" instance="Heidelpay\MGW\Model\Observer\TransactionSucceededObserver" />
-    </event>
-
-    <event name="hpmgw_payment_payment_review">
-        <observer name="hpmgw_payment_payment_review" instance="Heidelpay\MGW\Model\Observer\TransactionReviewObserver" />
-    </event>
-
-    <event name="hpmgw_payment_completed">
-        <observer name="hpmgw_payment_completed" instance="Heidelpay\MGW\Model\Observer\PaymentCompletedObserver" />
-    </event>
 </config>
