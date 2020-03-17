@@ -2,9 +2,11 @@
 
 namespace Heidelpay\MGW\Helper;
 
+use heidelpayPHP\Constants\PaymentState;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Resources\TransactionTypes\Authorization;
-use heidelpayPHP\Resources\TransactionTypes\Charge;
+use Magento\Sales\Api\InvoiceRepositoryInterface;
+use Magento\Sales\Api\OrderPaymentRepositoryInterface;
+use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 
@@ -46,25 +48,48 @@ class Payment
     private $_orderRepository;
 
     /**
+     * @var Order\OrderStateResolverInterface
+     */
+    private $_orderStateResolver;
+
+    /**
      * @var Order\StatusResolver
      */
     private $_orderStatusResolver;
+    /**
+     * @var OrderPaymentRepositoryInterface
+     */
+    private $_paymentRepository;
+
+    /**
+     * @var TransactionRepositoryInterface
+     */
+    private $_transactionRepository;
 
     /**
      * Payment constructor.
-     * @param Order\InvoiceRepository $invoiceRepository
+     * @param InvoiceRepositoryInterface $invoiceRepository
      * @param OrderRepository $orderRepository
+     * @param Order\OrderStateResolverInterface $orderStateResolver
      * @param Order\StatusResolver $orderStatusResolver
+     * @param OrderPaymentRepositoryInterface $paymentRepository
+     * @param TransactionRepositoryInterface $transactionRepository
      */
     public function __construct(
-        Order\InvoiceRepository $invoiceRepository,
+        InvoiceRepositoryInterface $invoiceRepository,
         OrderRepository $orderRepository,
-        Order\StatusResolver $orderStatusResolver
+        Order\OrderStateResolverInterface $orderStateResolver,
+        Order\StatusResolver $orderStatusResolver,
+        OrderPaymentRepositoryInterface $paymentRepository,
+        TransactionRepositoryInterface $transactionRepository
     )
     {
         $this->_invoiceRepository = $invoiceRepository;
         $this->_orderRepository = $orderRepository;
+        $this->_orderStateResolver = $orderStateResolver;
         $this->_orderStatusResolver = $orderStatusResolver;
+        $this->_paymentRepository = $paymentRepository;
+        $this->_transactionRepository = $transactionRepository;
     }
 
     /**
@@ -74,194 +99,30 @@ class Payment
      */
     public function processState(Order $order, \heidelpayPHP\Resources\Payment $payment)
     {
-        /** @var string $state */
-        $state = $order->getState();
-
-        switch ($state) {
-            case Order::STATE_COMPLETE:
-                $this->processStateForCompleteOrder($order, $payment);
+        switch ($payment->getState()) {
+            case PaymentState::STATE_CANCELED:
+                $this->processCanceledState($order);
                 break;
-            case Order::STATE_NEW:
-                $this->processStateForNewOrder($order, $payment);
+            case PaymentState::STATE_COMPLETED:
+                $this->processCompletedState($order, $payment);
                 break;
-            case Order::STATE_PAYMENT_REVIEW:
-                $this->processStateForPaymentReview($order, $payment);
+            case PaymentState::STATE_CHARGEBACK:
+                $this->processChargebackState($order);
                 break;
-            case Order::STATE_PROCESSING:
-                $this->processStateForProcessingOrder($order, $payment);
+            case PaymentState::STATE_PAYMENT_REVIEW:
+                $this->processPaymentReviewState($order);
+                break;
+            case PaymentState::STATE_PENDING:
+                $this->processPendingState($order, $payment);
                 break;
         }
     }
 
     /**
      * @param Order $order
-     * @param \heidelpayPHP\Resources\Payment $payment
-     * @throws HeidelpayApiException
      */
-    protected function processStateForCompleteOrder(
-        Order $order,
-        \heidelpayPHP\Resources\Payment $payment
-    )
+    private function processCanceledState(Order $order)
     {
-        if ($payment->isCanceled()) {
-            $this->cancelOrder($order, $payment);
-            $this->setOrderState($order, Order::STATE_COMPLETE);
-            return;
-        }
-    }
-
-    /**
-     * @param Order $order
-     * @param \heidelpayPHP\Resources\Payment $payment
-     * @throws HeidelpayApiException
-     */
-    protected function processStateForNewOrder(
-        Order $order,
-        \heidelpayPHP\Resources\Payment $payment
-    )
-    {
-        if ($payment->isCanceled()) {
-            $this->cancelOrder($order, $payment);
-            return;
-        }
-
-        /** @var Authorization|Charge $transaction */
-        $transaction = $payment->getAuthorization() ?? $payment->getChargeByIndex(0);
-
-        if ($transaction->isError()) {
-            $this->cancelOrder($order, $payment);
-            return;
-        }
-
-        $state = null;
-        $status = null;
-
-        if ($payment->isPending() && $transaction->isSuccess()) {
-            if ($this->isInvoicePayment($payment)) {
-                $state = Order::STATE_PROCESSING;
-                $status = null;
-            } elseif ($transaction instanceof Authorization) {
-                $state = Order::STATE_PROCESSING;
-                $status = self::STATUS_READY_TO_CAPTURE;
-            }
-        } elseif ($payment->isCompleted()) {
-            $state = Order::STATE_PROCESSING;
-            $status = null;
-        }
-
-        if ($state !== null) {
-            $this->setOrderState($order, $state, $status);
-        }
-    }
-
-    /**
-     * @param Order $order
-     * @param \heidelpayPHP\Resources\Payment $payment
-     * @throws HeidelpayApiException
-     */
-    protected function processStateForPaymentReview(
-        Order $order,
-        \heidelpayPHP\Resources\Payment $payment
-    )
-    {
-        $isInvoice = $this->isInvoicePayment($payment);
-
-        if ($isInvoice && $payment->isCanceled()) {
-            $this->cancelOrder($order, $payment);
-        } elseif ($isInvoice && $payment->isCompleted()) {
-            $this->setOrderState($order, Order::STATE_COMPLETE);
-        } elseif ($payment->isChargeBack()) {
-            $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW, Order::STATUS_FRAUD);
-        }
-    }
-
-    /**
-     * @param Order $order
-     * @param \heidelpayPHP\Resources\Payment $payment
-     * @throws HeidelpayApiException
-     */
-    protected function processStateForProcessingOrder(
-        Order $order,
-        \heidelpayPHP\Resources\Payment $payment
-    )
-    {
-        if ($order->getStatus() === self::STATUS_READY_TO_CAPTURE) {
-            if ($payment->isCanceled()) {
-                $this->cancelOrder($order, $payment);
-            } elseif ($payment->isCompleted() && !$this->isInvoicePayment($payment)) {
-                $this->setOrderState($order, Order::STATE_PROCESSING);
-            }
-        } elseif ($payment->isCanceled()) {
-            if ($payment->getAmount()->getCharged() > 0) {
-                $this->setOrderState($order, Order::STATE_CLOSED);
-            } else {
-                $this->cancelOrder($order, $payment);
-            }
-        } elseif ((($this->isInvoicePayment($payment) && $payment->isPending()) || $payment->isPaymentReview())
-            && $this->isOrderShipped($order)) {
-            $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
-        } elseif ($payment->isCompleted() && $this->isOrderShipped($order)) {
-            $this->setOrderState($order, Order::STATE_COMPLETE);
-        } elseif ($payment->isChargeBack()) {
-            $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW, Order::STATUS_FRAUD);
-        }
-    }
-
-    /**
-     * @param \heidelpayPHP\Resources\Payment $payment
-     * @return bool
-     */
-    private function isInvoicePayment(\heidelpayPHP\Resources\Payment $payment): bool
-    {
-        return $payment->getPaymentType()->isInvoiceType();
-    }
-
-    /**
-     * @param Order $order
-     * @return bool
-     */
-    private function isOrderShipped(Order $order): bool
-    {
-        foreach ($order->getItems() as $orderItem) {
-            /** @var Order\Item $orderItem */
-            if ($orderItem->getQtyToShip() > 0) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param Order $order
-     * @param string $state
-     * @param string|null $status
-     */
-    private function setOrderState(Order $order, string $state, ?string $status = null)
-    {
-        if ($status === null) {
-            $status = $this->_orderStatusResolver->getOrderStatusByState($order, $state);
-        }
-
-        $order->setState($state);
-        $order->setStatus($status);
-        $this->_orderRepository->save($order);
-    }
-
-    /**
-     * @param Order $order
-     * @param \heidelpayPHP\Resources\Payment $payment
-     * @throws HeidelpayApiException
-     */
-    public function cancelOrder(
-        Order $order,
-        \heidelpayPHP\Resources\Payment $payment
-    )
-    {
-        if (!$payment->isCanceled()) {
-            $payment->cancelAmount();
-        }
-
         if ($order->canCancel()) {
             /** @var Order\Invoice[] $invoices */
             $invoices = $order->getInvoiceCollection()->getItems();
@@ -275,5 +136,109 @@ class Payment
 
             $this->_orderRepository->save($order);
         }
+    }
+
+    /**
+     * @param Order $order
+     * @param \heidelpayPHP\Resources\Payment $payment
+     * @throws HeidelpayApiException
+     */
+    private function processCompletedState(Order $order, \heidelpayPHP\Resources\Payment $payment)
+    {
+        $orderPayment = $order->getPayment();
+
+        $transactionId = $payment->getChargeByIndex(0)->getId();
+
+        /** @var Order\Invoice $invoice */
+        $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
+
+        if ((int)$invoice->getState() === Order\Invoice::STATE_OPEN) {
+            $invoice->pay();
+
+            $this->_invoiceRepository->save($invoice);
+            $this->_paymentRepository->save($orderPayment);
+        }
+
+        /** @var Order\Payment\Transaction $paymentTransaction */
+        $paymentTransaction = $this->_transactionRepository->getByTransactionId(
+            $orderPayment->getTransactionId(),
+            $orderPayment->getId(),
+            $order->getId()
+        );
+
+        if (!$paymentTransaction->getIsClosed()) {
+            $paymentTransaction->setIsClosed(true);
+
+            $this->_transactionRepository->save($paymentTransaction);
+
+            $parentPaymentTransaction = $paymentTransaction->getParentTransaction();
+            if ($parentPaymentTransaction !== null &&
+                $parentPaymentTransaction->getIsClosed() == false) {
+                $parentPaymentTransaction->setIsClosed(true);
+                $this->_transactionRepository->save($parentPaymentTransaction);
+            }
+        }
+
+
+        // Need to set to processing, otherwise the state resolver will not complete the order, when we are
+        // currently in payment review (e.g. with invoice).
+        $order->setState(Order::STATE_PROCESSING);
+
+        $this->setOrderState($order, null, null);
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function processChargebackState(Order $order)
+    {
+        if ($order->getState() === Order::STATE_PAYMENT_REVIEW ||
+            $order->getState() === Order::STATE_PROCESSING) {
+            $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW, Order::STATUS_FRAUD);
+        }
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function processPaymentReviewState(Order $order)
+    {
+        $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
+    }
+
+    /**
+     * @param Order $order
+     * @param \heidelpayPHP\Resources\Payment $payment
+     * @throws HeidelpayApiException
+     */
+    private function processPendingState(Order $order, \heidelpayPHP\Resources\Payment $payment)
+    {
+        $authorization = $payment->getAuthorization();
+
+        if ($authorization !== null && $authorization->isSuccess() && $order->getState() !== Order::STATE_PROCESSING) {
+            $this->setOrderState($order, Order::STATE_PROCESSING, self::STATUS_READY_TO_CAPTURE);
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param string $state
+     * @param string|null $status
+     */
+    public function setOrderState(Order $order, ?string $state = null, ?string $status = null)
+    {
+        if ($state === null) {
+            $state = $this->_orderStateResolver->getStateForOrder($order, [
+                Order\OrderStateResolverInterface::IN_PROGRESS,
+            ]);
+        }
+
+        if ($status === null) {
+            $status = $this->_orderStatusResolver->getOrderStatusByState($order, $state);
+        }
+
+        $order->setState($state);
+        $order->setStatus($status);
+        $this->_orderRepository->save($order);
     }
 }

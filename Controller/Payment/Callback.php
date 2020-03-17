@@ -5,6 +5,7 @@ namespace Heidelpay\MGW\Controller\Payment;
 use Exception;
 use Heidelpay\MGW\Helper\Payment as PaymentHelper;
 use Heidelpay\MGW\Model\Config;
+use heidelpayPHP\Constants\PaymentState;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
 use Magento\Checkout\Model\Session;
@@ -83,30 +84,35 @@ class Callback extends AbstractPaymentAction
      */
     public function executeWith(Order $order, Payment $payment)
     {
-        $redirect = $this->resultRedirectFactory->create();
-        $redirect->setPath('checkout/onepage/success');
+        switch ($payment->getState()) {
+            case PaymentState::STATE_CANCELED:
+                return $this->cancelOrder();
+            case PaymentState::STATE_COMPLETED:
+                $this->_paymentHelper->setOrderState($order, Order::STATE_PROCESSING);
+                break;
+            case PaymentState::STATE_PENDING:
+                $authorization = $payment->getAuthorization();
 
-        try {
-            $this->_paymentHelper->processState($order, $payment);
-        } catch (Exception $e) {
-            try {
-                $this->_paymentHelper->cancelOrder($order, $payment);
-            } catch (Exception $ce) {
-                // ignore, since we can't do anything about it
-            }
+                if ($authorization !== null) {
+                    if ($authorization->isSuccess()) {
+                        $this->_paymentHelper->setOrderState(
+                            $order,
+                            Order::STATE_PROCESSING,
+                            PaymentHelper::STATUS_READY_TO_CAPTURE
+                        );
+                    }
+                } elseif ($payment->getPaymentType()->isInvoiceType()) {
+                    $charge = $payment->getChargeByIndex(0);
 
-            $message = $e->getMessage();
-
-            if ($e instanceof HeidelpayApiException) {
-                $message = $e->getClientMessage();
-            }
-
-            $this->_checkoutSession->restoreQuote();
-            $this->_messageManager->addErrorMessage($message);
-
-            $redirect->setPath('checkout/cart');
+                    if ($charge->isSuccess()) {
+                        $this->_paymentHelper->setOrderState($order, Order::STATE_PROCESSING);
+                    }
+                }
+                break;
         }
 
+        $redirect = $this->resultRedirectFactory->create();
+        $redirect->setPath('checkout/onepage/success');
         return $redirect;
     }
 }

@@ -4,6 +4,7 @@ namespace Heidelpay\MGW\Controller\Payment;
 
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Authorization;
+use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Sales\Model\Order;
 
 /**
@@ -36,10 +37,11 @@ class Redirect extends AbstractPaymentAction
      */
     public function executeWith(Order $order, Payment $payment)
     {
-        $transaction = $payment->getAuthorization();
+        /** @var Authorization|Charge $transaction */
+        $transaction = $payment->getAuthorization() ?? $payment->getChargeByIndex(0);
 
-        if (!$transaction instanceof Authorization) {
-            $transaction = $payment->getChargeByIndex(0);
+        if ($transaction->isError()) {
+            return $this->cancelOrder($transaction->getMessage()->getCustomer());
         }
 
         /** @var string|null $redirectUrl */

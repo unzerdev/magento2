@@ -74,7 +74,6 @@ abstract class AbstractPaymentAction extends Action
      */
     public function execute()
     {
-        /** @var Order $order */
         $order = $this->_checkoutSession->getLastRealOrder();
 
         /** @var HttpInterface $response */
@@ -91,28 +90,42 @@ abstract class AbstractPaymentAction extends Action
             $payment = $this->_moduleConfig
                 ->getHeidelpayClient()
                 ->fetchPaymentByOrderId($order->getIncrementId());
-        } catch (HeidelpayApiException $e) {
-            if ($e->getCode() === ApiResponseCodes::API_ERROR_PAYMENT_NOT_FOUND) {
-                $response->setHttpResponseCode(404);
-            } else {
-                $response->setHttpResponseCode(500);
+
+            return $this->executeWith($order, $payment);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+
+            if ($e instanceof HeidelpayApiException) {
+                $message = $e->getClientMessage();
             }
 
-            $response->setBody($e->getClientMessage());
-            return $response;
-        } catch (\Exception $e) {
-            $response->setHttpResponseCode(500);
-            $response->setBody('Internal server error');
-            return $response;
+            return $this->cancelOrder($message);
         }
-
-        return $this->executeWith($order, $payment);
     }
 
     /**
      * @param Order $order
-     * @param Payment $Payment
+     * @param Payment $payment
      * @return ResultInterface|ResponseInterface
+     * @throws HeidelpayApiException
      */
-    abstract public function executeWith(Order $order, Payment $Payment);
+    abstract public function executeWith(Order $order, Payment $payment);
+
+    /**
+     * @param string|null $message
+     * @return \Magento\Framework\Controller\Result\Redirect
+     */
+    protected function cancelOrder(?string $message = Null): \Magento\Framework\Controller\Result\Redirect
+    {
+        $this->_checkoutSession->restoreQuote();
+
+        if (!empty($message)) {
+            $this->_messageManager->addErrorMessage($message);
+        }
+
+        $redirect = $this->resultRedirectFactory->create();
+        $redirect->setPath('checkout/cart');
+
+        return $redirect;
+    }
 }
