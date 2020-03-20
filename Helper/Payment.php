@@ -222,6 +222,8 @@ class Payment
 
             if ($charge->isSuccess()) {
                 $this->setOrderState($order, Order::STATE_PROCESSING);
+            } else {
+                $this->setOrderState($order, Order::STATE_NEW);
             }
         }
     }
