@@ -35,7 +35,7 @@ use Magento\Sales\Model\OrderRepository;
  */
 class Payment
 {
-    public const STATUS_READY_TO_CAPTURE = 'ready to capture';
+    public const STATUS_READY_TO_CAPTURE = 'heidelpay_ready_to_capture';
 
     /**
      * @var Order\InvoiceRepository
