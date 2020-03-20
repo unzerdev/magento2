@@ -243,8 +243,10 @@ class Payment
             $status = $this->_orderStatusResolver->getOrderStatusByState($order, $state);
         }
 
-        $order->setState($state);
-        $order->setStatus($status);
-        $this->_orderRepository->save($order);
+        if ($order->getState() !== $state || $order->getStatus() !== $status) {
+            $order->setState($state);
+            $order->setStatus($status);
+            $this->_orderRepository->save($order);
+        }
     }
 }
