@@ -84,32 +84,7 @@ class Callback extends AbstractPaymentAction
      */
     public function executeWith(Order $order, Payment $payment)
     {
-        switch ($payment->getState()) {
-            case PaymentState::STATE_CANCELED:
-                return $this->cancelOrder();
-            case PaymentState::STATE_COMPLETED:
-                $this->_paymentHelper->setOrderState($order, Order::STATE_PROCESSING);
-                break;
-            case PaymentState::STATE_PENDING:
-                $authorization = $payment->getAuthorization();
-
-                if ($authorization !== null) {
-                    if ($authorization->isSuccess()) {
-                        $this->_paymentHelper->setOrderState(
-                            $order,
-                            Order::STATE_PROCESSING,
-                            PaymentHelper::STATUS_READY_TO_CAPTURE
-                        );
-                    }
-                } elseif ($payment->getPaymentType()->isInvoiceType()) {
-                    $charge = $payment->getChargeByIndex(0);
-
-                    if ($charge->isSuccess()) {
-                        $this->_paymentHelper->setOrderState($order, Order::STATE_PROCESSING);
-                    }
-                }
-                break;
-        }
+        $this->_paymentHelper->processState($order, $payment);
 
         $redirect = $this->resultRedirectFactory->create();
         $redirect->setPath('checkout/onepage/success');
