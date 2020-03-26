@@ -99,7 +99,7 @@ abstract class AbstractPaymentAction extends Action
                 $message = $e->getClientMessage();
             }
 
-            return $this->cancelOrder($message);
+            return $this->abortCheckout($message);
         }
     }
 
@@ -115,7 +115,7 @@ abstract class AbstractPaymentAction extends Action
      * @param string|null $message
      * @return \Magento\Framework\Controller\Result\Redirect
      */
-    protected function cancelOrder(?string $message = Null): \Magento\Framework\Controller\Result\Redirect
+    protected function abortCheckout(?string $message = Null): \Magento\Framework\Controller\Result\Redirect
     {
         $this->_checkoutSession->restoreQuote();
 

@@ -41,7 +41,7 @@ class Redirect extends AbstractPaymentAction
         $transaction = $payment->getAuthorization() ?? $payment->getChargeByIndex(0);
 
         if ($transaction->isError()) {
-            return $this->cancelOrder($transaction->getMessage()->getCustomer());
+            return $this->abortCheckout($transaction->getMessage()->getCustomer());
         }
 
         /** @var string|null $redirectUrl */
