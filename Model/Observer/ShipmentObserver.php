@@ -114,7 +114,8 @@ class ShipmentObserver implements ObserverInterface
             try {
                 $payment->ship($invoice->getId());
             } catch (HeidelpayApiException $e) {
-                if ($e->getCode() !== ApiResponseCodes::API_ERROR_TRANSACTION_SHIP_NOT_ALLOWED) {
+                if ($e->getCode() !== ApiResponseCodes::API_ERROR_TRANSACTION_SHIP_NOT_ALLOWED &&
+                    $e->getCode() !== ApiResponseCodes::CORE_ERROR_INSURANCE_ALREADY_ACTIVATED) {
                     throw $e;
                 }
             }
