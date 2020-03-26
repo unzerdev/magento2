@@ -219,12 +219,10 @@ class Payment
         if ($authorization !== null && $authorization->isSuccess() && $order->getState() !== Order::STATE_PROCESSING) {
             $this->setOrderState($order, Order::STATE_PROCESSING, self::STATUS_READY_TO_CAPTURE);
         } elseif ($payment->getPaymentType()->isInvoiceType()) {
-            $charge = $payment->getChargeByIndex(0);
-
-            if ($charge->isSuccess()) {
+            if ($order->canShip()) {
                 $this->setOrderState($order, Order::STATE_PROCESSING);
             } else {
-                $this->setOrderState($order, Order::STATE_NEW);
+                $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
             }
         }
     }
