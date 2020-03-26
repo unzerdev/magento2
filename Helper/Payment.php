@@ -192,7 +192,8 @@ class Payment
      */
     private function processChargebackState(Order $order)
     {
-        if ($order->getState() === Order::STATE_PAYMENT_REVIEW ||
+        if ($order->getState() === Order::STATE_COMPLETE ||
+            $order->getState() === Order::STATE_PAYMENT_REVIEW ||
             $order->getState() === Order::STATE_PROCESSING) {
             $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW, Order::STATUS_FRAUD);
         }
