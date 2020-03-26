@@ -19,6 +19,7 @@ use Magento\Framework\App\Response\Http as HttpResponse;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Event\Manager;
 use Magento\Sales\Model\Order;
+use Psr\Log\LoggerInterface;
 use stdClass;
 
 /**
@@ -52,6 +53,11 @@ class Process extends Action implements CsrfAwareActionInterface
     protected $_eventManager;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
+
+    /**
      * @var Config
      */
     protected $_moduleConfig;
@@ -65,12 +71,14 @@ class Process extends Action implements CsrfAwareActionInterface
      * Process constructor.
      * @param Context $context
      * @param Manager $eventManager
+     * @param LoggerInterface $logger
      * @param Config $moduleConfig
      * @param PaymentHelper $paymentHelper
      */
     public function __construct(
         Context $context,
         Manager $eventManager,
+        LoggerInterface $logger,
         Config $moduleConfig,
         PaymentHelper $paymentHelper
     )
@@ -78,6 +86,7 @@ class Process extends Action implements CsrfAwareActionInterface
         parent::__construct($context);
 
         $this->_eventManager = $eventManager;
+        $this->_logger = $logger;
         $this->_moduleConfig = $moduleConfig;
         $this->_paymentHelper = $paymentHelper;
     }
@@ -139,7 +148,9 @@ class Process extends Action implements CsrfAwareActionInterface
             }
         } catch (HeidelpayApiException $e) {
             $response->setStatusCode(500);
-            $response->setBody($e->getMerchantMessage());
+            $response->setBody($e->getClientMessage());
+
+            $this->_logger->error($e->getMerchantMessage(), ['event' => $event]);
         } catch (Exception $e) {
             $response->setStatusCode(500);
             $response->setBody($e->getMessage());
