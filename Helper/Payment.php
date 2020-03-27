@@ -132,13 +132,9 @@ class Payment
                 $this->_invoiceRepository->save($invoice);
             }
 
-            $newState = $order->getState() === Order::STATE_COMPLETE
-                ? Order::STATE_CLOSED
-                : Order::STATE_CANCELED;
-
             $order->cancel();
 
-            $this->setOrderState($order, $newState);
+            $this->_orderRepository->save($order);
         }
     }
 
