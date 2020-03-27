@@ -110,28 +110,6 @@ class Base extends Adapter
     }
 
     /**
-     * Returns the order state that will be set after shipment.
-     *
-     * If null is returned, the state will be the default state (completed).
-     *
-     * @return string|null
-     */
-    public function getAfterShipmentOrderState(): ?string
-    {
-        return $this->getConfigData('after_shipment_state');
-    }
-
-    /**
-     * Returns the order state that will be set for pending orders.
-     *
-     * @return string
-     */
-    public function getTransactionPendingState(): string
-    {
-        return $this->getConfigData('pending_payment_state') ?? Order::STATE_PAYMENT_REVIEW;
-    }
-
-    /**
      * Returns whether a redirect is required when making a payment.
      *
      * @return bool
@@ -156,10 +134,8 @@ class Base extends Adapter
             if ($this->isB2cOnly()) {
                 return false;
             }
-        } else {
-            if ($this->isB2bOnly()) {
-                return false;
-            }
+        } elseif ($this->isB2bOnly()) {
+            return false;
         }
 
         return parent::isAvailable($quote);

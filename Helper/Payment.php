@@ -2,26 +2,18 @@
 
 namespace Heidelpay\MGW\Helper;
 
-use Heidelpay\MGW\Model\Method\Base;
+use heidelpayPHP\Constants\PaymentState;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Resources\AbstractHeidelpayResource;
-use heidelpayPHP\Resources\TransactionTypes\Authorization;
-use heidelpayPHP\Resources\TransactionTypes\Cancellation;
-use heidelpayPHP\Resources\TransactionTypes\Charge;
-use Magento\Framework\Exception\InputException;
-use Magento\Sales\Api\OrderManagementInterface;
+use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Email\Sender\OrderSender;
-use Magento\Sales\Model\Order\Payment as OrderPayment;
-use Magento\Sales\Model\Order\StateResolver;
-use Magento\Sales\Model\Order\StatusResolver;
+use Magento\Sales\Model\OrderRepository;
 
 /**
- * Helper for updating payments and their orders from events
+ * Helper for cancellation state management
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2020 heidelpay GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,72 +35,57 @@ use Magento\Sales\Model\Order\StatusResolver;
  */
 class Payment
 {
+    public const STATUS_READY_TO_CAPTURE = 'heidelpay_ready_to_capture';
+
     /**
      * @var Order\InvoiceRepository
      */
-    protected $_invoiceRepository;
+    private $_invoiceRepository;
 
     /**
-     * @var OrderManagementInterface
+     * @var OrderRepository
      */
-    protected $_orderManagement;
+    private $_orderRepository;
 
     /**
-     * @var OrderRepositoryInterface
+     * @var Order\OrderStateResolverInterface
      */
-    protected $_orderRepository;
+    private $_orderStateResolver;
 
     /**
-     * @var OrderSender
+     * @var Order\StatusResolver
      */
-    protected $_orderSender;
-
-    /**
-     * @var StateResolver
-     */
-    protected $_orderStateResolver;
-
-    /**
-     * @var StatusResolver
-     */
-    protected $_orderStatusResolver;
-
+    private $_orderStatusResolver;
     /**
      * @var OrderPaymentRepositoryInterface
      */
-    protected $_paymentRepository;
+    private $_paymentRepository;
 
     /**
-     * @var OrderPayment\Transaction\Repository
+     * @var TransactionRepositoryInterface
      */
     private $_transactionRepository;
 
     /**
      * Payment constructor.
-     * @param Order\InvoiceRepository $invoiceRepository
-     * @param OrderManagementInterface $orderManagement
-     * @param OrderRepositoryInterface $orderRepository
-     * @param OrderSender $orderSender
-     * @param StateResolver $orderStateResolver
-     * @param StatusResolver $orderStatusResolver
+     * @param InvoiceRepositoryInterface $invoiceRepository
+     * @param OrderRepository $orderRepository
+     * @param Order\OrderStateResolverInterface $orderStateResolver
+     * @param Order\StatusResolver $orderStatusResolver
      * @param OrderPaymentRepositoryInterface $paymentRepository
-     * @param OrderPayment\Transaction\Repository $transactionRepository
+     * @param TransactionRepositoryInterface $transactionRepository
      */
     public function __construct(
-        Order\InvoiceRepository $invoiceRepository,
-        OrderManagementInterface $orderManagement,
-        OrderRepositoryInterface $orderRepository,
-        OrderSender $orderSender,
-        StateResolver $orderStateResolver,
-        StatusResolver $orderStatusResolver,
+        InvoiceRepositoryInterface $invoiceRepository,
+        OrderRepository $orderRepository,
+        Order\OrderStateResolverInterface $orderStateResolver,
+        Order\StatusResolver $orderStatusResolver,
         OrderPaymentRepositoryInterface $paymentRepository,
-        OrderPayment\Transaction\Repository $transactionRepository
+        TransactionRepositoryInterface $transactionRepository
     )
     {
         $this->_invoiceRepository = $invoiceRepository;
-        $this->_orderManagement = $orderManagement;
         $this->_orderRepository = $orderRepository;
-        $this->_orderSender = $orderSender;
         $this->_orderStateResolver = $orderStateResolver;
         $this->_orderStatusResolver = $orderStatusResolver;
         $this->_paymentRepository = $paymentRepository;
@@ -118,133 +95,159 @@ class Payment
     /**
      * @param Order $order
      * @param \heidelpayPHP\Resources\Payment $payment
-     * @return void
      * @throws HeidelpayApiException
-     * @throws InputException
      */
-    public function handlePaymentCompletion(Order $order, \heidelpayPHP\Resources\Payment $payment): void
+    public function processState(Order $order, \heidelpayPHP\Resources\Payment $payment)
     {
+        switch ($payment->getState()) {
+            case PaymentState::STATE_CANCELED:
+                $this->processCanceledState($order);
+                break;
+            case PaymentState::STATE_COMPLETED:
+                $this->processCompletedState($order, $payment);
+                break;
+            case PaymentState::STATE_CHARGEBACK:
+                $this->processChargebackState($order);
+                break;
+            case PaymentState::STATE_PAYMENT_REVIEW:
+                $this->processPaymentReviewState($order);
+                break;
+            case PaymentState::STATE_PENDING:
+                $this->processPendingState($order, $payment);
+                break;
+        }
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function processCanceledState(Order $order)
+    {
+        if ($order->canCancel()) {
+            /** @var Order\Invoice[] $invoices */
+            $invoices = $order->getInvoiceCollection()->getItems();
+
+            foreach ($invoices as $invoice) {
+                $invoice->cancel();
+                $this->_invoiceRepository->save($invoice);
+            }
+
+            $order->cancel();
+
+            $this->_orderRepository->save($order);
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param \heidelpayPHP\Resources\Payment $payment
+     * @throws HeidelpayApiException
+     */
+    private function processCompletedState(Order $order, \heidelpayPHP\Resources\Payment $payment)
+    {
+        $orderPayment = $order->getPayment();
+
         $transactionId = $payment->getChargeByIndex(0)->getId();
-
-        /** @var OrderPayment $payment */
-        $payment = $order->getPayment();
-
-        // Needed for updating the invoice when registering a notification. Since this is not saved as part of the
-        // payment we need to set it manually, otherwise Magento will remove the transaction ID from our invoice which
-        // prevents online refunds.
-        $payment->setTransactionId($transactionId);
 
         /** @var Order\Invoice $invoice */
         $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
+
         if ((int)$invoice->getState() === Order\Invoice::STATE_OPEN) {
             $invoice->pay();
+
+            $this->_invoiceRepository->save($invoice);
+            $this->_paymentRepository->save($orderPayment);
         }
 
-        /** @var OrderPayment\Transaction $paymentTransaction */
+        /** @var Order\Payment\Transaction $paymentTransaction */
         $paymentTransaction = $this->_transactionRepository->getByTransactionId(
-            $payment->getTransactionId(),
-            $payment->getId(),
+            $transactionId,
+            $orderPayment->getId(),
             $order->getId()
         );
 
-        $paymentTransaction->setIsClosed(true);
+        if (!$paymentTransaction->getIsClosed()) {
+            $paymentTransaction->setIsClosed(true);
 
-        $this->_invoiceRepository->save($invoice);
-        $this->_paymentRepository->save($payment);
-        $this->_transactionRepository->save($paymentTransaction);
+            $this->_transactionRepository->save($paymentTransaction);
 
-        $parentTransaction = $paymentTransaction->getParentTransaction();
-        if ($parentTransaction !== null &&
-            $parentTransaction->getIsClosed() == false) {
-            $parentTransaction->setIsClosed(true);
-            $this->_transactionRepository->save($parentTransaction);
+            $parentPaymentTransaction = $paymentTransaction->getParentTransaction();
+            if ($parentPaymentTransaction !== null &&
+                $parentPaymentTransaction->getIsClosed() == false) {
+                $parentPaymentTransaction->setIsClosed(true);
+                $this->_transactionRepository->save($parentPaymentTransaction);
+            }
         }
+
 
         // Need to set to processing, otherwise the state resolver will not complete the order, when we are
         // currently in payment review (e.g. with invoice).
         $order->setState(Order::STATE_PROCESSING);
 
-        $this->handleTransactionSuccess($order);
+        $this->setOrderState($order, null, null);
     }
 
     /**
      * @param Order $order
-     * @param AbstractHeidelpayResource $resource
+     */
+    private function processChargebackState(Order $order)
+    {
+        if ($order->getState() !== Order::STATE_CANCELED &&
+            $order->getState() !== Order::STATE_CLOSED) {
+            $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW, Order::STATUS_FRAUD);
+        }
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function processPaymentReviewState(Order $order)
+    {
+        $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
+    }
+
+    /**
+     * @param Order $order
+     * @param \heidelpayPHP\Resources\Payment $payment
      * @throws HeidelpayApiException
      */
-    public function handleTransactionError(Order $order, AbstractHeidelpayResource $resource)
+    private function processPendingState(Order $order, \heidelpayPHP\Resources\Payment $payment)
     {
-        if ($resource instanceof Cancellation) {
-            $resource = $resource->getParentResource();
+        $authorization = $payment->getAuthorization();
+
+        if ($authorization !== null && $authorization->isSuccess() && $order->getState() !== Order::STATE_PROCESSING) {
+            $this->setOrderState($order, Order::STATE_PROCESSING, self::STATUS_READY_TO_CAPTURE);
+        } elseif ($payment->getPaymentType()->isInvoiceType()) {
+            // The order has not been shipped yet.
+            if ($order->canShip()) {
+                $this->setOrderState($order, Order::STATE_PROCESSING);
+            } else {
+                $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
+            }
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param string $state
+     * @param string|null $status
+     */
+    public function setOrderState(Order $order, ?string $state = null, ?string $status = null)
+    {
+        if ($state === null) {
+            $state = $this->_orderStateResolver->getStateForOrder($order, [
+                Order\OrderStateResolverInterface::IN_PROGRESS,
+            ]);
         }
 
-        if (!$resource instanceof Authorization &&
-            !$resource instanceof Charge) {
-            return;
+        if ($status === null) {
+            $status = $this->_orderStatusResolver->getOrderStatusByState($order, $state);
         }
 
-        if (!$resource->getPayment()->isCanceled()) {
-            return;
-        }
-
-        if ($resource instanceof Charge) {
-            // For charges we need to manually cancel the invoice, since cancelling the order may be a no-op in case
-            // we already have invoices for all items.
-
-            $transactionId = $resource
-                ->getPayment()
-                ->getChargeByIndex(0)
-                ->getId();
-
-            /** @var Order\Invoice $invoice */
-            $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
-            $invoice->cancel();
-
-            $this->_invoiceRepository->save($invoice);
+        if ($order->getState() !== $state || $order->getStatus() !== $status) {
+            $order->setState($state);
+            $order->setStatus($status);
             $this->_orderRepository->save($order);
-        }
-
-        $this->_orderManagement->cancel($order->getId());
-    }
-
-    /**
-     * @param Order $order
-     */
-    public function handleTransactionPending(Order $order)
-    {
-        /** @var Base $paymentMethod */
-        $paymentMethod = $order->getPayment()->getMethodInstance();
-
-        /** @var string $state */
-        $state = $paymentMethod->getTransactionPendingState();
-
-        // If we have already shipped use the correct state for after shipment if set.
-        if ($order->getShipmentsCollection()->count() > 0) {
-            $state = $paymentMethod->getAfterShipmentOrderState() ?? $state;
-        }
-
-        $order->setState($state);
-        $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
-
-        $this->_orderRepository->save($order);
-    }
-
-    /**
-     * @param Order $order
-     */
-    public function handleTransactionSuccess(Order $order)
-    {
-        $orderState = $this->_orderStateResolver->getStateForOrder($order, [
-            $this->_orderStateResolver::IN_PROGRESS,
-        ]);
-
-        $order->setState($orderState);
-        $order->setStatus($this->_orderStatusResolver->getOrderStatusByState($order, $order->getState()));
-
-        $this->_orderRepository->save($order);
-
-        if (!$order->getEmailSent()) {
-            $this->_orderSender->send($order);
         }
     }
 }

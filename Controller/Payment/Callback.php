@@ -3,15 +3,13 @@
 namespace Heidelpay\MGW\Controller\Payment;
 
 use Exception;
+use Heidelpay\MGW\Helper\Payment as PaymentHelper;
 use Heidelpay\MGW\Model\Config;
+use heidelpayPHP\Constants\PaymentState;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use heidelpayPHP\Resources\Payment;
-use heidelpayPHP\Resources\TransactionTypes\Authorization;
-use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Exception\InputException;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Sales\Model\Order;
@@ -52,7 +50,7 @@ class Callback extends AbstractPaymentAction
     protected $_messageManager;
 
     /**
-     * @var \Heidelpay\MGW\Helper\Payment
+     * @var PaymentHelper
      */
     protected $_paymentHelper;
 
@@ -63,7 +61,7 @@ class Callback extends AbstractPaymentAction
      * @param Session $checkoutSession
      * @param ManagerInterface $messageManager
      * @param Config $moduleConfig
-     * @param \Heidelpay\MGW\Helper\Payment $paymentHelper
+     * @param PaymentHelper $paymentHelper
      */
     public function __construct(
         Context $context,
@@ -71,7 +69,7 @@ class Callback extends AbstractPaymentAction
         Session $checkoutSession,
         ManagerInterface $messageManager,
         Config $moduleConfig,
-        \Heidelpay\MGW\Helper\Payment $paymentHelper
+        PaymentHelper $paymentHelper
     )
     {
         parent::__construct($context, $checkoutSession, $moduleConfig);
@@ -83,96 +81,10 @@ class Callback extends AbstractPaymentAction
 
     /**
      * @inheritDoc
-     * @throws HeidelpayApiException
      */
     public function executeWith(Order $order, Payment $payment)
     {
-        /** @var Authorization|Charge|AbstractHeidelpayResource $resource */
-        $resource = $payment->getAuthorization() ?? $payment->getChargeByIndex(0);
-
-        if ($resource->isSuccess()) {
-            $response = $this->handleSuccess($order, $resource);
-        } elseif ($resource->isPending()) {
-            $response = $this->handlePending($order);
-        } else {
-            $response = $this->handleError($order, $resource);
-        }
-
-        return $response;
-    }
-
-    /**
-     * @param Order $order
-     * @param Authorization|Charge|AbstractHeidelpayResource $resource
-     * @return \Magento\Framework\Controller\Result\Redirect
-     * @throws HeidelpayApiException
-     */
-    protected function handleError(
-        Order $order,
-        AbstractHeidelpayResource $resource
-    ): \Magento\Framework\Controller\Result\Redirect
-    {
-        return $this->handleErrorMessage($order, $resource, $resource->getMessage()->getCustomer());
-    }
-
-    /**
-     * @param Order $order
-     * @param Authorization|Charge|AbstractHeidelpayResource $resource
-     * @param string $message
-     * @return \Magento\Framework\Controller\Result\Redirect
-     * @throws HeidelpayApiException
-     */
-    private function handleErrorMessage(
-        Order $order,
-        AbstractHeidelpayResource $resource,
-        string $message
-    ): \Magento\Framework\Controller\Result\Redirect
-    {
-        $this->_checkoutSession->restoreQuote();
-        $this->_messageManager->addErrorMessage($message);
-
-        $this->_paymentHelper->handleTransactionError($order, $resource);
-
-        $redirect = $this->resultRedirectFactory->create();
-        $redirect->setPath('checkout/cart');
-        return $redirect;
-    }
-
-    /**
-     * @param Order $order
-     * @return \Magento\Framework\Controller\Result\Redirect
-     */
-    protected function handlePending(Order $order): \Magento\Framework\Controller\Result\Redirect
-    {
-        $this->_paymentHelper->handleTransactionPending($order);
-
-        $redirect = $this->resultRedirectFactory->create();
-        $redirect->setPath('checkout/onepage/success');
-        return $redirect;
-    }
-
-    /**
-     * @param Order $order
-     * @param Authorization|Charge|AbstractHeidelpayResource $resource
-     * @return \Magento\Framework\Controller\Result\Redirect
-     * @throws HeidelpayApiException
-     */
-    protected function handleSuccess(
-        Order $order,
-        AbstractHeidelpayResource $resource
-    ): \Magento\Framework\Controller\Result\Redirect
-    {
-        try {
-            $payment = $resource->getPayment();
-
-            if ($payment->isCompleted()) {
-                $this->_paymentHelper->handlePaymentCompletion($order, $payment);
-            } else {
-                $this->_paymentHelper->handleTransactionSuccess($order);
-            }
-        } catch (Exception $e) {
-            return $this->handleErrorMessage($order, $resource, $e->getMessage());
-        }
+        $this->_paymentHelper->processState($order, $payment);
 
         $redirect = $this->resultRedirectFactory->create();
         $redirect->setPath('checkout/onepage/success');

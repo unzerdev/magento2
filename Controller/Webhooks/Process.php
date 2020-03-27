@@ -3,10 +3,12 @@
 namespace Heidelpay\MGW\Controller\Webhooks;
 
 use Exception;
+use Heidelpay\MGW\Helper\Payment as PaymentHelper;
 use Heidelpay\MGW\Model\Config;
-use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
+use heidelpayPHP\Resources\Payment;
+use heidelpayPHP\Resources\TransactionTypes\AbstractTransactionType;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CsrfAwareActionInterface;
@@ -15,8 +17,9 @@ use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Response\Http as HttpResponse;
 use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\DataObject;
 use Magento\Framework\Event\Manager;
+use Magento\Sales\Model\Order;
+use Psr\Log\LoggerInterface;
 use stdClass;
 
 /**
@@ -50,22 +53,42 @@ class Process extends Action implements CsrfAwareActionInterface
     protected $_eventManager;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
+
+    /**
      * @var Config
      */
     protected $_moduleConfig;
 
     /**
+     * @var PaymentHelper
+     */
+    protected $_paymentHelper;
+
+    /**
      * Process constructor.
      * @param Context $context
      * @param Manager $eventManager
+     * @param LoggerInterface $logger
      * @param Config $moduleConfig
+     * @param PaymentHelper $paymentHelper
      */
-    public function __construct(Context $context, Manager $eventManager, Config $moduleConfig)
+    public function __construct(
+        Context $context,
+        Manager $eventManager,
+        LoggerInterface $logger,
+        Config $moduleConfig,
+        PaymentHelper $paymentHelper
+    )
     {
         parent::__construct($context);
 
         $this->_eventManager = $eventManager;
+        $this->_logger = $logger;
         $this->_moduleConfig = $moduleConfig;
+        $this->_paymentHelper = $paymentHelper;
     }
 
     /**
@@ -92,58 +115,64 @@ class Process extends Action implements CsrfAwareActionInterface
         /** @var HttpRequest $request */
         $request = $this->getRequest();
 
-        /** @var HttpResponse $response */
-        $response = $this->getResponse();
-
-        /** @var string $requestBody */
         $requestBody = $request->getContent();
 
-        /** @var stdClass $event */
-        $event = json_decode($requestBody, false);
+        /** @var HttpResponse $response */
+        $response = $this->getResponse();
+        $response->setHttpResponseCode(200);
+        $response->setBody('OK');
 
-        if (!$event  || !$this->_isValidEvent($event)) {
+        /** @var stdClass $event */
+        $event = json_decode($requestBody);
+
+        if (!$event || !$this->isValidEvent($event)) {
             $response->setStatusCode(400);
             $response->setBody('Bad request');
             return $response;
         }
 
-        /** @var AbstractHeidelpayResource|null $resource */
-        $resource = null;
-
         try {
-            $resource = $this->_moduleConfig
-                ->getHeidelpayClient()
-                ->fetchResourceFromEvent($requestBody);
-        } catch (HeidelpayApiException $e) {
-            if ($e->getCode() !== ApiResponseCodes::API_ERROR_PAYMENT_NOT_FOUND &&
-                $e->getCode() !== ApiResponseCodes::API_ERROR_CUSTOMER_CAN_NOT_BE_FOUND &&
-                $e->getCode() !== ApiResponseCodes::API_ERROR_CUSTOMER_DOES_NOT_EXIST) {
-                $response->setStatusCode(500);
-                $response->setBody($e->getMerchantMessage());
+            $payment = $this->getPaymentFromEvent($requestBody);
+
+            if ($payment !== null && $payment->getOrderId() !== null) {
+                /** @var Order $order */
+                $order = $this->_objectManager->create(Order::class);
+                $order->loadByIncrementId($payment->getOrderId());
+
+                if ($order->getId()) {
+                    $this->_paymentHelper->processState($order, $payment);
+                } else {
+                    $response->setStatusCode(404);
+                    $response->setBody('Not found');
+                }
             }
+        } catch (HeidelpayApiException $e) {
+            $response->setStatusCode(500);
+            $response->setBody($e->getClientMessage());
+
+            $this->_logger->error($e->getMerchantMessage(), ['event' => $event]);
         } catch (Exception $e) {
             $response->setStatusCode(500);
             $response->setBody($e->getMessage());
-            return $response;
         }
 
-        $eventKey = str_replace('.', '_', $event->event);
-
-        $result = new DataObject();
-        $result->setData('message', 'OK');
-        $result->setData('status', 200);
-
-        $this->_eventManager->dispatch("hpmgw_{$eventKey}", [
-            'eventType' => $event->event,
-            'resource' => $resource,
-            'resourceUrl' => $event->retrieveUrl,
-            'result' => $result,
-        ]);
-
-        $response->setHttpResponseCode($result->getData('status'));
-        $response->setBody($result->getData('message'));
-
         return $response;
+    }
+
+    protected function getPaymentFromEvent(string $requestBody): ?Payment
+    {
+        /** @var AbstractHeidelpayResource $resource */
+        $resource = $this->_moduleConfig
+            ->getHeidelpayClient()
+            ->fetchResourceFromEvent($requestBody);
+
+        if ($resource instanceof Payment) {
+            return $resource;
+        } elseif ($resource instanceof AbstractTransactionType) {
+            return $resource->getPayment();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -153,7 +182,7 @@ class Process extends Action implements CsrfAwareActionInterface
      *
      * @return bool
      */
-    protected function _isValidEvent(stdClass $event): bool
+    protected function isValidEvent(stdClass $event): bool
     {
         return isset($event->event)
             && isset($event->publicKey)

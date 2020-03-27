@@ -16,6 +16,12 @@
         </arguments>
     </type>
 
+    <type name="Heidelpay\MGW\Controller\Webhooks\Process">
+        <arguments>
+            <argument name="logger" xsi:type="object">Heidelpay\MGW\Logger\Logger</argument>
+        </arguments>
+    </type>
+
     <type name="Heidelpay\MGW\Model\Command\AbstractCommand">
         <arguments>
             <argument name="logger" xsi:type="object">Heidelpay\MGW\Logger\Logger</argument>
