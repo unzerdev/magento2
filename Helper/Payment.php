@@ -8,6 +8,7 @@ use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
 
 /**
@@ -48,6 +49,11 @@ class Payment
     private $_orderRepository;
 
     /**
+     * @var OrderSender
+     */
+    private $_orderSender;
+
+    /**
      * @var Order\OrderStateResolverInterface
      */
     private $_orderStateResolver;
@@ -56,6 +62,7 @@ class Payment
      * @var Order\StatusResolver
      */
     private $_orderStatusResolver;
+
     /**
      * @var OrderPaymentRepositoryInterface
      */
@@ -70,6 +77,7 @@ class Payment
      * Payment constructor.
      * @param InvoiceRepositoryInterface $invoiceRepository
      * @param OrderRepository $orderRepository
+     * @param OrderSender $orderSender
      * @param Order\OrderStateResolverInterface $orderStateResolver
      * @param Order\StatusResolver $orderStatusResolver
      * @param OrderPaymentRepositoryInterface $paymentRepository
@@ -78,6 +86,7 @@ class Payment
     public function __construct(
         InvoiceRepositoryInterface $invoiceRepository,
         OrderRepository $orderRepository,
+        OrderSender $orderSender,
         Order\OrderStateResolverInterface $orderStateResolver,
         Order\StatusResolver $orderStatusResolver,
         OrderPaymentRepositoryInterface $paymentRepository,
@@ -86,6 +95,7 @@ class Payment
     {
         $this->_invoiceRepository = $invoiceRepository;
         $this->_orderRepository = $orderRepository;
+        $this->_orderSender = $orderSender;
         $this->_orderStateResolver = $orderStateResolver;
         $this->_orderStatusResolver = $orderStatusResolver;
         $this->_paymentRepository = $paymentRepository;
@@ -248,6 +258,11 @@ class Payment
             $order->setState($state);
             $order->setStatus($status);
             $this->_orderRepository->save($order);
+        }
+
+        // Trigger new order email once, if not already sent, since we skipped sending it when creating the order.
+        if (!$order->getEmailSent() && !in_array($state, [Order::STATE_NEW, Order::STATE_CANCELED])) {
+            $this->_orderSender->send($order);
         }
     }
 }
