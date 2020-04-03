@@ -133,6 +133,12 @@ class Payment
      */
     private function processCanceledState(Order $order)
     {
+        // Orders in payment_review can't be cancelled so we must manually
+        // change the status so that we can cancel the Order.
+        if ($order->isPaymentReview()) {
+            $order->setState(Order::STATE_PROCESSING);
+        }
+
         if ($order->canCancel()) {
             /** @var Order\Invoice[] $invoices */
             $invoices = $order->getInvoiceCollection()->getItems();

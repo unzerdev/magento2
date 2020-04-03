@@ -91,7 +91,11 @@ abstract class AbstractPaymentAction extends Action
                 ->getHeidelpayClient()
                 ->fetchPaymentByOrderId($order->getIncrementId());
 
-            return $this->executeWith($order, $payment);
+            $response = $this->executeWith($order, $payment);
+
+            if ($payment->isCanceled()) {
+                $response = $this->abortCheckout();
+            }
         } catch (\Exception $e) {
             $message = $e->getMessage();
 
@@ -99,8 +103,10 @@ abstract class AbstractPaymentAction extends Action
                 $message = $e->getClientMessage();
             }
 
-            return $this->abortCheckout($message);
+            $response = $this->abortCheckout($message);
         }
+
+        return $response;
     }
 
     /**
