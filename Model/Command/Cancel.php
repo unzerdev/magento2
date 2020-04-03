@@ -52,6 +52,10 @@ class Cancel extends AbstractCommand
         /** @var Payment $hpPayment */
         $hpPayment = $this->_getClient()->fetchPaymentByOrderId($order->getIncrementId());
 
+        if ($hpPayment->isCanceled()) {
+            return;
+        }
+
         /** @var Cancellation[] $cancellations */
         $cancellations = $hpPayment->cancelAmount($commandSubject['amount'] ?? null, static::REASON);
 
