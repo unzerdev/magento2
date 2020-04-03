@@ -69,8 +69,9 @@
                         <label>Title</label>
                         <config_path>payment/hpmgw_direct_debit/title</config_path>
                     </field>
-                    <field id="merchant_name" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="merchant_name" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Merchant Name</label>
+                        <comment>Name of merchant for SEPA mandate.</comment>
                         <config_path>payment/hpmgw_direct_debit/merchant_name</config_path>
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -98,8 +99,9 @@
                         <label>Title</label>
                         <config_path>payment/hpmgw_direct_debit_guaranteed/title</config_path>
                     </field>
-                    <field id="merchant_name" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="merchant_name" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Merchant Name</label>
+                        <comment>Name of merchant for SEPA mandate.</comment>
                         <config_path>payment/hpmgw_direct_debit_guaranteed/merchant_name</config_path>
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">

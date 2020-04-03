@@ -43,6 +43,7 @@
 "Birthdate","BirtDate of birthhdate"
 "Your date of birth","Your date of birth"
 
+"Name of merchant for SEPA mandate.","Name of merchant for SEPA mandate."
 "Merchant Name","Merchant Name"
 "SEPA Direct Debit Mandate","SEPA Direct Debit Mandate"
 "By signing this mandate form, you authorise %1 to send instructions to your bank to debit your account and your bank to debit your account in accordance with the instructions from %1.","By signing this mandate form, you authorise %1 to send instructions to your bank to debit your account and your bank to debit your account in accordance with the instructions from %1."
