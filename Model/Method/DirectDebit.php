@@ -38,6 +38,10 @@ class DirectDebit extends Base
 
         if (empty($merchantName)) {
             $merchantName = $this->_scopeConfig->getValue(self::CONFIG_PATH_STORE_NAME);
+
+            if (empty($merchantName)) {
+                $merchantName = __('the merchant');
+            }
         }
 
         return [
