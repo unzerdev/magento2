@@ -73,6 +73,10 @@
                         <label>Merchant Name</label>
                         <comment>Name of merchant for SEPA mandate.</comment>
                         <config_path>payment/hpmgw_direct_debit/merchant_name</config_path>
+                        <validate>required-entry</validate>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
@@ -103,6 +107,10 @@
                         <label>Merchant Name</label>
                         <comment>Name of merchant for SEPA mandate.</comment>
                         <config_path>payment/hpmgw_direct_debit_guaranteed/merchant_name</config_path>
+                        <validate>required-entry</validate>
+                        <depends>
+                            <field id="active">1</field>
+                        </depends>
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>

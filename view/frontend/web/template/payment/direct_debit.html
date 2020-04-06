@@ -29,18 +29,8 @@
                     <span data-bind="i18n: 'Place Order'"></span>
                 </button>
             </div>
-            <div class="field">
-                <h3 data-bind="text: translate('SEPA Direct Debit Mandate')"></h3>
-                <p data-bind="text: translate('By signing this mandate form, you authorise %1 to send instructions to '
-                    + 'your bank to debit your account and your bank to debit your account in accordance with the '
-                    + 'instructions from %1.')"></p>
-                <p data-bind="text: translate('Note: As part of your rights, you are entitled to a refund from your '
-                    + 'bank under the terms and conditions of your agreement with your bank. A refund must be claimed '
-                    + 'within 8 weeks starting from the date on which your account was debited. Your rights regarding '
-                    + 'this SEPA mandate are explained in a statement that you can obtain from your bank.')"></p>
-                <p data-bind="text: translate('In case of refusal or rejection of direct debit payment I instruct my '
-                    + 'bank irrevocably to inform %1 or any third party upon request about my name, address and date '
-                    + 'of birth.')"></p>
+            <div class="field sepa-direct-debit-mandate">
+                <h3 data-bind="i18n: 'SEPA Direct Debit Mandate'"></h3>
             </div>
         </form>
     </div>
