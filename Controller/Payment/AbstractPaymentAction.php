@@ -94,7 +94,11 @@ abstract class AbstractPaymentAction extends Action
             $response = $this->executeWith($order, $payment);
 
             if ($payment->isCanceled()) {
-                $response = $this->abortCheckout();
+                $message = $payment->getAuthorization() !== null
+                    ? $payment->getAuthorization()->getMessage()
+                    : $payment->getChargeByIndex(0)->getMessage();
+
+                $response = $this->abortCheckout($message->getCustomer());
             }
         } catch (\Exception $e) {
             $message = $e->getMessage();
