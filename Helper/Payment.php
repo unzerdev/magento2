@@ -2,6 +2,7 @@
 
 namespace Heidelpay\MGW\Helper;
 
+use Exception;
 use heidelpayPHP\Constants\PaymentState;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use Magento\Framework\Lock\LockManagerInterface;
@@ -9,6 +10,7 @@ use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
 
@@ -43,6 +45,11 @@ class Payment
      * @var Order\InvoiceRepository
      */
     private $_invoiceRepository;
+
+    /**
+     * @var InvoiceSender
+     */
+    private $_invoiceSender;
 
     /**
      * @var LockManagerInterface
@@ -82,6 +89,7 @@ class Payment
     /**
      * Payment constructor.
      * @param InvoiceRepositoryInterface $invoiceRepository
+     * @param InvoiceSender $invoiceSender
      * @param LockManagerInterface $lockManager
      * @param OrderRepository $orderRepository
      * @param OrderSender $orderSender
@@ -92,6 +100,7 @@ class Payment
      */
     public function __construct(
         InvoiceRepositoryInterface $invoiceRepository,
+        InvoiceSender $invoiceSender,
         LockManagerInterface $lockManager,
         OrderRepository $orderRepository,
         OrderSender $orderSender,
@@ -102,6 +111,7 @@ class Payment
     )
     {
         $this->_invoiceRepository = $invoiceRepository;
+        $this->_invoiceSender = $invoiceSender;
         $this->_lockManager = $lockManager;
         $this->_orderRepository = $orderRepository;
         $this->_orderSender = $orderSender;
@@ -217,7 +227,6 @@ class Payment
             }
         }
 
-
         // Need to set to processing, otherwise the state resolver will not complete the order, when we are
         // currently in payment review (e.g. with invoice).
         $order->setState(Order::STATE_PROCESSING);
@@ -248,6 +257,7 @@ class Payment
      * @param Order $order
      * @param \heidelpayPHP\Resources\Payment $payment
      * @throws HeidelpayApiException
+     * @throws Exception
      */
     private function processPendingState(Order $order, \heidelpayPHP\Resources\Payment $payment)
     {
@@ -295,6 +305,13 @@ class Payment
         // Trigger new order email once, if not already sent, since we skipped sending it when creating the order.
         if (!$order->getEmailSent() && !in_array($state, [Order::STATE_NEW, Order::STATE_CANCELED])) {
             $this->_orderSender->send($order);
+
+            foreach ($order->getInvoiceCollection() as $invoice) {
+                /** @var Order\Invoice $invoice */
+                if (!$invoice->getEmailSent()) {
+                    $this->_invoiceSender->send($invoice);
+                }
+            }
         }
     }
 }
