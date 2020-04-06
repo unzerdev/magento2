@@ -4,6 +4,7 @@ namespace Heidelpay\MGW\Helper;
 
 use heidelpayPHP\Constants\PaymentState;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
+use Magento\Framework\Lock\LockManagerInterface;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
@@ -44,6 +45,11 @@ class Payment
     private $_invoiceRepository;
 
     /**
+     * @var LockManagerInterface
+     */
+    private $_lockManager;
+
+    /**
      * @var OrderRepository
      */
     private $_orderRepository;
@@ -76,6 +82,7 @@ class Payment
     /**
      * Payment constructor.
      * @param InvoiceRepositoryInterface $invoiceRepository
+     * @param LockManagerInterface $lockManager
      * @param OrderRepository $orderRepository
      * @param OrderSender $orderSender
      * @param Order\OrderStateResolverInterface $orderStateResolver
@@ -85,6 +92,7 @@ class Payment
      */
     public function __construct(
         InvoiceRepositoryInterface $invoiceRepository,
+        LockManagerInterface $lockManager,
         OrderRepository $orderRepository,
         OrderSender $orderSender,
         Order\OrderStateResolverInterface $orderStateResolver,
@@ -94,6 +102,7 @@ class Payment
     )
     {
         $this->_invoiceRepository = $invoiceRepository;
+        $this->_lockManager = $lockManager;
         $this->_orderRepository = $orderRepository;
         $this->_orderSender = $orderSender;
         $this->_orderStateResolver = $orderStateResolver;
@@ -106,25 +115,38 @@ class Payment
      * @param Order $order
      * @param \heidelpayPHP\Resources\Payment $payment
      * @throws HeidelpayApiException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function processState(Order $order, \heidelpayPHP\Resources\Payment $payment)
     {
-        switch ($payment->getState()) {
-            case PaymentState::STATE_CANCELED:
-                $this->processCanceledState($order);
-                break;
-            case PaymentState::STATE_COMPLETED:
-                $this->processCompletedState($order, $payment);
-                break;
-            case PaymentState::STATE_CHARGEBACK:
-                $this->processChargebackState($order);
-                break;
-            case PaymentState::STATE_PAYMENT_REVIEW:
-                $this->processPaymentReviewState($order);
-                break;
-            case PaymentState::STATE_PENDING:
-                $this->processPendingState($order, $payment);
-                break;
+        $lockName = sprintf('hpmgw_order_%d', $order->getId());
+
+        $this->_lockManager->lock($lockName);
+
+        // Reload order to get current state
+        $order = $this->_orderRepository->get($order->getId());
+
+        try {
+            switch ($payment->getState()) {
+                case PaymentState::STATE_CANCELED:
+                    $this->processCanceledState($order);
+                    break;
+                case PaymentState::STATE_COMPLETED:
+                    $this->processCompletedState($order, $payment);
+                    break;
+                case PaymentState::STATE_CHARGEBACK:
+                    $this->processChargebackState($order);
+                    break;
+                case PaymentState::STATE_PAYMENT_REVIEW:
+                    $this->processPaymentReviewState($order);
+                    break;
+                case PaymentState::STATE_PENDING:
+                    $this->processPendingState($order, $payment);
+                    break;
+            }
+        } finally {
+            $this->_lockManager->unlock($lockName);
         }
     }
 
