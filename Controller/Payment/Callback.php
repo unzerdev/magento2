@@ -2,11 +2,8 @@
 
 namespace Heidelpay\MGW\Controller\Payment;
 
-use Exception;
 use Heidelpay\MGW\Helper\Payment as PaymentHelper;
 use Heidelpay\MGW\Model\Config;
-use heidelpayPHP\Constants\PaymentState;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
@@ -72,11 +69,10 @@ class Callback extends AbstractPaymentAction
         PaymentHelper $paymentHelper
     )
     {
-        parent::__construct($context, $checkoutSession, $moduleConfig);
+        parent::__construct($context, $checkoutSession, $moduleConfig, $paymentHelper);
 
         $this->_cartManagement = $cartManagement;
         $this->_messageManager = $messageManager;
-        $this->_paymentHelper = $paymentHelper;
     }
 
     /**

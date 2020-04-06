@@ -2,6 +2,7 @@
 
 namespace Heidelpay\MGW\Controller\Payment;
 
+use Heidelpay\MGW\Helper\Payment as PaymentHelper;
 use Heidelpay\MGW\Model\Config;
 use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
@@ -50,19 +51,27 @@ abstract class AbstractPaymentAction extends Action
     protected $_moduleConfig;
 
     /**
+     * @var PaymentHelper
+     */
+    protected $_paymentHelper;
+
+    /**
      * AbstractPaymentAction constructor.
      * @param Context $context
      * @param Session $checkoutSession
      * @param Config $moduleConfig
+     * @param PaymentHelper $paymentHelper
      */
     public function __construct(
         Context $context,
         Session $checkoutSession,
-        Config $moduleConfig
+        Config $moduleConfig,
+        PaymentHelper $paymentHelper
     ) {
         parent::__construct($context);
         $this->_checkoutSession = $checkoutSession;
         $this->_moduleConfig = $moduleConfig;
+        $this->_paymentHelper = $paymentHelper;
     }
 
     /**
@@ -86,7 +95,6 @@ abstract class AbstractPaymentAction extends Action
         }
 
         try {
-            /** @var Payment $payment */
             $payment = $this->_moduleConfig
                 ->getHeidelpayClient()
                 ->fetchPaymentByOrderId($order->getIncrementId());
