@@ -171,17 +171,16 @@ class Payment
             $order->setState(Order::STATE_PROCESSING);
         }
 
+        /** @var Order\Invoice[] $invoices */
+        $invoices = $order->getInvoiceCollection()->getItems();
+
+        foreach ($invoices as $invoice) {
+            $invoice->cancel();
+            $this->_invoiceRepository->save($invoice);
+        }
+
         if ($order->canCancel()) {
-            /** @var Order\Invoice[] $invoices */
-            $invoices = $order->getInvoiceCollection()->getItems();
-
-            foreach ($invoices as $invoice) {
-                $invoice->cancel();
-                $this->_invoiceRepository->save($invoice);
-            }
-
             $order->cancel();
-
             $this->_orderRepository->save($order);
         }
     }

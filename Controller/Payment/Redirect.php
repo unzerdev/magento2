@@ -44,6 +44,8 @@ class Redirect extends AbstractPaymentAction
             return $this->abortCheckout($transaction->getMessage()->getCustomer());
         }
 
+        $this->_paymentHelper->setOrderState($order, Order::STATE_NEW, 'pending');
+
         /** @var string|null $redirectUrl */
         $redirectUrl = $transaction->getRedirectUrl();
 
