@@ -148,6 +148,9 @@ class Payment
                 case PaymentState::STATE_CHARGEBACK:
                     $this->processChargebackState($order);
                     break;
+                case PaymentState::STATE_PARTLY:
+                    $this->processPartlyState($order);
+                    break;
                 case PaymentState::STATE_PAYMENT_REVIEW:
                     $this->processPaymentReviewState($order);
                     break;
@@ -242,6 +245,14 @@ class Payment
             $order->getState() !== Order::STATE_CLOSED) {
             $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW, Order::STATUS_FRAUD);
         }
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function processPartlyState(Order $order)
+    {
+        $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
     }
 
     /**
