@@ -252,7 +252,7 @@ class Payment
      */
     private function processPartlyState(Order $order)
     {
-        $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
+        $this->setOrderProcessing($order);
     }
 
     /**
@@ -276,16 +276,24 @@ class Payment
         if ($authorization !== null && $authorization->isSuccess() && $order->getState() !== Order::STATE_PROCESSING) {
             $this->setOrderState($order, Order::STATE_PROCESSING, self::STATUS_READY_TO_CAPTURE);
         } elseif ($payment->getPaymentType()->isInvoiceType()) {
-            // canShip returns false when the order is currently in payment_review state so we must temporarily change
-            // change the state for canShip to return the desired value.
-            $order->setState(Order::STATE_PROCESSING);
+            $this->setOrderProcessing($order);
+        }
+    }
 
-            // The order has not been shipped yet.
-            if ($order->canShip()) {
-                $this->setOrderState($order, Order::STATE_PROCESSING);
-            } else {
-                $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
-            }
+    /**
+     * @param Order $order
+     */
+    private function setOrderProcessing(Order $order)
+    {
+        // canShip returns false when the order is currently in payment_review state so we must temporarily change
+        // change the state for canShip to return the desired value.
+        $order->setState(Order::STATE_PROCESSING);
+
+        // The order has not been shipped yet.
+        if ($order->canShip()) {
+            $this->setOrderState($order, Order::STATE_PROCESSING);
+        } else {
+            $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
         }
     }
 
