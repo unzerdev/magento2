@@ -149,7 +149,7 @@ class Payment
                     $this->processChargebackState($order);
                     break;
                 case PaymentState::STATE_PARTLY:
-                    $this->processPartlyState($order);
+                    $this->processPartlyState($order, $payment);
                     break;
                 case PaymentState::STATE_PAYMENT_REVIEW:
                     $this->processPaymentReviewState($order);
@@ -249,10 +249,12 @@ class Payment
 
     /**
      * @param Order $order
+     * @param \heidelpayPHP\Resources\Payment $payment
+     * @throws HeidelpayApiException
      */
-    private function processPartlyState(Order $order)
+    private function processPartlyState(Order $order, \heidelpayPHP\Resources\Payment $payment)
     {
-        $this->setOrderProcessing($order);
+        $this->processPendingState($order, $payment);
     }
 
     /**
