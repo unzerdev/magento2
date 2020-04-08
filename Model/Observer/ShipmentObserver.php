@@ -105,6 +105,8 @@ class ShipmentObserver implements ObserverInterface
             ->getHeidelpayClient()
             ->fetchPaymentByOrderId($order->getIncrementId());
 
+        $this->_paymentHelper->processState($order, $payment);
+
         if (in_array($order->getPayment()->getMethod(), self::SHIPPABLE_PAYMENT_METHODS)) {
             /** @var Order\Invoice $invoice */
             $invoice = $order
@@ -120,7 +122,5 @@ class ShipmentObserver implements ObserverInterface
                 }
             }
         }
-
-        $this->_paymentHelper->processState($order, $payment);
     }
 }
