@@ -72,9 +72,8 @@ class Authorize extends AbstractCommand
         }
 
         $order->addCommentToStatusHistory(
-            'heidelpay authorization transaction' .
-            "\nUniqueId: " . $authorization->getUniqueId() .
-            "\nShortId: " . $authorization->getShortId()
+            'heidelpay authorization transaction: ' .
+            'UniqueId: ' . $authorization->getUniqueId() . ' | ShortId: ' . $authorization->getShortId()
         );
 
         if ($authorization->isError()) {
