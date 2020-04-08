@@ -102,7 +102,7 @@ class Capture extends AbstractCommand
         }
 
         $order->addCommentToStatusHistory(
-            'heidelpay authorization transaction: ' .
+            'heidelpay charge transaction: ' .
             'UniqueId: ' . $charge->getUniqueId() . ' | ShortId: ' . $charge->getShortId()
         );
 
