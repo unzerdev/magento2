@@ -278,14 +278,14 @@ class Payment
         if ($authorization !== null && $authorization->isSuccess() && $order->getState() !== Order::STATE_PROCESSING) {
             $this->setOrderState($order, Order::STATE_PROCESSING, self::STATUS_READY_TO_CAPTURE);
         } elseif ($payment->getPaymentType()->isInvoiceType()) {
-            $this->setOrderProcessing($order);
+            $this->setInvoiceTypeState($order);
         }
     }
 
     /**
      * @param Order $order
      */
-    private function setOrderProcessing(Order $order)
+    private function setInvoiceTypeState(Order $order)
     {
         // canShip returns false when the order is currently in payment_review state so we must temporarily change
         // change the state for canShip to return the desired value.
