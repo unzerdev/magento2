@@ -93,13 +93,22 @@ class Capture extends AbstractCommand
                 $charge = $this->_chargeExisting($paymentId, $amount);
             } else {
                 $charge = $this->_chargeNew($payment, $amount);
+                $order->addCommentToStatusHistory('heidelpay paymentId: ' . $charge->getPaymentId());
             }
         } catch (HeidelpayApiException $e) {
             $this->_logger->error($e->getMerchantMessage(), ['incrementId' => $order->getIncrementId()]);
+            $order->addCommentToStatusHistory('heidelpay Error (' . $e->getCode() . '): ' . $e->getMerchantMessage());
             throw new LocalizedException(__($e->getClientMessage()));
         }
 
+        $order->addCommentToStatusHistory(
+            'heidelpay authorization transaction' .
+            "\nUniqueId: " . $charge->getUniqueId() .
+            "\nShortId: " . $charge->getShortId()
+        );
+
         if ($charge->isError()) {
+            $order->addCommentToStatusHistory('heidelpay Error (' . $charge->getMessage()->getCode() . '): ' . $authorization->getMessage()->getMerchant());
             throw new LocalizedException(__('Failed to charge payment.'));
         }
 
