@@ -205,7 +205,11 @@ class Payment
         if ((int)$invoice->getState() === Order\Invoice::STATE_OPEN) {
             $invoice->pay();
 
+            $order = $invoice->getOrder();
+            $orderPayment = $order->getPayment();
+
             $this->_invoiceRepository->save($invoice);
+            $this->_orderRepository->save($order);
             $this->_paymentRepository->save($orderPayment);
         }
 
@@ -316,9 +320,10 @@ class Payment
             $status = $this->_orderStatusResolver->getOrderStatusByState($order, $state);
         }
 
-        if ($order->getState() !== $state || $order->getStatus() !== $status) {
-            $order->setState($state);
-            $order->setStatus($status);
+        $order->setState($state);
+        $order->setStatus($status);
+
+        if ($order->hasDataChanges()) {
             $this->_orderRepository->save($order);
         }
 
