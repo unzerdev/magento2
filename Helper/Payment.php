@@ -149,7 +149,7 @@ class Payment
                     $this->processChargebackState($order);
                     break;
                 case PaymentState::STATE_PARTLY:
-                    $this->processPartlyState($order);
+                    $this->processPartlyState($order, $payment);
                     break;
                 case PaymentState::STATE_PAYMENT_REVIEW:
                     $this->processPaymentReviewState($order);
@@ -249,10 +249,12 @@ class Payment
 
     /**
      * @param Order $order
+     * @param \heidelpayPHP\Resources\Payment $payment
+     * @throws HeidelpayApiException
      */
-    private function processPartlyState(Order $order)
+    private function processPartlyState(Order $order, \heidelpayPHP\Resources\Payment $payment)
     {
-        $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
+        $this->processPendingState($order, $payment);
     }
 
     /**
@@ -276,16 +278,24 @@ class Payment
         if ($authorization !== null && $authorization->isSuccess() && $order->getState() !== Order::STATE_PROCESSING) {
             $this->setOrderState($order, Order::STATE_PROCESSING, self::STATUS_READY_TO_CAPTURE);
         } elseif ($payment->getPaymentType()->isInvoiceType()) {
-            // canShip returns false when the order is currently in payment_review state so we must temporarily change
-            // change the state for canShip to return the desired value.
-            $order->setState(Order::STATE_PROCESSING);
+            $this->setInvoiceTypeState($order);
+        }
+    }
 
-            // The order has not been shipped yet.
-            if ($order->canShip()) {
-                $this->setOrderState($order, Order::STATE_PROCESSING);
-            } else {
-                $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
-            }
+    /**
+     * @param Order $order
+     */
+    private function setInvoiceTypeState(Order $order)
+    {
+        // canShip returns false when the order is currently in payment_review state so we must temporarily change
+        // change the state for canShip to return the desired value.
+        $order->setState(Order::STATE_PROCESSING);
+
+        // The order has not been shipped yet.
+        if ($order->canShip()) {
+            $this->setOrderState($order, Order::STATE_PROCESSING);
+        } else {
+            $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
         }
     }
 
