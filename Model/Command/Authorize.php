@@ -67,17 +67,15 @@ class Authorize extends AbstractCommand
             $order->addCommentToStatusHistory('heidelpay paymentId: ' . $authorization->getPaymentId());
         } catch (HeidelpayApiException $e) {
             $this->_logger->error($e->getMerchantMessage(), ['incrementId' => $order->getIncrementId()]);
-            $order->addCommentToStatusHistory('heidelpay Error (' . $e->getCode() . '): ' . $e->getMerchantMessage());
+            $this->addHeidelpayErrorToOrderHistory($order, $e->getCode(), $e->getMerchantMessage());
             throw new LocalizedException(__($e->getClientMessage()));
         }
 
-        $order->addCommentToStatusHistory(
-            'heidelpay authorization transaction: ' .
-            'UniqueId: ' . $authorization->getUniqueId() . ' | ShortId: ' . $authorization->getShortId()
-        );
+        $this->addHeidelpayIdsToHistory($order, $authorization);
 
         if ($authorization->isError()) {
-            $order->addCommentToStatusHistory('heidelpay Error (' . $authorization->getMessage()->getCode() . '): ' . $authorization->getMessage()->getMerchant());
+            $message = $authorization->getMessage();
+            $this->addHeidelpayErrorToOrderHistory($order, $message->getCode(), $message->getMerchant());
             throw new LocalizedException(__('Failed to authorize payment.'));
         }
 
