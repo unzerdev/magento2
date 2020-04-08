@@ -197,6 +197,6 @@ abstract class AbstractCommand implements CommandInterface
      * @param string $message
      */
     protected function addHeidelpayErrorToOrderHistory(SalesOrder $order, $code, $message): void {
-        $order->addCommentToStatusHistory("heidelpay Error (${$code}): ${message}");
+        $order->addCommentToStatusHistory("heidelpay Error (${code}): ${message}");
     }
 }
