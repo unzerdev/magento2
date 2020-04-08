@@ -1,6 +1,6 @@
 {
     "name": "heidelpay/magento2-merchant-gateway",
-    "description": "This extension for Magento 2 provides a direct integration of the Heidelpay payment methods to your Magento 2 shop.",
+    "description": "This extension for Magento 2 provides a direct integration of the heidelpay payment types to your Magento 2 shop via the heidelpay merchant gateway (MGW).",
     "type": "magento2-module",
     "license": "Apache-2.0",
     "require": {
@@ -23,7 +23,7 @@
             "Heidelpay\\MGW\\": ""
         }
     },
-    "homepage": "https://dev.heidelpay.com/magento2",
+    "homepage": "https://dev.heidelpay.com/user-guide-magento-2-mgw-plugin",
     "keywords": [
       "magento",
       "magento2",
