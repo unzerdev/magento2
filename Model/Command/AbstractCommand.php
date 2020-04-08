@@ -22,6 +22,8 @@ use Magento\Sales\Model\Order as SalesOrder;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Psr\Log\LoggerInterface;
 
+use function get_class;
+
 /**
  * Abstract Command for using the heidelpay SDK
  *
@@ -184,7 +186,7 @@ abstract class AbstractCommand implements CommandInterface
     protected function addHeidelpayIdsToHistory(SalesOrder $order, AbstractTransactionType $transaction): void
     {
         $order->addCommentToStatusHistory(
-            'heidelpay ' . ResourceNameService::getClassShortName($transaction) . ' transaction: ' .
+            'heidelpay ' . ResourceNameService::getClassShortName(get_class($transaction)) . ' transaction: ' .
             'UniqueId: ' . $transaction->getUniqueId() . ' | ShortId: ' . $transaction->getShortId()
         );
     }
