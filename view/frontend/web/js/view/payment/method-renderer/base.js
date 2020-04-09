@@ -123,7 +123,7 @@ define(
                     'method': this.item.method,
                     'po_number': null,
                     'additional_data': {
-                        'customer_id': this.customer() !== null ? this.customer().id : null,
+                        'customer_id': this.customer !== null ? this.customer().id : null,
                         'resource_id': this.resourceId
                     }
                 };
