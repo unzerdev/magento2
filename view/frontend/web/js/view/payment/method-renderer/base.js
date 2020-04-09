@@ -27,6 +27,13 @@ define(
     ) {
         'use strict';
 
+        // Magento does not keep track of the current step anywhere so we must manually check the hash
+        var currentCheckoutStep = ko.observable(document.location.hash.replace('/^#/', ''));
+
+        $(window).on('hashchange', function() {
+            currentCheckoutStep(document.location.hash.replace(/^#/, ''));
+        });
+
         return Component.extend({
             redirectAfterPlaceOrder: false,
             redirectUrl: 'hpmgw/payment/redirect',
@@ -35,7 +42,7 @@ define(
 
             defaults: {
                 config: null,
-                customerId: null,
+                customer: null,
                 customerProvider: null,
                 customerType: 'b2c',
                 customerValid: null,
@@ -44,29 +51,27 @@ define(
                 template: null
             },
 
-            initialize: function () {
-                var self = this;
-                this._super();
-
-                customerLoader.loadFromQuote().done(function (customer) {
-                    self.customerId = customer.id;
-                })
+            initializeCustomerForm: function (fieldId, errorFieldId) {
+                this.customer = customerLoader.getCustomerObservable();
+                this.customer.subscribe(this._initializeCustomerForm.bind(this, fieldId, errorFieldId));
             },
 
-            initializeCustomerForm: function (fieldId, errorFieldId) {
+            _initializeCustomerForm: function(fieldId, errorFieldId) {
                 var self = this;
+
+                $('#' + fieldId).empty();
+                $('#' + errorFieldId).empty();
+
                 this.customerValid = ko.observable(false);
 
-                customerLoader.loadFromQuote().done(function (customer) {
-                    if (self.customerType === 'b2b') {
-                        self._initializeCustomerFormForB2bCustomer(fieldId, errorFieldId, customer);
-                    } else {
-                        self._initializeCustomerFormForB2cCustomer(fieldId, errorFieldId, customer);
-                    }
+                if (self.customerType === 'b2b') {
+                    self._initializeCustomerFormForB2bCustomer(fieldId, errorFieldId, self.customer());
+                } else {
+                    self._initializeCustomerFormForB2cCustomer(fieldId, errorFieldId, self.customer());
+                }
 
-                    self.customerProvider.addEventListener('validate', function (event) {
-                        self.customerValid("success" in event && event.success);
-                    });
+                self.customerProvider.addEventListener('validate', function (event) {
+                    self.customerValid("success" in event && event.success);
                 });
             },
 
@@ -118,7 +123,7 @@ define(
                     'method': this.item.method,
                     'po_number': null,
                     'additional_data': {
-                        'customer_id': this.customerId,
+                        'customer_id': this.customer() !== null ? this.customer().id : null,
                         'resource_id': this.resourceId
                     }
                 };
@@ -145,9 +150,6 @@ define(
                 Promise.all(promises).then(
                     function (values) {
                         self.resourceId = values[0].id;
-                        if (values.length > 1) {
-                            self.customerId = values[1].id;
-                        }
 
                         placeOrderAction(self.getData(), self.messageContainer)
                             .done(function () {
