@@ -1,57 +1,79 @@
 define(
     [
         'jquery',
-        'uiComponent',
+        'ko',
         'mage/storage',
         'Magento_Checkout/js/model/error-processor',
         'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/model/quote',
         'Magento_Checkout/js/model/url-builder',
     ],
-    function ($, Component, storage, errorProcessor, fullScreenLoader, quote, urlBuilder) {
+    function ($, ko, storage, errorProcessor, fullScreenLoader, quote, urlBuilder) {
         'use strict';
 
-        var deferred = null;
+        var currentRequest = null,
+            customerObservable = null;
 
-        return {
-            loadFromQuote: function() {
-                if (deferred === null) {
-                    deferred = $.Deferred();
+        function loadCustomer() {
+            fullScreenLoader.startLoader();
 
-                    fullScreenLoader.startLoader();
+            customerObservable = customerObservable || ko.observable(null);
 
-                    var request = storage.post(
-                        urlBuilder.createUrl('/hpmgw/get-external-customer', {}),
-                        JSON.stringify({
-                            guestEmail: quote.guestEmail,
-                        })
-                    );
+            var request = storage.post(
+                urlBuilder.createUrl('/hpmgw/get-external-customer', {}),
+                JSON.stringify({
+                    guestEmail: quote.guestEmail,
+                })
+            );
 
-                    request.always(fullScreenLoader.stopLoader);
-                    request.fail(errorProcessor.process);
-                    request.done(function(customer) {
-                        if (customer !== null) {
-                            // Magento converts camel case to snake case in API responses so we must manually map
-                            // the properties to be consistent with the casing for the heidelpay SDK.
-
-                            customer.billingAddress = customer.billing_address;
-                            delete customer.billing_address;
-
-                            customer.shippingAddress = customer.shipping_address;
-                            delete customer.shipping_address;
-
-                            customer.companyInfo = customer.company_info;
-                            delete customer.company_info;
-
-                            deferred.resolve(customer);
-                        } else {
-                            deferred.reject();
-                        }
-                    })
+            request.always(fullScreenLoader.stopLoader);
+            request.fail(errorProcessor.process);
+            request.done(function(customer) {
+                if (currentRequest !== request || customer === null) {
+                    return;
                 }
 
-                return deferred.promise();
+                currentRequest = null;
+
+                // Magento converts camel case to snake case in API responses so we must manually map
+                // the properties to be consistent with the casing for the heidelpay SDK.
+
+                customer.billingAddress = customer.billing_address;
+                delete customer.billing_address;
+
+                customer.shippingAddress = customer.shipping_address;
+                delete customer.shipping_address;
+
+                customer.companyInfo = customer.company_info;
+                delete customer.company_info;
+
+                customerObservable(customer);
+            });
+
+            if (currentRequest) {
+                currentRequest.abort();
             }
+
+            currentRequest = request;
+        }
+
+        $(window).on('hashchange', function() {
+            // if the hash changes the customer has switched between steps and possibly changed
+            // his billing and/or shipping address, in which case we can not use the customer
+            // that we already loaded.
+            if (location.hash === '#payment') {
+                loadCustomer();
+            }
+        });
+
+        return {
+            getCustomerObservable: function() {
+                if (customerObservable === null) {
+                    loadCustomer();
+                }
+
+                return customerObservable;
+            },
         };
     }
 );
