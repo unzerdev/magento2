@@ -160,4 +160,14 @@ class Base extends Adapter
     {
         return false;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTitle()
+    {
+        return __(parent::getTitle());
+    }
+
+
 }
