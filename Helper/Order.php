@@ -10,7 +10,6 @@ use heidelpayPHP\Resources\Customer;
 use heidelpayPHP\Resources\CustomerFactory;
 use heidelpayPHP\Resources\EmbeddedResources;
 use heidelpayPHP\Resources\EmbeddedResources\BasketItem;
-use heidelpayPHP\Resources\Metadata;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Quote\Model\Quote;
@@ -160,7 +159,7 @@ class Order
             $billingAddress->getLastname()
         );
 
-        $gender = $quote->getCustomer()->getCustomAttribute('gender')->getSource()->getOptionText($customer->getData('gender'));
+        $gender = $quote->getCustomer()->getGender();
         $this->_moduleConfig->getHeidelpayClient()->debugLog('Gender: ' . $gender);
 
         $customer->setEmail($email);
