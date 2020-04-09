@@ -13,7 +13,7 @@ Currently supported payment methods are:
 * Cards (Credit and Debit)
 * Direct Debit (guaranteed) B2C
 * FlexiPay direct®
-* iDeal
+* iDEAL
 * Invoice (guaranteed) B2C
 * Invoice guaranteed B2B
 * PayPal

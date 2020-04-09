@@ -91,7 +91,7 @@
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[Invoice Simple]]></title>
+                <title><![CDATA[Invoice]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
