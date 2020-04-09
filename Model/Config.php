@@ -6,7 +6,7 @@ use Heidelpay\MGW\Model\Logger\DebugHandler;
 use heidelpayPHP\Heidelpay;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\Locale\Resolver;
 
 /**
  * Global Module configuration and SDK provider
@@ -57,26 +57,26 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     private $_debugHandler;
 
     /**
+     * @var Resolver
+     */
+    private $_localeResolver;
+
+    /**
      * @var ScopeConfigInterface
      */
     private $_scopeConfig;
 
     /**
-     * @var StoreManagerInterface
-     */
-    private $_storeManager;
-
-    /**
      * Config constructor.
+     * @param Resolver $localeResolver
      * @param ScopeConfigInterface $scopeConfig
-     * @param StoreManagerInterface $storeManager
      * @param DebugHandler $debugHandler
      * @param null $methodCode
      * @param string $pathPattern
      */
     public function __construct(
+        Resolver $localeResolver,
         ScopeConfigInterface $scopeConfig,
-        StoreManagerInterface $storeManager,
         DebugHandler $debugHandler,
         $methodCode = null,
         $pathPattern = self::DEFAULT_PATH_PATTERN
@@ -84,8 +84,8 @@ class Config extends \Magento\Payment\Gateway\Config\Config
         parent::__construct($scopeConfig, $methodCode, $pathPattern);
 
         $this->_debugHandler = $debugHandler;
+        $this->_localeResolver = $localeResolver;
         $this->_scopeConfig = $scopeConfig;
-        $this->_storeManager = $storeManager;
     }
 
     /**
@@ -127,7 +127,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
         /** @var Heidelpay $client */
         $client = new Heidelpay(
             $this->getPrivateKey(),
-            $this->_storeManager->getStore()->getLocaleCode()
+            $this->_localeResolver->getLocale()
         );
 
         $client->setDebugMode($this->isDebugMode());

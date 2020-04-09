@@ -97,15 +97,12 @@ class Capture extends AbstractCommand
             }
         } catch (HeidelpayApiException $e) {
             $this->_logger->error($e->getMerchantMessage(), ['incrementId' => $order->getIncrementId()]);
-            $this->addHeidelpayErrorToOrderHistory($order, $e->getCode(), $e->getMerchantMessage());
             throw new LocalizedException(__($e->getClientMessage()));
         }
 
         $this->addHeidelpayIdsToHistory($order, $charge);
 
         if ($charge->isError()) {
-            $message = $charge->getMessage();
-            $this->addHeidelpayErrorToOrderHistory($order, $message->getCode(), $message->getMerchant());
             throw new LocalizedException(__('Failed to charge payment.'));
         }
 
