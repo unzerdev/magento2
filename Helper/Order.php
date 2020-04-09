@@ -160,8 +160,8 @@ class Order
             $billingAddress->getLastname()
         );
 
-        $gender = $quote->getCustomer()->getCustomAttribute('gender')->getSource()->getOptionText($customer->getData('gender'));;
-        $this->_moduleConfig->getHeidelpayClient()->debugLog('Gender: ' . ($gender ?  $gender->getValue() : 'null'));
+        $gender = $quote->getCustomer()->getCustomAttribute('gender')->getSource()->getOptionText($customer->getData('gender'));
+        $this->_moduleConfig->getHeidelpayClient()->debugLog('Gender: ' . $gender);
 
         $customer->setEmail($email);
         $customer->setPhone($billingAddress->getTelephone());
