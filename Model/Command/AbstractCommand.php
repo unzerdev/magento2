@@ -8,16 +8,21 @@ use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
 use heidelpayPHP\Heidelpay;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use heidelpayPHP\Resources\Customer;
+use heidelpayPHP\Resources\TransactionTypes\AbstractTransactionType;
 use heidelpayPHP\Resources\TransactionTypes\Authorization;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
+use heidelpayPHP\Services\ResourceNameService;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Model\InfoInterface;
+use Magento\Sales\Model\Order as SalesOrder;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Psr\Log\LoggerInterface;
+
+use function get_class;
 
 /**
  * Abstract Command for using the heidelpay SDK
@@ -170,5 +175,30 @@ abstract class AbstractCommand implements CommandInterface
         $payment->setIsTransactionPending($resource->isPending());
 
         $payment->setAdditionalInformation(static::KEY_PAYMENT_ID, $resource->getPaymentId());
+    }
+
+    /**
+     * Writes heidelpay Ids of the transaction to order history.
+     *
+     * @param SalesOrder $order
+     * @param AbstractTransactionType $transaction
+     */
+    protected function addHeidelpayIdsToHistory(SalesOrder $order, AbstractTransactionType $transaction): void
+    {
+        $order->addCommentToStatusHistory(
+            'heidelpay ' . ResourceNameService::getClassShortName(get_class($transaction)) . ' transaction: ' .
+            'UniqueId: ' . $transaction->getUniqueId() . ' | ShortId: ' . $transaction->getShortId()
+        );
+    }
+
+    /**
+     * Add heidelpay error messages to order history.
+     *
+     * @param SalesOrder $order
+     * @param string $code
+     * @param string $message
+     */
+    protected function addHeidelpayErrorToOrderHistory(SalesOrder $order, $code, $message): void {
+        $order->addCommentToStatusHistory("heidelpay Error (${code}): ${message}");
     }
 }
