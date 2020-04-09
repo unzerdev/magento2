@@ -3,6 +3,7 @@
 namespace Heidelpay\MGW\Helper;
 
 use Heidelpay\MGW\Model\Config;
+use heidelpayPHP\Constants\Salutations;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Heidelpay;
 use heidelpayPHP\Resources\Basket;
@@ -10,7 +11,6 @@ use heidelpayPHP\Resources\Customer;
 use heidelpayPHP\Resources\CustomerFactory;
 use heidelpayPHP\Resources\EmbeddedResources;
 use heidelpayPHP\Resources\EmbeddedResources\BasketItem;
-use heidelpayPHP\Resources\Metadata;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Quote\Model\Quote;
@@ -43,6 +43,9 @@ use Magento\Store\Api\Data\StoreInterface;
  */
 class Order
 {
+    const GENDER_MALE = 1;
+    const GENDER_FEMALE = 2;
+
     /**
      * @var Config
      */
@@ -160,6 +163,7 @@ class Order
             $billingAddress->getLastname()
         );
 
+        $customer->setSalutation($this->getSalutationFromQuote($quote));
         $customer->setEmail($email);
         $customer->setPhone($billingAddress->getTelephone());
 
@@ -252,5 +256,29 @@ class Order
             && $gatewayAddress->getCountry() === $magentoAddress->getCountryId()
             && $gatewayAddress->getStreet() === $street
             && $gatewayAddress->getZip() === $magentoAddress->getPostcode();
+    }
+
+    /**
+     * Returns the heidelpay salutation constant depending on the gender of the customer.
+     * Male -> 1 -> mr
+     * Feale -> 2 -> mrs
+     * Default -> unknown
+     *
+     * @param Quote $quote
+     * @return string
+     */
+    protected function getSalutationFromQuote(Quote $quote): string
+    {
+        switch ($quote->getCustomer()->getGender()) {
+            case self::GENDER_MALE:
+                $salutation = Salutations::MR;
+                break;
+            case self::GENDER_FEMALE:
+                $salutation = Salutations::MRS;
+                break;
+            default:
+                $salutation = Salutations::UNKNOWN;
+        }
+        return $salutation;
     }
 }
