@@ -27,13 +27,6 @@ define(
     ) {
         'use strict';
 
-        // Magento does not keep track of the current step anywhere so we must manually check the hash
-        var currentCheckoutStep = ko.observable(document.location.hash.replace('/^#/', ''));
-
-        $(window).on('hashchange', function() {
-            currentCheckoutStep(document.location.hash.replace(/^#/, ''));
-        });
-
         return Component.extend({
             redirectAfterPlaceOrder: false,
             redirectUrl: 'hpmgw/payment/redirect',
@@ -66,6 +59,8 @@ define(
 
                 $('#' + fieldId).empty();
                 $('#' + errorFieldId).empty();
+
+                this.customerValid(false);
 
                 if (self.customerType === 'b2b') {
                     self._initializeCustomerFormForB2bCustomer(fieldId, errorFieldId, self.customer());
