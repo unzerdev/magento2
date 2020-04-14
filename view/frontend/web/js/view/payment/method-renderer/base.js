@@ -51,8 +51,12 @@ define(
                 template: null
             },
 
-            initializeCustomerForm: function (fieldId, errorFieldId) {
+            initialize: function() {
+                this._super();
                 this.customer = customerLoader.getCustomerObservable();
+            },
+
+            initializeCustomerForm: function (fieldId, errorFieldId) {
                 this.customer.subscribe(this._initializeCustomerForm.bind(this, fieldId, errorFieldId));
             },
 
