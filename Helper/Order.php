@@ -261,7 +261,7 @@ class Order
     /**
      * Returns the heidelpay salutation constant depending on the gender of the customer.
      * Male -> 1 -> mr
-     * Feale -> 2 -> mrs
+     * Female -> 2 -> mrs
      * Default -> unknown
      *
      * @param Quote $quote
