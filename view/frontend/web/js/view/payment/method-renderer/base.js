@@ -54,6 +54,7 @@ define(
             initialize: function() {
                 this._super();
                 this.customer = customerLoader.getCustomerObservable();
+                this.customerValid = ko.observable(false);
             },
 
             initializeCustomerForm: function (fieldId, errorFieldId) {
@@ -65,8 +66,6 @@ define(
 
                 $('#' + fieldId).empty();
                 $('#' + errorFieldId).empty();
-
-                this.customerValid = ko.observable(false);
 
                 if (self.customerType === 'b2b') {
                     self._initializeCustomerFormForB2bCustomer(fieldId, errorFieldId, self.customer());
