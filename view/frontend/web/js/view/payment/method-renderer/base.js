@@ -60,6 +60,8 @@ define(
                 $('#' + fieldId).empty();
                 $('#' + errorFieldId).empty();
 
+                this.customerValid(false);
+
                 if (self.customerType === 'b2b') {
                     self._initializeCustomerFormForB2bCustomer(fieldId, errorFieldId, self.customer());
                 } else {
