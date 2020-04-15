@@ -744,7 +744,7 @@ i.h-iconideal-van-lanschot:before {
     vertical-align: top
 }
 
-.heidelpayUI.form input:not(.heidelpayChoices__input), .heidelpayUI.form input:not([type]), .heidelpayUI.form input[type=date], .heidelpayUI.form input[type=datetime-local], .heidelpayUI.form input[type=email], .heidelpayUI.form input[type=file], .heidelpayUI.form input[type=number], .heidelpayUI.form input[type=password], .heidelpayUI.form input[type=search], .heidelpayUI.form input[type=tel], .heidelpayUI.form input[type=text], .heidelpayUI.form input[type=time], .heidelpayUI.form input[type=url] {
+.heidelpayUI.form input:not(.heidelpayChoices__input):not([type="checkbox"]), .heidelpayUI.form input:not([type]), .heidelpayUI.form input[type=date], .heidelpayUI.form input[type=datetime-local], .heidelpayUI.form input[type=email], .heidelpayUI.form input[type=file], .heidelpayUI.form input[type=number], .heidelpayUI.form input[type=password], .heidelpayUI.form input[type=search], .heidelpayUI.form input[type=tel], .heidelpayUI.form input[type=text], .heidelpayUI.form input[type=time], .heidelpayUI.form input[type=url] {
     margin: 0;
     outline: none;
     -webkit-appearance: none;
