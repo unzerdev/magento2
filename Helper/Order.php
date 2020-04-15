@@ -3,6 +3,7 @@
 namespace Heidelpay\MGW\Helper;
 
 use Heidelpay\MGW\Model\Config;
+use heidelpayPHP\Constants\BasketItemTypes;
 use heidelpayPHP\Constants\Salutations;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Heidelpay;
@@ -120,6 +121,7 @@ class Order
             $basketItem->setAmountVat($orderItem->getTaxAmount());
             $basketItem->setQuantity($orderItem->getQtyOrdered());
             $basketItem->setTitle($orderItem->getName());
+            $basketItem->setType($orderItem->getIsVirtual() ? BasketItemTypes::DIGITAL : BasketItemTypes::GOODS);
 
             $basket->addBasketItem($basketItem);
         }
