@@ -106,6 +106,7 @@ class Order
             $basketItem->setAmountGross($order->getShippingInclTax());
             $basketItem->setAmountPerUnit($order->getShippingInclTax());
             $basketItem->setAmountVat($order->getShippingTaxAmount());
+            $basketItem->setTitle('Shipment');
             $basketItem->setType(BasketItemTypes::SHIPMENT);
 
             $basket->addBasketItem($basketItem);
