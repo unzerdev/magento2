@@ -101,6 +101,12 @@ class Order
         foreach ($order->getAllVisibleItems() as $orderItem) {
             /** @var OrderModel\Item $orderItem */
 
+            // getAllVisibleItems() only checks getParentItemId() but it's possible that there is a parent item set
+            // without a parent item id.
+            if ($orderItem->getParentItem() !== null) {
+                continue;
+            }
+
             $totalInclTax = $orderItem->getRowTotalInclTax();
             if ($totalInclTax === null) {
                 $totalInclTax = $orderItem->getRowTotal();
