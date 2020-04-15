@@ -3,6 +3,7 @@
 namespace Heidelpay\MGW\Helper;
 
 use Heidelpay\MGW\Model\Config;
+use heidelpayPHP\Constants\BasketItemTypes;
 use heidelpayPHP\Constants\Salutations;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Heidelpay;
@@ -98,8 +99,27 @@ class Order
         $basket->setCurrencyCode($order->getOrderCurrencyCode());
         $basket->setOrderId($order->getIncrementId());
 
+        if ($order->getShippingAmount() > 0) {
+            $basketItem = new BasketItem();
+            $basketItem->setAmountNet($order->getShippingAmount());
+            $basketItem->setAmountDiscount(abs($order->getShippingDiscountAmount()));
+            $basketItem->setAmountGross($order->getShippingInclTax());
+            $basketItem->setAmountPerUnit($order->getShippingInclTax());
+            $basketItem->setAmountVat($order->getShippingTaxAmount());
+            $basketItem->setTitle('Shipment');
+            $basketItem->setType(BasketItemTypes::SHIPMENT);
+
+            $basket->addBasketItem($basketItem);
+        }
+
         foreach ($order->getAllVisibleItems() as $orderItem) {
             /** @var OrderModel\Item $orderItem */
+
+            // getAllVisibleItems() only checks getParentItemId() but it's possible that there is a parent item set
+            // without a parent item id.
+            if ($orderItem->getParentItem() !== null) {
+                continue;
+            }
 
             $totalInclTax = $orderItem->getRowTotalInclTax();
             if ($totalInclTax === null) {
@@ -114,6 +134,7 @@ class Order
             $basketItem->setAmountVat($orderItem->getTaxAmount());
             $basketItem->setQuantity($orderItem->getQtyOrdered());
             $basketItem->setTitle($orderItem->getName());
+            $basketItem->setType($orderItem->getIsVirtual() ? BasketItemTypes::DIGITAL : BasketItemTypes::GOODS);
 
             $basket->addBasketItem($basketItem);
         }
