@@ -99,6 +99,18 @@ class Order
         $basket->setCurrencyCode($order->getOrderCurrencyCode());
         $basket->setOrderId($order->getIncrementId());
 
+        if ($order->getShippingAmount() > 0) {
+            $basketItem = new BasketItem();
+            $basketItem->setAmountNet($order->getShippingAmount());
+            $basketItem->setAmountDiscount(abs($order->getShippingDiscountAmount()));
+            $basketItem->setAmountGross($order->getShippingInclTax());
+            $basketItem->setAmountPerUnit($order->getShippingInclTax());
+            $basketItem->setAmountVat($order->getShippingTaxAmount());
+            $basketItem->setType(BasketItemTypes::SHIPMENT);
+
+            $basket->addBasketItem($basketItem);
+        }
+
         foreach ($order->getAllVisibleItems() as $orderItem) {
             /** @var OrderModel\Item $orderItem */
 
