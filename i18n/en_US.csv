@@ -51,7 +51,7 @@
 "Note: As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights regarding this SEPA mandate are explained in a statement that you can obtain from your bank.","Note: As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights regarding this SEPA mandate are explained in a statement that you can obtain from your bank."
 "In case of refusal or rejection of direct debit payment I instruct my bank irrevocably to inform %1 or any third party upon request about my name, address and date of birth.","In case of refusal or rejection of direct debit payment I instruct my bank irrevocably to inform %1 or any third party upon request about my name, address and date of birth."
 
-"The SDK provides error and debug information which you can catch and write to your log.","The SDK provides error and debug information which you can catch and write to your log."
+"The SDK provides error and debug information which you can catch and write to your log.","Log debug information to hpmgw_debug.log"
 "Logging and Debugging","Logging and Debugging"
 
 "Payment information does not match billing address.","Payment information does not match billing address."
