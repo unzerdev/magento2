@@ -40,7 +40,7 @@
                         <config_path>payment/hpmgw_cards/title</config_path>
                     </field>
                     <field id="order_payment_action" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1">
-                        <label>Payment Action</label>
+                        <label>Booking Mode</label>
                         <config_path>payment/hpmgw_cards/order_payment_action</config_path>
                         <source_model>Heidelpay\MGW\Model\System\Config\Source\PaymentAction</source_model>
                     </field>
