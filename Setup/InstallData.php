@@ -56,7 +56,7 @@ class InstallData implements InstallDataInterface
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
-        if (version_compare($context->getVersion(), '0.1.0') < 0) {
+        if (version_compare($context->getVersion(), '1.0.0') < 0) {
             $status = $this->_orderStatusFactory->create();
             $status->setStatus(Payment::STATUS_READY_TO_CAPTURE);
             $status->setData('label', self::STATUS_READY_TO_CAPTURE_LABEL);
