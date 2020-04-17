@@ -12,6 +12,7 @@ use heidelpayPHP\Resources\Customer;
 use heidelpayPHP\Resources\CustomerFactory;
 use heidelpayPHP\Resources\EmbeddedResources;
 use heidelpayPHP\Resources\EmbeddedResources\BasketItem;
+use heidelpayPHP\Resources\Metadata;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Quote\Model\Quote;
@@ -146,22 +147,21 @@ class Order
      * Returns metadata for the given order.
      *
      * @param OrderModel $order
-     * @return array
+     * @return Metadata
      */
-    public function createMetadataForOrder(OrderModel $order): array
+    public function createMetadataForOrder(OrderModel $order): Metadata
     {
-        return [
-            'customerId' => $order->getCustomerId(),
-            'customerGroupId' => $order->getCustomerGroupId(),
+        $metaData = new Metadata();
 
-            'pluginType' => 'magento2-merchant-gateway',
-            'pluginVersion' => $this->_moduleList->getOne('Heidelpay_MGW')['setup_version'],
+        $metaData->setShopType('Magento 2')
+            ->setShopVersion($this->_productMetadata->getVersion())
+            ->addMetadata('customerId', $order->getCustomerId())
+            ->addMetadata('customerGroupId', $order->getCustomerGroupId())
+            ->addMetadata('pluginType', 'magento2-merchant-gateway')
+            ->addMetadata('pluginVersion', $this->_moduleList->getOne('Heidelpay_MGW')['setup_version'])
+            ->addMetadata('storeId', $order->getStoreId());
 
-            'shopType' => 'Magento 2',
-            'shopVersion' => $this->_productMetadata->getVersion(),
-
-            'storeId' => $order->getStoreId(),
-        ];
+        return $metaData;
     }
 
     /**
