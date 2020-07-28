@@ -34,7 +34,7 @@ interface CheckoutInterface
      *
      * @param string|null $guestEmail Customer E-Mail address.
      *
-     * @return Customer|null
+     * @return \Heidelpay\MGW\Api\Data\Customer|null
      */
     public function getExternalCustomer(?string $guestEmail = null): ?Customer;
 }
