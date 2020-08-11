@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## [1.0.1][1.0.1]
 ### Added
 * php 7.4 support.
+
+### Fix
+*   Fix repository language (PHP).
+
 ## [1.0.0][1.0.0]
 ### Added
 *   Initial release.
