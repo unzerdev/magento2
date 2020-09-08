@@ -20,7 +20,7 @@ Currently supported payment methods are:
 * Sofort
 
 ## SYSTEM REQUIREMENTS
-This extension requires PHP 7.1, PHP 7.2 or PHP 7.3. 
+This extension requires PHP 7.1, PHP 7.2, PHP 7.3 or PHP 7.4. 
 It also depends on the heidelpay/heidelpay-php SDK, which will be installed along with the plugin.
 
 Please refer to the additional requirements listed under https://docs.heidelpay.com/docs/system-requirements (et seq.).
