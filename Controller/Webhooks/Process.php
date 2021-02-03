@@ -4,6 +4,7 @@ namespace Heidelpay\MGW\Controller\Webhooks;
 
 use Exception;
 use Heidelpay\MGW\Helper\Payment as PaymentHelper;
+use Heidelpay\MGW\Helper\Webhooks;
 use Heidelpay\MGW\Model\Config;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
@@ -18,7 +19,11 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Response\Http as HttpResponse;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Event\Manager;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Model\Order;
+use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Model\App\EmulationFactory;
+use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use stdClass;
 
@@ -48,6 +53,11 @@ use stdClass;
 class Process extends Action implements CsrfAwareActionInterface
 {
     /**
+     * @var EmulationFactory
+     */
+    protected $_emulationFactory;
+
+    /**
      * @var Manager
      */
     protected $_eventManager;
@@ -68,27 +78,38 @@ class Process extends Action implements CsrfAwareActionInterface
     protected $_paymentHelper;
 
     /**
+     * @var StoreManagerInterface
+     */
+    protected $_storeManager;
+
+    /**
      * Process constructor.
      * @param Context $context
+     * @param EmulationFactory $emulationFactory
      * @param Manager $eventManager
      * @param LoggerInterface $logger
      * @param Config $moduleConfig
      * @param PaymentHelper $paymentHelper
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         Context $context,
+        EmulationFactory $emulationFactory,
         Manager $eventManager,
         LoggerInterface $logger,
         Config $moduleConfig,
-        PaymentHelper $paymentHelper
+        PaymentHelper $paymentHelper,
+        StoreManagerInterface $storeManager
     )
     {
         parent::__construct($context);
 
+        $this->_emulationFactory = $emulationFactory;
         $this->_eventManager = $eventManager;
         $this->_logger = $logger;
         $this->_moduleConfig = $moduleConfig;
         $this->_paymentHelper = $paymentHelper;
+        $this->_storeManager = $storeManager;
     }
 
     /**
@@ -121,6 +142,17 @@ class Process extends Action implements CsrfAwareActionInterface
         $response = $this->getResponse();
         $response->setHttpResponseCode(200);
         $response->setBody('OK');
+
+        $store = $this->getStoreFromRequest($request);
+
+        if ($store === null) {
+            $response->setStatusCode(404);
+            $response->setBody('Not found');
+            return $response;
+        }
+
+        $emulation = $this->_emulationFactory->create();
+        $emulation->startEnvironmentEmulation($store->getId());
 
         /** @var stdClass $event */
         $event = json_decode($requestBody);
@@ -156,12 +188,18 @@ class Process extends Action implements CsrfAwareActionInterface
             $response->setBody($e->getMessage());
         }
 
+        $emulation->stopEnvironmentEmulation();
+
         return $response;
     }
 
+    /**
+     * @param string $requestBody
+     * @return Payment|null
+     * @throws HeidelpayApiException
+     */
     protected function getPaymentFromEvent(string $requestBody): ?Payment
     {
-        /** @var AbstractHeidelpayResource $resource */
         $resource = $this->_moduleConfig
             ->getHeidelpayClient()
             ->fetchResourceFromEvent($requestBody);
@@ -176,6 +214,14 @@ class Process extends Action implements CsrfAwareActionInterface
     }
 
     /**
+     * @return string
+     */
+    protected function getPublicKey(): string
+    {
+        return $this->_moduleConfig->getPublicKey();
+    }
+
+    /**
      * Returns whether the given webhook event is valid.
      *
      * @param stdClass $event
@@ -187,6 +233,21 @@ class Process extends Action implements CsrfAwareActionInterface
         return isset($event->event)
             && isset($event->publicKey)
             && isset($event->retrieveUrl)
-            && $event->publicKey === $this->_moduleConfig->getPublicKey();
+            && $event->publicKey === $this->getPublicKey();
+    }
+
+    protected function getStoreFromRequest(RequestInterface $request): ?StoreInterface
+    {
+        $storeCode = $request->getParam(Webhooks::URL_PARAM_STORE);
+
+        if (empty($storeCode)) {
+            return $this->_storeManager->getDefaultStoreView();
+        }
+
+        try {
+            return $this->_storeManager->getStore($storeCode);
+        } catch (NoSuchEntityException $e) {
+            return null;
+        }
     }
 }
