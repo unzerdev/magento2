@@ -14,11 +14,11 @@ use heidelpayPHP\Resources\EmbeddedResources;
 use heidelpayPHP\Resources\EmbeddedResources\BasketItem;
 use heidelpayPHP\Resources\Metadata;
 use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Model\Order as OrderModel;
-use Magento\Store\Api\Data\StoreInterface;
 
 /**
  * Helper for generating heidelpay resources for new orders
@@ -63,26 +63,22 @@ class Order
      */
     private $_productMetadata;
 
-    /**
-     * @var StoreInterface
-     */
-    private $_store;
 
     /**
      * Order constructor.
      * @param Config $moduleConfig
-     * @param StoreInterface $store
+     * @param ModuleListInterface $moduleList
+     * @param ProductMetadataInterface $productMetadata
      */
     public function __construct(
         Config $moduleConfig,
         ModuleListInterface $moduleList,
-        ProductMetadataInterface $productMetadata,
-        StoreInterface $store)
+        ProductMetadataInterface $productMetadata
+    )
     {
         $this->_moduleConfig = $moduleConfig;
         $this->_moduleList = $moduleList;
         $this->_productMetadata = $productMetadata;
-        $this->_store = $store;
     }
 
     /**
@@ -171,7 +167,7 @@ class Order
      * @param string $email
      * @return Customer
      * @throws HeidelpayApiException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function createCustomerFromQuote(Quote $quote, string $email): ?Customer
     {
@@ -206,11 +202,11 @@ class Order
      * Updates an Heidelpay address from an address in Magento.
      *
      * @param EmbeddedResources\Address $gatewayAddress
-     * @param Quote\Address $magentoAddress
+     * @param Quote\Address|OrderAddressInterface $magentoAddress
      */
     private function updateGatewayAddressFromMagento(
         EmbeddedResources\Address $gatewayAddress,
-        Quote\Address $magentoAddress
+        $magentoAddress
     ): void
     {
         $street = $this->convertStreetLinesToString($magentoAddress->getStreet());
@@ -230,6 +226,35 @@ class Order
         $streetLines = array_map('trim', $streetLines);
         $streetLines = array_unique($streetLines);
         return implode(' ', $streetLines);
+    }
+
+    /**
+     * @param OrderModel $order
+     * @param Customer $gatewayCustomer
+     * @throws HeidelpayApiException
+     * @throws NoSuchEntityException
+     */
+    public function updateGatewayCustomerFromOrder(OrderModel $order, Customer $gatewayCustomer)
+    {
+        $billingAddress = $order->getBillingAddress();
+
+        $gatewayCustomer->setFirstname($billingAddress->getFirstname());
+        $gatewayCustomer->setLastname($billingAddress->getLastname());
+
+        $gatewayCustomer->setCompany($billingAddress->getCompany());
+
+        $this->updateGatewayAddressFromMagento(
+            $gatewayCustomer->getBillingAddress(),
+            $billingAddress
+        );
+
+        $this->updateGatewayAddressFromMagento(
+            $gatewayCustomer->getShippingAddress(),
+            $order->getShippingAddress()
+        );
+
+        $client = $this->_moduleConfig->getHeidelpayClient();
+        $client->updateCustomer($gatewayCustomer);
     }
 
     /**

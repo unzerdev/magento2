@@ -162,6 +162,16 @@ class Base extends Adapter
     }
 
     /**
+     * Returns whether the payment method is safe.
+     *
+     * @return bool
+     */
+    public function isGuaranteed(): bool
+    {
+        return false;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getTitle()

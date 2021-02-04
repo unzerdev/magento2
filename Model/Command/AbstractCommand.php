@@ -149,7 +149,11 @@ abstract class AbstractCommand implements CommandInterface
         $customer = $this->_getClient()->fetchCustomer($customerId);
 
         if (!$this->_orderHelper->validateGatewayCustomerAgainstOrder($order, $customer)) {
-            throw new LocalizedException(__('Payment information does not match billing address.'));
+            if ($payment->getMethodInstance()->isGuaranteed()) {
+                throw new LocalizedException(__('Payment information does not match billing address.'));
+            }
+
+            $this->_orderHelper->updateGatewayCustomerFromOrder($order, $customer);
         }
 
         return $customerId;
