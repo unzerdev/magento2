@@ -34,4 +34,12 @@ class DirectDebitGuaranteed extends DirectDebit
     {
         return true;
     }
+
+    /**
+     * @return bool
+     */
+    public function isGuaranteed(): bool
+    {
+        return true;
+    }
 }
