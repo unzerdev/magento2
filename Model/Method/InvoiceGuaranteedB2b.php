@@ -34,12 +34,4 @@ class InvoiceGuaranteedB2b extends Invoice
     {
         return true;
     }
-
-    /**
-     * @return bool
-     */
-    public function isGuaranteed(): bool
-    {
-        return true;
-    }
 }
