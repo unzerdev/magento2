@@ -34,4 +34,12 @@ class InvoiceGuaranteed extends Invoice
     {
         return true;
     }
+
+    /**
+     * @inheridoc
+     */
+    public function isGuaranteed(): bool
+    {
+        return true;
+    }
 }

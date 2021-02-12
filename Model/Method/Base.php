@@ -128,6 +128,10 @@ class Base extends Adapter
             return parent::isAvailable($quote);
         }
 
+        if ($quote->getIsVirtual() && $this->isGuaranteed()) {
+            return false;
+        }
+
         $hasCompany = !empty($quote->getBillingAddress()->getCompany());
 
         if ($hasCompany) {
@@ -157,6 +161,16 @@ class Base extends Adapter
      * @return bool
      */
     public function isB2cOnly(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Returns whether the payment method is safe.
+     *
+     * @return bool
+     */
+    public function isGuaranteed(): bool
     {
         return false;
     }

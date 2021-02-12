@@ -171,6 +171,11 @@ class Order
      */
     public function createCustomerFromQuote(Quote $quote, string $email): ?Customer
     {
+        // A virtual quote does not have any customer data other than E-Mail so we can't create a customer object.
+        if ($quote->isVirtual()) {
+            return null;
+        }
+
         /** @var Quote\Address $billingAddress */
         $billingAddress = $quote->getBillingAddress();
 
