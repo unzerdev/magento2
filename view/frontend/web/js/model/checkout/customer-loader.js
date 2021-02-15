@@ -29,7 +29,9 @@ define(
             request.always(fullScreenLoader.stopLoader);
             request.fail(errorProcessor.process);
             request.done(function(customer) {
-                if (currentRequest !== request || customer === null) {
+                if (currentRequest !== request ||
+                    customer === null ||
+                    (customer instanceof Array && customer.length === 0)) {
                     return;
                 }
 

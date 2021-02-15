@@ -37,6 +37,7 @@ define(
                 config: null,
                 customer: null,
                 customerProvider: null,
+                customerSubscription: null,
                 customerType: 'b2c',
                 customerValid: null,
                 resourceId: null,
@@ -51,7 +52,18 @@ define(
             },
 
             initializeCustomerForm: function (fieldId, errorFieldId) {
-                this.customer.subscribe(this._initializeCustomerForm.bind(this, fieldId, errorFieldId));
+                var self = this;
+
+                self.customerSubscription = this.customer.subscribe(function(customer) {
+                    if (customer === null) {
+                        return;
+                    }
+
+                    self._initializeCustomerForm(fieldId, errorFieldId);
+
+                    self.customerSubscription.dispose();
+                    self.customerSubscription = null;
+                });
             },
 
             _initializeCustomerForm: function(fieldId, errorFieldId) {
@@ -121,7 +133,7 @@ define(
                     'method': this.item.method,
                     'po_number': null,
                     'additional_data': {
-                        'customer_id': this.customer !== null ? this.customer().id : null,
+                        'customer_id': this.customer !== null && this.customer() !== null ? this.customer().id : null,
                         'resource_id': this.resourceId
                     }
                 };
