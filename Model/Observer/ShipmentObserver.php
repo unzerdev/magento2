@@ -7,7 +7,6 @@ use Heidelpay\MGW\Model\Config;
 use Heidelpay\MGW\Model\Method\Base;
 use heidelpayPHP\Constants\ApiResponseCodes;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Resources\Payment;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -15,6 +14,7 @@ use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\Sales\Model\Order\StatusResolver;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Observer for automatically tracking shipments in the Gateway
@@ -63,18 +63,28 @@ class ShipmentObserver implements ObserverInterface
      * @var PaymentHelper
      */
     protected $_paymentHelper;
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
 
     /**
      * ShipmentObserver constructor.
      * @param Config $moduleConfig
      * @param StatusResolver $orderStatusResolver
      * @param PaymentHelper $paymentHelper
+     * @param StoreManagerInterface $storeManager
      */
-    public function __construct(Config $moduleConfig, StatusResolver $orderStatusResolver, PaymentHelper $paymentHelper)
-    {
+    public function __construct(
+        Config $moduleConfig,
+        StatusResolver $orderStatusResolver,
+        PaymentHelper $paymentHelper,
+        StoreManagerInterface $storeManager
+    ) {
         $this->_moduleConfig = $moduleConfig;
         $this->_orderStatusResolver = $orderStatusResolver;
         $this->_paymentHelper = $paymentHelper;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -94,6 +104,8 @@ class ShipmentObserver implements ObserverInterface
 
         $order = $shipment->getOrder();
 
+        $storeCode = $this->getStoreCode($order->getStoreId());
+
         /** @var MethodInterface $methodInstance */
         $methodInstance = $order->getPayment()->getMethodInstance();
 
@@ -102,7 +114,7 @@ class ShipmentObserver implements ObserverInterface
         }
 
         $payment = $this->_moduleConfig
-            ->getHeidelpayClient()
+            ->getHeidelpayClient($storeCode)
             ->fetchPaymentByOrderId($order->getIncrementId());
 
         $this->_paymentHelper->processState($order, $payment);
@@ -122,5 +134,15 @@ class ShipmentObserver implements ObserverInterface
                 }
             }
         }
+    }
+
+    /**
+     * @param int $storeId
+     * @return string
+     * @throws NoSuchEntityException
+     */
+    public function getStoreCode(int $storeId)
+    {
+        return $this->storeManager->getStore($storeId)->getCode();
     }
 }
