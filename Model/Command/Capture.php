@@ -50,10 +50,6 @@ class Capture extends AbstractCommand
      * @var BuilderInterface
      */
     private $_transactionBuilder;
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
 
     /**
      * @inheritDoc
@@ -69,10 +65,9 @@ class Capture extends AbstractCommand
         StoreManagerInterface $storeManager
     )
     {
-        parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder);
+        parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder, $storeManager);
 
         $this->_transactionBuilder = $transactionBuilder;
-        $this->storeManager = $storeManager;
     }
 
     /**
@@ -94,11 +89,11 @@ class Capture extends AbstractCommand
         /** @var string|null $paymentId */
         $paymentId = $payment->getAdditionalInformation(self::KEY_PAYMENT_ID);
 
-        $storeId = $this->storeManager->getStore($order->getStoreId())->getCode();
+        $storeCode = $this->getStoreCode($order->getStoreId());
 
         try {
             if ($paymentId !== null) {
-                $charge = $this->_chargeExisting($paymentId, $amount, $storeId);
+                $charge = $this->_chargeExisting($paymentId, $amount, $storeCode);
             } else {
                 $charge = $this->_chargeNew($payment, $amount);
                 $order->addCommentToStatusHistory('heidelpay paymentId: ' . $charge->getPaymentId());

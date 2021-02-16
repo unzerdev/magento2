@@ -14,6 +14,7 @@ use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order as OrderModel;
 use Magento\Sales\Model\Order\Payment\Operations\AuthorizeOperation;
 use Magento\Sales\Model\Order\Payment\Operations\CaptureOperation;
+use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -60,6 +61,7 @@ class Order extends AbstractCommand
      * @param UrlInterface $urlBuilder
      * @param AuthorizeOperation $authorizeOperation
      * @param CaptureOperation $captureOperation
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         Session $checkoutSession,
@@ -68,9 +70,11 @@ class Order extends AbstractCommand
         OrderHelper $orderHelper,
         UrlInterface $urlBuilder,
         AuthorizeOperation $authorizeOperation,
-        CaptureOperation $captureOperation
+        CaptureOperation $captureOperation,
+        StoreManagerInterface $storeManager
+
     ) {
-        parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder);
+        parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder, $storeManager);
 
         $this->_authorizeOperation = $authorizeOperation;
         $this->_captureOperation = $captureOperation;
