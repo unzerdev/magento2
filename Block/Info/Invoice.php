@@ -4,9 +4,9 @@ namespace Heidelpay\MGW\Block\Info;
 
 use Heidelpay\MGW\Helper\Order as OrderHelper;
 use Heidelpay\MGW\Model\Config;
-use heidelpayPHP\Heidelpay;
 use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Template;
 use Magento\Payment\Block\Info;
 use Magento\Sales\Model\Order;
@@ -99,11 +99,11 @@ class Invoice extends Info
     protected function _getPayment(): Payment
     {
         if ($this->_payment === null) {
-            /** @var Heidelpay $client */
-            $client = $this->_moduleConfig->getHeidelpayClient();
-
             /** @var Order $order */
             $order = $this->getInfo()->getOrder();
+
+            $storeId = $this->getStoreCode($order->getStoreId());
+            $client  = $this->_moduleConfig->getHeidelpayClient($storeId);
 
             $this->_payment = $client->fetchPaymentByOrderId($order->getIncrementId());
         }
@@ -165,5 +165,15 @@ class Invoice extends Info
             return $order;
         }
         return $this->getInfo()->getOrder();
+    }
+
+    /**
+     * @param string|null $storeId
+     * @return string
+     * @throws NoSuchEntityException
+     */
+    public function getStoreCode(string $storeId = null)
+    {
+        return $this->_storeManager->getStore($storeId)->getCode();
     }
 }

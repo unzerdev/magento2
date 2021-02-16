@@ -148,8 +148,6 @@ class Config extends \Magento\Payment\Gateway\Config\Config
         $client->setDebugMode($this->isDebugMode($storeId));
         $client->setDebugHandler($this->_debugHandler);
 
-        $client->debugLog('>>>>>>>>>>>> StoreCode: ' . $storeId);
-
         return $client;
     }
 }
