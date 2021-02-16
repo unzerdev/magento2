@@ -4,10 +4,7 @@ namespace Heidelpay\MGW\Controller\Adminhtml\Webhooks;
 
 use Heidelpay\MGW\Helper\Webhooks as WebhooksHelper;
 use Heidelpay\MGW\Model\Config;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Resources\Webhook;
 use Magento\Backend\App\Action;
-use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -86,5 +83,15 @@ abstract class AbstractAction extends Action
         $store = $this->_storeManager->getStore($storeIdentifier);
 
         return $this->_webhooksHelper->getUrl($store);
+    }
+
+    /**
+     * @return string
+     * @throws NoSuchEntityException
+     */
+    public function getStoreCode()
+    {
+        $storeId = $this->getRequest()->getParam(self::URL_PARAM_STORE);
+        return $this->_storeManager->getStore($storeId)->getCode();
     }
 }

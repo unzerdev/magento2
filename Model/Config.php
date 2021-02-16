@@ -4,8 +4,8 @@ namespace Heidelpay\MGW\Model;
 
 use Heidelpay\MGW\Model\Logger\DebugHandler;
 use heidelpayPHP\Heidelpay;
+use heidelpayPHP\Interfaces\DebugHandlerInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Locale\Resolver;
 use Magento\Store\Model\ScopeInterface;
 
@@ -53,7 +53,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     const METHOD_SOFORT = 'hpmgw_sofort';
 
     /**
-     * @var DebugHandler
+     * @var DebugHandlerInterface
      */
     private $_debugHandler;
 
@@ -147,6 +147,8 @@ class Config extends \Magento\Payment\Gateway\Config\Config
 
         $client->setDebugMode($this->isDebugMode($storeId));
         $client->setDebugHandler($this->_debugHandler);
+
+        $client->debugLog('>>>>>>>>>>>> StoreCode: ' . $storeId);
 
         return $client;
     }

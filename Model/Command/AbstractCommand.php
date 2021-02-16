@@ -129,7 +129,6 @@ abstract class AbstractCommand implements CommandInterface
     {
         if ($this->_client === null) {
             $this->_client = $this->_config->getHeidelpayClient($storeCode);
-            $this->_client->debugLog('>>>>>>>>>>>> StoreCode: ' . $storeCode);
         }
 
         return $this->_client;

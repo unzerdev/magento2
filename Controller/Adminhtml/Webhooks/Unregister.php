@@ -3,13 +3,9 @@
 namespace Heidelpay\MGW\Controller\Adminhtml\Webhooks;
 
 use Exception;
-use Heidelpay\MGW\Helper\Webhooks as WebhooksHelper;
-use Heidelpay\MGW\Model\Config;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Webhook;
-use Magento\Backend\App\Action;
 use Magento\Framework\Controller\Result\Redirect;
-use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Controller for deregistering webhooks via the backend
@@ -44,7 +40,7 @@ class Unregister extends AbstractAction
         try {
             $webhookUrl = $this->getWebhookUrl();
 
-            $client = $this->_moduleConfig->getHeidelpayClient();
+            $client = $this->_moduleConfig->getHeidelpayClient($this->getStoreCode());
 
             foreach ($client->fetchAllWebhooks() as $webhook) {
                 /** @var Webhook $webhook */
