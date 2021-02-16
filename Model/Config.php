@@ -90,55 +90,62 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     }
 
     /**
+     * @param string|null $storeId
      * @return bool
      */
-    private function isDebugMode(): bool
+    private function isDebugMode(string $storeId = null): bool
     {
         return $this->_scopeConfig->isSetFlag(
             self::BASE_CONFIGURATION_PATH . self::KEY_LOGGING,
-            ScopeInterface::SCOPE_STORE
+            ScopeInterface::SCOPE_STORE,
+            $storeId
         );
     }
 
     /**
      * Returns the public key.
      *
+     * @param string|null $storeId
      * @return string
      */
-    public function getPublicKey(): string
+    public function getPublicKey(string $storeId = null): string
     {
         return $this->_scopeConfig->getValue(
             self::BASE_CONFIGURATION_PATH . self::KEY_PUBLIC_KEY,
-            ScopeInterface::SCOPE_STORE
+            ScopeInterface::SCOPE_STORE,
+            $storeId
         );
     }
 
     /**
      * Returns the private key.
      *
+     * @param string|null $storeId
      * @return string
      */
-    public function getPrivateKey(): string
+    public function getPrivateKey(string $storeId = null): string
     {
         return $this->_scopeConfig->getValue(
             self::BASE_CONFIGURATION_PATH . self::KEY_PRIVATE_KEY,
-            ScopeInterface::SCOPE_STORE
+            ScopeInterface::SCOPE_STORE,
+            $storeId
         );
     }
 
     /**
      * Returns an API client using the configured private key.
      *
+     * @param string|null $storeId
      * @return Heidelpay
      */
-    public function getHeidelpayClient(): Heidelpay
+    public function getHeidelpayClient(string $storeId = null): Heidelpay
     {
         $client = new Heidelpay(
-            $this->getPrivateKey(),
+            $this->getPrivateKey($storeId),
             $this->_localeResolver->getLocale()
         );
 
-        $client->setDebugMode($this->isDebugMode());
+        $client->setDebugMode($this->isDebugMode($storeId));
         $client->setDebugHandler($this->_debugHandler);
 
         return $client;

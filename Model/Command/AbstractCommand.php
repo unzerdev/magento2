@@ -113,13 +113,14 @@ abstract class AbstractCommand implements CommandInterface
     }
 
     /**
+     * @param string|null $storeCode
      * @return Heidelpay
-     * @throws NoSuchEntityException
      */
-    protected function _getClient(): Heidelpay
+    protected function _getClient(string $storeCode = null): Heidelpay
     {
         if ($this->_client === null) {
-            $this->_client = $this->_config->getHeidelpayClient();
+            $this->_client = $this->_config->getHeidelpayClient($storeCode);
+            $this->_client->debugLog('>>>>>>>>>>>> StoreCode: ' . $storeCode);
         }
 
         return $this->_client;

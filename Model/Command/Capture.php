@@ -6,7 +6,6 @@ use Heidelpay\MGW\Model\Config;
 use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
-use heidelpayPHP\Resources\Payment;
 use heidelpayPHP\Resources\TransactionTypes\Authorization;
 use heidelpayPHP\Resources\TransactionTypes\Charge;
 use Magento\Checkout\Model\Session;
@@ -19,6 +18,7 @@ use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface;
 use Magento\Sales\Model\Order\Payment\TransactionFactory;
+use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -50,6 +50,10 @@ class Capture extends AbstractCommand
      * @var BuilderInterface
      */
     private $_transactionBuilder;
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
 
     /**
      * @inheritDoc
@@ -61,12 +65,14 @@ class Capture extends AbstractCommand
         LoggerInterface $logger,
         \Heidelpay\MGW\Helper\Order $orderHelper,
         UrlInterface $urlBuilder,
-        BuilderInterface $transactionBuilder
+        BuilderInterface $transactionBuilder,
+        StoreManagerInterface $storeManager
     )
     {
         parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder);
 
         $this->_transactionBuilder = $transactionBuilder;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -88,9 +94,11 @@ class Capture extends AbstractCommand
         /** @var string|null $paymentId */
         $paymentId = $payment->getAdditionalInformation(self::KEY_PAYMENT_ID);
 
+        $storeId = $this->storeManager->getStore($order->getStoreId())->getCode();
+
         try {
             if ($paymentId !== null) {
-                $charge = $this->_chargeExisting($paymentId, $amount);
+                $charge = $this->_chargeExisting($paymentId, $amount, $storeId);
             } else {
                 $charge = $this->_chargeNew($payment, $amount);
                 $order->addCommentToStatusHistory('heidelpay paymentId: ' . $charge->getPaymentId());
@@ -115,14 +123,13 @@ class Capture extends AbstractCommand
      *
      * @param string $paymentId
      * @param float $amount
+     * @param string|null $storeId
      * @return Charge
      * @throws HeidelpayApiException
-     * @throws NoSuchEntityException
      */
-    protected function _chargeExisting(string $paymentId, float $amount): Charge
+    protected function _chargeExisting(string $paymentId, float $amount, string $storeId = null): Charge
     {
-        /** @var Payment $payment */
-        $payment = $this->_getClient()->fetchPayment($paymentId);
+        $payment = $this->_getClient($storeId)->fetchPayment($paymentId);
 
         /** @var Authorization|null $authorization */
         $authorization = $payment->getAuthorization();
@@ -141,18 +148,20 @@ class Capture extends AbstractCommand
      * @param float $amount
      * @return Charge
      * @throws HeidelpayApiException
-     * @throws NoSuchEntityException
      * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     protected function _chargeNew(InfoInterface $payment, float $amount): Charge
     {
         /** @var Order $order */
         $order = $payment->getOrder();
 
+        $storeId = $order->getStoreId();
+
         /** @var string $resourceId */
         $resourceId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_RESOURCE_ID);
 
-        return $this->_getClient()->charge(
+        return $this->_getClient($storeId)->charge(
             $amount,
             $order->getOrderCurrencyCode(),
             $resourceId,
