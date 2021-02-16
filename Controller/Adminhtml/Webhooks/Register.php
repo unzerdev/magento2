@@ -2,12 +2,15 @@
 
 namespace Heidelpay\MGW\Controller\Adminhtml\Webhooks;
 
+use Exception;
 use Heidelpay\MGW\Helper\Webhooks as WebhooksHelper;
 use Heidelpay\MGW\Model\Config;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Webhook;
 use Magento\Backend\App\Action;
 use Magento\Framework\Controller\Result\Redirect;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Controller for registering webhooks via the backend
@@ -32,41 +35,16 @@ use Magento\Framework\Controller\Result\Redirect;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class Register extends Action
+class Register extends AbstractAction
 {
-    /**
-     * @var Config Config
-     */
-    protected $_moduleConfig;
-
-    /**
-     * @var WebhooksHelper
-     */
-    protected $_webhooksHelper;
-
-    /**
-     * Register constructor.
-     * @param Action\Context $context
-     * @param Config $moduleConfig
-     * @param WebhooksHelper $webhooksHelper
-     */
-    public function __construct(Action\Context $context, Config $moduleConfig, WebhooksHelper $webhooksHelper)
-    {
-        parent::__construct($context);
-
-        $this->_moduleConfig = $moduleConfig;
-        $this->_webhooksHelper = $webhooksHelper;
-    }
-
     /**
      * @inheritDoc
      */
     public function execute(): Redirect
     {
-        /** @var string $webhookUrl */
-        $webhookUrl = $this->_webhooksHelper->getUrl();
-
         try {
+            $webhookUrl = $this->getWebhookUrl();
+
             $client = $this->_moduleConfig->getHeidelpayClient();
 
             $isRegistered = false;
@@ -86,7 +64,7 @@ class Register extends Action
             $this->messageManager->addSuccessMessage(__('Successfully registered webhooks'));
         } catch (HeidelpayApiException $e) {
             $this->messageManager->addErrorMessage(__($e->getMerchantMessage()));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
         }
 

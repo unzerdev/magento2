@@ -2,9 +2,15 @@
 
 namespace Heidelpay\MGW\Block\System\Config;
 
+use Heidelpay\MGW\Controller\Adminhtml\Webhooks\AbstractAction;
+use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
+use Magento\Store\Model\StoreManagerInterface;
 use Zend_Json;
 
 /**
@@ -35,6 +41,38 @@ class WebhooksButtons extends Field
     protected $_template = 'Heidelpay_MGW::system/config/webhooks.phtml';
 
     /**
+     * @var RequestInterface
+     */
+    protected $_request;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $_storeManager;
+
+    /**
+     * WebhooksButtons constructor.
+     * @param Context $context
+     * @param RequestInterface $request
+     * @param StoreManagerInterface $storeManager
+     * @param array $data
+     * @param SecureHtmlRenderer|null $secureRenderer
+     */
+    public function __construct(
+        Context $context,
+        RequestInterface $request,
+        StoreManagerInterface $storeManager,
+        array $data = [],
+        ?SecureHtmlRenderer $secureRenderer = null
+    )
+    {
+        parent::__construct($context, $data, $secureRenderer);
+
+        $this->_request = $request;
+        $this->_storeManager = $storeManager;
+    }
+
+    /**
      * @inheritDoc
      */
     protected function _getElementHtml(AbstractElement $element): string
@@ -43,11 +81,14 @@ class WebhooksButtons extends Field
     }
 
     /**
-     * @inheritDoc
+     * @return string
+     * @throws NoSuchEntityException
      */
     public function getRegisterAction(): string
     {
-        return $this->getUrl('hpmgw/webhooks/register');
+        return $this->getUrl('hpmgw/webhooks/register', [
+            AbstractAction::URL_PARAM_STORE => $this->getStoreIdentifier(),
+        ]);
     }
 
     /**
@@ -67,11 +108,14 @@ class WebhooksButtons extends Field
     }
 
     /**
-     * @inheritDoc
+     * @return string
+     * @throws NoSuchEntityException
      */
     public function getUnregisterAction(): string
     {
-        return $this->getUrl('hpmgw/webhooks/unregister');
+        return $this->getUrl('hpmgw/webhooks/unregister', [
+            AbstractAction::URL_PARAM_STORE => $this->getStoreIdentifier(),
+        ]);
     }
 
     /**
@@ -88,5 +132,19 @@ class WebhooksButtons extends Field
         ]);
 
         return $button->toHtml();
+    }
+
+    /**
+     * @return int
+     * @throws NoSuchEntityException
+     */
+    protected function getStoreIdentifier(): int
+    {
+        /** @var int|string $storeIdentifier */
+        $storeIdentifier = $this->getRequest()->getParam(AbstractAction::URL_PARAM_STORE);
+
+        $store = $this->_storeManager->getStore($storeIdentifier);
+
+        return $store->getId();
     }
 }

@@ -2,7 +2,9 @@
 
 namespace Heidelpay\MGW\Helper;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Url;
+use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -31,10 +33,7 @@ use Magento\Store\Model\StoreManagerInterface;
  */
 class Webhooks
 {
-    /**
-     * @var StoreManagerInterface
-     */
-    protected $_storeManager;
+    public const URL_PARAM_STORE = 'store';
 
     /**
      * @var Url
@@ -43,27 +42,21 @@ class Webhooks
 
     /**
      * Webhooks constructor.
-     * @param StoreManagerInterface $storeManager
      * @param Url $urlBuilder
      */
-    public function __construct(
-        StoreManagerInterface $storeManager,
-        Url $urlBuilder
-    ) {
-        $this->_storeManager = $storeManager;
+    public function __construct(Url $urlBuilder)
+    {
         $this->_urlBuilder = $urlBuilder;
     }
 
     /**
+     * @param StoreInterface|null $store
      * @return string
      */
-    public function getUrl(): string
+    public function getUrl(?StoreInterface $store): string
     {
-        /** @var Store $store */
-        $store = $this->_storeManager->getDefaultStoreView();
-
         return $this->_urlBuilder
             ->setScope($store)
-            ->getUrl('hpmgw/webhooks/process', ['_nosid' => true]);
+            ->getUrl('hpmgw/webhooks/process', ['_nosid' => true, self::URL_PARAM_STORE => $store->getId()]);
     }
 }
