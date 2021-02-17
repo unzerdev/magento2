@@ -2,11 +2,9 @@
 
 namespace Heidelpay\MGW\Controller\Adminhtml\Webhooks;
 
-use Heidelpay\MGW\Helper\Webhooks as WebhooksHelper;
-use Heidelpay\MGW\Model\Config;
+use Exception;
 use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Resources\Webhook;
-use Magento\Backend\App\Action;
 use Magento\Framework\Controller\Result\Redirect;
 
 /**
@@ -32,42 +30,17 @@ use Magento\Framework\Controller\Result\Redirect;
  *
  * @package  heidelpay/magento2-merchant-gateway
  */
-class Unregister extends Action
+class Unregister extends AbstractAction
 {
-    /**
-     * @var Config Config
-     */
-    protected $_moduleConfig;
-
-    /**
-     * @var WebhooksHelper
-     */
-    protected $_webhooksHelper;
-
-    /**
-     * Unregister constructor.
-     * @param Action\Context $context
-     * @param Config $moduleConfig
-     * @param WebhooksHelper $webhooksHelper
-     */
-    public function __construct(Action\Context $context, Config $moduleConfig, WebhooksHelper $webhooksHelper)
-    {
-        parent::__construct($context);
-
-        $this->_moduleConfig = $moduleConfig;
-        $this->_webhooksHelper = $webhooksHelper;
-    }
-
     /**
      * @inheritDoc
      */
     public function execute(): Redirect
     {
-        /** @var string $webhookUrl */
-        $webhookUrl = $this->_webhooksHelper->getUrl();
-
         try {
-            $client = $this->_moduleConfig->getHeidelpayClient();
+            $webhookUrl = $this->getWebhookUrl();
+
+            $client = $this->_moduleConfig->getHeidelpayClient($this->getStoreCode());
 
             foreach ($client->fetchAllWebhooks() as $webhook) {
                 /** @var Webhook $webhook */
@@ -79,7 +52,7 @@ class Unregister extends Action
             $this->messageManager->addSuccessMessage(__('Successfully unregistered webhooks'));
         } catch (HeidelpayApiException $e) {
             $this->messageManager->addErrorMessage(__($e->getMerchantMessage()));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));
         }
 
