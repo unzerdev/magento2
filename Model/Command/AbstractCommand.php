@@ -20,6 +20,8 @@ use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order as SalesOrder;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
+use Magento\Store\Model\StoreManager;
+use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use function get_class;
 
@@ -79,6 +81,10 @@ abstract class AbstractCommand implements CommandInterface
      * @var UrlInterface
      */
     protected $_urlBuilder;
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
 
     /**
      * AbstractCommand constructor.
@@ -87,19 +93,22 @@ abstract class AbstractCommand implements CommandInterface
      * @param LoggerInterface $logger
      * @param Order $orderHelper
      * @param UrlInterface $urlBuilder
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         Session $checkoutSession,
         Config $config,
         LoggerInterface $logger,
         Order $orderHelper,
-        UrlInterface $urlBuilder
+        UrlInterface $urlBuilder,
+        StoreManagerInterface $storeManager
     ) {
         $this->_checkoutSession = $checkoutSession;
         $this->_config = $config;
         $this->_logger = $logger;
         $this->_orderHelper = $orderHelper;
         $this->_urlBuilder = $urlBuilder;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -113,13 +122,13 @@ abstract class AbstractCommand implements CommandInterface
     }
 
     /**
+     * @param string|null $storeCode
      * @return Heidelpay
-     * @throws NoSuchEntityException
      */
-    protected function _getClient(): Heidelpay
+    protected function _getClient(string $storeCode = null): Heidelpay
     {
         if ($this->_client === null) {
-            $this->_client = $this->_config->getHeidelpayClient();
+            $this->_client = $this->_config->getHeidelpayClient($storeCode);
         }
 
         return $this->_client;
@@ -199,5 +208,15 @@ abstract class AbstractCommand implements CommandInterface
      */
     protected function addHeidelpayErrorToOrderHistory(SalesOrder $order, $code, $message): void {
         $order->addCommentToStatusHistory("heidelpay Error (${code}): ${message}");
+    }
+
+    /**
+     * @param int $storeId
+     * @return string
+     * @throws NoSuchEntityException
+     */
+    public function getStoreCode(int $storeId)
+    {
+        return $this->storeManager->getStore($storeId)->getCode();
     }
 }

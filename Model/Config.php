@@ -4,9 +4,10 @@ namespace Heidelpay\MGW\Model;
 
 use Heidelpay\MGW\Model\Logger\DebugHandler;
 use heidelpayPHP\Heidelpay;
+use heidelpayPHP\Interfaces\DebugHandlerInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Locale\Resolver;
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Global Module configuration and SDK provider
@@ -52,7 +53,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     const METHOD_SOFORT = 'hpmgw_sofort';
 
     /**
-     * @var DebugHandler
+     * @var DebugHandlerInterface
      */
     private $_debugHandler;
 
@@ -89,48 +90,62 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     }
 
     /**
+     * @param string|null $storeId
      * @return bool
      */
-    private function isDebugMode(): bool
+    private function isDebugMode(string $storeId = null): bool
     {
-        return $this->_scopeConfig->isSetFlag(self::BASE_CONFIGURATION_PATH . self::KEY_LOGGING);
+        return $this->_scopeConfig->isSetFlag(
+            self::BASE_CONFIGURATION_PATH . self::KEY_LOGGING,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
     }
 
     /**
      * Returns the public key.
      *
+     * @param string|null $storeId
      * @return string
      */
-    public function getPublicKey(): string
+    public function getPublicKey(string $storeId = null): string
     {
-        return $this->_scopeConfig->getValue(self::BASE_CONFIGURATION_PATH . self::KEY_PUBLIC_KEY);
+        return $this->_scopeConfig->getValue(
+            self::BASE_CONFIGURATION_PATH . self::KEY_PUBLIC_KEY,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
     }
 
     /**
      * Returns the private key.
      *
+     * @param string|null $storeId
      * @return string
      */
-    public function getPrivateKey(): string
+    public function getPrivateKey(string $storeId = null): string
     {
-        return $this->_scopeConfig->getValue(self::BASE_CONFIGURATION_PATH . self::KEY_PRIVATE_KEY);
+        return $this->_scopeConfig->getValue(
+            self::BASE_CONFIGURATION_PATH . self::KEY_PRIVATE_KEY,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
     }
 
     /**
      * Returns an API client using the configured private key.
      *
+     * @param string|null $storeId
      * @return Heidelpay
-     * @throws NoSuchEntityException
      */
-    public function getHeidelpayClient(): Heidelpay
+    public function getHeidelpayClient(string $storeId = null): Heidelpay
     {
-        /** @var Heidelpay $client */
         $client = new Heidelpay(
-            $this->getPrivateKey(),
+            $this->getPrivateKey($storeId),
             $this->_localeResolver->getLocale()
         );
 
-        $client->setDebugMode($this->isDebugMode());
+        $client->setDebugMode($this->isDebugMode($storeId));
         $client->setDebugHandler($this->_debugHandler);
 
         return $client;
