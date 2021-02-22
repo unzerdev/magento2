@@ -9,7 +9,6 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\View\Helper\SecureHtmlRenderer;
 use Magento\Store\Model\StoreManagerInterface;
 use Zend_Json;
 
@@ -56,17 +55,15 @@ class WebhooksButtons extends Field
      * @param RequestInterface $request
      * @param StoreManagerInterface $storeManager
      * @param array $data
-     * @param SecureHtmlRenderer|null $secureRenderer
      */
     public function __construct(
         Context $context,
         RequestInterface $request,
         StoreManagerInterface $storeManager,
-        array $data = [],
-        ?SecureHtmlRenderer $secureRenderer = null
+        array $data = []
     )
     {
-        parent::__construct($context, $data, $secureRenderer);
+        parent::__construct($context, $data);
 
         $this->_request = $request;
         $this->_storeManager = $storeManager;
