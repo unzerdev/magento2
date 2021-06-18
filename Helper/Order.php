@@ -165,11 +165,12 @@ class Order
      *
      * @param Quote $quote
      * @param string $email
+     * @param bool $create
+     *
      * @return Customer
      * @throws HeidelpayApiException
-     * @throws NoSuchEntityException
      */
-    public function createCustomerFromQuote(Quote $quote, string $email): ?Customer
+    public function createCustomerFromQuote(Quote $quote, string $email, bool $create = false): ?Customer
     {
         // A virtual quote does not have any customer data other than E-Mail so we can't create a customer object.
         if ($quote->isVirtual()) {
@@ -200,7 +201,7 @@ class Order
         /** @var Heidelpay $client */
         $client = $this->_moduleConfig->getHeidelpayClient();
 
-        return $client->createCustomer($customer);
+        return $create ? $client->createCustomer($customer) : $customer;
     }
 
     /**

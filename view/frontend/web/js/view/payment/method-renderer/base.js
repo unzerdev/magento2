@@ -88,15 +88,12 @@ define(
             _initializeCustomerFormForB2bCustomer: function (fieldId, errorFieldId, customer) {
                 this.customerProvider = this.sdk.B2BCustomer();
                 this.customerProvider.initFormFields(customer);
-                this.customerProvider.update(
-                    customer.id,
-                    {
-                        containerId: fieldId,
-                        errorHolderId: errorFieldId,
-                        fields: ['companyInfo'],
-                        showHeader: false
-                    }
-                );
+                this.customerProvider.create({
+                    containerId: fieldId,
+                    errorHolderId: errorFieldId,
+                    fields: ['companyInfo'],
+                    showHeader: false
+                });
 
                 // The SDK currently always shows these fields, although we don't specify them in the options above.
                 // Hide them manually since users are not allowed to change them anyways.
@@ -108,16 +105,13 @@ define(
             _initializeCustomerFormForB2cCustomer: function (fieldId, errorFieldId, customer) {
                 this.customerProvider = this.sdk.Customer();
                 this.customerProvider.initFormFields(customer);
-                this.customerProvider.update(
-                    customer.id,
-                    {
-                        infoBoxText: $t('Your date of birth'),
-                        containerId: fieldId,
-                        errorHolderId: errorFieldId,
-                        fields: ['birthdate'],
-                        showHeader: false
-                    }
-                );
+                this.customerProvider.create({
+                    infoBoxText: $t('Your date of birth'),
+                    containerId: fieldId,
+                    errorHolderId: errorFieldId,
+                    /*fields: ['birthdate'],*/
+                    showHeader: false
+                });
             },
 
             initializeForm: function () {
@@ -129,6 +123,7 @@ define(
             },
 
             getData: function () {
+                //console.log(this.customer);
                 return {
                     'method': this.item.method,
                     'po_number': null,
@@ -145,7 +140,7 @@ define(
                     self = this;
 
                 if (this.customerProvider) {
-                    promises = [this.resourceProvider.createResource(), this.customerProvider.updateCustomer()];
+                    promises = [this.resourceProvider.createResource(), this.customerProvider.createCustomer()];
                 } else {
                     promises = [this.resourceProvider.createResource()];
                 }
@@ -160,6 +155,10 @@ define(
                 Promise.all(promises).then(
                     function (values) {
                         self.resourceId = values[0].id;
+                        if (self.customer && values[1]) {
+                            self.customer.id = values[1].id
+                        }
+                        console.log(values[1])
 
                         placeOrderAction(self.getData(), self.messageContainer)
                             .done(function () {
