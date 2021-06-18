@@ -109,9 +109,12 @@ define(
                     infoBoxText: $t('Your date of birth'),
                     containerId: fieldId,
                     errorHolderId: errorFieldId,
-                    /*fields: ['birthdate'],*/
                     showHeader: false
                 });
+
+                var field = $('#' + fieldId);
+                field.find('.field').filter('.city, .company, :has(.country), .street, .zip, .firstname, .lastname').hide();
+                field.find('.heidelpayUI.divider-horizontal:eq(0)').hide();
             },
 
             initializeForm: function () {
@@ -123,7 +126,6 @@ define(
             },
 
             getData: function () {
-                //console.log(this.customer);
                 return {
                     'method': this.item.method,
                     'po_number': null,
@@ -155,10 +157,9 @@ define(
                 Promise.all(promises).then(
                     function (values) {
                         self.resourceId = values[0].id;
-                        if (self.customer && values[1]) {
-                            self.customer.id = values[1].id
+                        if (self.customer() && values[1]) {
+                            self.customer().id = values[1].id
                         }
-                        console.log(values[1])
 
                         placeOrderAction(self.getData(), self.messageContainer)
                             .done(function () {

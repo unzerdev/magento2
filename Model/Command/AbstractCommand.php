@@ -150,6 +150,15 @@ abstract class AbstractCommand implements CommandInterface
         $customerId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
 
         if (empty($customerId)) {
+            try {
+                $papiCustomer = $this->_orderHelper->createCustomerFromOrder($order, $order->getCustomerEmail(), true);
+            } catch (\Exception $exception) {
+                $this->_getClient()->getDebugHandler()->log('Customer Creation failed');
+            }
+            $customerId = $papiCustomer->getId();
+        }
+
+        if (empty($customerId)) {
             return null;
         }
 

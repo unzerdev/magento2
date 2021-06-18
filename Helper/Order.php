@@ -165,12 +165,12 @@ class Order
      *
      * @param Quote $quote
      * @param string $email
-     * @param bool $create
+     * @param bool $createResource
      *
      * @return Customer
      * @throws HeidelpayApiException
      */
-    public function createCustomerFromQuote(Quote $quote, string $email, bool $create = false): ?Customer
+    public function createCustomerFromQuote(Quote $quote, string $email, bool $createResource = false): ?Customer
     {
         // A virtual quote does not have any customer data other than E-Mail so we can't create a customer object.
         if ($quote->isVirtual()) {
@@ -201,7 +201,65 @@ class Order
         /** @var Heidelpay $client */
         $client = $this->_moduleConfig->getHeidelpayClient();
 
-        return $create ? $client->createCustomer($customer) : $customer;
+        return $createResource ? $client->createCustomer($customer) : $customer;
+    }
+
+    /**
+     * Returns a new or updated Heidelpay Customer resource for the given quote.
+     *
+     * @param OrderModel $order
+     * @param string $email
+     * @param bool $createResource
+     *
+     * @return Customer
+     * @throws HeidelpayApiException
+     */
+    public function createCustomerFromOrder(OrderModel $order, string $email, bool $createResource = false): ?Customer
+    {
+        /** @var Heidelpay $client */
+        $client = $this->_moduleConfig->getHeidelpayClient();
+        $client->debugLog('createCostomerFromOder');
+
+
+        // A virtual quote does not have any customer data other than E-Mail so we can't create a customer object.
+        /*if ($order->getIsNotVirtual()) {
+            return null;
+        }*/
+
+        /** @var Quote\Address $billingAddress */
+        $billingAddress = $order->getBillingAddress();
+
+        $client->debugLog('create customer instance');
+
+        /** @var Customer $customer */
+        $customer = CustomerFactory::createCustomer(
+            $billingAddress->getFirstname(),
+            $billingAddress->getLastname()
+        );
+
+        $client->debugLog('set salutation');
+        $gender = $order->getCustomerGender();
+        $customer->setSalutation($this->getSalutationFromGender($gender));
+
+        $client->debugLog('set email');
+        $customer->setEmail($email);
+
+        $client->debugLog('set phone');
+        $customer->setPhone($billingAddress->getTelephone());
+
+        $client->debugLog('set company');
+
+        $company = $billingAddress->getCompany();
+        if (!empty($company)) {
+            $customer->setCompany($company);
+        }
+
+        $this->updateGatewayAddressFromMagento($customer->getBillingAddress(), $billingAddress);
+        $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $order->getShippingAddress());
+
+        $client->debugLog('before customer creation');
+
+        return $createResource ? $client->createCustomer($customer) : $customer;
     }
 
     /**
@@ -321,7 +379,17 @@ class Order
      */
     protected function getSalutationFromQuote(Quote $quote): string
     {
-        switch ($quote->getCustomer()->getGender()) {
+        return $this->getSalutationFromGender($quote->getCustomer()->getGender());
+    }
+
+    /**
+     * @param float | int $gender
+     *
+     * @return string
+     */
+    protected function getSalutationFromGender($gender): string
+    {
+        switch ($gender) {
             case self::GENDER_MALE:
                 $salutation = Salutations::MR;
                 break;
@@ -332,5 +400,5 @@ class Order
                 $salutation = Salutations::UNKNOWN;
         }
         return $salutation;
-    }
+}
 }
