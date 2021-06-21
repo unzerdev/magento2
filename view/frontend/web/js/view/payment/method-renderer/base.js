@@ -106,7 +106,6 @@ define(
                 this.customerProvider = this.sdk.Customer();
                 this.customerProvider.initFormFields(customer);
                 this.customerProvider.create({
-                    infoBoxText: $t('Your date of birth'),
                     containerId: fieldId,
                     errorHolderId: errorFieldId,
                     showHeader: false
@@ -115,6 +114,7 @@ define(
                 var field = $('#' + fieldId);
                 field.find('.field').filter('.city, .company, :has(.country), .street, .zip, .firstname, .lastname').hide();
                 field.find('.heidelpayUI.divider-horizontal:eq(0)').hide();
+                field.find('.heidelpayUI.message.downArrow').hide();
             },
 
             initializeForm: function () {
