@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Fix
 * Payment customer
     * Customer resource was created to early in checkout before order was placed.
-    * Customer data were missing when ordering with  a virtual quote.
+    * Customer data were missing when ordering with a virtual quote.
     * Missing customer-email when ordering with invoice secured and direct debit secured.
     
 ### Added
