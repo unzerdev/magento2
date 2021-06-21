@@ -218,18 +218,8 @@ class Order
     {
         /** @var Heidelpay $client */
         $client = $this->_moduleConfig->getHeidelpayClient();
-        $client->debugLog('createCostomerFromOder');
 
-
-        // A virtual quote does not have any customer data other than E-Mail so we can't create a customer object.
-        /*if ($order->getIsNotVirtual()) {
-            return null;
-        }*/
-
-        /** @var Quote\Address $billingAddress */
         $billingAddress = $order->getBillingAddress();
-
-        $client->debugLog('create customer instance');
 
         /** @var Customer $customer */
         $customer = CustomerFactory::createCustomer(
@@ -237,17 +227,10 @@ class Order
             $billingAddress->getLastname()
         );
 
-        $client->debugLog('set salutation');
         $gender = $order->getCustomerGender();
         $customer->setSalutation($this->getSalutationFromGender($gender));
-
-        $client->debugLog('set email');
         $customer->setEmail($email);
-
-        $client->debugLog('set phone');
         $customer->setPhone($billingAddress->getTelephone());
-
-        $client->debugLog('set company');
 
         $company = $billingAddress->getCompany();
         if (!empty($company)) {
@@ -255,9 +238,11 @@ class Order
         }
 
         $this->updateGatewayAddressFromMagento($customer->getBillingAddress(), $billingAddress);
-        $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $order->getShippingAddress());
 
-        $client->debugLog('before customer creation');
+        $shippingAddress = $order->getShippingAddress();
+        if($shippingAddress) {
+            $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $shippingAddress);
+        }
 
         return $createResource ? $client->createCustomer($customer) : $customer;
     }
@@ -275,8 +260,9 @@ class Order
     {
         $street = $this->convertStreetLinesToString($magentoAddress->getStreet());
 
+        $gatewayAddress->setName($magentoAddress->getName());
         $gatewayAddress->setCity($magentoAddress->getCity());
-        $gatewayAddress->setCountry($magentoAddress->getCountry());
+        $gatewayAddress->setCountry($magentoAddress->getCountryId());
         $gatewayAddress->setStreet($street);
         $gatewayAddress->setZip($magentoAddress->getPostcode());
     }
@@ -306,16 +292,20 @@ class Order
         $gatewayCustomer->setLastname($billingAddress->getLastname());
 
         $gatewayCustomer->setCompany($billingAddress->getCompany());
+        $gatewayCustomer->setEmail($billingAddress->getEmail());
 
         $this->updateGatewayAddressFromMagento(
             $gatewayCustomer->getBillingAddress(),
             $billingAddress
         );
 
-        $this->updateGatewayAddressFromMagento(
-            $gatewayCustomer->getShippingAddress(),
-            $order->getShippingAddress()
-        );
+        $magentoShippingAddress = $order->getShippingAddress();
+        if (null !== $magentoShippingAddress) {
+            $this->updateGatewayAddressFromMagento(
+                $gatewayCustomer->getShippingAddress(),
+                $magentoShippingAddress
+            );
+        }
 
         $client = $this->_moduleConfig->getHeidelpayClient();
         $client->updateCustomer($gatewayCustomer);
@@ -336,18 +326,23 @@ class Order
         // Magento's getCompany() always returns a string, but the heidelpay Customer Address does not, so we must make
         // sure that both have the same type.
         $companyValid = ($order->getBillingAddress()->getCompany() ?? '') === ($gatewayCustomer->getCompany() ?? '');
+        $emailValid = $order->getCustomerEmail() === $gatewayCustomer->getEmail();
 
         $billingAddressValid = $this->validateGatewayAddressAgainstOrderAddress(
             $gatewayCustomer->getBillingAddress(),
             $order->getBillingAddress()
         );
 
-        $shippingAddressValid = $this->validateGatewayAddressAgainstOrderAddress(
-            $gatewayCustomer->getShippingAddress(),
-            $order->getShippingAddress()
-        );
+        $shippingAddress = $order->getShippingAddress();
+        $shippingAddressValid = true;
+        if($shippingAddress !== null) {
+            $shippingAddressValid = $this->validateGatewayAddressAgainstOrderAddress(
+                $gatewayCustomer->getShippingAddress(),
+                $shippingAddress
+            );
+        }
 
-        return $nameValid && $companyValid && $billingAddressValid && $shippingAddressValid;
+        return $nameValid && $companyValid && $billingAddressValid && $shippingAddressValid && $emailValid;
     }
 
     /**

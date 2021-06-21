@@ -5,6 +5,7 @@ namespace Heidelpay\MGW\Model\Command;
 use Heidelpay\MGW\Helper\Order;
 use Heidelpay\MGW\Model\Config;
 use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
+use heidelpayPHP\Exceptions\HeidelpayApiException;
 use heidelpayPHP\Heidelpay;
 use heidelpayPHP\Resources\AbstractHeidelpayResource;
 use heidelpayPHP\Resources\Customer;
@@ -152,10 +153,10 @@ abstract class AbstractCommand implements CommandInterface
         if (empty($customerId)) {
             try {
                 $papiCustomer = $this->_orderHelper->createCustomerFromOrder($order, $order->getCustomerEmail(), true);
+                $customerId = $papiCustomer->getId();
             } catch (\Exception $exception) {
-                $this->_getClient()->getDebugHandler()->log('Customer Creation failed');
+                $customerId = null;
             }
-            $customerId = $papiCustomer->getId();
         }
 
         if (empty($customerId)) {
