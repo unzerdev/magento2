@@ -165,11 +165,12 @@ class Order
      *
      * @param Quote $quote
      * @param string $email
+     * @param bool $createResource
+     *
      * @return Customer
      * @throws HeidelpayApiException
-     * @throws NoSuchEntityException
      */
-    public function createCustomerFromQuote(Quote $quote, string $email): ?Customer
+    public function createCustomerFromQuote(Quote $quote, string $email, bool $createResource = false): ?Customer
     {
         // A virtual quote does not have any customer data other than E-Mail so we can't create a customer object.
         if ($quote->isVirtual()) {
@@ -200,7 +201,50 @@ class Order
         /** @var Heidelpay $client */
         $client = $this->_moduleConfig->getHeidelpayClient();
 
-        return $client->createCustomer($customer);
+        return $createResource ? $client->createCustomer($customer) : $customer;
+    }
+
+    /**
+     * Returns a new or updated Heidelpay Customer resource for the given quote.
+     *
+     * @param OrderModel $order
+     * @param string $email
+     * @param bool $createResource
+     *
+     * @return Customer
+     * @throws HeidelpayApiException
+     */
+    public function createCustomerFromOrder(OrderModel $order, string $email, bool $createResource = false): ?Customer
+    {
+        /** @var Heidelpay $client */
+        $client = $this->_moduleConfig->getHeidelpayClient();
+
+        $billingAddress = $order->getBillingAddress();
+
+        /** @var Customer $customer */
+        $customer = CustomerFactory::createCustomer(
+            $billingAddress->getFirstname(),
+            $billingAddress->getLastname()
+        );
+
+        $gender = $order->getCustomerGender();
+        $customer->setSalutation($this->getSalutationFromGender($gender));
+        $customer->setEmail($email);
+        $customer->setPhone($billingAddress->getTelephone());
+
+        $company = $billingAddress->getCompany();
+        if (!empty($company)) {
+            $customer->setCompany($company);
+        }
+
+        $this->updateGatewayAddressFromMagento($customer->getBillingAddress(), $billingAddress);
+
+        $shippingAddress = $order->getShippingAddress();
+        if($shippingAddress) {
+            $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $shippingAddress);
+        }
+
+        return $createResource ? $client->createCustomer($customer) : $customer;
     }
 
     /**
@@ -216,8 +260,9 @@ class Order
     {
         $street = $this->convertStreetLinesToString($magentoAddress->getStreet());
 
+        $gatewayAddress->setName($magentoAddress->getName());
         $gatewayAddress->setCity($magentoAddress->getCity());
-        $gatewayAddress->setCountry($magentoAddress->getCountry());
+        $gatewayAddress->setCountry($magentoAddress->getCountryId());
         $gatewayAddress->setStreet($street);
         $gatewayAddress->setZip($magentoAddress->getPostcode());
     }
@@ -247,16 +292,20 @@ class Order
         $gatewayCustomer->setLastname($billingAddress->getLastname());
 
         $gatewayCustomer->setCompany($billingAddress->getCompany());
+        $gatewayCustomer->setEmail($billingAddress->getEmail());
 
         $this->updateGatewayAddressFromMagento(
             $gatewayCustomer->getBillingAddress(),
             $billingAddress
         );
 
-        $this->updateGatewayAddressFromMagento(
-            $gatewayCustomer->getShippingAddress(),
-            $order->getShippingAddress()
-        );
+        $magentoShippingAddress = $order->getShippingAddress();
+        if (null !== $magentoShippingAddress) {
+            $this->updateGatewayAddressFromMagento(
+                $gatewayCustomer->getShippingAddress(),
+                $magentoShippingAddress
+            );
+        }
 
         $client = $this->_moduleConfig->getHeidelpayClient();
         $client->updateCustomer($gatewayCustomer);
@@ -277,18 +326,23 @@ class Order
         // Magento's getCompany() always returns a string, but the heidelpay Customer Address does not, so we must make
         // sure that both have the same type.
         $companyValid = ($order->getBillingAddress()->getCompany() ?? '') === ($gatewayCustomer->getCompany() ?? '');
+        $emailValid = $order->getCustomerEmail() === $gatewayCustomer->getEmail();
 
         $billingAddressValid = $this->validateGatewayAddressAgainstOrderAddress(
             $gatewayCustomer->getBillingAddress(),
             $order->getBillingAddress()
         );
 
-        $shippingAddressValid = $this->validateGatewayAddressAgainstOrderAddress(
-            $gatewayCustomer->getShippingAddress(),
-            $order->getShippingAddress()
-        );
+        $shippingAddress = $order->getShippingAddress();
+        $shippingAddressValid = true;
+        if($shippingAddress !== null) {
+            $shippingAddressValid = $this->validateGatewayAddressAgainstOrderAddress(
+                $gatewayCustomer->getShippingAddress(),
+                $shippingAddress
+            );
+        }
 
-        return $nameValid && $companyValid && $billingAddressValid && $shippingAddressValid;
+        return $nameValid && $companyValid && $billingAddressValid && $shippingAddressValid && $emailValid;
     }
 
     /**
@@ -320,7 +374,17 @@ class Order
      */
     protected function getSalutationFromQuote(Quote $quote): string
     {
-        switch ($quote->getCustomer()->getGender()) {
+        return $this->getSalutationFromGender($quote->getCustomer()->getGender());
+    }
+
+    /**
+     * @param float | int $gender
+     *
+     * @return string
+     */
+    protected function getSalutationFromGender($gender): string
+    {
+        switch ($gender) {
             case self::GENDER_MALE:
                 $salutation = Salutations::MR;
                 break;
@@ -331,5 +395,5 @@ class Order
                 $salutation = Salutations::UNKNOWN;
         }
         return $salutation;
-    }
+}
 }
