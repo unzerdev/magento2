@@ -88,15 +88,12 @@ define(
             _initializeCustomerFormForB2bCustomer: function (fieldId, errorFieldId, customer) {
                 this.customerProvider = this.sdk.B2BCustomer();
                 this.customerProvider.initFormFields(customer);
-                this.customerProvider.update(
-                    customer.id,
-                    {
-                        containerId: fieldId,
-                        errorHolderId: errorFieldId,
-                        fields: ['companyInfo'],
-                        showHeader: false
-                    }
-                );
+                this.customerProvider.create({
+                    containerId: fieldId,
+                    errorHolderId: errorFieldId,
+                    fields: ['companyInfo'],
+                    showHeader: false
+                });
 
                 // The SDK currently always shows these fields, although we don't specify them in the options above.
                 // Hide them manually since users are not allowed to change them anyways.
@@ -108,16 +105,16 @@ define(
             _initializeCustomerFormForB2cCustomer: function (fieldId, errorFieldId, customer) {
                 this.customerProvider = this.sdk.Customer();
                 this.customerProvider.initFormFields(customer);
-                this.customerProvider.update(
-                    customer.id,
-                    {
-                        infoBoxText: $t('Your date of birth'),
-                        containerId: fieldId,
-                        errorHolderId: errorFieldId,
-                        fields: ['birthdate'],
-                        showHeader: false
-                    }
-                );
+                this.customerProvider.create({
+                    containerId: fieldId,
+                    errorHolderId: errorFieldId,
+                    showHeader: false
+                });
+
+                var field = $('#' + fieldId);
+                field.find('.field').filter('.city, .company, :has(.country), .street, .zip, .firstname, .lastname').hide();
+                field.find('.heidelpayUI.divider-horizontal:eq(0)').hide();
+                field.find('.heidelpayUI.message.downArrow').hide();
             },
 
             initializeForm: function () {
@@ -145,7 +142,7 @@ define(
                     self = this;
 
                 if (this.customerProvider) {
-                    promises = [this.resourceProvider.createResource(), this.customerProvider.updateCustomer()];
+                    promises = [this.resourceProvider.createResource(), this.customerProvider.createCustomer()];
                 } else {
                     promises = [this.resourceProvider.createResource()];
                 }
@@ -160,6 +157,9 @@ define(
                 Promise.all(promises).then(
                     function (values) {
                         self.resourceId = values[0].id;
+                        if (self.customer() && values[1]) {
+                            self.customer().id = values[1].id
+                        }
 
                         placeOrderAction(self.getData(), self.messageContainer)
                             .done(function () {
