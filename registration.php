@@ -2,4 +2,4 @@
 
 use Magento\Framework\Component\ComponentRegistrar;
 
-ComponentRegistrar::register(ComponentRegistrar::MODULE, 'Heidelpay_MGW', __DIR__);
+ComponentRegistrar::register(ComponentRegistrar::MODULE, 'Unzer_PAPI', __DIR__);

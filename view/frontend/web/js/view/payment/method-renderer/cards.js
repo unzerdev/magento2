@@ -1,7 +1,7 @@
 define(
     [
         'ko',
-        'Heidelpay_MGW/js/view/payment/method-renderer/base'
+        'Unzer_PAPI/js/view/payment/method-renderer/base'
     ],
     function (ko, Component) {
         'use strict';
@@ -13,7 +13,7 @@ define(
                     expiry: {valid: null},
                     number: {valid: null},
                 },
-                template: 'Heidelpay_MGW/payment/cards'
+                template: 'Unzer_PAPI/payment/cards'
             },
 
             initializeForm: function () {

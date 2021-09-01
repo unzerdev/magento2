@@ -154,7 +154,7 @@ class Order
             ->addMetadata('customerId', $order->getCustomerId())
             ->addMetadata('customerGroupId', $order->getCustomerGroupId())
             ->addMetadata('pluginType', 'magento2-merchant-gateway')
-            ->addMetadata('pluginVersion', $this->_moduleList->getOne('Heidelpay_MGW')['setup_version'])
+            ->addMetadata('pluginVersion', $this->_moduleList->getOne('Unzer_PAPI')['setup_version'])
             ->addMetadata('storeId', $order->getStoreId());
 
         return $metaData;

@@ -1,7 +1,7 @@
 define(
     [
         'ko',
-        'Heidelpay_MGW/js/view/payment/method-renderer/base'
+        'Unzer_PAPI/js/view/payment/method-renderer/base'
     ],
     function (ko, Component) {
         'use strict';
@@ -9,7 +9,7 @@ define(
         return Component.extend({
             defaults: {
                 customerType: 'b2b',
-                template: 'Heidelpay_MGW/payment/invoice_guaranteed_b2b'
+                template: 'Unzer_PAPI/payment/invoice_guaranteed_b2b'
             },
 
             initializeForm: function () {

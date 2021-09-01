@@ -2,7 +2,7 @@ define(
     [
         'jquery',
         'ko',
-        'Heidelpay_MGW/js/view/payment/method-renderer/direct_debit'
+        'Unzer_PAPI/js/view/payment/method-renderer/direct_debit'
     ],
     function ($, ko, Component) {
         'use strict';
@@ -10,7 +10,7 @@ define(
         return Component.extend({
             defaults: {
                 ibanValid: false,
-                template: 'Heidelpay_MGW/payment/direct_debit_guaranteed'
+                template: 'Unzer_PAPI/payment/direct_debit_guaranteed'
             },
 
             initializeForm: function () {

@@ -39,7 +39,7 @@ class Plugin
 {
     const BLOCK_NAME = 'checkout.success';
 
-    const PENDING_TEMPLATE = 'Heidelpay_MGW::success/pending.phtml';
+    const PENDING_TEMPLATE = 'Unzer_PAPI::success/pending.phtml';
 
     /**
      * @var Session
