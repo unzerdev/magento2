@@ -5,13 +5,13 @@ namespace Heidelpay\MGW\Model\Command;
 use Heidelpay\MGW\Helper\Order;
 use Heidelpay\MGW\Model\Config;
 use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
-use heidelpayPHP\Heidelpay;
-use heidelpayPHP\Resources\AbstractHeidelpayResource;
-use heidelpayPHP\Resources\Customer;
-use heidelpayPHP\Resources\TransactionTypes\AbstractTransactionType;
-use heidelpayPHP\Resources\TransactionTypes\Authorization;
-use heidelpayPHP\Resources\TransactionTypes\Charge;
-use heidelpayPHP\Services\ResourceNameService;
+use UnzerSDK\Unzer;
+use UnzerSDK\Resources\AbstractHeidelpayResource;
+use UnzerSDK\Resources\Customer;
+use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
+use UnzerSDK\Resources\TransactionTypes\Authorization;
+use UnzerSDK\Resources\TransactionTypes\Charge;
+use UnzerSDK\Services\ResourceNameService;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -142,7 +142,7 @@ abstract class AbstractCommand implements CommandInterface
      * @return string|null
      * @throws LocalizedException
      * @throws NoSuchEntityException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
      */
     protected function _getCustomerId(InfoInterface $payment, \Magento\Sales\Model\Order $order): ?string
     {

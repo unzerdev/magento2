@@ -3,8 +3,8 @@
 namespace Heidelpay\MGW\Model;
 
 use Heidelpay\MGW\Model\Logger\DebugHandler;
-use heidelpayPHP\Heidelpay;
-use heidelpayPHP\Interfaces\DebugHandlerInterface;
+use UnzerSDK\Unzer;
+use UnzerSDK\Interfaces\DebugHandlerInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Locale\Resolver;
 use Magento\Store\Model\ScopeInterface;

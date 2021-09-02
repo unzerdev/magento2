@@ -3,7 +3,7 @@
 namespace Heidelpay\MGW\Model\Command;
 
 use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
+use UnzerSDK\Exceptions\HeidelpayApiException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
@@ -36,7 +36,7 @@ class Authorize extends AbstractCommand
     /**
      * @inheritDoc
      * @throws LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
      */
     public function execute(array $commandSubject)
     {

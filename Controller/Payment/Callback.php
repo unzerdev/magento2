@@ -4,7 +4,7 @@ namespace Heidelpay\MGW\Controller\Payment;
 
 use Heidelpay\MGW\Helper\Payment as PaymentHelper;
 use Heidelpay\MGW\Model\Config;
-use heidelpayPHP\Resources\Payment;
+use UnzerSDK\Resources\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Message\ManagerInterface;

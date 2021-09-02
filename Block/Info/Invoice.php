@@ -4,8 +4,8 @@ namespace Heidelpay\MGW\Block\Info;
 
 use Heidelpay\MGW\Helper\Order as OrderHelper;
 use Heidelpay\MGW\Model\Config;
-use heidelpayPHP\Resources\Payment;
-use heidelpayPHP\Resources\TransactionTypes\Charge;
+use UnzerSDK\Resources\Payment;
+use UnzerSDK\Resources\TransactionTypes\Charge;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Template;
 use Magento\Payment\Block\Info;
@@ -79,7 +79,7 @@ class Invoice extends Info
      * Returns the first charge for the payment.
      *
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
      *
      * @return Charge|null
      */
@@ -92,7 +92,7 @@ class Invoice extends Info
      * Returns the payment.
      *
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
      *
      * @return Payment
      */
@@ -113,7 +113,7 @@ class Invoice extends Info
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
      * @return string
      */
     public function getAccountHolder(): string
@@ -123,7 +123,7 @@ class Invoice extends Info
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
      * @return string
      */
     public function getAccountIban(): string
@@ -133,7 +133,7 @@ class Invoice extends Info
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
      * @return string
      */
     public function getAccountBic(): string
@@ -143,7 +143,7 @@ class Invoice extends Info
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
      * @return string
      */
     public function getReference(): string

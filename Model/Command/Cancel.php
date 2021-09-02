@@ -2,8 +2,8 @@
 
 namespace Heidelpay\MGW\Model\Command;
 
-use heidelpayPHP\Constants\CancelReasonCodes;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
+use UnzerSDK\Constants\CancelReasonCodes;
+use UnzerSDK\Exceptions\HeidelpayApiException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 

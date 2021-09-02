@@ -4,8 +4,8 @@ namespace Heidelpay\MGW\Block\Checkout\Onepage\Success;
 
 use Heidelpay\MGW\Model\Config;
 use Heidelpay\MGW\Model\Method\Base;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Resources\Payment;
+use UnzerSDK\Exceptions\HeidelpayApiException;
+use UnzerSDK\Resources\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Template;

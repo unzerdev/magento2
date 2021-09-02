@@ -3,8 +3,8 @@
 namespace Heidelpay\MGW\Helper;
 
 use Exception;
-use heidelpayPHP\Constants\PaymentState;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
+use UnzerSDK\Constants\PaymentState;
+use UnzerSDK\Exceptions\HeidelpayApiException;
 use Magento\Framework\Lock\LockManagerInterface;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
@@ -123,12 +123,12 @@ class Payment
 
     /**
      * @param Order $order
-     * @param \heidelpayPHP\Resources\Payment $payment
+     * @param \UnzerSDK\Resources\Payment $payment
      * @throws HeidelpayApiException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function processState(Order $order, \heidelpayPHP\Resources\Payment $payment)
+    public function processState(Order $order, \UnzerSDK\Resources\Payment $payment)
     {
         $lockName = sprintf('hpmgw_order_%d', $order->getId());
 
@@ -190,10 +190,10 @@ class Payment
 
     /**
      * @param Order $order
-     * @param \heidelpayPHP\Resources\Payment $payment
+     * @param \UnzerSDK\Resources\Payment $payment
      * @throws HeidelpayApiException
      */
-    private function processCompletedState(Order $order, \heidelpayPHP\Resources\Payment $payment)
+    private function processCompletedState(Order $order, \UnzerSDK\Resources\Payment $payment)
     {
         $orderPayment = $order->getPayment();
 
@@ -253,10 +253,10 @@ class Payment
 
     /**
      * @param Order $order
-     * @param \heidelpayPHP\Resources\Payment $payment
+     * @param \UnzerSDK\Resources\Payment $payment
      * @throws HeidelpayApiException
      */
-    private function processPartlyState(Order $order, \heidelpayPHP\Resources\Payment $payment)
+    private function processPartlyState(Order $order, \UnzerSDK\Resources\Payment $payment)
     {
         $this->processPendingState($order, $payment);
     }
@@ -271,11 +271,11 @@ class Payment
 
     /**
      * @param Order $order
-     * @param \heidelpayPHP\Resources\Payment $payment
+     * @param \UnzerSDK\Resources\Payment $payment
      * @throws HeidelpayApiException
      * @throws Exception
      */
-    private function processPendingState(Order $order, \heidelpayPHP\Resources\Payment $payment)
+    private function processPendingState(Order $order, \UnzerSDK\Resources\Payment $payment)
     {
         $authorization = $payment->getAuthorization();
 

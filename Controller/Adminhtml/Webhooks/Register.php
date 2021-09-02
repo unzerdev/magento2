@@ -3,8 +3,8 @@
 namespace Heidelpay\MGW\Controller\Adminhtml\Webhooks;
 
 use Exception;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Resources\Webhook;
+use UnzerSDK\Exceptions\HeidelpayApiException;
+use UnzerSDK\Resources\Webhook;
 use Magento\Framework\Controller\Result\Redirect;
 
 /**

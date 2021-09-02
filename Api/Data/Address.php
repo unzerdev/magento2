@@ -53,10 +53,10 @@ class Address
     }
 
     /**
-     * @param \heidelpayPHP\Resources\EmbeddedResources\Address $addressResource
+     * @param \UnzerSDK\Resources\EmbeddedResources\Address $addressResource
      * @return static
      */
-    public static function fromResource(\heidelpayPHP\Resources\EmbeddedResources\Address $addressResource): self
+    public static function fromResource(\UnzerSDK\Resources\EmbeddedResources\Address $addressResource): self
     {
         $address = new self();
         $address->name = $addressResource->getName();

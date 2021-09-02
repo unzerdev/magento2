@@ -71,10 +71,10 @@ class Customer
     }
 
     /**
-     * @param \heidelpayPHP\Resources\Customer $customerResource
+     * @param \UnzerSDK\Resources\Customer $customerResource
      * @return static
      */
-    public static function fromResource(\heidelpayPHP\Resources\Customer $customerResource): self
+    public static function fromResource(\UnzerSDK\Resources\Customer $customerResource): self
     {
         $customer = new self();
         $customer->id = $customerResource->getId();

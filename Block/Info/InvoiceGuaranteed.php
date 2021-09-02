@@ -41,7 +41,7 @@ class InvoiceGuaranteed extends Invoice
     /**
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
      */
     public function getCustomerSalutation(): string
     {
@@ -51,7 +51,7 @@ class InvoiceGuaranteed extends Invoice
     /**
      * @return string|null
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
      */
     public function getCustomerBirthdate(): ?string
     {

@@ -6,7 +6,7 @@ use Heidelpay\MGW\Helper\Order as OrderHelper;
 use Heidelpay\MGW\Model\Config;
 use Heidelpay\MGW\Model\Method\Base;
 use Heidelpay\MGW\Model\System\Config\Source\PaymentAction;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
+use UnzerSDK\Exceptions\HeidelpayApiException;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;

@@ -47,10 +47,10 @@ class CompanyInfo
     }
 
     /**
-     * @param \heidelpayPHP\Resources\EmbeddedResources\CompanyInfo $companyInfoResource
+     * @param \UnzerSDK\Resources\EmbeddedResources\CompanyInfo $companyInfoResource
      * @return static
      */
-    public static function fromResource(\heidelpayPHP\Resources\EmbeddedResources\CompanyInfo $companyInfoResource): self
+    public static function fromResource(\UnzerSDK\Resources\EmbeddedResources\CompanyInfo $companyInfoResource): self
     {
         $companyInfo = new self();
         $companyInfo->registrationType = $companyInfoResource->getRegistrationType();

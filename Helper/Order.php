@@ -3,16 +3,16 @@
 namespace Heidelpay\MGW\Helper;
 
 use Heidelpay\MGW\Model\Config;
-use heidelpayPHP\Constants\BasketItemTypes;
-use heidelpayPHP\Constants\Salutations;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Heidelpay;
-use heidelpayPHP\Resources\Basket;
-use heidelpayPHP\Resources\Customer;
-use heidelpayPHP\Resources\CustomerFactory;
-use heidelpayPHP\Resources\EmbeddedResources;
-use heidelpayPHP\Resources\EmbeddedResources\BasketItem;
-use heidelpayPHP\Resources\Metadata;
+use UnzerSDK\Constants\BasketItemTypes;
+use UnzerSDK\Constants\Salutations;
+use UnzerSDK\Exceptions\HeidelpayApiException;
+use UnzerSDK\Unzer;
+use UnzerSDK\Resources\Basket;
+use UnzerSDK\Resources\Customer;
+use UnzerSDK\Resources\CustomerFactory;
+use UnzerSDK\Resources\EmbeddedResources;
+use UnzerSDK\Resources\EmbeddedResources\BasketItem;
+use UnzerSDK\Resources\Metadata;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Module\ModuleListInterface;
