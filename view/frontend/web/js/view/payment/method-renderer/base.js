@@ -5,7 +5,7 @@ define(
         'mage/storage',
         'mage/translate',
         'mage/url',
-        'Heidelpay_MGW/js/model/checkout/customer-loader',
+        'Unzer_PAPI/js/model/checkout/customer-loader',
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/view/payment/default',

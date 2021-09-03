@@ -31,7 +31,7 @@ use Magento\TestFramework\ObjectManager;
  */
 class ModuleConfigTest extends \PHPUnit\Framework\TestCase
 {
-    private $moduleName = 'Heidelpay_MGW';
+    private $moduleName = 'Unzer_PAPI';
 
     public function testTheModuleIsRegistered()
     {

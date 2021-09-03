@@ -37,7 +37,7 @@ use Zend_Json;
  */
 class WebhooksButtons extends Field
 {
-    protected $_template = 'Heidelpay_MGW::system/config/webhooks.phtml';
+    protected $_template = 'Unzer_PAPI::system/config/webhooks.phtml';
 
     /**
      * @var RequestInterface

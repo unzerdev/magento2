@@ -1,13 +1,13 @@
 define(
     [
-        'Heidelpay_MGW/js/view/payment/method-renderer/base'
+        'Unzer_PAPI/js/view/payment/method-renderer/base'
     ],
     function (Component) {
         'use strict';
 
         return Component.extend({
             defaults: {
-                template: 'Heidelpay_MGW/payment/flexipay_direct'
+                template: 'Unzer_PAPI/payment/flexipay_direct'
             },
 
             initializeForm: function () {

@@ -36,7 +36,7 @@ use Magento\Sales\Model\Order;
  */
 class Invoice extends Info
 {
-    protected $_template = 'Heidelpay_MGW::info/invoice.phtml';
+    protected $_template = 'Unzer_PAPI::info/invoice.phtml';
 
     /**
      * @var Config
@@ -71,7 +71,7 @@ class Invoice extends Info
      */
     public function toPdf(): string
     {
-        $this->setTemplate('Heidelpay_MGW::info/pdf/invoice.phtml');
+        $this->setTemplate('Unzer_PAPI::info/pdf/invoice.phtml');
         return $this->toHtml();
     }
 

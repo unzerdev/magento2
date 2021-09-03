@@ -27,14 +27,14 @@ namespace Heidelpay\MGW\Block\Info;
  */
 class InvoiceGuaranteedB2b extends InvoiceGuaranteed
 {
-    protected $_template = 'Heidelpay_MGW::info/invoice_guaranteed_b2b.phtml';
+    protected $_template = 'Unzer_PAPI::info/invoice_guaranteed_b2b.phtml';
 
     /**
      * @inheritDoc
      */
     public function toPdf(): string
     {
-        $this->setTemplate('Heidelpay_MGW::info/pdf/invoice_guaranteed_b2b.phtml');
+        $this->setTemplate('Unzer_PAPI::info/pdf/invoice_guaranteed_b2b.phtml');
         return $this->toHtml();
     }
 }

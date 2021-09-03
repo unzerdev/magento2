@@ -2,7 +2,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <css src="Heidelpay_MGW::css/heidelpay.css"/>
+        <css src="Unzer_PAPI::css/heidelpay.css"/>
     </head>
     <body>
         <referenceBlock name="checkout.root">
@@ -20,8 +20,8 @@
                                                     <item name="children" xsi:type="array">
                                                         <item name="renders" xsi:type="array">
                                                             <item name="children" xsi:type="array">
-                                                                <item name="heidelpay_mgw" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">Heidelpay_MGW/js/view/payment/method-renderer</item>
+                                                                <item name="Unzer_PAPI" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Unzer_PAPI/js/view/payment/method-renderer</item>
                                                                     <item name="methods" xsi:type="array">
                                                                         <item name="hpmgw_cards" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>

@@ -34,7 +34,7 @@ use Magento\Sales\Model\Order;
  */
 class AdditionalPaymentInformation extends Template
 {
-    protected $_template = 'Heidelpay_MGW::success/additional_payment_information.phtml';
+    protected $_template = 'Unzer_PAPI::success/additional_payment_information.phtml';
 
     /**
      * @var Session|null

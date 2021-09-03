@@ -1,14 +1,14 @@
 define(
     [
         'ko',
-        'Heidelpay_MGW/js/view/payment/method-renderer/base'
+        'Unzer_PAPI/js/view/payment/method-renderer/base'
     ],
     function (ko, Component) {
         'use strict';
 
         return Component.extend({
             defaults: {
-                template: 'Heidelpay_MGW/payment/invoice_guaranteed'
+                template: 'Unzer_PAPI/payment/invoice_guaranteed'
             },
 
             initializeForm: function () {
