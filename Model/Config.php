@@ -12,7 +12,7 @@ use Magento\Store\Model\ScopeInterface;
 /**
  * Global Module configuration and SDK provider
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,11 @@ use Magento\Store\Model\ScopeInterface;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Config extends \Magento\Payment\Gateway\Config\Config
 {
@@ -136,7 +136,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * Returns an API client using the configured private key.
      *
      * @param string|null $storeId
-     * @return Heidelpay
+     * @return Unzer
      */
     public function getHeidelpayClient(string $storeId = null): Unzer
     {

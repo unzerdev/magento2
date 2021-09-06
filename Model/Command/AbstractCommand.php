@@ -26,9 +26,9 @@ use Psr\Log\LoggerInterface;
 use function get_class;
 
 /**
- * Abstract Command for using the heidelpay SDK
+ * Abstract Command for using the Unzer SDK
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,11 +42,11 @@ use function get_class;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 abstract class AbstractCommand implements CommandInterface
 {
@@ -58,7 +58,7 @@ abstract class AbstractCommand implements CommandInterface
     protected $_checkoutSession;
 
     /**
-     * @var Heidelpay
+     * @var Unzer
      */
     protected $_client;
 
@@ -123,7 +123,7 @@ abstract class AbstractCommand implements CommandInterface
 
     /**
      * @param string|null $storeCode
-     * @return Heidelpay
+     * @return Unzer
      */
     protected function _getClient(string $storeCode = null): Unzer
     {
@@ -195,7 +195,7 @@ abstract class AbstractCommand implements CommandInterface
     }
 
     /**
-     * Writes heidelpay Ids of the transaction to order history.
+     * Writes Unzer Ids of the transaction to order history.
      *
      * @param SalesOrder $order
      * @param AbstractTransactionType $transaction
@@ -209,7 +209,7 @@ abstract class AbstractCommand implements CommandInterface
     }
 
     /**
-     * Add heidelpay error messages to order history.
+     * Add Unzer error messages to order history.
      *
      * @param SalesOrder $order
      * @param string $code

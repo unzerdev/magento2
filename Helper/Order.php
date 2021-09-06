@@ -21,9 +21,9 @@ use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Model\Order as OrderModel;
 
 /**
- * Helper for generating heidelpay resources for new orders
+ * Helper for generating Unzer resources for new orders
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,11 +37,11 @@ use Magento\Sales\Model\Order as OrderModel;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Order
 {
@@ -161,7 +161,7 @@ class Order
     }
 
     /**
-     * Returns a new or updated Heidelpay Customer resource for the given quote.
+     * Returns a new or updated Unzer Customer resource for the given quote.
      *
      * @param Quote $quote
      * @param string $email
@@ -198,14 +198,14 @@ class Order
         $this->updateGatewayAddressFromMagento($customer->getBillingAddress(), $billingAddress);
         $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $quote->getShippingAddress());
 
-        /** @var Heidelpay $client */
+        /** @var Unzer $client */
         $client = $this->_moduleConfig->getHeidelpayClient();
 
         return $createResource ? $client->createCustomer($customer) : $customer;
     }
 
     /**
-     * Returns a new or updated Heidelpay Customer resource for the given quote.
+     * Returns a new or updated Unzer Customer resource for the given quote.
      *
      * @param OrderModel $order
      * @param string $email
@@ -216,7 +216,7 @@ class Order
      */
     public function createCustomerFromOrder(OrderModel $order, string $email, bool $createResource = false): ?Customer
     {
-        /** @var Heidelpay $client */
+        /** @var Unzer $client */
         $client = $this->_moduleConfig->getHeidelpayClient();
 
         $billingAddress = $order->getBillingAddress();
@@ -248,7 +248,7 @@ class Order
     }
 
     /**
-     * Updates an Heidelpay address from an address in Magento.
+     * Updates an Unzer address from an address in Magento.
      *
      * @param EmbeddedResources\Address $gatewayAddress
      * @param Quote\Address|OrderAddressInterface $magentoAddress
@@ -323,7 +323,7 @@ class Order
         $nameValid = $gatewayCustomer->getFirstname() === $order->getBillingAddress()->getFirstname()
             && $gatewayCustomer->getLastname() === $order->getBillingAddress()->getLastname();
 
-        // Magento's getCompany() always returns a string, but the heidelpay Customer Address does not, so we must make
+        // Magento's getCompany() always returns a string, but the Unzer Customer Address does not, so we must make
         // sure that both have the same type.
         $companyValid = ($order->getBillingAddress()->getCompany() ?? '') === ($gatewayCustomer->getCompany() ?? '');
         $emailValid = $order->getCustomerEmail() === $gatewayCustomer->getEmail();
@@ -364,7 +364,7 @@ class Order
     }
 
     /**
-     * Returns the heidelpay salutation constant depending on the gender of the customer.
+     * Returns the Unzer salutation constant depending on the gender of the customer.
      * Male -> 1 -> mr
      * Female -> 2 -> mrs
      * Default -> unknown

@@ -5,7 +5,7 @@ namespace Unzer\PAPI\Model\Method;
 /**
  * Flexipay Direct payment method
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ namespace Unzer\PAPI\Model\Method;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class FlexipayDirect extends Base
 {
