@@ -19,7 +19,7 @@
                     </field>
                     <field id="webhooks" translate="label" type="button" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="1">
                         <label>Webhooks</label>
-                        <frontend_model>Heidelpay\MGW\Block\System\Config\WebhooksButtons</frontend_model>
+                        <frontend_model>Unzer\PAPI\Block\System\Config\WebhooksButtons</frontend_model>
                     </field>
                     <field id="logging" translate="label,comment" type="select" sortOrder="50"  showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Logging and Debugging</label>
@@ -42,7 +42,7 @@
                     <field id="order_payment_action" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1">
                         <label>Booking Mode</label>
                         <config_path>payment/hpmgw_cards/order_payment_action</config_path>
-                        <source_model>Heidelpay\MGW\Model\System\Config\Source\PaymentAction</source_model>
+                        <source_model>Unzer\PAPI\Model\System\Config\Source\PaymentAction</source_model>
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
@@ -265,7 +265,7 @@
                     <field id="order_payment_action" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1">
                         <label>Payment Action</label>
                         <config_path>payment/hpmgw_paypal/order_payment_action</config_path>
-                        <source_model>Heidelpay\MGW\Model\System\Config\Source\PaymentAction</source_model>
+                        <source_model>Unzer\PAPI\Model\System\Config\Source\PaymentAction</source_model>
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>

@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Logger;
+namespace Unzer\PAPI\Model\Logger;
 
 use UnzerSDK\Interfaces\DebugHandlerInterface;
 use Psr\Log\LoggerInterface;

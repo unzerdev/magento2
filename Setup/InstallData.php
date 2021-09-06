@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\MGW\Setup;
+namespace Unzer\PAPI\Setup;
 
-use Heidelpay\MGW\Helper\Payment;
+use Unzer\PAPI\Helper\Payment;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;

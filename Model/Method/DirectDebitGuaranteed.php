@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Method;
+namespace Unzer\PAPI\Model\Method;
 
 /**
  * Direct debit (guaranteed) payment method

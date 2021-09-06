@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Method;
+namespace Unzer\PAPI\Model\Method;
 
 /**
  * Flexipay Direct payment method

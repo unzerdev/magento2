@@ -1,9 +1,9 @@
 <?php
 
-namespace Heidelpay\MGW\Controller\Payment;
+namespace Unzer\PAPI\Controller\Payment;
 
-use Heidelpay\MGW\Helper\Payment as PaymentHelper;
-use Heidelpay\MGW\Model\Config;
+use Unzer\PAPI\Helper\Payment as PaymentHelper;
+use Unzer\PAPI\Model\Config;
 use UnzerSDK\Resources\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;

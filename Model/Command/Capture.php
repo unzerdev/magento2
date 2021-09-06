@@ -1,10 +1,10 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Command;
+namespace Unzer\PAPI\Model\Command;
 
-use Heidelpay\MGW\Model\Config;
-use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
-use UnzerSDK\Exceptions\HeidelpayApiException;
+use Unzer\PAPI\Model\Config;
+use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
+use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\AbstractHeidelpayResource;
 use UnzerSDK\Resources\TransactionTypes\Authorization;
 use UnzerSDK\Resources\TransactionTypes\Charge;
@@ -59,7 +59,7 @@ class Capture extends AbstractCommand
         Session $checkoutSession,
         Config $config,
         LoggerInterface $logger,
-        \Heidelpay\MGW\Helper\Order $orderHelper,
+        \Unzer\PAPI\Helper\Order $orderHelper,
         UrlInterface $urlBuilder,
         BuilderInterface $transactionBuilder,
         StoreManagerInterface $storeManager
@@ -73,7 +73,7 @@ class Capture extends AbstractCommand
     /**
      * @inheritDoc
      * @throws LocalizedException
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      */
     public function execute(array $commandSubject)
     {
@@ -98,7 +98,7 @@ class Capture extends AbstractCommand
                 $charge = $this->_chargeNew($payment, $amount);
                 $order->addCommentToStatusHistory('heidelpay paymentId: ' . $charge->getPaymentId());
             }
-        } catch (HeidelpayApiException $e) {
+        } catch (UnzerApiException $e) {
             $this->_logger->error($e->getMerchantMessage(), ['incrementId' => $order->getIncrementId()]);
             throw new LocalizedException(__($e->getClientMessage()));
         }
@@ -120,7 +120,7 @@ class Capture extends AbstractCommand
      * @param float $amount
      * @param string|null $storeId
      * @return Charge
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      */
     protected function _chargeExisting(string $paymentId, float $amount, string $storeId = null): Charge
     {
@@ -142,7 +142,7 @@ class Capture extends AbstractCommand
      * @param InfoInterface $payment
      * @param float $amount
      * @return Charge
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */

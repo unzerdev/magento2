@@ -1,9 +1,9 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Config;
+namespace Unzer\PAPI\Model\Config;
 
-use Heidelpay\MGW\Model\Config;
-use Heidelpay\MGW\Model\Method\Base as MethodBase;
+use Unzer\PAPI\Model\Config;
+use Unzer\PAPI\Model\Method\Base as MethodBase;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Helper\Data as PaymentHelper;

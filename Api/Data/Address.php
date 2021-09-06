@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\MGW\Api\Data;
+namespace Unzer\PAPI\Api\Data;
 
 /**
  * Checkout API Address DTO.

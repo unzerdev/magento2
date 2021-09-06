@@ -1,10 +1,10 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Command;
+namespace Unzer\PAPI\Model\Command;
 
-use Heidelpay\MGW\Helper\Order;
-use Heidelpay\MGW\Model\Config;
-use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
+use Unzer\PAPI\Helper\Order;
+use Unzer\PAPI\Model\Config;
+use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
 use UnzerSDK\Unzer;
 use UnzerSDK\Resources\AbstractHeidelpayResource;
 use UnzerSDK\Resources\Customer;
@@ -142,7 +142,7 @@ abstract class AbstractCommand implements CommandInterface
      * @return string|null
      * @throws LocalizedException
      * @throws NoSuchEntityException
-     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      */
     protected function _getCustomerId(InfoInterface $payment, \Magento\Sales\Model\Order $order): ?string
     {

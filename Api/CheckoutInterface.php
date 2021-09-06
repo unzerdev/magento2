@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\MGW\Api;
+namespace Unzer\PAPI\Api;
 
-use Heidelpay\MGW\Api\Data\Customer;
+use Unzer\PAPI\Api\Data\Customer;
 
 /**
  * Checkout API Interface.
@@ -34,7 +34,7 @@ interface CheckoutInterface
      *
      * @param string|null $guestEmail Customer E-Mail address.
      *
-     * @return \Heidelpay\MGW\Api\Data\Customer|null
+     * @return \Unzer\PAPI\Api\Data\Customer|null
      */
     public function getExternalCustomer(?string $guestEmail = null): ?Customer;
 }

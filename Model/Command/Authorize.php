@@ -1,9 +1,9 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Command;
+namespace Unzer\PAPI\Model\Command;
 
-use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
-use UnzerSDK\Exceptions\HeidelpayApiException;
+use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
+use UnzerSDK\Exceptions\UnzerApiException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
@@ -36,7 +36,7 @@ class Authorize extends AbstractCommand
     /**
      * @inheritDoc
      * @throws LocalizedException
-     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      */
     public function execute(array $commandSubject)
     {
@@ -65,7 +65,7 @@ class Authorize extends AbstractCommand
                 null
             );
             $order->addCommentToStatusHistory('heidelpay paymentId: ' . $authorization->getPaymentId());
-        } catch (HeidelpayApiException $e) {
+        } catch (UnzerApiException $e) {
             $this->_logger->error($e->getMerchantMessage(), ['incrementId' => $order->getIncrementId()]);
             throw new LocalizedException(__($e->getClientMessage()));
         }

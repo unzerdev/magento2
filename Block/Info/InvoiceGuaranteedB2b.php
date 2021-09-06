@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\MGW\Block\Info;
+namespace Unzer\PAPI\Block\Info;
 
 /**
  * Customer Account Order Invoice Information Block

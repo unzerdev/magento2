@@ -1,11 +1,11 @@
 <?php
 
-namespace Heidelpay\MGW\Controller\Payment;
+namespace Unzer\PAPI\Controller\Payment;
 
-use Heidelpay\MGW\Helper\Payment as PaymentHelper;
-use Heidelpay\MGW\Model\Config;
+use Unzer\PAPI\Helper\Payment as PaymentHelper;
+use Unzer\PAPI\Model\Config;
 use UnzerSDK\Constants\ApiResponseCodes;
-use UnzerSDK\Exceptions\HeidelpayApiException;
+use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
@@ -111,7 +111,7 @@ abstract class AbstractPaymentAction extends Action
         } catch (\Exception $e) {
             $message = $e->getMessage();
 
-            if ($e instanceof HeidelpayApiException) {
+            if ($e instanceof UnzerApiException) {
                 $message = $e->getClientMessage();
             }
 
@@ -125,7 +125,7 @@ abstract class AbstractPaymentAction extends Action
      * @param Order $order
      * @param Payment $payment
      * @return ResultInterface|ResponseInterface
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      */
     abstract public function executeWith(Order $order, Payment $payment);
 

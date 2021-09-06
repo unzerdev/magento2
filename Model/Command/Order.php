@@ -1,12 +1,12 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Command;
+namespace Unzer\PAPI\Model\Command;
 
-use Heidelpay\MGW\Helper\Order as OrderHelper;
-use Heidelpay\MGW\Model\Config;
-use Heidelpay\MGW\Model\Method\Base;
-use Heidelpay\MGW\Model\System\Config\Source\PaymentAction;
-use UnzerSDK\Exceptions\HeidelpayApiException;
+use Unzer\PAPI\Helper\Order as OrderHelper;
+use Unzer\PAPI\Model\Config;
+use Unzer\PAPI\Model\Method\Base;
+use Unzer\PAPI\Model\System\Config\Source\PaymentAction;
+use UnzerSDK\Exceptions\UnzerApiException;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
@@ -83,7 +83,7 @@ class Order extends AbstractCommand
     /**
      * @inheritDoc
      * @throws LocalizedException
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      * @throws \Exception
      */
     public function execute(array $commandSubject)

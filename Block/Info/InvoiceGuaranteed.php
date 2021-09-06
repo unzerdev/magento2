@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\MGW\Block\Info;
+namespace Unzer\PAPI\Block\Info;
 
 /**
  * Customer Account Order Invoice Information Block
@@ -41,7 +41,7 @@ class InvoiceGuaranteed extends Invoice
     /**
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      */
     public function getCustomerSalutation(): string
     {
@@ -51,7 +51,7 @@ class InvoiceGuaranteed extends Invoice
     /**
      * @return string|null
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      */
     public function getCustomerBirthdate(): ?string
     {

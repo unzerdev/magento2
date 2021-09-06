@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\MGW\Helper;
+namespace Unzer\PAPI\Helper;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Url;

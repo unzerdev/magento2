@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\MGW\Api\Data;
+namespace Unzer\PAPI\Api\Data;
 
 /**
  * Checkout API Customer DTO.
@@ -175,7 +175,7 @@ class Customer
     }
 
     /**
-     * @return \Heidelpay\MGW\Api\Data\Address|null
+     * @return \Unzer\PAPI\Api\Data\Address|null
      */
     public function getBillingAddress(): ?Address
     {
@@ -183,7 +183,7 @@ class Customer
     }
 
     /**
-     * @return \Heidelpay\MGW\Api\Data\Address|null
+     * @return \Unzer\PAPI\Api\Data\Address|null
      */
     public function getShippingAddress(): ?Address
     {
@@ -191,9 +191,9 @@ class Customer
     }
 
     /**
-     * @return \Heidelpay\MGW\Api\Data\CompanyInfo|null
+     * @return \Unzer\PAPI\Api\Data\CompanyInfo|null
      */
-    public function getCompanyInfo(): ?\Heidelpay\MGW\Api\Data\CompanyInfo
+    public function getCompanyInfo(): ?\Unzer\PAPI\Api\Data\CompanyInfo
     {
         return $this->companyInfo;
     }

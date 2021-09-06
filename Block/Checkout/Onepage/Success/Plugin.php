@@ -1,10 +1,10 @@
 <?php
 
-namespace Heidelpay\MGW\Block\Checkout\Onepage\Success;
+namespace Unzer\PAPI\Block\Checkout\Onepage\Success;
 
-use Heidelpay\MGW\Model\Config;
-use Heidelpay\MGW\Model\Method\Base;
-use UnzerSDK\Exceptions\HeidelpayApiException;
+use Unzer\PAPI\Model\Config;
+use Unzer\PAPI\Model\Method\Base;
+use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -92,7 +92,7 @@ class Plugin
                     $subject->setTemplate(self::PENDING_TEMPLATE);
                 }
             } catch (NoSuchEntityException $e) {
-            } catch (HeidelpayApiException $e) {
+            } catch (UnzerApiException $e) {
             }
         }
     }

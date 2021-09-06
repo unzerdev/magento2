@@ -1,10 +1,10 @@
 <?php
 
-namespace Heidelpay\MGW\Api;
+namespace Unzer\PAPI\Api;
 
 use Exception;
-use Heidelpay\MGW\Api\Data\Customer;
-use Heidelpay\MGW\Helper\Order as OrderHelper;
+use Unzer\PAPI\Api\Data\Customer;
+use Unzer\PAPI\Helper\Order as OrderHelper;
 use Magento\Checkout\Model\Session;
 use Magento\Quote\Model\Quote;
 

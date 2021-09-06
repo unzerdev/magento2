@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\MGW\Block\Checkout\Success;
+namespace Unzer\PAPI\Block\Checkout\Success;
 
-use Heidelpay\MGW\Model\Method\Base;
+use Unzer\PAPI\Model\Method\Base;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;

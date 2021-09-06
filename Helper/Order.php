@@ -1,11 +1,11 @@
 <?php
 
-namespace Heidelpay\MGW\Helper;
+namespace Unzer\PAPI\Helper;
 
-use Heidelpay\MGW\Model\Config;
+use Unzer\PAPI\Model\Config;
 use UnzerSDK\Constants\BasketItemTypes;
 use UnzerSDK\Constants\Salutations;
-use UnzerSDK\Exceptions\HeidelpayApiException;
+use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Unzer;
 use UnzerSDK\Resources\Basket;
 use UnzerSDK\Resources\Customer;
@@ -168,7 +168,7 @@ class Order
      * @param bool $createResource
      *
      * @return Customer
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      */
     public function createCustomerFromQuote(Quote $quote, string $email, bool $createResource = false): ?Customer
     {
@@ -212,7 +212,7 @@ class Order
      * @param bool $createResource
      *
      * @return Customer
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      */
     public function createCustomerFromOrder(OrderModel $order, string $email, bool $createResource = false): ?Customer
     {
@@ -281,7 +281,7 @@ class Order
     /**
      * @param OrderModel $order
      * @param Customer $gatewayCustomer
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      * @throws NoSuchEntityException
      */
     public function updateGatewayCustomerFromOrder(OrderModel $order, Customer $gatewayCustomer)

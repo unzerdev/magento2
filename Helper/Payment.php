@@ -1,10 +1,10 @@
 <?php
 
-namespace Heidelpay\MGW\Helper;
+namespace Unzer\PAPI\Helper;
 
 use Exception;
 use UnzerSDK\Constants\PaymentState;
-use UnzerSDK\Exceptions\HeidelpayApiException;
+use UnzerSDK\Exceptions\UnzerApiException;
 use Magento\Framework\Lock\LockManagerInterface;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
@@ -124,7 +124,7 @@ class Payment
     /**
      * @param Order $order
      * @param \UnzerSDK\Resources\Payment $payment
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -191,7 +191,7 @@ class Payment
     /**
      * @param Order $order
      * @param \UnzerSDK\Resources\Payment $payment
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      */
     private function processCompletedState(Order $order, \UnzerSDK\Resources\Payment $payment)
     {
@@ -254,7 +254,7 @@ class Payment
     /**
      * @param Order $order
      * @param \UnzerSDK\Resources\Payment $payment
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      */
     private function processPartlyState(Order $order, \UnzerSDK\Resources\Payment $payment)
     {
@@ -272,7 +272,7 @@ class Payment
     /**
      * @param Order $order
      * @param \UnzerSDK\Resources\Payment $payment
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      * @throws Exception
      */
     private function processPendingState(Order $order, \UnzerSDK\Resources\Payment $payment)

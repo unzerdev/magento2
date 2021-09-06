@@ -1,12 +1,12 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Observer;
+namespace Unzer\PAPI\Model\Observer;
 
-use Heidelpay\MGW\Helper\Payment as PaymentHelper;
-use Heidelpay\MGW\Model\Config;
-use Heidelpay\MGW\Model\Method\Base;
+use Unzer\PAPI\Helper\Payment as PaymentHelper;
+use Unzer\PAPI\Model\Config;
+use Unzer\PAPI\Model\Method\Base;
 use UnzerSDK\Constants\ApiResponseCodes;
-use UnzerSDK\Exceptions\HeidelpayApiException;
+use UnzerSDK\Exceptions\UnzerApiException;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -90,7 +90,7 @@ class ShipmentObserver implements ObserverInterface
     /**
      * @param Observer $observer
      * @return void
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      * @throws NoSuchEntityException
      */
     public function execute(Observer $observer): void
@@ -127,7 +127,7 @@ class ShipmentObserver implements ObserverInterface
 
             try {
                 $payment->ship($invoice->getId());
-            } catch (HeidelpayApiException $e) {
+            } catch (UnzerApiException $e) {
                 if ($e->getCode() !== ApiResponseCodes::API_ERROR_TRANSACTION_SHIP_NOT_ALLOWED &&
                     $e->getCode() !== ApiResponseCodes::CORE_ERROR_INSURANCE_ALREADY_ACTIVATED) {
                     throw $e;

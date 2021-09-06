@@ -1,9 +1,9 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Command;
+namespace Unzer\PAPI\Model\Command;
 
 use UnzerSDK\Constants\CancelReasonCodes;
-use UnzerSDK\Exceptions\HeidelpayApiException;
+use UnzerSDK\Exceptions\UnzerApiException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 
@@ -37,7 +37,7 @@ class Cancel extends AbstractCommand
     /**
      * @inheritDoc
      * @throws LocalizedException
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      */
     public function execute(array $commandSubject)
     {

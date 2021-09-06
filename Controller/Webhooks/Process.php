@@ -1,12 +1,12 @@
 <?php
 
-namespace Heidelpay\MGW\Controller\Webhooks;
+namespace Unzer\PAPI\Controller\Webhooks;
 
 use Exception;
-use Heidelpay\MGW\Helper\Payment as PaymentHelper;
-use Heidelpay\MGW\Helper\Webhooks;
-use Heidelpay\MGW\Model\Config;
-use UnzerSDK\Exceptions\HeidelpayApiException;
+use Unzer\PAPI\Helper\Payment as PaymentHelper;
+use Unzer\PAPI\Helper\Webhooks;
+use Unzer\PAPI\Model\Config;
+use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\AbstractHeidelpayResource;
 use UnzerSDK\Resources\Payment;
 use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
@@ -178,7 +178,7 @@ class Process extends Action implements CsrfAwareActionInterface
                     $response->setBody('Not found');
                 }
             }
-        } catch (HeidelpayApiException $e) {
+        } catch (UnzerApiException $e) {
             $response->setStatusCode(500);
             $response->setBody($e->getClientMessage());
 
@@ -196,7 +196,7 @@ class Process extends Action implements CsrfAwareActionInterface
     /**
      * @param string $requestBody
      * @return Payment|null
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      */
     protected function getPaymentFromEvent(string $requestBody): ?Payment
     {

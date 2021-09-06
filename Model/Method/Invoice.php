@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Method;
+namespace Unzer\PAPI\Model\Method;
 
-use Heidelpay\MGW\Model\Config;
+use Unzer\PAPI\Model\Config;
 use UnzerSDK\Resources\Payment;
 use UnzerSDK\Resources\TransactionTypes\Charge;
 use Magento\Framework\App\Config\ScopeConfigInterface;

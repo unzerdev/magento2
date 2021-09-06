@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\MGW\Model;
+namespace Unzer\PAPI\Model;
 
-use Heidelpay\MGW\Model\Logger\DebugHandler;
+use Unzer\PAPI\Model\Logger\DebugHandler;
 use UnzerSDK\Unzer;
 use UnzerSDK\Interfaces\DebugHandlerInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;

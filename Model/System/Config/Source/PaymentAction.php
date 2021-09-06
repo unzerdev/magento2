@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\MGW\Model\System\Config\Source;
+namespace Unzer\PAPI\Model\System\Config\Source;
 
 use Magento\Framework\Data\OptionSourceInterface;
 

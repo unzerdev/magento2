@@ -1,9 +1,9 @@
 <?php
 
-namespace Heidelpay\MGW\Block\Info;
+namespace Unzer\PAPI\Block\Info;
 
-use Heidelpay\MGW\Helper\Order as OrderHelper;
-use Heidelpay\MGW\Model\Config;
+use Unzer\PAPI\Helper\Order as OrderHelper;
+use Unzer\PAPI\Model\Config;
 use UnzerSDK\Resources\Payment;
 use UnzerSDK\Resources\TransactionTypes\Charge;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -79,7 +79,7 @@ class Invoice extends Info
      * Returns the first charge for the payment.
      *
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      *
      * @return Charge|null
      */
@@ -92,7 +92,7 @@ class Invoice extends Info
      * Returns the payment.
      *
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      *
      * @return Payment
      */
@@ -113,7 +113,7 @@ class Invoice extends Info
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      * @return string
      */
     public function getAccountHolder(): string
@@ -123,7 +123,7 @@ class Invoice extends Info
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      * @return string
      */
     public function getAccountIban(): string
@@ -133,7 +133,7 @@ class Invoice extends Info
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      * @return string
      */
     public function getAccountBic(): string
@@ -143,7 +143,7 @@ class Invoice extends Info
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      * @return string
      */
     public function getReference(): string

@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Logger\Handler;
+namespace Unzer\PAPI\Model\Logger\Handler;
 
 use Magento\Framework\Logger\Handler\Base;
 use Monolog\Logger;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\MGW\Test\Integration;
+namespace Unzer\PAPI\Test\Integration;
 
 use Magento\Framework\Component\ComponentRegistrar;
 use Magento\Framework\Module\ModuleList;

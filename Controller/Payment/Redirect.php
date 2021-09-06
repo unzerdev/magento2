@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\MGW\Controller\Payment;
+namespace Unzer\PAPI\Controller\Payment;
 
 use UnzerSDK\Resources\Payment;
 use UnzerSDK\Resources\TransactionTypes\Authorization;

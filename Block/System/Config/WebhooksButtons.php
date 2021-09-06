@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\MGW\Block\System\Config;
+namespace Unzer\PAPI\Block\System\Config;
 
-use Heidelpay\MGW\Controller\Adminhtml\Webhooks\AbstractAction;
+use Unzer\PAPI\Controller\Adminhtml\Webhooks\AbstractAction;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\App\RequestInterface;

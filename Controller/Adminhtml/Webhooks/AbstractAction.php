@@ -1,9 +1,9 @@
 <?php
 
-namespace Heidelpay\MGW\Controller\Adminhtml\Webhooks;
+namespace Unzer\PAPI\Controller\Adminhtml\Webhooks;
 
-use Heidelpay\MGW\Helper\Webhooks as WebhooksHelper;
-use Heidelpay\MGW\Model\Config;
+use Unzer\PAPI\Helper\Webhooks as WebhooksHelper;
+use Unzer\PAPI\Model\Config;
 use Magento\Backend\App\Action;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
