@@ -38,7 +38,7 @@ define(
                 currentRequest = null;
 
                 // Magento converts camel case to snake case in API responses so we must manually map
-                // the properties to be consistent with the casing for the heidelpay SDK.
+                // the properties to be consistent with the casing for the Unzer SDK.
 
                 customer.billingAddress = customer.billing_address;
                 delete customer.billing_address;

@@ -21,7 +21,7 @@ define(
                     'sepa-direct-debit-guaranteed-customer-error'
                 );
 
-                this.resourceProvider = this.sdk.SepaDirectDebitGuaranteed();
+                this.resourceProvider = this.sdk.SepaDirectDebit();
                 this.resourceProvider.create('sepa-direct-debit-guaranteed', {
                     containerId: 'sepa-direct-debit-guaranteed-iban-field'
                 });

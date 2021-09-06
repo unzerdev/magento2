@@ -1,0 +1,5206 @@
+.unzerUI.divider {
+    margin: 1rem 0;
+    line-height: 1;
+    height: 0;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: rgba(0, 0, 0, .85);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+}
+
+.unzerUI.divider-horizontal {
+    height: 1px;
+    margin: 1rem -20px;
+    background-color: #dadada
+}
+
+.unzerUI.divider:not(.vertical):not(.horizontal) {
+    border-top: 1px solid rgba(34, 36, 38, .15);
+    border-bottom: 1px solid hsla(0, 0%, 100%, .1)
+}
+
+.unzerUI.grid > .column + .divider, .unzerUI.grid > .row > .column + .divider {
+    left: auto
+}
+
+.unzerUI.horizontal.divider {
+    display: table;
+    white-space: nowrap;
+    height: auto;
+    margin: "";
+    line-height: 1;
+    text-align: center
+}
+
+.unzerUI.horizontal.divider:after, .unzerUI.horizontal.divider:before {
+    content: "";
+    display: table-cell;
+    position: relative;
+    top: 50%;
+    width: 50%;
+    background-repeat: no-repeat
+}
+
+.unzerUI.horizontal.divider:before {
+    background-position: right 1em top 50%
+}
+
+.unzerUI.horizontal.divider:after {
+    background-position: left 1em top 50%
+}
+
+.unzerUI.vertical.divider {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    height: 50%;
+    line-height: 0;
+    text-align: center;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%)
+}
+
+.unzerUI.vertical.divider:after, .unzerUI.vertical.divider:before {
+    position: absolute;
+    left: 50%;
+    content: "";
+    z-index: 3;
+    border-left: 1px solid rgba(34, 36, 38, .15);
+    border-right: 1px solid hsla(0, 0%, 100%, .1);
+    width: 0;
+    height: calc(100% - 1rem)
+}
+
+.unzerUI.vertical.divider:before {
+    top: -100%
+}
+
+.unzerUI.vertical.divider:after {
+    top: auto;
+    bottom: 0
+}
+
+@media only screen and (max-width: 767px) {
+    .unzerUI.grid .stackable.row .unzerUI.vertical.divider, .unzerUI.stackable.grid .unzerUI.vertical.divider {
+        display: table;
+        white-space: nowrap;
+        height: auto;
+        margin: "";
+        overflow: hidden;
+        line-height: 1;
+        text-align: center;
+        position: static;
+        top: 0;
+        left: 0;
+        -webkit-transform: none;
+        transform: none
+    }
+
+    .unzerUI.grid .stackable.row .unzerUI.vertical.divider:after, .unzerUI.grid .stackable.row .unzerUI.vertical.divider:before, .unzerUI.stackable.grid .unzerUI.vertical.divider:after, .unzerUI.stackable.grid .unzerUI.vertical.divider:before {
+        position: static;
+        left: 0;
+        border-left: none;
+        border-right: none;
+        content: "";
+        display: table-cell;
+        position: relative;
+        top: 50%;
+        width: 50%;
+        background-repeat: no-repeat
+    }
+
+    .unzerUI.grid .stackable.row .unzerUI.vertical.divider:before, .unzerUI.stackable.grid .unzerUI.vertical.divider:before {
+        background-position: right 1em top 50%
+    }
+
+    .unzerUI.grid .stackable.row .unzerUI.vertical.divider:after, .unzerUI.stackable.grid .unzerUI.vertical.divider:after {
+        background-position: left 1em top 50%
+    }
+}
+
+.unzerUI.divider > .icon {
+    margin: 0;
+    font-size: 1em;
+    height: 1em;
+    vertical-align: middle
+}
+
+.unzerUI.hidden.divider {
+    border-color: transparent !important
+}
+
+.unzerUI.hidden.divider:after, .unzerUI.hidden.divider:before {
+    display: none
+}
+
+.unzerUI.divider.inverted, .unzerUI.horizontal.inverted.divider, .unzerUI.vertical.inverted.divider {
+    color: #fff
+}
+
+.unzerUI.divider.inverted, .unzerUI.divider.inverted:after, .unzerUI.divider.inverted:before {
+    border-color: rgba(34, 36, 38, .15) hsla(0, 0%, 100%, .15) hsla(0, 0%, 100%, .15) rgba(34, 36, 38, .15) !important
+}
+
+.unzerUI.fitted.divider {
+    margin: 0
+}
+
+.unzerUI.clearing.divider {
+    clear: both
+}
+
+.unzerUI.section.divider {
+    margin-top: 2rem;
+    margin-bottom: 2rem
+}
+
+.unzerUI.divider {
+    font-size: 1em
+}
+
+.unzerUI.form {
+    position: relative;
+    max-width: 100%
+}
+
+.unzerUI.form > p {
+    margin: 1em 0
+}
+
+.unzerUI.form .field {
+    clear: both;
+    box-sizing: border-box;
+    margin: 0 0 1em
+}
+
+.unzerUI.form .field:last-child, .unzerUI.form .fields:last-child, .unzerUI.form .fields:last-child .field {
+    margin-bottom: 0
+}
+
+.unzerUI.form .fields .field {
+    clear: both;
+    margin: 0
+}
+
+.unzerDisplayNone {
+    display: none
+}
+
+.unzerUI.form .field > label {
+    display: block;
+    margin: 0 0 .28571429rem;
+    color: #000;
+    text-transform: none
+}
+
+.unzerUI.label.subtitle {
+    display: block;
+    margin: 0 0 1.5rem;
+    color: #002c44;
+    text-transform: none;
+    font-weight: 600;
+    line-height: 1.25
+}
+
+.unzerUI.form input:not([type]), .unzerUI.form input[type=date], .unzerUI.form input[type=datetime-local], .unzerUI.form input[type=email], .unzerUI.form input[type=file], .unzerUI.form input[type=number], .unzerUI.form input[type=password], .unzerUI.form input[type=search], .unzerUI.form input[type=tel], .unzerUI.form input[type=text], .unzerUI.form input[type=time], .unzerUI.form input[type=url], .unzerUI.form textarea {
+    font-family: inherit;
+    width: 100%;
+    vertical-align: top
+}
+
+.unzerUI.form input:not(.unzerChoices__input), .unzerUI.form input:not([type]), .unzerUI.form input[type=date], .unzerUI.form input[type=datetime-local], .unzerUI.form input[type=email], .unzerUI.form input[type=file], .unzerUI.form input[type=number], .unzerUI.form input[type=password], .unzerUI.form input[type=search], .unzerUI.form input[type=tel], .unzerUI.form input[type=text], .unzerUI.form input[type=time], .unzerUI.form input[type=url] {
+    margin: 0;
+    outline: none;
+    -webkit-appearance: none;
+    line-height: 1rem;
+    height: 1rem;
+    padding: 11px 1rem;
+    font-size: 1em;
+    background: #fff;
+    border: 1px solid #dadada;
+    color: #000;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, .2)
+}
+
+.unzerUI.form select {
+    font-size: 1em;
+    display: block;
+    height: auto;
+    width: 100%;
+    background: #fff;
+    border: 1px solid rgba(34, 36, 38, .15);
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 0 transparent;
+    padding: .62em 1em;
+    color: rgba(0, 0, 0, .87);
+    transition: color .1s ease, border-color .1s ease
+}
+
+.unzerUI.form .field > .selection.dropdown, .unzerUI.form .field > .unzerChoices {
+    width: 100%;
+    box-sizing: border-box;
+    height: 40px
+}
+
+.unzerUI.form .field > .selection.dropdown i.icon:before {
+    margin-left: 0
+}
+
+.unzerUI.form .field > .selection.dropdown > .dropdown.icon {
+    float: right
+}
+
+.unzerUI.form .inline.field > .selection.dropdown, .unzerUI.form .inline.fields .field > .selection.dropdown {
+    width: auto
+}
+
+.unzerUI.form .inline.field > .selection.dropdown > .dropdown.icon, .unzerUI.form .inline.fields .field > .selection.dropdown > .dropdown.icon {
+    float: none
+}
+
+.unzerUI.form .field .unzerUI.input, .unzerUI.form .fields .field .unzerUI.input, .unzerUI.form .wide.field .unzerUI.input {
+    width: 100%
+}
+
+.unzerUI.form .inline.field:not(.wide) .unzerUI.input, .unzerUI.form .inline.fields .field:not(.wide) .unzerUI.input {
+    width: auto;
+    vertical-align: middle
+}
+
+.unzerUI.form .field .unzerUI.input input, .unzerUI.form .fields .field .unzerUI.input input {
+    width: auto
+}
+
+.unzerUI.form .eight.fields .unzerUI.input input, .unzerUI.form .five.fields .unzerUI.input input, .unzerUI.form .four.fields .unzerUI.input input, .unzerUI.form .nine.fields .unzerUI.input input, .unzerUI.form .seven.fields .unzerUI.input input, .unzerUI.form .six.fields .unzerUI.input input, .unzerUI.form .ten.fields .unzerUI.input input, .unzerUI.form .three.fields .unzerUI.input input, .unzerUI.form .two.fields .unzerUI.input input, .unzerUI.form .wide.field .unzerUI.input .unzerInput, .unzerUI.form .wide.field .unzerUI.input input {
+    flex: 1 0 auto;
+    width: 0
+}
+
+.unzerUI.form .error.message, .unzerUI.form .success.message, .unzerUI.form .warning.message {
+    display: none;
+    margin-top: .5rem;
+    min-height: 1rem;
+    background: transparent;
+    border: none;
+    padding: 0;
+    line-height: 1rem;
+    font-size: 1em;
+    border-radius: 0;
+    box-shadow: none
+}
+
+.unzerUI.form .error.message {
+    color: #d0021b
+}
+
+.unzerUI.form .message:first-child {
+    margin-top: 0
+}
+
+.unzerUI.form .field .prompt.label {
+    white-space: normal;
+    background: #fff !important;
+    border: 1px solid #e0b4b4 !important;
+    color: #d0021b !important
+}
+
+.unzerUI.form .inline.field .prompt, .unzerUI.form .inline.fields .field .prompt {
+    vertical-align: top;
+    margin: -.25em 0 -.5em .5em
+}
+
+.unzerUI.form .inline.field .prompt:before, .unzerUI.form .inline.fields .field .prompt:before {
+    border-width: 0 0 1px 1px;
+    bottom: auto;
+    right: auto;
+    top: 50%;
+    left: 0
+}
+
+.unzerUI.form ::-webkit-input-placeholder {
+    color: #999
+}
+
+.unzerUI.form :-ms-input-placeholder {
+    color: #999 !important
+}
+
+.unzerUI.form ::-moz-placeholder {
+    color: #999
+}
+
+.unzerUI.form.success .success.message:not(:empty) {
+    display: block
+}
+
+.unzerUI.form.success .compact.success.message:not(:empty) {
+    display: inline-block
+}
+
+.unzerUI.form.success .icon.success.message:not(:empty) {
+    display: flex
+}
+
+.unzerUI.form.error .error.message:not(:empty) {
+    display: block
+}
+
+.unzerUI.form.error .compact.error.message:not(:empty) {
+    display: inline-block
+}
+
+.unzerUI.form.error .icon.error.message:not(:empty) {
+    display: flex
+}
+
+.unzerUI.form .field.error .error.message:not(:empty), .unzerUI.form .fields.error .field .error.message:not(:empty) {
+    display: block
+}
+
+.unzerUI.form .field.error .compact.error.message:not(:empty), .unzerUI.form .fields.error .field .compact.error.message:not(:empty) {
+    display: inline-block
+}
+
+.unzerUI.form .field.error icon.error.message:not(:empty), .unzerUI.form .fields.error .field icon.error.message:not(:empty) {
+    display: flex
+}
+
+.unzerUI.form .field.error .input, .unzerUI.form .field.error label, .unzerUI.form .fields.error .field .input, .unzerUI.form .fields.error .field label {
+    color: #d0021b
+}
+
+.unzerUI.form .field.error .corner.label, .unzerUI.form .fields.error .field .corner.label {
+    border-color: #d0021b;
+    color: #fff
+}
+
+.unzerUI.form .field.error .unzerInput, .unzerUI.form .field.error input:not([type]), .unzerUI.form .field.error input[type=date], .unzerUI.form .field.error input[type=datetime-local], .unzerUI.form .field.error input[type=email], .unzerUI.form .field.error input[type=file], .unzerUI.form .field.error input[type=number], .unzerUI.form .field.error input[type=password], .unzerUI.form .field.error input[type=search], .unzerUI.form .field.error input[type=tel], .unzerUI.form .field.error input[type=text], .unzerUI.form .field.error input[type=time], .unzerUI.form .field.error input[type=url], .unzerUI.form .field.error select, .unzerUI.form .field.error textarea, .unzerUI.form .fields.error .field .unzerInput, .unzerUI.form .fields.error .field input:not([type]), .unzerUI.form .fields.error .field input[type=date], .unzerUI.form .fields.error .field input[type=datetime-local], .unzerUI.form .fields.error .field input[type=email], .unzerUI.form .fields.error .field input[type=file], .unzerUI.form .fields.error .field input[type=number], .unzerUI.form .fields.error .field input[type=password], .unzerUI.form .fields.error .field input[type=search], .unzerUI.form .fields.error .field input[type=tel], .unzerUI.form .fields.error .field input[type=text], .unzerUI.form .fields.error .field input[type=time], .unzerUI.form .fields.error .field input[type=url], .unzerUI.form .fields.error .field select, .unzerUI.form .fields.error .field textarea {
+    background: #fff6f6;
+    border-color: #d0021b;
+    box-shadow: none
+}
+
+.unzerUI.form .field.error select {
+    -webkit-appearance: menulist-button
+}
+
+.unzerUI.form .field.error .unzerUI.dropdown, .unzerUI.form .field.error .unzerUI.dropdown .item, .unzerUI.form .field.error .unzerUI.dropdown .text, .unzerUI.form .fields.error .field .unzerUI.dropdown, .unzerUI.form .fields.error .field .unzerUI.dropdown .item {
+    background: #fff6f6
+}
+
+.unzerUI.form .field.error .unzerUI.dropdown, .unzerUI.form .field.error .unzerUI.dropdown:hover, .unzerUI.form .fields.error .field .unzerUI.dropdown, .unzerUI.form .fields.error .field .unzerUI.dropdown:hover {
+    border-color: #d0021b !important
+}
+
+.unzerUI.form .field.error .unzerUI.dropdown:hover .menu, .unzerUI.form .fields.error .field .unzerUI.dropdown:hover .menu {
+    border-color: #d0021b
+}
+
+.unzerUI.form .field.error .unzerUI.multiple.selection.dropdown > .label, .unzerUI.form .fields.error .field .unzerUI.multiple.selection.dropdown > .label {
+    background-color: #fff6f6
+}
+
+.unzerUI.form .field.error .unzerUI.dropdown .menu .item:hover, .unzerUI.form .field.error .unzerUI.dropdown .menu .selected.item, .unzerUI.form .fields.error .field .unzerUI.dropdown .menu .item:hover, .unzerUI.form .fields.error .field .unzerUI.dropdown .menu .selected.item {
+    background-color: #fbe7e7
+}
+
+.unzerUI.form .field.error .unzerUI.dropdown .menu .active.item, .unzerUI.form .fields.error .field .unzerUI.dropdown .menu .active.item {
+    background-color: #fdcfcf !important
+}
+
+.unzerUI.form .field.error .checkbox:not(.toggle):not(.slider) .box, .unzerUI.form .field.error .checkbox:not(.toggle):not(.slider) label, .unzerUI.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box, .unzerUI.form .fields.error .field .checkbox:not(.toggle):not(.slider) label {
+    color: #d0021b
+}
+
+.unzerUI.form .field.error .checkbox:not(.toggle):not(.slider) .box:before, .unzerUI.form .field.error .checkbox:not(.toggle):not(.slider) label:before, .unzerUI.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box:before, .unzerUI.form .fields.error .field .checkbox:not(.toggle):not(.slider) label:before {
+    background: #fff6f6;
+    border-color: #e0b4b4
+}
+
+.unzerUI.form .field.error .checkbox .box:after, .unzerUI.form .field.error .checkbox label:after, .unzerUI.form .fields.error .field .checkbox .box:after, .unzerUI.form .fields.error .field .checkbox label:after {
+    color: #d0021b
+}
+
+.unzerUI.form .disabled.field, .unzerUI.form .disabled.fields .field, .unzerUI.form .field :disabled {
+    pointer-events: none;
+    opacity: .45
+}
+
+.unzerUI.form .field.disabled > label, .unzerUI.form .fields.disabled > label {
+    opacity: .45
+}
+
+.unzerUI.form .field.disabled :disabled {
+    opacity: 1
+}
+
+.unzerUI.form .fields {
+    display: flex;
+    flex-direction: row;
+    margin: 0 -.5em 1em
+}
+
+@media only screen and (max-width: 767px) {
+    .unzerUI.form .fields {
+        flex-direction: column
+    }
+}
+
+.unzerUI.form .fields > .field {
+    flex: 0 1 auto;
+    padding-left: .5em;
+    padding-right: .5em
+}
+
+.unzerUI.form .fields > .field:first-child {
+    border-left: none;
+    box-shadow: none
+}
+
+.unzerUI.form .two.fields > .field, .unzerUI.form .two.fields > .fields {
+    width: 50%
+}
+
+.unzerUI.form .three.fields > .field, .unzerUI.form .three.fields > .fields {
+    width: 33.33333333%
+}
+
+.unzerUI.form .four.fields > .field, .unzerUI.form .four.fields > .fields {
+    width: 25%
+}
+
+.unzerUI.form .five.fields > .field, .unzerUI.form .five.fields > .fields {
+    width: 20%
+}
+
+.unzerUI.form .six.fields > .field, .unzerUI.form .six.fields > .fields {
+    width: 16.66666667%
+}
+
+.unzerUI.form .seven.fields > .field, .unzerUI.form .seven.fields > .fields {
+    width: 14.28571429%
+}
+
+.unzerUI.form .eight.fields > .field, .unzerUI.form .eight.fields > .fields {
+    width: 12.5%
+}
+
+.unzerUI.form .nine.fields > .field, .unzerUI.form .nine.fields > .fields {
+    width: 11.11111111%
+}
+
+.unzerUI.form .ten.fields > .field, .unzerUI.form .ten.fields > .fields {
+    width: 10%
+}
+
+@media only screen and (max-width: 767px) {
+    .unzerUI.form .fields {
+        flex-wrap: wrap
+    }
+
+    .unzerUI.form:not(.unstackable) .eight.fields:not(.unstackable) > .field, .unzerUI.form:not(.unstackable) .eight.fields:not(.unstackable) > .fields, .unzerUI.form:not(.unstackable) .five.fields:not(.unstackable) > .field, .unzerUI.form:not(.unstackable) .five.fields:not(.unstackable) > .fields, .unzerUI.form:not(.unstackable) .four.fields:not(.unstackable) > .field, .unzerUI.form:not(.unstackable) .four.fields:not(.unstackable) > .fields, .unzerUI.form:not(.unstackable) .nine.fields:not(.unstackable) > .field, .unzerUI.form:not(.unstackable) .nine.fields:not(.unstackable) > .fields, .unzerUI.form:not(.unstackable) .seven.fields:not(.unstackable) > .field, .unzerUI.form:not(.unstackable) .seven.fields:not(.unstackable) > .fields, .unzerUI.form:not(.unstackable) .six.fields:not(.unstackable) > .field, .unzerUI.form:not(.unstackable) .six.fields:not(.unstackable) > .fields, .unzerUI.form:not(.unstackable) .ten.fields:not(.unstackable) > .field, .unzerUI.form:not(.unstackable) .ten.fields:not(.unstackable) > .fields, .unzerUI.form:not(.unstackable) .three.fields:not(.unstackable) > .field, .unzerUI.form:not(.unstackable) .three.fields:not(.unstackable) > .fields, .unzerUI.form:not(.unstackable) .two.fields:not(.unstackable) > .field, .unzerUI.form:not(.unstackable) .two.fields:not(.unstackable) > .fields, .unzerUI.form:not(.unstackable) [class*="equal width"].fields:not(.unstackable) > .field, .unzerUI[class*="equal width"].form:not(.unstackable) .fields > .field {
+        width: 100% !important;
+        margin: 0 0 1em
+    }
+
+    .unzerUI.form .inline.field > label, .unzerUI.form .inline.field > p, .unzerUI.form .inline.fields .field > label, .unzerUI.form .inline.fields .field > p, .unzerUI.form .inline.fields > label {
+        display: none !important;
+        opacity: 0
+    }
+}
+
+.unzerUI.form .fields .wide.field {
+    width: 6.25%;
+    padding-left: .5em;
+    padding-right: .5em
+}
+
+.unzerUI.form .one.wide.field {
+    width: 6.25% !important
+}
+
+.unzerUI.form .two.wide.field {
+    width: 12.5% !important
+}
+
+.unzerUI.form .three.wide.field {
+    width: 18.75% !important
+}
+
+.unzerUI.form .four.wide.field {
+    width: 25% !important
+}
+
+.unzerUI.form .five.wide.field {
+    width: 31.25% !important
+}
+
+.unzerUI.form .six.wide.field {
+    width: 37.5% !important
+}
+
+.unzerUI.form .seven.wide.field {
+    width: 43.75% !important
+}
+
+.unzerUI.form .eight.wide.field {
+    width: 50% !important
+}
+
+.unzerUI.form .nine.wide.field {
+    width: 56.25% !important
+}
+
+.unzerUI.form .ten.wide.field {
+    width: 62.5% !important
+}
+
+.unzerUI.form .eleven.wide.field {
+    width: 68.75% !important
+}
+
+.unzerUI.form .twelve.wide.field {
+    width: 75% !important
+}
+
+.unzerUI.form .thirteen.wide.field {
+    width: 81.25% !important
+}
+
+.unzerUI.form .fourteen.wide.field {
+    width: 87.5% !important
+}
+
+.unzerUI.form .fifteen.wide.field {
+    width: 93.75% !important
+}
+
+.unzerUI.form .sixteen.wide.field {
+    width: 100% !important
+}
+
+@media only screen and (max-width: 767px) {
+    .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .eight.wide.field, .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .eleven.wide.field, .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .fifteen.wide.field, .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .five.wide.field, .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .four.wide.field, .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .fourteen.wide.field, .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .nine.wide.field, .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .seven.wide.field, .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .six.wide.field, .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .sixteen.wide.field, .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .ten.wide.field, .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .thirteen.wide.field, .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .three.wide.field, .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .twelve.wide.field, .unzerUI.form:not(.unstackable) .fields:not(.unstackable) > .two.wide.field, .unzerUI.form:not(.unstackable) .five.fields:not(.unstackable) > .field, .unzerUI.form:not(.unstackable) .five.fields:not(.unstackable) > .fields, .unzerUI.form:not(.unstackable) .four.fields:not(.unstackable) > .field, .unzerUI.form:not(.unstackable) .four.fields:not(.unstackable) > .fields, .unzerUI.form:not(.unstackable) .three.fields:not(.unstackable) > .field, .unzerUI.form:not(.unstackable) .three.fields:not(.unstackable) > .fields, .unzerUI.form:not(.unstackable) .two.fields:not(.unstackable) > .field, .unzerUI.form:not(.unstackable) .two.fields:not(.unstackable) > .fields {
+        width: 100% !important
+    }
+
+    .unzerUI.form .fields {
+        margin-bottom: 0
+    }
+}
+
+.unzerUI.form [class*="equal width"].fields > .field, .unzerUI[class*="equal width"].form .fields > .field {
+    width: 100%;
+    flex: 1 1 auto
+}
+
+.unzerUI.form .inline.fields {
+    margin: 0 0 1em;
+    align-items: flex-start
+}
+
+.unzerUI.form .inline.fields .field {
+    margin: 0;
+    padding: 0 1em 0 0
+}
+
+.unzerUI.form .inline.field > label, .unzerUI.form .inline.field > p, .unzerUI.form .inline.fields .field > label, .unzerUI.form .inline.fields .field > p, .unzerUI.form .inline.fields > label {
+    display: inline-block;
+    width: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    vertical-align: baseline;
+    font-size: 1em;
+    color: #000;
+    text-transform: none
+}
+
+.unzerUI.form .inline.fields > label {
+    margin: .035714em 1em 0 0
+}
+
+.unzerUI.form .inline.field > input, .unzerUI.form .inline.field > select, .unzerUI.form .inline.fields .field > input, .unzerUI.form .inline.fields .field > select {
+    display: inline-block;
+    width: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    vertical-align: middle;
+    font-size: 1em
+}
+
+.unzerUI.form .inline.field > :first-child, .unzerUI.form .inline.fields .field > :first-child {
+    margin: 0 .85714286em 0 0
+}
+
+.unzerUI.form .inline.field > :only-child, .unzerUI.form .inline.fields .field > :only-child {
+    margin: 0
+}
+
+.unzerUI.form .inline.fields .wide.field {
+    display: flex;
+    align-items: center
+}
+
+.unzerUI.form .inline.fields .wide.field > input, .unzerUI.form .inline.fields .wide.field > select {
+    width: 100%
+}
+
+/*!
+ * # Semantic UI 2.4.1 - Button
+ * http://github.com/semantic-org/semantic-ui/
+ *
+ *
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ *
+ */
+.unzerUI.button {
+    font-family: inherit;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    min-height: 1rem;
+    height: 40px;
+    outline: none;
+    border: none;
+    vertical-align: baseline;
+    background: #56b1e3 none;
+    margin: 0 .25em 0 0;
+    padding: 12px 1.5em;
+    text-transform: none;
+    text-shadow: none;
+    font-weight: 700;
+    line-height: 1rem;
+    font-style: normal;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 2px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: opacity .1s ease, background-color .1s ease, color .1s ease, box-shadow .1s ease, background .1s ease;
+    will-change: "";
+    -webkit-tap-highlight-color: transparent
+}
+
+a.unzerUI.button:-webkit-any-link {
+    color: #fff
+}
+
+a.unzerUI.button:-moz-any-link {
+    color: #fff
+}
+
+a.unzerUI.button:any-link {
+    color: #fff
+}
+
+.unzerUI.button:hover {
+    background-color: #cacbcd;
+    background-image: none;
+    box-shadow: inset 0 0 0 1px transparent, inset 0 0 0 0 rgba(34, 36, 38, .15);
+    color: rgba(0, 0, 0, .8)
+}
+
+.unzerUI.button:hover .icon {
+    opacity: .85
+}
+
+.unzerUI.button:focus {
+    background-color: #cacbcd;
+    color: rgba(0, 0, 0, .8);
+    background-image: "" !important;
+    box-shadow: "" !important
+}
+
+.unzerUI.button:focus .icon {
+    opacity: .85
+}
+
+.unzerUI.active.button:active, .unzerUI.button:active {
+    background-color: #babbbc;
+    background-image: "";
+    color: rgba(0, 0, 0, .9);
+    box-shadow: inset 0 0 0 1px transparent, none
+}
+
+.unzerUI.active.button {
+    box-shadow: inset 0 0 0 1px transparent
+}
+
+.unzerUI.active.button, .unzerUI.active.button:hover {
+    background-color: #c0c1c2;
+    background-image: none;
+    color: rgba(0, 0, 0, .95)
+}
+
+.unzerUI.active.button:active {
+    background-color: #c0c1c2;
+    background-image: none
+}
+
+.unzerUI.loading.loading.loading.loading.loading.loading.button {
+    position: relative;
+    cursor: default;
+    text-shadow: none !important;
+    color: transparent !important;
+    opacity: 1;
+    pointer-events: auto;
+    transition: all 0s linear, opacity .1s ease
+}
+
+.unzerUI.loading.button:before {
+    border-radius: 500rem;
+    border: .2em solid rgba(0, 0, 0, .15)
+}
+
+.unzerUI.loading.button:after, .unzerUI.loading.button:before {
+    position: absolute;
+    content: "";
+    top: 50%;
+    left: 50%;
+    margin: -.64285714em 0 0 -.64285714em;
+    width: 1.28571429em;
+    height: 1.28571429em
+}
+
+.unzerUI.loading.button:after {
+    -webkit-animation: button-spin .6s linear;
+    animation: button-spin .6s linear;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    border-radius: 500rem;
+    border: .2em solid transparent;
+    border-top-color: #fff;
+    box-shadow: 0 0 0 1px transparent
+}
+
+.unzerUI.labeled.icon.loading.button .icon {
+    background-color: transparent;
+    box-shadow: none
+}
+
+@-webkit-keyframes button-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+    }
+    to {
+        -webkit-transform: rotate(1turn);
+        transform: rotate(1turn)
+    }
+}
+
+@keyframes button-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+    }
+    to {
+        -webkit-transform: rotate(1turn);
+        transform: rotate(1turn)
+    }
+}
+
+.unzerUI.basic.loading.button:not(.inverted):before {
+    border-color: rgba(0, 0, 0, .1)
+}
+
+.unzerUI.basic.loading.button:not(.inverted):after {
+    border-top-color: #767676
+}
+
+.unzerUI.button:disabled, .unzerUI.buttons .disabled.button, .unzerUI.disabled.active.button, .unzerUI.disabled.button, .unzerUI.disabled.button:hover {
+    cursor: default;
+    opacity: .45 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    pointer-events: none !important
+}
+
+.unzerUI.basic.buttons .unzerUI.disabled.button {
+    border-color: rgba(34, 36, 38, .5)
+}
+
+.unzerUI.animated.button {
+    position: relative;
+    overflow: hidden;
+    padding-right: 0 !important;
+    vertical-align: middle;
+    z-index: 1
+}
+
+.unzerUI.animated.button .content {
+    will-change: transform, opacity
+}
+
+.unzerUI.animated.button .visible.content {
+    position: relative;
+    margin-right: 1.5em
+}
+
+.unzerUI.animated.button .hidden.content {
+    position: absolute;
+    width: 100%
+}
+
+.unzerUI.animated.button .hidden.content, .unzerUI.animated.button .visible.content {
+    transition: right .3s ease 0s
+}
+
+.unzerUI.animated.button .visible.content {
+    left: auto;
+    right: 0
+}
+
+.unzerUI.animated.button .hidden.content {
+    top: 50%;
+    left: auto;
+    right: -100%;
+    margin-top: -.5em
+}
+
+.unzerUI.animated.button:focus .visible.content, .unzerUI.animated.button:hover .visible.content {
+    left: auto;
+    right: 200%
+}
+
+.unzerUI.animated.button:focus .hidden.content, .unzerUI.animated.button:hover .hidden.content {
+    left: auto;
+    right: 0
+}
+
+.unzerUI.vertical.animated.button .hidden.content, .unzerUI.vertical.animated.button .visible.content {
+    transition: top .3s ease, -webkit-transform .3s ease;
+    transition: top .3s ease, transform .3s ease;
+    transition: top .3s ease, transform .3s ease, -webkit-transform .3s ease
+}
+
+.unzerUI.vertical.animated.button .visible.content {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    right: auto
+}
+
+.unzerUI.vertical.animated.button .hidden.content {
+    top: -50%;
+    left: 0;
+    right: auto
+}
+
+.unzerUI.vertical.animated.button:focus .visible.content, .unzerUI.vertical.animated.button:hover .visible.content {
+    -webkit-transform: translateY(200%);
+    transform: translateY(200%);
+    right: auto
+}
+
+.unzerUI.vertical.animated.button:focus .hidden.content, .unzerUI.vertical.animated.button:hover .hidden.content {
+    top: 50%;
+    right: auto
+}
+
+.unzerUI.fade.animated.button .hidden.content, .unzerUI.fade.animated.button .visible.content {
+    transition: opacity .3s ease, -webkit-transform .3s ease;
+    transition: opacity .3s ease, transform .3s ease;
+    transition: opacity .3s ease, transform .3s ease, -webkit-transform .3s ease
+}
+
+.unzerUI.fade.animated.button .visible.content {
+    left: auto;
+    right: auto;
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1)
+}
+
+.unzerUI.fade.animated.button .hidden.content {
+    opacity: 0;
+    left: 0;
+    right: auto;
+    -webkit-transform: scale(1.5);
+    transform: scale(1.5)
+}
+
+.unzerUI.fade.animated.button:focus .visible.content, .unzerUI.fade.animated.button:hover .visible.content {
+    left: auto;
+    right: auto;
+    opacity: 0;
+    -webkit-transform: scale(.75);
+    transform: scale(.75)
+}
+
+.unzerUI.fade.animated.button:focus .hidden.content, .unzerUI.fade.animated.button:hover .hidden.content {
+    left: 0;
+    right: auto;
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1)
+}
+
+.unzerUI.inverted.button {
+    box-shadow: inset 0 0 0 2px #fff !important;
+    background: transparent none;
+    color: #fff;
+    text-shadow: none !important
+}
+
+.unzerUI.inverted.buttons .button {
+    margin: 0 0 0 -2px
+}
+
+.unzerUI.inverted.buttons .button:first-child {
+    margin-left: 0
+}
+
+.unzerUI.inverted.vertical.buttons .button {
+    margin: 0 0 -2px
+}
+
+.unzerUI.inverted.vertical.buttons .button:first-child {
+    margin-top: 0
+}
+
+.unzerUI.inverted.button.active, .unzerUI.inverted.button:focus, .unzerUI.inverted.button:hover {
+    background: #fff;
+    box-shadow: inset 0 0 0 2px #fff !important;
+    color: rgba(0, 0, 0, .8)
+}
+
+.unzerUI.inverted.button.active:focus {
+    background: #dcddde;
+    box-shadow: inset 0 0 0 2px #dcddde !important;
+    color: rgba(0, 0, 0, .8)
+}
+
+.unzerUI.labeled.button:not(.icon) {
+    display: inline-flex;
+    flex-direction: row;
+    background: none !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important
+}
+
+.unzerUI.labeled.button > .button {
+    margin: 0
+}
+
+.unzerUI.labeled.button > .label {
+    display: flex;
+    align-items: center;
+    margin: 0 0 0 -1px !important;
+    padding: "";
+    font-size: 1em;
+    border-color: rgba(34, 36, 38, .15)
+}
+
+.unzerUI.labeled.button > .tag.label:before {
+    width: 1.85em;
+    height: 1.85em
+}
+
+.unzerUI.labeled.button:not([class*="left labeled"]) > .button {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0
+}
+
+.unzerUI.labeled.button:not([class*="left labeled"]) > .label, .unzerUI[class*="left labeled"].button > .button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0
+}
+
+.unzerUI[class*="left labeled"].button > .label {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0
+}
+
+.unzerUI.button > .icon:not(.button) {
+    height: .85714286em;
+    opacity: .8;
+    transition: opacity .1s ease;
+    vertical-align: "";
+    color: ""
+}
+
+.unzerUI.button:not(.icon) > .icon:not(.button):not(.dropdown), .unzerUI.button > .icon:not(.button) {
+    margin: 0 .42857143em 0 -.21428571em
+}
+
+.unzerUI.button:not(.icon) > .right.icon:not(.button):not(.dropdown) {
+    margin: 0 -.21428571em 0 .42857143em
+}
+
+.unzerUI[class*="left floated"].button, .unzerUI[class*="left floated"].buttons {
+    float: left;
+    margin-left: 0;
+    margin-right: .25em
+}
+
+.unzerUI[class*="right floated"].button, .unzerUI[class*="right floated"].buttons {
+    float: right;
+    margin-right: 0;
+    margin-left: .25em
+}
+
+.unzerUI.compact.button, .unzerUI.compact.buttons .button {
+    padding: .58928571em 1.125em
+}
+
+.unzerUI.compact.icon.button, .unzerUI.compact.icon.buttons .button {
+    padding: .58928571em
+}
+
+.unzerUI.compact.labeled.icon.button, .unzerUI.compact.labeled.icon.buttons .button {
+    padding: .58928571em 3.69642857em
+}
+
+.unzerUI.mini.button, .unzerUI.mini.buttons .button, .unzerUI.mini.buttons .or {
+    font-size: .78571429rem
+}
+
+.unzerUI.tiny.button, .unzerUI.tiny.buttons .button, .unzerUI.tiny.buttons .or {
+    font-size: .85714286rem
+}
+
+.unzerUI.small.button, .unzerUI.small.buttons .button, .unzerUI.small.buttons .or {
+    font-size: .92857143rem
+}
+
+.unzerUI.button, .unzerUI.buttons .button, .unzerUI.buttons .or {
+    font-size: 1em
+}
+
+.unzerUI.large.button, .unzerUI.large.buttons .button, .unzerUI.large.buttons .or {
+    font-size: 1.14285714rem
+}
+
+.unzerUI.big.button, .unzerUI.big.buttons .button, .unzerUI.big.buttons .or {
+    font-size: 1.28571429rem
+}
+
+.unzerUI.huge.button, .unzerUI.huge.buttons .button, .unzerUI.huge.buttons .or {
+    font-size: 1.42857143rem
+}
+
+.unzerUI.massive.button, .unzerUI.massive.buttons .button, .unzerUI.massive.buttons .or {
+    font-size: 1.71428571rem
+}
+
+.unzerUI.icon.button, .unzerUI.icon.buttons .button {
+    padding: .78571429em
+}
+
+.unzerUI.icon.button > .icon, .unzerUI.icon.buttons .button > .icon {
+    opacity: .9;
+    margin: 0 !important;
+    vertical-align: top
+}
+
+.unzerUI.basic.button, .unzerUI.basic.buttons .button {
+    background: transparent none !important;
+    color: rgba(0, 0, 0, .6) !important;
+    font-weight: 400;
+    border-radius: .28571429rem;
+    text-transform: none;
+    text-shadow: none !important;
+    box-shadow: inset 0 0 0 1px rgba(34, 36, 38, .15)
+}
+
+.unzerUI.basic.buttons {
+    box-shadow: none;
+    border: 1px solid rgba(34, 36, 38, .15);
+    border-radius: .28571429rem
+}
+
+.unzerUI.basic.buttons .button {
+    border-radius: 0
+}
+
+.unzerUI.basic.button:focus, .unzerUI.basic.button:hover, .unzerUI.basic.buttons .button:focus, .unzerUI.basic.buttons .button:hover {
+    background: #fff !important;
+    color: rgba(0, 0, 0, .8) !important;
+    box-shadow: inset 0 0 0 1px rgba(34, 36, 38, .35), inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.basic.button:active, .unzerUI.basic.buttons .button:active {
+    background: #f8f8f8 !important;
+    color: rgba(0, 0, 0, .9) !important;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15), inset 0 1px 4px 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.basic.active.button, .unzerUI.basic.buttons .active.button {
+    background: rgba(0, 0, 0, .05) !important;
+    box-shadow: "" !important;
+    color: rgba(0, 0, 0, .95) !important
+}
+
+.unzerUI.basic.active.button:hover, .unzerUI.basic.buttons .active.button:hover {
+    background-color: rgba(0, 0, 0, .05)
+}
+
+.unzerUI.basic.buttons .button:hover {
+    box-shadow: inset 0 0 0 1px rgba(34, 36, 38, .35), inset inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.basic.buttons .button:active {
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15), inset inset 0 1px 4px 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.basic.buttons .active.button {
+    box-shadow: "" !important
+}
+
+.unzerUI.basic.inverted.button, .unzerUI.basic.inverted.buttons .button {
+    background-color: transparent !important;
+    color: #f9fafb !important;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important
+}
+
+.unzerUI.basic.inverted.button:focus, .unzerUI.basic.inverted.button:hover, .unzerUI.basic.inverted.buttons .button:focus, .unzerUI.basic.inverted.buttons .button:hover {
+    color: #fff !important;
+    box-shadow: inset 0 0 0 2px #fff !important
+}
+
+.unzerUI.basic.inverted.button:active, .unzerUI.basic.inverted.buttons .button:active {
+    background-color: hsla(0, 0%, 100%, .08) !important;
+    color: #fff !important;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .9) !important
+}
+
+.unzerUI.basic.inverted.active.button, .unzerUI.basic.inverted.buttons .active.button {
+    background-color: hsla(0, 0%, 100%, .08);
+    color: #fff;
+    text-shadow: none;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .7)
+}
+
+.unzerUI.basic.inverted.active.button:hover, .unzerUI.basic.inverted.buttons .active.button:hover {
+    background-color: hsla(0, 0%, 100%, .15);
+    box-shadow: inset 0 0 0 2px #fff !important
+}
+
+.unzerUI.basic.buttons .button {
+    border-left: 1px solid rgba(34, 36, 38, .15);
+    box-shadow: none
+}
+
+.unzerUI.basic.vertical.buttons .button {
+    border-left: none;
+    border-left-width: 0;
+    border-top: 1px solid rgba(34, 36, 38, .15)
+}
+
+.unzerUI.basic.vertical.buttons .button:first-child {
+    border-top-width: 0
+}
+
+.unzerUI.labeled.icon.button, .unzerUI.labeled.icon.buttons .button {
+    position: relative;
+    padding-left: 4.07142857em !important;
+    padding-right: 1.5em !important
+}
+
+.unzerUI.labeled.icon.button > .icon, .unzerUI.labeled.icon.buttons > .button > .icon {
+    position: absolute;
+    height: 100%;
+    line-height: 1;
+    border-radius: 0;
+    border-top-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+    text-align: center;
+    margin: 0;
+    width: 2.57142857em;
+    background-color: rgba(0, 0, 0, .05);
+    color: "";
+    box-shadow: inset -1px 0 0 0 transparent;
+    top: 0;
+    left: 0
+}
+
+.unzerUI[class*="right labeled"].icon.button {
+    padding-right: 4.07142857em !important;
+    padding-left: 1.5em !important
+}
+
+.unzerUI[class*="right labeled"].icon.button > .icon {
+    left: auto;
+    right: 0;
+    border-radius: 0;
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+    box-shadow: inset 1px 0 0 0 transparent
+}
+
+.unzerUI.labeled.icon.button > .icon:after, .unzerUI.labeled.icon.button > .icon:before, .unzerUI.labeled.icon.buttons > .button > .icon:after, .unzerUI.labeled.icon.buttons > .button > .icon:before {
+    display: block;
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    text-align: center;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%)
+}
+
+.unzerUI.labeled.icon.buttons .button > .icon {
+    border-radius: 0
+}
+
+.unzerUI.labeled.icon.buttons .button:first-child > .icon {
+    border-top-left-radius: .28571429rem;
+    border-bottom-left-radius: .28571429rem
+}
+
+.unzerUI.labeled.icon.buttons .button:last-child > .icon {
+    border-top-right-radius: .28571429rem;
+    border-bottom-right-radius: .28571429rem
+}
+
+.unzerUI.vertical.labeled.icon.buttons .button:first-child > .icon {
+    border-radius: 0;
+    border-top-left-radius: .28571429rem
+}
+
+.unzerUI.vertical.labeled.icon.buttons .button:last-child > .icon {
+    border-radius: 0;
+    border-bottom-left-radius: .28571429rem
+}
+
+.unzerUI.fluid[class*="left labeled"].icon.button, .unzerUI.fluid[class*="right labeled"].icon.button {
+    padding-left: 1.5em !important;
+    padding-right: 1.5em !important
+}
+
+.unzerUI.button.toggle.active, .unzerUI.buttons .button.toggle.active, .unzerUI.toggle.buttons .active.button {
+    background-color: #21ba45 !important;
+    box-shadow: none !important;
+    text-shadow: none;
+    color: #fff !important
+}
+
+.unzerUI.button.toggle.active:hover {
+    background-color: #16ab39 !important;
+    text-shadow: none;
+    color: #fff !important
+}
+
+.unzerUI.circular.button {
+    border-radius: 10em
+}
+
+.unzerUI.circular.button > .icon {
+    width: 1em;
+    vertical-align: baseline
+}
+
+.unzerUI.buttons .or {
+    position: relative;
+    width: .3em;
+    height: 2.57142857em;
+    z-index: 3
+}
+
+.unzerUI.buttons .or:before {
+    position: absolute;
+    text-align: center;
+    border-radius: 500rem;
+    content: "or";
+    top: 50%;
+    left: 50%;
+    background-color: #fff;
+    text-shadow: none;
+    margin-top: -.89285714em;
+    margin-left: -.89285714em;
+    width: 1.78571429em;
+    height: 1.78571429em;
+    line-height: 1.78571429em;
+    color: rgba(0, 0, 0, .4);
+    font-style: normal;
+    font-weight: 700;
+    box-shadow: inset 0 0 0 1px transparent
+}
+
+.unzerUI.buttons .or[data-text]:before {
+    content: attr(data-text)
+}
+
+.unzerUI.fluid.buttons .or {
+    width: 0 !important
+}
+
+.unzerUI.fluid.buttons .or:after {
+    display: none
+}
+
+.unzerUI.attached.button {
+    position: relative;
+    display: block;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: 0 0 0 1px rgba(34, 36, 38, .15) !important
+}
+
+.unzerUI.attached.top.button {
+    border-radius: .28571429rem .28571429rem 0 0
+}
+
+.unzerUI.attached.bottom.button {
+    border-radius: 0 0 .28571429rem .28571429rem
+}
+
+.unzerUI.left.attached.button {
+    display: inline-block;
+    border-left: none;
+    text-align: right;
+    padding-right: .75em;
+    border-radius: .28571429rem 0 0 .28571429rem
+}
+
+.unzerUI.right.attached.button {
+    display: inline-block;
+    text-align: left;
+    padding-left: .75em;
+    border-radius: 0 .28571429rem .28571429rem 0
+}
+
+.unzerUI.attached.buttons {
+    position: relative;
+    display: flex;
+    border-radius: 0;
+    width: auto !important;
+    z-index: 2;
+    margin-left: -1px;
+    margin-right: -1px
+}
+
+.unzerUI.attached.buttons .button {
+    margin: 0
+}
+
+.unzerUI.attached.buttons .button:first-child, .unzerUI.attached.buttons .button:last-child {
+    border-radius: 0
+}
+
+.unzerUI[class*="top attached"].buttons {
+    margin-bottom: -1px;
+    border-radius: .28571429rem .28571429rem 0 0
+}
+
+.unzerUI[class*="top attached"].buttons .button:first-child {
+    border-radius: .28571429rem 0 0 0
+}
+
+.unzerUI[class*="top attached"].buttons .button:last-child {
+    border-radius: 0 .28571429rem 0 0
+}
+
+.unzerUI[class*="bottom attached"].buttons {
+    margin-top: -1px;
+    border-radius: 0 0 .28571429rem .28571429rem
+}
+
+.unzerUI[class*="bottom attached"].buttons .button:first-child {
+    border-radius: 0 0 0 .28571429rem
+}
+
+.unzerUI[class*="bottom attached"].buttons .button:last-child {
+    border-radius: 0 0 .28571429rem 0
+}
+
+.unzerUI[class*="left attached"].buttons {
+    display: inline-flex;
+    margin-right: 0;
+    margin-left: -1px;
+    border-radius: 0 .28571429rem .28571429rem 0
+}
+
+.unzerUI[class*="left attached"].buttons .button:first-child {
+    margin-left: -1px;
+    border-radius: 0 .28571429rem 0 0
+}
+
+.unzerUI[class*="left attached"].buttons .button:last-child {
+    margin-left: -1px;
+    border-radius: 0 0 .28571429rem 0
+}
+
+.unzerUI[class*="right attached"].buttons {
+    display: inline-flex;
+    margin-left: 0;
+    margin-right: -1px;
+    border-radius: .28571429rem 0 0 .28571429rem
+}
+
+.unzerUI[class*="right attached"].buttons .button:first-child {
+    margin-left: -1px;
+    border-radius: .28571429rem 0 0 0
+}
+
+.unzerUI[class*="right attached"].buttons .button:last-child {
+    margin-left: -1px;
+    border-radius: 0 0 0 .28571429rem
+}
+
+.unzerUI.fluid.button, .unzerUI.fluid.buttons {
+    width: 100%
+}
+
+.unzerUI.fluid.button {
+    display: block
+}
+
+.unzerUI.two.buttons {
+    width: 100%
+}
+
+.unzerUI.two.buttons > .button {
+    width: 50%
+}
+
+.unzerUI.three.buttons {
+    width: 100%
+}
+
+.unzerUI.three.buttons > .button {
+    width: 33.333%
+}
+
+.unzerUI.four.buttons {
+    width: 100%
+}
+
+.unzerUI.four.buttons > .button {
+    width: 25%
+}
+
+.unzerUI.five.buttons {
+    width: 100%
+}
+
+.unzerUI.five.buttons > .button {
+    width: 20%
+}
+
+.unzerUI.six.buttons {
+    width: 100%
+}
+
+.unzerUI.six.buttons > .button {
+    width: 16.666%
+}
+
+.unzerUI.seven.buttons {
+    width: 100%
+}
+
+.unzerUI.seven.buttons > .button {
+    width: 14.285%
+}
+
+.unzerUI.eight.buttons {
+    width: 100%
+}
+
+.unzerUI.eight.buttons > .button {
+    width: 12.5%
+}
+
+.unzerUI.nine.buttons {
+    width: 100%
+}
+
+.unzerUI.nine.buttons > .button {
+    width: 11.11%
+}
+
+.unzerUI.ten.buttons {
+    width: 100%
+}
+
+.unzerUI.ten.buttons > .button {
+    width: 10%
+}
+
+.unzerUI.eleven.buttons {
+    width: 100%
+}
+
+.unzerUI.eleven.buttons > .button {
+    width: 9.09%
+}
+
+.unzerUI.twelve.buttons {
+    width: 100%
+}
+
+.unzerUI.twelve.buttons > .button {
+    width: 8.3333%
+}
+
+.unzerUI.fluid.vertical.buttons, .unzerUI.fluid.vertical.buttons > .button {
+    display: flex;
+    width: auto
+}
+
+.unzerUI.two.vertical.buttons > .button {
+    height: 50%
+}
+
+.unzerUI.three.vertical.buttons > .button {
+    height: 33.333%
+}
+
+.unzerUI.four.vertical.buttons > .button {
+    height: 25%
+}
+
+.unzerUI.five.vertical.buttons > .button {
+    height: 20%
+}
+
+.unzerUI.six.vertical.buttons > .button {
+    height: 16.666%
+}
+
+.unzerUI.seven.vertical.buttons > .button {
+    height: 14.285%
+}
+
+.unzerUI.eight.vertical.buttons > .button {
+    height: 12.5%
+}
+
+.unzerUI.nine.vertical.buttons > .button {
+    height: 11.11%
+}
+
+.unzerUI.ten.vertical.buttons > .button {
+    height: 10%
+}
+
+.unzerUI.eleven.vertical.buttons > .button {
+    height: 9.09%
+}
+
+.unzerUI.twelve.vertical.buttons > .button {
+    height: 8.3333%
+}
+
+.unzerUI.black.button, .unzerUI.black.buttons .button {
+    background-color: #1b1c1d;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.black.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.black.button:hover, .unzerUI.black.buttons .button:hover {
+    background-color: #27292a;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.black.button:focus, .unzerUI.black.buttons .button:focus {
+    background-color: #2f3032;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.black.button:active, .unzerUI.black.buttons .button:active {
+    background-color: #343637;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.black.active.button, .unzerUI.black.button .active.button:active, .unzerUI.black.buttons .active.button, .unzerUI.black.buttons .active.button:active {
+    background-color: #0f0f10;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.black.button, .unzerUI.basic.black.buttons .button {
+    box-shadow: inset 0 0 0 1px #1b1c1d !important;
+    color: #1b1c1d !important
+}
+
+.unzerUI.basic.black.button:hover, .unzerUI.basic.black.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #27292a !important;
+    color: #27292a !important
+}
+
+.unzerUI.basic.black.button:focus, .unzerUI.basic.black.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #2f3032 !important;
+    color: #27292a !important
+}
+
+.unzerUI.basic.black.active.button, .unzerUI.basic.black.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #0f0f10 !important;
+    color: #343637 !important
+}
+
+.unzerUI.basic.black.button:active, .unzerUI.basic.black.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #343637 !important;
+    color: #343637 !important
+}
+
+.unzerUI.buttons:not(.vertical) > .basic.black.button:not(:first-child) {
+    margin-left: -1px
+}
+
+.unzerUI.inverted.black.button, .unzerUI.inverted.black.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #d4d4d5 !important;
+    color: #fff
+}
+
+.unzerUI.inverted.black.button.active, .unzerUI.inverted.black.button:active, .unzerUI.inverted.black.button:focus, .unzerUI.inverted.black.button:hover, .unzerUI.inverted.black.buttons .button.active, .unzerUI.inverted.black.buttons .button:active, .unzerUI.inverted.black.buttons .button:focus, .unzerUI.inverted.black.buttons .button:hover {
+    box-shadow: none !important;
+    color: #fff
+}
+
+.unzerUI.inverted.black.active.button, .unzerUI.inverted.black.button:active, .unzerUI.inverted.black.button:focus, .unzerUI.inverted.black.button:hover, .unzerUI.inverted.black.buttons .active.button, .unzerUI.inverted.black.buttons .button:active, .unzerUI.inverted.black.buttons .button:focus, .unzerUI.inverted.black.buttons .button:hover {
+    background-color: #000
+}
+
+.unzerUI.inverted.black.basic.button, .unzerUI.inverted.black.basic.buttons .button, .unzerUI.inverted.black.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.black.basic.button:hover, .unzerUI.inverted.black.basic.buttons .button:hover, .unzerUI.inverted.black.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #000 !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.black.basic.button:focus, .unzerUI.inverted.black.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #000 !important;
+    color: #545454 !important
+}
+
+.unzerUI.inverted.black.basic.active.button, .unzerUI.inverted.black.basic.button:active, .unzerUI.inverted.black.basic.buttons .active.button, .unzerUI.inverted.black.basic.buttons .button:active, .unzerUI.inverted.black.buttons .basic.active.button, .unzerUI.inverted.black.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #000 !important;
+    color: #fff !important
+}
+
+.unzerUI.grey.button, .unzerUI.grey.buttons .button {
+    background-color: #767676;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.grey.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.grey.button:hover, .unzerUI.grey.buttons .button:hover {
+    background-color: #838383;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.grey.button:focus, .unzerUI.grey.buttons .button:focus {
+    background-color: #8a8a8a;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.grey.button:active, .unzerUI.grey.buttons .button:active {
+    background-color: #909090;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.grey.active.button, .unzerUI.grey.button .active.button:active, .unzerUI.grey.buttons .active.button, .unzerUI.grey.buttons .active.button:active {
+    background-color: #696969;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.grey.button, .unzerUI.basic.grey.buttons .button {
+    box-shadow: inset 0 0 0 1px #767676 !important;
+    color: #767676 !important
+}
+
+.unzerUI.basic.grey.button:hover, .unzerUI.basic.grey.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #838383 !important;
+    color: #838383 !important
+}
+
+.unzerUI.basic.grey.button:focus, .unzerUI.basic.grey.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #8a8a8a !important;
+    color: #838383 !important
+}
+
+.unzerUI.basic.grey.active.button, .unzerUI.basic.grey.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #696969 !important;
+    color: #909090 !important
+}
+
+.unzerUI.basic.grey.button:active, .unzerUI.basic.grey.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #909090 !important;
+    color: #909090 !important
+}
+
+.unzerUI.buttons:not(.vertical) > .basic.grey.button:not(:first-child) {
+    margin-left: -1px
+}
+
+.unzerUI.inverted.grey.button, .unzerUI.inverted.grey.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #d4d4d5 !important;
+    color: #fff
+}
+
+.unzerUI.inverted.grey.button.active, .unzerUI.inverted.grey.button:active, .unzerUI.inverted.grey.button:focus, .unzerUI.inverted.grey.button:hover, .unzerUI.inverted.grey.buttons .button.active, .unzerUI.inverted.grey.buttons .button:active, .unzerUI.inverted.grey.buttons .button:focus, .unzerUI.inverted.grey.buttons .button:hover {
+    box-shadow: none !important;
+    color: rgba(0, 0, 0, .6)
+}
+
+.unzerUI.inverted.grey.button:hover, .unzerUI.inverted.grey.buttons .button:hover {
+    background-color: #cfd0d2
+}
+
+.unzerUI.inverted.grey.button:focus, .unzerUI.inverted.grey.buttons .button:focus {
+    background-color: #c7c9cb
+}
+
+.unzerUI.inverted.grey.active.button, .unzerUI.inverted.grey.buttons .active.button {
+    background-color: #cfd0d2
+}
+
+.unzerUI.inverted.grey.button:active, .unzerUI.inverted.grey.buttons .button:active {
+    background-color: #c2c4c5
+}
+
+.unzerUI.inverted.grey.basic.button, .unzerUI.inverted.grey.basic.buttons .button, .unzerUI.inverted.grey.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.grey.basic.button:hover, .unzerUI.inverted.grey.basic.buttons .button:hover, .unzerUI.inverted.grey.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #cfd0d2 !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.grey.basic.button:focus, .unzerUI.inverted.grey.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #c7c9cb !important;
+    color: #dcddde !important
+}
+
+.unzerUI.inverted.grey.basic.active.button, .unzerUI.inverted.grey.basic.buttons .active.button, .unzerUI.inverted.grey.buttons .basic.active.button {
+    box-shadow: inset 0 0 0 2px #cfd0d2 !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.grey.basic.button:active, .unzerUI.inverted.grey.basic.buttons .button:active, .unzerUI.inverted.grey.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #c2c4c5 !important;
+    color: #fff !important
+}
+
+.unzerUI.brown.button, .unzerUI.brown.buttons .button {
+    background-color: #a5673f;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.brown.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.brown.button:hover, .unzerUI.brown.buttons .button:hover {
+    background-color: #975b33;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.brown.button:focus, .unzerUI.brown.buttons .button:focus {
+    background-color: #90532b;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.brown.button:active, .unzerUI.brown.buttons .button:active {
+    background-color: #805031;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.brown.active.button, .unzerUI.brown.button .active.button:active, .unzerUI.brown.buttons .active.button, .unzerUI.brown.buttons .active.button:active {
+    background-color: #995a31;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.brown.button, .unzerUI.basic.brown.buttons .button {
+    box-shadow: inset 0 0 0 1px #a5673f !important;
+    color: #a5673f !important
+}
+
+.unzerUI.basic.brown.button:hover, .unzerUI.basic.brown.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #975b33 !important;
+    color: #975b33 !important
+}
+
+.unzerUI.basic.brown.button:focus, .unzerUI.basic.brown.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #90532b !important;
+    color: #975b33 !important
+}
+
+.unzerUI.basic.brown.active.button, .unzerUI.basic.brown.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #995a31 !important;
+    color: #805031 !important
+}
+
+.unzerUI.basic.brown.button:active, .unzerUI.basic.brown.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #805031 !important;
+    color: #805031 !important
+}
+
+.unzerUI.buttons:not(.vertical) > .basic.brown.button:not(:first-child) {
+    margin-left: -1px
+}
+
+.unzerUI.inverted.brown.button, .unzerUI.inverted.brown.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #d67c1c !important;
+    color: #d67c1c
+}
+
+.unzerUI.inverted.brown.button.active, .unzerUI.inverted.brown.button:active, .unzerUI.inverted.brown.button:focus, .unzerUI.inverted.brown.button:hover, .unzerUI.inverted.brown.buttons .button.active, .unzerUI.inverted.brown.buttons .button:active, .unzerUI.inverted.brown.buttons .button:focus, .unzerUI.inverted.brown.buttons .button:hover {
+    box-shadow: none !important;
+    color: #fff
+}
+
+.unzerUI.inverted.brown.button:hover, .unzerUI.inverted.brown.buttons .button:hover {
+    background-color: #c86f11
+}
+
+.unzerUI.inverted.brown.button:focus, .unzerUI.inverted.brown.buttons .button:focus {
+    background-color: #c16808
+}
+
+.unzerUI.inverted.brown.active.button, .unzerUI.inverted.brown.buttons .active.button {
+    background-color: #cc6f0d
+}
+
+.unzerUI.inverted.brown.button:active, .unzerUI.inverted.brown.buttons .button:active {
+    background-color: #a96216
+}
+
+.unzerUI.inverted.brown.basic.button, .unzerUI.inverted.brown.basic.buttons .button, .unzerUI.inverted.brown.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.brown.basic.button:hover, .unzerUI.inverted.brown.basic.buttons .button:hover, .unzerUI.inverted.brown.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #c86f11 !important;
+    color: #d67c1c !important
+}
+
+.unzerUI.inverted.brown.basic.button:focus, .unzerUI.inverted.brown.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #c16808 !important;
+    color: #d67c1c !important
+}
+
+.unzerUI.inverted.brown.basic.active.button, .unzerUI.inverted.brown.basic.buttons .active.button, .unzerUI.inverted.brown.buttons .basic.active.button {
+    box-shadow: inset 0 0 0 2px #cc6f0d !important;
+    color: #d67c1c !important
+}
+
+.unzerUI.inverted.brown.basic.button:active, .unzerUI.inverted.brown.basic.buttons .button:active, .unzerUI.inverted.brown.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #a96216 !important;
+    color: #d67c1c !important
+}
+
+.unzerUI.blue.button, .unzerUI.blue.buttons .button {
+    background-color: #2185d0;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.blue.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.blue.button:hover, .unzerUI.blue.buttons .button:hover {
+    background-color: #1678c2;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.blue.button:focus, .unzerUI.blue.buttons .button:focus {
+    background-color: #0d71bb;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.blue.button:active, .unzerUI.blue.buttons .button:active {
+    background-color: #1a69a4;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.blue.active.button, .unzerUI.blue.button .active.button:active, .unzerUI.blue.buttons .active.button, .unzerUI.blue.buttons .active.button:active {
+    background-color: #1279c6;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.blue.button, .unzerUI.basic.blue.buttons .button {
+    box-shadow: inset 0 0 0 1px #2185d0 !important;
+    color: #2185d0 !important
+}
+
+.unzerUI.basic.blue.button:hover, .unzerUI.basic.blue.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #1678c2 !important;
+    color: #1678c2 !important
+}
+
+.unzerUI.basic.blue.button:focus, .unzerUI.basic.blue.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #0d71bb !important;
+    color: #1678c2 !important
+}
+
+.unzerUI.basic.blue.active.button, .unzerUI.basic.blue.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #1279c6 !important;
+    color: #1a69a4 !important
+}
+
+.unzerUI.basic.blue.button:active, .unzerUI.basic.blue.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #1a69a4 !important;
+    color: #1a69a4 !important
+}
+
+.unzerUI.buttons:not(.vertical) > .basic.blue.button:not(:first-child) {
+    margin-left: -1px
+}
+
+.unzerUI.inverted.blue.button, .unzerUI.inverted.blue.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #54c8ff !important;
+    color: #54c8ff
+}
+
+.unzerUI.inverted.blue.button.active, .unzerUI.inverted.blue.button:active, .unzerUI.inverted.blue.button:focus, .unzerUI.inverted.blue.button:hover, .unzerUI.inverted.blue.buttons .button.active, .unzerUI.inverted.blue.buttons .button:active, .unzerUI.inverted.blue.buttons .button:focus, .unzerUI.inverted.blue.buttons .button:hover {
+    box-shadow: none !important;
+    color: #fff
+}
+
+.unzerUI.inverted.blue.button:hover, .unzerUI.inverted.blue.buttons .button:hover {
+    background-color: #3ac0ff
+}
+
+.unzerUI.inverted.blue.button:focus, .unzerUI.inverted.blue.buttons .button:focus {
+    background-color: #2bbbff
+}
+
+.unzerUI.inverted.blue.active.button, .unzerUI.inverted.blue.buttons .active.button {
+    background-color: #3ac0ff
+}
+
+.unzerUI.inverted.blue.button:active, .unzerUI.inverted.blue.buttons .button:active {
+    background-color: #21b8ff
+}
+
+.unzerUI.inverted.blue.basic.button, .unzerUI.inverted.blue.basic.buttons .button, .unzerUI.inverted.blue.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.blue.basic.button:hover, .unzerUI.inverted.blue.basic.buttons .button:hover, .unzerUI.inverted.blue.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #3ac0ff !important;
+    color: #54c8ff !important
+}
+
+.unzerUI.inverted.blue.basic.button:focus, .unzerUI.inverted.blue.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #2bbbff !important;
+    color: #54c8ff !important
+}
+
+.unzerUI.inverted.blue.basic.active.button, .unzerUI.inverted.blue.basic.buttons .active.button, .unzerUI.inverted.blue.buttons .basic.active.button {
+    box-shadow: inset 0 0 0 2px #3ac0ff !important;
+    color: #54c8ff !important
+}
+
+.unzerUI.inverted.blue.basic.button:active, .unzerUI.inverted.blue.basic.buttons .button:active, .unzerUI.inverted.blue.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #21b8ff !important;
+    color: #54c8ff !important
+}
+
+.unzerUI.green.button, .unzerUI.green.buttons .button {
+    background-color: #21ba45;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.green.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.green.button:hover, .unzerUI.green.buttons .button:hover {
+    background-color: #16ab39;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.green.button:focus, .unzerUI.green.buttons .button:focus {
+    background-color: #0ea432;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.green.button:active, .unzerUI.green.buttons .button:active {
+    background-color: #198f35;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.green.active.button, .unzerUI.green.button .active.button:active, .unzerUI.green.buttons .active.button, .unzerUI.green.buttons .active.button:active {
+    background-color: #13ae38;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.green.button, .unzerUI.basic.green.buttons .button {
+    box-shadow: inset 0 0 0 1px #21ba45 !important;
+    color: #21ba45 !important
+}
+
+.unzerUI.basic.green.button:hover, .unzerUI.basic.green.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #16ab39 !important;
+    color: #16ab39 !important
+}
+
+.unzerUI.basic.green.button:focus, .unzerUI.basic.green.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #0ea432 !important;
+    color: #16ab39 !important
+}
+
+.unzerUI.basic.green.active.button, .unzerUI.basic.green.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #13ae38 !important;
+    color: #198f35 !important
+}
+
+.unzerUI.basic.green.button:active, .unzerUI.basic.green.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #198f35 !important;
+    color: #198f35 !important
+}
+
+.unzerUI.buttons:not(.vertical) > .basic.green.button:not(:first-child) {
+    margin-left: -1px
+}
+
+.unzerUI.inverted.green.button, .unzerUI.inverted.green.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #2ecc40 !important;
+    color: #2ecc40
+}
+
+.unzerUI.inverted.green.button.active, .unzerUI.inverted.green.button:active, .unzerUI.inverted.green.button:focus, .unzerUI.inverted.green.button:hover, .unzerUI.inverted.green.buttons .button.active, .unzerUI.inverted.green.buttons .button:active, .unzerUI.inverted.green.buttons .button:focus, .unzerUI.inverted.green.buttons .button:hover {
+    box-shadow: none !important;
+    color: #fff
+}
+
+.unzerUI.inverted.green.button:hover, .unzerUI.inverted.green.buttons .button:hover {
+    background-color: #22be34
+}
+
+.unzerUI.inverted.green.button:focus, .unzerUI.inverted.green.buttons .button:focus {
+    background-color: #19b82b
+}
+
+.unzerUI.inverted.green.active.button, .unzerUI.inverted.green.buttons .active.button {
+    background-color: #1fc231
+}
+
+.unzerUI.inverted.green.button:active, .unzerUI.inverted.green.buttons .button:active {
+    background-color: #25a233
+}
+
+.unzerUI.inverted.green.basic.button, .unzerUI.inverted.green.basic.buttons .button, .unzerUI.inverted.green.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.green.basic.button:hover, .unzerUI.inverted.green.basic.buttons .button:hover, .unzerUI.inverted.green.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #22be34 !important;
+    color: #2ecc40 !important
+}
+
+.unzerUI.inverted.green.basic.button:focus, .unzerUI.inverted.green.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #19b82b !important;
+    color: #2ecc40 !important
+}
+
+.unzerUI.inverted.green.basic.active.button, .unzerUI.inverted.green.basic.buttons .active.button, .unzerUI.inverted.green.buttons .basic.active.button {
+    box-shadow: inset 0 0 0 2px #1fc231 !important;
+    color: #2ecc40 !important
+}
+
+.unzerUI.inverted.green.basic.button:active, .unzerUI.inverted.green.basic.buttons .button:active, .unzerUI.inverted.green.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #25a233 !important;
+    color: #2ecc40 !important
+}
+
+.unzerUI.orange.button, .unzerUI.orange.buttons .button {
+    background-color: #f2711c;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.orange.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.orange.button:hover, .unzerUI.orange.buttons .button:hover {
+    background-color: #f26202;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.orange.button:focus, .unzerUI.orange.buttons .button:focus {
+    background-color: #e55b00;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.orange.button:active, .unzerUI.orange.buttons .button:active {
+    background-color: #cf590c;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.orange.active.button, .unzerUI.orange.button .active.button:active, .unzerUI.orange.buttons .active.button, .unzerUI.orange.buttons .active.button:active {
+    background-color: #f56100;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.orange.button, .unzerUI.basic.orange.buttons .button {
+    box-shadow: inset 0 0 0 1px #f2711c !important;
+    color: #f2711c !important
+}
+
+.unzerUI.basic.orange.button:hover, .unzerUI.basic.orange.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #f26202 !important;
+    color: #f26202 !important
+}
+
+.unzerUI.basic.orange.button:focus, .unzerUI.basic.orange.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #e55b00 !important;
+    color: #f26202 !important
+}
+
+.unzerUI.basic.orange.active.button, .unzerUI.basic.orange.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #f56100 !important;
+    color: #cf590c !important
+}
+
+.unzerUI.basic.orange.button:active, .unzerUI.basic.orange.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #cf590c !important;
+    color: #cf590c !important
+}
+
+.unzerUI.buttons:not(.vertical) > .basic.orange.button:not(:first-child) {
+    margin-left: -1px
+}
+
+.unzerUI.inverted.orange.button, .unzerUI.inverted.orange.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #ff851b !important;
+    color: #ff851b
+}
+
+.unzerUI.inverted.orange.button.active, .unzerUI.inverted.orange.button:active, .unzerUI.inverted.orange.button:focus, .unzerUI.inverted.orange.button:hover, .unzerUI.inverted.orange.buttons .button.active, .unzerUI.inverted.orange.buttons .button:active, .unzerUI.inverted.orange.buttons .button:focus, .unzerUI.inverted.orange.buttons .button:hover {
+    box-shadow: none !important;
+    color: #fff
+}
+
+.unzerUI.inverted.orange.button:hover, .unzerUI.inverted.orange.buttons .button:hover {
+    background-color: #ff7701
+}
+
+.unzerUI.inverted.orange.button:focus, .unzerUI.inverted.orange.buttons .button:focus {
+    background-color: #f17000
+}
+
+.unzerUI.inverted.orange.active.button, .unzerUI.inverted.orange.buttons .active.button {
+    background-color: #ff7701
+}
+
+.unzerUI.inverted.orange.button:active, .unzerUI.inverted.orange.buttons .button:active {
+    background-color: #e76b00
+}
+
+.unzerUI.inverted.orange.basic.button, .unzerUI.inverted.orange.basic.buttons .button, .unzerUI.inverted.orange.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.orange.basic.button:hover, .unzerUI.inverted.orange.basic.buttons .button:hover, .unzerUI.inverted.orange.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #ff7701 !important;
+    color: #ff851b !important
+}
+
+.unzerUI.inverted.orange.basic.button:focus, .unzerUI.inverted.orange.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #f17000 !important;
+    color: #ff851b !important
+}
+
+.unzerUI.inverted.orange.basic.active.button, .unzerUI.inverted.orange.basic.buttons .active.button, .unzerUI.inverted.orange.buttons .basic.active.button {
+    box-shadow: inset 0 0 0 2px #ff7701 !important;
+    color: #ff851b !important
+}
+
+.unzerUI.inverted.orange.basic.button:active, .unzerUI.inverted.orange.basic.buttons .button:active, .unzerUI.inverted.orange.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #e76b00 !important;
+    color: #ff851b !important
+}
+
+.unzerUI.pink.button, .unzerUI.pink.buttons .button {
+    background-color: #e03997;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.pink.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.pink.button:hover, .unzerUI.pink.buttons .button:hover {
+    background-color: #e61a8d;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.pink.button:focus, .unzerUI.pink.buttons .button:focus {
+    background-color: #e10f85;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.pink.button:active, .unzerUI.pink.buttons .button:active {
+    background-color: #c71f7e;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.pink.active.button, .unzerUI.pink.button .active.button:active, .unzerUI.pink.buttons .active.button, .unzerUI.pink.buttons .active.button:active {
+    background-color: #ea158d;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.pink.button, .unzerUI.basic.pink.buttons .button {
+    box-shadow: inset 0 0 0 1px #e03997 !important;
+    color: #e03997 !important
+}
+
+.unzerUI.basic.pink.button:hover, .unzerUI.basic.pink.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #e61a8d !important;
+    color: #e61a8d !important
+}
+
+.unzerUI.basic.pink.button:focus, .unzerUI.basic.pink.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #e10f85 !important;
+    color: #e61a8d !important
+}
+
+.unzerUI.basic.pink.active.button, .unzerUI.basic.pink.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #ea158d !important;
+    color: #c71f7e !important
+}
+
+.unzerUI.basic.pink.button:active, .unzerUI.basic.pink.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #c71f7e !important;
+    color: #c71f7e !important
+}
+
+.unzerUI.buttons:not(.vertical) > .basic.pink.button:not(:first-child) {
+    margin-left: -1px
+}
+
+.unzerUI.inverted.pink.button, .unzerUI.inverted.pink.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #ff8edf !important;
+    color: #ff8edf
+}
+
+.unzerUI.inverted.pink.button.active, .unzerUI.inverted.pink.button:active, .unzerUI.inverted.pink.button:focus, .unzerUI.inverted.pink.button:hover, .unzerUI.inverted.pink.buttons .button.active, .unzerUI.inverted.pink.buttons .button:active, .unzerUI.inverted.pink.buttons .button:focus, .unzerUI.inverted.pink.buttons .button:hover {
+    box-shadow: none !important;
+    color: #fff
+}
+
+.unzerUI.inverted.pink.button:hover, .unzerUI.inverted.pink.buttons .button:hover {
+    background-color: #ff74d8
+}
+
+.unzerUI.inverted.pink.button:focus, .unzerUI.inverted.pink.buttons .button:focus {
+    background-color: #ff65d3
+}
+
+.unzerUI.inverted.pink.active.button, .unzerUI.inverted.pink.buttons .active.button {
+    background-color: #ff74d8
+}
+
+.unzerUI.inverted.pink.button:active, .unzerUI.inverted.pink.buttons .button:active {
+    background-color: #ff5bd1
+}
+
+.unzerUI.inverted.pink.basic.button, .unzerUI.inverted.pink.basic.buttons .button, .unzerUI.inverted.pink.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.pink.basic.button:hover, .unzerUI.inverted.pink.basic.buttons .button:hover, .unzerUI.inverted.pink.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #ff74d8 !important;
+    color: #ff8edf !important
+}
+
+.unzerUI.inverted.pink.basic.button:focus, .unzerUI.inverted.pink.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #ff65d3 !important;
+    color: #ff8edf !important
+}
+
+.unzerUI.inverted.pink.basic.active.button, .unzerUI.inverted.pink.basic.buttons .active.button, .unzerUI.inverted.pink.buttons .basic.active.button {
+    box-shadow: inset 0 0 0 2px #ff74d8 !important;
+    color: #ff8edf !important
+}
+
+.unzerUI.inverted.pink.basic.button:active, .unzerUI.inverted.pink.basic.buttons .button:active, .unzerUI.inverted.pink.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #ff5bd1 !important;
+    color: #ff8edf !important
+}
+
+.unzerUI.violet.button, .unzerUI.violet.buttons .button {
+    background-color: #6435c9;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.violet.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.violet.button:hover, .unzerUI.violet.buttons .button:hover {
+    background-color: #5829bb;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.violet.button:focus, .unzerUI.violet.buttons .button:focus {
+    background-color: #4f20b5;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.violet.button:active, .unzerUI.violet.buttons .button:active {
+    background-color: #502aa1;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.violet.active.button, .unzerUI.violet.button .active.button:active, .unzerUI.violet.buttons .active.button, .unzerUI.violet.buttons .active.button:active {
+    background-color: #5626bf;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.violet.button, .unzerUI.basic.violet.buttons .button {
+    box-shadow: inset 0 0 0 1px #6435c9 !important;
+    color: #6435c9 !important
+}
+
+.unzerUI.basic.violet.button:hover, .unzerUI.basic.violet.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #5829bb !important;
+    color: #5829bb !important
+}
+
+.unzerUI.basic.violet.button:focus, .unzerUI.basic.violet.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #4f20b5 !important;
+    color: #5829bb !important
+}
+
+.unzerUI.basic.violet.active.button, .unzerUI.basic.violet.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #5626bf !important;
+    color: #502aa1 !important
+}
+
+.unzerUI.basic.violet.button:active, .unzerUI.basic.violet.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #502aa1 !important;
+    color: #502aa1 !important
+}
+
+.unzerUI.buttons:not(.vertical) > .basic.violet.button:not(:first-child) {
+    margin-left: -1px
+}
+
+.unzerUI.inverted.violet.button, .unzerUI.inverted.violet.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #a291fb !important;
+    color: #a291fb
+}
+
+.unzerUI.inverted.violet.button.active, .unzerUI.inverted.violet.button:active, .unzerUI.inverted.violet.button:focus, .unzerUI.inverted.violet.button:hover, .unzerUI.inverted.violet.buttons .button.active, .unzerUI.inverted.violet.buttons .button:active, .unzerUI.inverted.violet.buttons .button:focus, .unzerUI.inverted.violet.buttons .button:hover {
+    box-shadow: none !important;
+    color: #fff
+}
+
+.unzerUI.inverted.violet.button:hover, .unzerUI.inverted.violet.buttons .button:hover {
+    background-color: #8a73ff
+}
+
+.unzerUI.inverted.violet.button:focus, .unzerUI.inverted.violet.buttons .button:focus {
+    background-color: #7d64ff
+}
+
+.unzerUI.inverted.violet.active.button, .unzerUI.inverted.violet.buttons .active.button {
+    background-color: #8a73ff
+}
+
+.unzerUI.inverted.violet.button:active, .unzerUI.inverted.violet.buttons .button:active {
+    background-color: #7860f9
+}
+
+.unzerUI.inverted.violet.basic.button, .unzerUI.inverted.violet.basic.buttons .button, .unzerUI.inverted.violet.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.violet.basic.button:hover, .unzerUI.inverted.violet.basic.buttons .button:hover, .unzerUI.inverted.violet.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #8a73ff !important;
+    color: #a291fb !important
+}
+
+.unzerUI.inverted.violet.basic.button:focus, .unzerUI.inverted.violet.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #7d64ff !important;
+    color: #a291fb !important
+}
+
+.unzerUI.inverted.violet.basic.active.button, .unzerUI.inverted.violet.basic.buttons .active.button, .unzerUI.inverted.violet.buttons .basic.active.button {
+    box-shadow: inset 0 0 0 2px #8a73ff !important;
+    color: #a291fb !important
+}
+
+.unzerUI.inverted.violet.basic.button:active, .unzerUI.inverted.violet.basic.buttons .button:active, .unzerUI.inverted.violet.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #7860f9 !important;
+    color: #a291fb !important
+}
+
+.unzerUI.purple.button, .unzerUI.purple.buttons .button {
+    background-color: #a333c8;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.purple.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.purple.button:hover, .unzerUI.purple.buttons .button:hover {
+    background-color: #9627ba;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.purple.button:focus, .unzerUI.purple.buttons .button:focus {
+    background-color: #8f1eb4;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.purple.button:active, .unzerUI.purple.buttons .button:active {
+    background-color: #82299f;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.purple.active.button, .unzerUI.purple.button .active.button:active, .unzerUI.purple.buttons .active.button, .unzerUI.purple.buttons .active.button:active {
+    background-color: #9724be;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.purple.button, .unzerUI.basic.purple.buttons .button {
+    box-shadow: inset 0 0 0 1px #a333c8 !important;
+    color: #a333c8 !important
+}
+
+.unzerUI.basic.purple.button:hover, .unzerUI.basic.purple.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #9627ba !important;
+    color: #9627ba !important
+}
+
+.unzerUI.basic.purple.button:focus, .unzerUI.basic.purple.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #8f1eb4 !important;
+    color: #9627ba !important
+}
+
+.unzerUI.basic.purple.active.button, .unzerUI.basic.purple.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #9724be !important;
+    color: #82299f !important
+}
+
+.unzerUI.basic.purple.button:active, .unzerUI.basic.purple.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #82299f !important;
+    color: #82299f !important
+}
+
+.unzerUI.buttons:not(.vertical) > .basic.purple.button:not(:first-child) {
+    margin-left: -1px
+}
+
+.unzerUI.inverted.purple.button, .unzerUI.inverted.purple.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #dc73ff !important;
+    color: #dc73ff
+}
+
+.unzerUI.inverted.purple.button.active, .unzerUI.inverted.purple.button:active, .unzerUI.inverted.purple.button:focus, .unzerUI.inverted.purple.button:hover, .unzerUI.inverted.purple.buttons .button.active, .unzerUI.inverted.purple.buttons .button:active, .unzerUI.inverted.purple.buttons .button:focus, .unzerUI.inverted.purple.buttons .button:hover {
+    box-shadow: none !important;
+    color: #fff
+}
+
+.unzerUI.inverted.purple.button:hover, .unzerUI.inverted.purple.buttons .button:hover {
+    background-color: #d65aff
+}
+
+.unzerUI.inverted.purple.button:focus, .unzerUI.inverted.purple.buttons .button:focus {
+    background-color: #d24aff
+}
+
+.unzerUI.inverted.purple.active.button, .unzerUI.inverted.purple.buttons .active.button {
+    background-color: #d65aff
+}
+
+.unzerUI.inverted.purple.button:active, .unzerUI.inverted.purple.buttons .button:active {
+    background-color: #cf40ff
+}
+
+.unzerUI.inverted.purple.basic.button, .unzerUI.inverted.purple.basic.buttons .button, .unzerUI.inverted.purple.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.purple.basic.button:hover, .unzerUI.inverted.purple.basic.buttons .button:hover, .unzerUI.inverted.purple.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #d65aff !important;
+    color: #dc73ff !important
+}
+
+.unzerUI.inverted.purple.basic.button:focus, .unzerUI.inverted.purple.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #d24aff !important;
+    color: #dc73ff !important
+}
+
+.unzerUI.inverted.purple.basic.active.button, .unzerUI.inverted.purple.basic.buttons .active.button, .unzerUI.inverted.purple.buttons .basic.active.button {
+    box-shadow: inset 0 0 0 2px #d65aff !important;
+    color: #dc73ff !important
+}
+
+.unzerUI.inverted.purple.basic.button:active, .unzerUI.inverted.purple.basic.buttons .button:active, .unzerUI.inverted.purple.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #cf40ff !important;
+    color: #dc73ff !important
+}
+
+.unzerUI.red.button, .unzerUI.red.buttons .button {
+    background-color: #db2828;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.red.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.red.button:hover, .unzerUI.red.buttons .button:hover {
+    background-color: #d01919;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.red.button:focus, .unzerUI.red.buttons .button:focus {
+    background-color: #ca1010;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.red.button:active, .unzerUI.red.buttons .button:active {
+    background-color: #b21e1e;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.red.active.button, .unzerUI.red.button .active.button:active, .unzerUI.red.buttons .active.button, .unzerUI.red.buttons .active.button:active {
+    background-color: #d41515;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.red.button, .unzerUI.basic.red.buttons .button {
+    box-shadow: inset 0 0 0 1px #db2828 !important;
+    color: #db2828 !important
+}
+
+.unzerUI.basic.red.button:hover, .unzerUI.basic.red.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #d01919 !important;
+    color: #d01919 !important
+}
+
+.unzerUI.basic.red.button:focus, .unzerUI.basic.red.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #ca1010 !important;
+    color: #d01919 !important
+}
+
+.unzerUI.basic.red.active.button, .unzerUI.basic.red.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #d41515 !important;
+    color: #b21e1e !important
+}
+
+.unzerUI.basic.red.button:active, .unzerUI.basic.red.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #b21e1e !important;
+    color: #b21e1e !important
+}
+
+.unzerUI.buttons:not(.vertical) > .basic.red.button:not(:first-child) {
+    margin-left: -1px
+}
+
+.unzerUI.inverted.red.button, .unzerUI.inverted.red.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #ff695e !important;
+    color: #ff695e
+}
+
+.unzerUI.inverted.red.button.active, .unzerUI.inverted.red.button:active, .unzerUI.inverted.red.button:focus, .unzerUI.inverted.red.button:hover, .unzerUI.inverted.red.buttons .button.active, .unzerUI.inverted.red.buttons .button:active, .unzerUI.inverted.red.buttons .button:focus, .unzerUI.inverted.red.buttons .button:hover {
+    box-shadow: none !important;
+    color: #fff
+}
+
+.unzerUI.inverted.red.button:hover, .unzerUI.inverted.red.buttons .button:hover {
+    background-color: #ff5144
+}
+
+.unzerUI.inverted.red.button:focus, .unzerUI.inverted.red.buttons .button:focus {
+    background-color: #ff4335
+}
+
+.unzerUI.inverted.red.active.button, .unzerUI.inverted.red.buttons .active.button {
+    background-color: #ff5144
+}
+
+.unzerUI.inverted.red.button:active, .unzerUI.inverted.red.buttons .button:active {
+    background-color: #ff392b
+}
+
+.unzerUI.inverted.red.basic.button, .unzerUI.inverted.red.basic.buttons .button, .unzerUI.inverted.red.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.red.basic.button:hover, .unzerUI.inverted.red.basic.buttons .button:hover, .unzerUI.inverted.red.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #ff5144 !important;
+    color: #ff695e !important
+}
+
+.unzerUI.inverted.red.basic.button:focus, .unzerUI.inverted.red.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #ff4335 !important;
+    color: #ff695e !important
+}
+
+.unzerUI.inverted.red.basic.active.button, .unzerUI.inverted.red.basic.buttons .active.button, .unzerUI.inverted.red.buttons .basic.active.button {
+    box-shadow: inset 0 0 0 2px #ff5144 !important;
+    color: #ff695e !important
+}
+
+.unzerUI.inverted.red.basic.button:active, .unzerUI.inverted.red.basic.buttons .button:active, .unzerUI.inverted.red.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #ff392b !important;
+    color: #ff695e !important
+}
+
+.unzerUI.teal.button, .unzerUI.teal.buttons .button {
+    background-color: #00b5ad;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.teal.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.teal.button:hover, .unzerUI.teal.buttons .button:hover {
+    background-color: #009c95;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.teal.button:focus, .unzerUI.teal.buttons .button:focus {
+    background-color: #008c86;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.teal.button:active, .unzerUI.teal.buttons .button:active {
+    background-color: #00827c;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.teal.active.button, .unzerUI.teal.button .active.button:active, .unzerUI.teal.buttons .active.button, .unzerUI.teal.buttons .active.button:active {
+    background-color: #009c95;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.teal.button, .unzerUI.basic.teal.buttons .button {
+    box-shadow: inset 0 0 0 1px #00b5ad !important;
+    color: #00b5ad !important
+}
+
+.unzerUI.basic.teal.button:hover, .unzerUI.basic.teal.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #009c95 !important;
+    color: #009c95 !important
+}
+
+.unzerUI.basic.teal.button:focus, .unzerUI.basic.teal.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #008c86 !important;
+    color: #009c95 !important
+}
+
+.unzerUI.basic.teal.active.button, .unzerUI.basic.teal.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #009c95 !important;
+    color: #00827c !important
+}
+
+.unzerUI.basic.teal.button:active, .unzerUI.basic.teal.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #00827c !important;
+    color: #00827c !important
+}
+
+.unzerUI.buttons:not(.vertical) > .basic.teal.button:not(:first-child) {
+    margin-left: -1px
+}
+
+.unzerUI.inverted.teal.button, .unzerUI.inverted.teal.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #6dffff !important;
+    color: #6dffff
+}
+
+.unzerUI.inverted.teal.button.active, .unzerUI.inverted.teal.button:active, .unzerUI.inverted.teal.button:focus, .unzerUI.inverted.teal.button:hover, .unzerUI.inverted.teal.buttons .button.active, .unzerUI.inverted.teal.buttons .button:active, .unzerUI.inverted.teal.buttons .button:focus, .unzerUI.inverted.teal.buttons .button:hover {
+    box-shadow: none !important;
+    color: rgba(0, 0, 0, .6)
+}
+
+.unzerUI.inverted.teal.button:hover, .unzerUI.inverted.teal.buttons .button:hover {
+    background-color: #54ffff
+}
+
+.unzerUI.inverted.teal.button:focus, .unzerUI.inverted.teal.buttons .button:focus {
+    background-color: #4ff
+}
+
+.unzerUI.inverted.teal.active.button, .unzerUI.inverted.teal.buttons .active.button {
+    background-color: #54ffff
+}
+
+.unzerUI.inverted.teal.button:active, .unzerUI.inverted.teal.buttons .button:active {
+    background-color: #3affff
+}
+
+.unzerUI.inverted.teal.basic.button, .unzerUI.inverted.teal.basic.buttons .button, .unzerUI.inverted.teal.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.teal.basic.button:hover, .unzerUI.inverted.teal.basic.buttons .button:hover, .unzerUI.inverted.teal.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #54ffff !important;
+    color: #6dffff !important
+}
+
+.unzerUI.inverted.teal.basic.button:focus, .unzerUI.inverted.teal.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #4ff !important;
+    color: #6dffff !important
+}
+
+.unzerUI.inverted.teal.basic.active.button, .unzerUI.inverted.teal.basic.buttons .active.button, .unzerUI.inverted.teal.buttons .basic.active.button {
+    box-shadow: inset 0 0 0 2px #54ffff !important;
+    color: #6dffff !important
+}
+
+.unzerUI.inverted.teal.basic.button:active, .unzerUI.inverted.teal.basic.buttons .button:active, .unzerUI.inverted.teal.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #3affff !important;
+    color: #6dffff !important
+}
+
+.unzerUI.olive.button, .unzerUI.olive.buttons .button {
+    background-color: #b5cc18;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.olive.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.olive.button:hover, .unzerUI.olive.buttons .button:hover {
+    background-color: #a7bd0d;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.olive.button:focus, .unzerUI.olive.buttons .button:focus {
+    background-color: #a0b605;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.olive.button:active, .unzerUI.olive.buttons .button:active {
+    background-color: #8d9e13;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.olive.active.button, .unzerUI.olive.button .active.button:active, .unzerUI.olive.buttons .active.button, .unzerUI.olive.buttons .active.button:active {
+    background-color: #aac109;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.olive.button, .unzerUI.basic.olive.buttons .button {
+    box-shadow: inset 0 0 0 1px #b5cc18 !important;
+    color: #b5cc18 !important
+}
+
+.unzerUI.basic.olive.button:hover, .unzerUI.basic.olive.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #a7bd0d !important;
+    color: #a7bd0d !important
+}
+
+.unzerUI.basic.olive.button:focus, .unzerUI.basic.olive.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #a0b605 !important;
+    color: #a7bd0d !important
+}
+
+.unzerUI.basic.olive.active.button, .unzerUI.basic.olive.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #aac109 !important;
+    color: #8d9e13 !important
+}
+
+.unzerUI.basic.olive.button:active, .unzerUI.basic.olive.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #8d9e13 !important;
+    color: #8d9e13 !important
+}
+
+.unzerUI.buttons:not(.vertical) > .basic.olive.button:not(:first-child) {
+    margin-left: -1px
+}
+
+.unzerUI.inverted.olive.button, .unzerUI.inverted.olive.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #d9e778 !important;
+    color: #d9e778
+}
+
+.unzerUI.inverted.olive.button.active, .unzerUI.inverted.olive.button:active, .unzerUI.inverted.olive.button:focus, .unzerUI.inverted.olive.button:hover, .unzerUI.inverted.olive.buttons .button.active, .unzerUI.inverted.olive.buttons .button:active, .unzerUI.inverted.olive.buttons .button:focus, .unzerUI.inverted.olive.buttons .button:hover {
+    box-shadow: none !important;
+    color: rgba(0, 0, 0, .6)
+}
+
+.unzerUI.inverted.olive.button:hover, .unzerUI.inverted.olive.buttons .button:hover {
+    background-color: #d8ea5c
+}
+
+.unzerUI.inverted.olive.button:focus, .unzerUI.inverted.olive.buttons .button:focus {
+    background-color: #daef47
+}
+
+.unzerUI.inverted.olive.active.button, .unzerUI.inverted.olive.buttons .active.button {
+    background-color: #daed59
+}
+
+.unzerUI.inverted.olive.button:active, .unzerUI.inverted.olive.buttons .button:active {
+    background-color: #cddf4d
+}
+
+.unzerUI.inverted.olive.basic.button, .unzerUI.inverted.olive.basic.buttons .button, .unzerUI.inverted.olive.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.olive.basic.button:hover, .unzerUI.inverted.olive.basic.buttons .button:hover, .unzerUI.inverted.olive.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #d8ea5c !important;
+    color: #d9e778 !important
+}
+
+.unzerUI.inverted.olive.basic.button:focus, .unzerUI.inverted.olive.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #daef47 !important;
+    color: #d9e778 !important
+}
+
+.unzerUI.inverted.olive.basic.active.button, .unzerUI.inverted.olive.basic.buttons .active.button, .unzerUI.inverted.olive.buttons .basic.active.button {
+    box-shadow: inset 0 0 0 2px #daed59 !important;
+    color: #d9e778 !important
+}
+
+.unzerUI.inverted.olive.basic.button:active, .unzerUI.inverted.olive.basic.buttons .button:active, .unzerUI.inverted.olive.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #cddf4d !important;
+    color: #d9e778 !important
+}
+
+.unzerUI.yellow.button, .unzerUI.yellow.buttons .button {
+    background-color: #fbbd08;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.yellow.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.yellow.button:hover, .unzerUI.yellow.buttons .button:hover {
+    background-color: #eaae00;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.yellow.button:focus, .unzerUI.yellow.buttons .button:focus {
+    background-color: #daa300;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.yellow.button:active, .unzerUI.yellow.buttons .button:active {
+    background-color: #cd9903;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.yellow.active.button, .unzerUI.yellow.button .active.button:active, .unzerUI.yellow.buttons .active.button, .unzerUI.yellow.buttons .active.button:active {
+    background-color: #eaae00;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.yellow.button, .unzerUI.basic.yellow.buttons .button {
+    box-shadow: inset 0 0 0 1px #fbbd08 !important;
+    color: #fbbd08 !important
+}
+
+.unzerUI.basic.yellow.button:hover, .unzerUI.basic.yellow.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #eaae00 !important;
+    color: #eaae00 !important
+}
+
+.unzerUI.basic.yellow.button:focus, .unzerUI.basic.yellow.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #daa300 !important;
+    color: #eaae00 !important
+}
+
+.unzerUI.basic.yellow.active.button, .unzerUI.basic.yellow.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #eaae00 !important;
+    color: #cd9903 !important
+}
+
+.unzerUI.basic.yellow.button:active, .unzerUI.basic.yellow.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #cd9903 !important;
+    color: #cd9903 !important
+}
+
+.unzerUI.buttons:not(.vertical) > .basic.yellow.button:not(:first-child) {
+    margin-left: -1px
+}
+
+.unzerUI.inverted.yellow.button, .unzerUI.inverted.yellow.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #ffe21f !important;
+    color: #ffe21f
+}
+
+.unzerUI.inverted.yellow.button.active, .unzerUI.inverted.yellow.button:active, .unzerUI.inverted.yellow.button:focus, .unzerUI.inverted.yellow.button:hover, .unzerUI.inverted.yellow.buttons .button.active, .unzerUI.inverted.yellow.buttons .button:active, .unzerUI.inverted.yellow.buttons .button:focus, .unzerUI.inverted.yellow.buttons .button:hover {
+    box-shadow: none !important;
+    color: rgba(0, 0, 0, .6)
+}
+
+.unzerUI.inverted.yellow.button:hover, .unzerUI.inverted.yellow.buttons .button:hover {
+    background-color: #ffdf05
+}
+
+.unzerUI.inverted.yellow.button:focus, .unzerUI.inverted.yellow.buttons .button:focus {
+    background-color: #f5d500
+}
+
+.unzerUI.inverted.yellow.active.button, .unzerUI.inverted.yellow.buttons .active.button {
+    background-color: #ffdf05
+}
+
+.unzerUI.inverted.yellow.button:active, .unzerUI.inverted.yellow.buttons .button:active {
+    background-color: #ebcd00
+}
+
+.unzerUI.inverted.yellow.basic.button, .unzerUI.inverted.yellow.basic.buttons .button, .unzerUI.inverted.yellow.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.yellow.basic.button:hover, .unzerUI.inverted.yellow.basic.buttons .button:hover, .unzerUI.inverted.yellow.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #ffdf05 !important;
+    color: #ffe21f !important
+}
+
+.unzerUI.inverted.yellow.basic.button:focus, .unzerUI.inverted.yellow.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #f5d500 !important;
+    color: #ffe21f !important
+}
+
+.unzerUI.inverted.yellow.basic.active.button, .unzerUI.inverted.yellow.basic.buttons .active.button, .unzerUI.inverted.yellow.buttons .basic.active.button {
+    box-shadow: inset 0 0 0 2px #ffdf05 !important;
+    color: #ffe21f !important
+}
+
+.unzerUI.inverted.yellow.basic.button:active, .unzerUI.inverted.yellow.basic.buttons .button:active, .unzerUI.inverted.yellow.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #ebcd00 !important;
+    color: #ffe21f !important
+}
+
+.unzerUI.primary.button, .unzerUI.primary.buttons .button {
+    background-color: #2185d0;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.primary.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.primary.button:hover, .unzerUI.primary.buttons .button:hover {
+    background-color: #1678c2;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.primary.button:focus, .unzerUI.primary.buttons .button:focus {
+    background-color: #0d71bb;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.primary.button:active, .unzerUI.primary.buttons .button:active {
+    background-color: #1a69a4;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.primary.active.button, .unzerUI.primary.button .active.button:active, .unzerUI.primary.buttons .active.button, .unzerUI.primary.buttons .active.button:active {
+    background-color: #1279c6;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.primary.button, .unzerUI.basic.primary.buttons .button {
+    box-shadow: inset 0 0 0 1px #2185d0 !important;
+    color: #2185d0 !important
+}
+
+.unzerUI.basic.primary.button:hover, .unzerUI.basic.primary.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #1678c2 !important;
+    color: #1678c2 !important
+}
+
+.unzerUI.basic.primary.button:focus, .unzerUI.basic.primary.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #0d71bb !important;
+    color: #1678c2 !important
+}
+
+.unzerUI.basic.primary.active.button, .unzerUI.basic.primary.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #1279c6 !important;
+    color: #1a69a4 !important
+}
+
+.unzerUI.basic.primary.button:active, .unzerUI.basic.primary.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #1a69a4 !important;
+    color: #1a69a4 !important
+}
+
+.unzerUI.inverted.primary.button, .unzerUI.inverted.primary.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #54c8ff !important;
+    color: #54c8ff
+}
+
+.unzerUI.inverted.primary.button.active, .unzerUI.inverted.primary.button:active, .unzerUI.inverted.primary.button:focus, .unzerUI.inverted.primary.button:hover, .unzerUI.inverted.primary.buttons .button.active, .unzerUI.inverted.primary.buttons .button:active, .unzerUI.inverted.primary.buttons .button:focus, .unzerUI.inverted.primary.buttons .button:hover {
+    box-shadow: none !important;
+    color: #fff
+}
+
+.unzerUI.inverted.primary.button:hover, .unzerUI.inverted.primary.buttons .button:hover {
+    background-color: #3ac0ff
+}
+
+.unzerUI.inverted.primary.button:focus, .unzerUI.inverted.primary.buttons .button:focus {
+    background-color: #2bbbff
+}
+
+.unzerUI.inverted.primary.active.button, .unzerUI.inverted.primary.buttons .active.button {
+    background-color: #3ac0ff
+}
+
+.unzerUI.inverted.primary.button:active, .unzerUI.inverted.primary.buttons .button:active {
+    background-color: #21b8ff
+}
+
+.unzerUI.inverted.primary.basic.button, .unzerUI.inverted.primary.basic.buttons .button, .unzerUI.inverted.primary.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.primary.basic.button:hover, .unzerUI.inverted.primary.basic.buttons .button:hover, .unzerUI.inverted.primary.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #3ac0ff !important;
+    color: #54c8ff !important
+}
+
+.unzerUI.inverted.primary.basic.button:focus, .unzerUI.inverted.primary.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #2bbbff !important;
+    color: #54c8ff !important
+}
+
+.unzerUI.inverted.primary.basic.active.button, .unzerUI.inverted.primary.basic.buttons .active.button, .unzerUI.inverted.primary.buttons .basic.active.button {
+    box-shadow: inset 0 0 0 2px #3ac0ff !important;
+    color: #54c8ff !important
+}
+
+.unzerUI.inverted.primary.basic.button:active, .unzerUI.inverted.primary.basic.buttons .button:active, .unzerUI.inverted.primary.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #21b8ff !important;
+    color: #54c8ff !important
+}
+
+.unzerUI.secondary.button, .unzerUI.secondary.buttons .button {
+    background-color: #1b1c1d;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.secondary.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.secondary.button:hover, .unzerUI.secondary.buttons .button:hover {
+    background-color: #27292a;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.secondary.button:focus, .unzerUI.secondary.buttons .button:focus {
+    background-color: #2e3032;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.secondary.button:active, .unzerUI.secondary.buttons .button:active {
+    background-color: #343637;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.secondary.active.button, .unzerUI.secondary.button .active.button:active, .unzerUI.secondary.buttons .active.button, .unzerUI.secondary.buttons .active.button:active {
+    background-color: #27292a;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.secondary.button, .unzerUI.basic.secondary.buttons .button {
+    box-shadow: inset 0 0 0 1px #1b1c1d !important;
+    color: #1b1c1d !important
+}
+
+.unzerUI.basic.secondary.button:hover, .unzerUI.basic.secondary.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #27292a !important;
+    color: #27292a !important
+}
+
+.unzerUI.basic.secondary.button:focus, .unzerUI.basic.secondary.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #2e3032 !important;
+    color: #27292a !important
+}
+
+.unzerUI.basic.secondary.active.button, .unzerUI.basic.secondary.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #27292a !important;
+    color: #343637 !important
+}
+
+.unzerUI.basic.secondary.button:active, .unzerUI.basic.secondary.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #343637 !important;
+    color: #343637 !important
+}
+
+.unzerUI.inverted.secondary.button, .unzerUI.inverted.secondary.buttons .button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px #545454 !important;
+    color: #545454
+}
+
+.unzerUI.inverted.secondary.button.active, .unzerUI.inverted.secondary.button:active, .unzerUI.inverted.secondary.button:focus, .unzerUI.inverted.secondary.button:hover, .unzerUI.inverted.secondary.buttons .button.active, .unzerUI.inverted.secondary.buttons .button:active, .unzerUI.inverted.secondary.buttons .button:focus, .unzerUI.inverted.secondary.buttons .button:hover {
+    box-shadow: none !important;
+    color: #fff
+}
+
+.unzerUI.inverted.secondary.button:hover, .unzerUI.inverted.secondary.buttons .button:hover {
+    background-color: #616161
+}
+
+.unzerUI.inverted.secondary.button:focus, .unzerUI.inverted.secondary.buttons .button:focus {
+    background-color: #686868
+}
+
+.unzerUI.inverted.secondary.active.button, .unzerUI.inverted.secondary.buttons .active.button {
+    background-color: #616161
+}
+
+.unzerUI.inverted.secondary.button:active, .unzerUI.inverted.secondary.buttons .button:active {
+    background-color: #6e6e6e
+}
+
+.unzerUI.inverted.secondary.basic.button, .unzerUI.inverted.secondary.basic.buttons .button, .unzerUI.inverted.secondary.buttons .basic.button {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 100%, .5) !important;
+    color: #fff !important
+}
+
+.unzerUI.inverted.secondary.basic.button:hover, .unzerUI.inverted.secondary.basic.buttons .button:hover, .unzerUI.inverted.secondary.buttons .basic.button:hover {
+    box-shadow: inset 0 0 0 2px #616161 !important;
+    color: #545454 !important
+}
+
+.unzerUI.inverted.secondary.basic.button:focus, .unzerUI.inverted.secondary.basic.buttons .button:focus {
+    box-shadow: inset 0 0 0 2px #686868 !important;
+    color: #545454 !important
+}
+
+.unzerUI.inverted.secondary.basic.active.button, .unzerUI.inverted.secondary.basic.buttons .active.button, .unzerUI.inverted.secondary.buttons .basic.active.button {
+    box-shadow: inset 0 0 0 2px #616161 !important;
+    color: #545454 !important
+}
+
+.unzerUI.inverted.secondary.basic.button:active, .unzerUI.inverted.secondary.basic.buttons .button:active, .unzerUI.inverted.secondary.buttons .basic.button:active {
+    box-shadow: inset 0 0 0 2px #6e6e6e !important;
+    color: #545454 !important
+}
+
+.unzerUI.positive.button, .unzerUI.positive.buttons .button {
+    background-color: #21ba45;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.positive.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.positive.button:hover, .unzerUI.positive.buttons .button:hover {
+    background-color: #16ab39;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.positive.button:focus, .unzerUI.positive.buttons .button:focus {
+    background-color: #0ea432;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.positive.button:active, .unzerUI.positive.buttons .button:active {
+    background-color: #198f35;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.positive.active.button, .unzerUI.positive.button .active.button:active, .unzerUI.positive.buttons .active.button, .unzerUI.positive.buttons .active.button:active {
+    background-color: #13ae38;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.positive.button, .unzerUI.basic.positive.buttons .button {
+    box-shadow: inset 0 0 0 1px #21ba45 !important;
+    color: #21ba45 !important
+}
+
+.unzerUI.basic.positive.button:hover, .unzerUI.basic.positive.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #16ab39 !important;
+    color: #16ab39 !important
+}
+
+.unzerUI.basic.positive.button:focus, .unzerUI.basic.positive.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #0ea432 !important;
+    color: #16ab39 !important
+}
+
+.unzerUI.basic.positive.active.button, .unzerUI.basic.positive.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #13ae38 !important;
+    color: #198f35 !important
+}
+
+.unzerUI.basic.positive.button:active, .unzerUI.basic.positive.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #198f35 !important;
+    color: #198f35 !important
+}
+
+.unzerUI.negative.button, .unzerUI.negative.buttons .button {
+    background-color: #db2828;
+    color: #fff;
+    text-shadow: none;
+    background-image: none
+}
+
+.unzerUI.negative.button {
+    box-shadow: inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.negative.button:hover, .unzerUI.negative.buttons .button:hover {
+    background-color: #d01919;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.negative.button:focus, .unzerUI.negative.buttons .button:focus {
+    background-color: #ca1010;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.negative.button:active, .unzerUI.negative.buttons .button:active {
+    background-color: #b21e1e;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.negative.active.button, .unzerUI.negative.button .active.button:active, .unzerUI.negative.buttons .active.button, .unzerUI.negative.buttons .active.button:active {
+    background-color: #d41515;
+    color: #fff;
+    text-shadow: none
+}
+
+.unzerUI.basic.negative.button, .unzerUI.basic.negative.buttons .button {
+    box-shadow: inset 0 0 0 1px #db2828 !important;
+    color: #db2828 !important
+}
+
+.unzerUI.basic.negative.button:hover, .unzerUI.basic.negative.buttons .button:hover {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #d01919 !important;
+    color: #d01919 !important
+}
+
+.unzerUI.basic.negative.button:focus, .unzerUI.basic.negative.buttons .button:focus {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #ca1010 !important;
+    color: #d01919 !important
+}
+
+.unzerUI.basic.negative.active.button, .unzerUI.basic.negative.buttons .active.button {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1px #d41515 !important;
+    color: #b21e1e !important
+}
+
+.unzerUI.basic.negative.button:active, .unzerUI.basic.negative.buttons .button:active {
+    box-shadow: inset 0 0 0 1px #b21e1e !important;
+    color: #b21e1e !important
+}
+
+.unzerUI.buttons:not(.vertical) > .basic.primary.button:not(:first-child) {
+    margin-left: -1px
+}
+
+.unzerUI.buttons {
+    display: inline-flex;
+    flex-direction: row;
+    font-size: 0;
+    vertical-align: baseline;
+    margin: 0 .25em 0 0
+}
+
+.unzerUI.buttons:not(.basic):not(.inverted) {
+    box-shadow: none
+}
+
+.unzerUI.buttons:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden
+}
+
+.unzerUI.buttons .button {
+    flex: 1 0 auto;
+    border-radius: 0;
+    margin: 0
+}
+
+.unzerUI.buttons:not(.basic):not(.inverted) > .button, .unzerUI.buttons > .unzerUI.button:not(.basic):not(.inverted) {
+    box-shadow: inset 0 0 0 1px transparent, inset 0 0 0 0 rgba(34, 36, 38, .15)
+}
+
+.unzerUI.buttons .button:first-child {
+    border-left: none;
+    margin-left: 0;
+    border-top-left-radius: .28571429rem;
+    border-bottom-left-radius: .28571429rem
+}
+
+.unzerUI.buttons .button:last-child {
+    border-top-right-radius: .28571429rem;
+    border-bottom-right-radius: .28571429rem
+}
+
+.unzerUI.vertical.buttons {
+    display: inline-flex;
+    flex-direction: column
+}
+
+.unzerUI.vertical.buttons .button {
+    display: block;
+    float: none;
+    width: 100%;
+    margin: 0;
+    box-shadow: none;
+    border-radius: 0
+}
+
+.unzerUI.vertical.buttons .button:first-child {
+    border-top-left-radius: .28571429rem;
+    border-top-right-radius: .28571429rem
+}
+
+.unzerUI.vertical.buttons .button:last-child {
+    margin-bottom: 0;
+    border-bottom-left-radius: .28571429rem;
+    border-bottom-right-radius: .28571429rem
+}
+
+.unzerUI.vertical.buttons .button:only-child {
+    border-radius: .28571429rem
+}
+
+@font-face {
+    font-family: Open Sans;
+    src: url(https://static.unzer.com/assets/fonts/OpenSans-Regular-webfont.eot);
+    src: url(https://static.unzer.com/assets/fonts/OpenSans-Regular-webfont.eot?#iefix) format("embedded-opentype"), url(https://static.unzer.com/assets/fonts/OpenSans-Regular-webfont.woff) format("woff"), url(https://static.unzer.com/assets/fonts/OpenSans-Regular-webfont.ttf) format("truetype"), url(https://static.unzer.com/assets/fonts/OpenSans-Regular-webfont.svg#open_sansregular) format("svg");
+    font-weight: 400;
+    font-style: normal
+}
+
+@font-face {
+    font-family: Open Sans;
+    src: url(https://static.unzer.com/assets/fonts/OpenSans-Semibold-webfont.eot);
+    src: url(https://static.unzer.com/assets/fonts/OpenSans-Semibold-webfont.eot?#iefix) format("embedded-opentype"), url(https://static.unzer.com/assets/fonts/OpenSans-Semibold-webfont.woff) format("woff"), url(https://static.unzer.com/assets/fonts/OpenSans-Semibold-webfont.ttf) format("truetype"), url(https://static.unzer.com/assets/fonts/OpenSans-Semibold-webfont.svg#open_sanssemibold) format("svg");
+    font-weight: 600;
+    font-style: normal
+}
+
+@font-face {
+    font-family: Open Sans;
+    src: url(https://static.unzer.com/assets/fonts/OpenSans-Bold-webfont.eot);
+    src: url(https://static.unzer.com/assets/fonts/OpenSans-Bold-webfont.eot?#iefix) format("embedded-opentype"), url(https://static.unzer.com/assets/fonts/OpenSans-Bold-webfont.woff) format("woff"), url(https://static.unzer.com/assets/fonts/OpenSans-Bold-webfont.ttf) format("truetype"), url(https://static.unzer.com/assets/fonts/OpenSans-Bold-webfont.svg#open_sansbold) format("svg");
+    font-weight: 800;
+    font-style: normal
+}
+
+.unzerChoices, .unzerUI {
+    font-family: Open Sans, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.2em;
+    color: #000
+}
+
+.unzerChoices input.unzerChoices__input {
+    box-sizing: content-box
+}
+
+.unzerUI * {
+    box-sizing: border-box
+}
+
+.unzerSandboxNotify {
+    display: block;
+    width: 100%;
+    background-color: #ff8005;
+    z-index: 9999;
+    text-align: center;
+    padding: 15px 0;
+    margin: 0 0 20px
+}
+
+.unzerSandboxNotify p {
+    margin: 0;
+    padding: 0
+}
+
+.unzerUIIframe {
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 1px !important;
+    min-width: 100% !important;
+    overflow: hidden !important;
+    display: block !important;
+    height: 1.2em
+}
+
+.unzerMarginTop {
+    margin-top: 1em
+}
+
+.unzerUIPopupEmail {
+    position: relative;
+    display: inline-block;
+    color: #00f;
+    cursor: pointer
+}
+
+.unzerUIPopupEmail:hover {
+    text-decoration: underline
+}
+
+.unzerUIOverlay {
+    visibility: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    z-index: 1
+}
+
+.unzerUIOverlay.show {
+    visibility: visible
+}
+
+.unzerUIPopupMessage {
+    visibility: hidden;
+    cursor: default;
+    width: 480px;
+    text-align: left;
+    font-size: 12px;
+    background-color: #555;
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 16px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -205px
+}
+
+.unzerUIPopupMessage ul {
+    padding-left: 16px
+}
+
+.unzerUIPopupEmail .unzerUIPopupMessage:after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border: 5px solid transparent;
+    border-top-color: #555
+}
+
+.unzerUIPopupEmail .show {
+    visibility: visible
+}
+
+[class*=" h-iconimg-"], [class^=h-iconimg-] {
+    position: relative;
+    display: inline-block;
+    height: 1rem;
+    width: 1rem;
+    margin-left: .4rem;
+    margin-right: .4rem;
+    line-height: 1rem
+}
+
+[class*=" h-iconimg-"]:before, [class^=h-iconimg-]:before, i.icon[class*=" h-iconimg-"]:before, i.icon[class^=h-iconimg-]:before {
+    font-size: 1rem;
+    display: inline-block;
+    text-decoration: inherit;
+    text-align: center;
+    -o-object-fit: contain;
+    object-fit: contain;
+    position: absolute;
+    top: 50%;
+    margin-top: -.5rem;
+    left: 0;
+    height: 1rem;
+    width: 1rem;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-size: auto 1rem;
+    content: " "
+}
+
+i.h-iconimg-address:before {
+    background-image: url(https://static.unzer.com/assets/images/common/ico-address.svg)
+}
+
+i.h-iconimg-uid:before {
+    background-image: url(https://static.unzer.com/assets/images/common/ico-uid.svg)
+}
+
+i.h-iconimg-card-number:before {
+    background-image: url(https://static.unzer.com/assets/images/common/group-5.svg)
+}
+
+i.h-iconimg-card-cvc:before {
+    background-image: url(https://static.unzer.com/assets/images/common/collaps.svg)
+}
+
+i.h-iconimg-card-expiry:before {
+    background-image: url(https://static.unzer.com/assets/images/common/group-4.svg)
+}
+
+i.h-iconimg-card-holder:before {
+    background-image: url(https://static.unzer.com/assets/images/common/name-copy.svg)
+}
+
+i.h-iconimg-card-email:before {
+    background-image: url(https://static.unzer.com/assets/images/common/ico-email.svg)
+}
+
+i.h-iconimg-card-error:before {
+    background-image: url(https://static.unzer.com/assets/images/common/card-error.svg)
+}
+
+i.h-iconimg-visa:before {
+    background-image: url(https://static.unzer.com/assets/images/brands/visa.svg)
+}
+
+i.h-iconimg-mastercard:before {
+    background-image: url(https://static.unzer.com/assets/images/brands/mastercard.svg)
+}
+
+i.h-iconimg-amex:before {
+    background-image: url(https://static.unzer.com/assets/images/brands/amex.svg)
+}
+
+i.h-iconimg-discover:before {
+    background-image: url(https://static.unzer.com/assets/images/brands/discover.svg)
+}
+
+i.h-iconimg-jcb-var:before {
+    background-image: url(https://static.unzer.com/assets/images/brands/jcb-var.png)
+}
+
+i.h-iconimg-diners:before {
+    background-image: url(https://static.unzer.com/assets/images/brands/diners.svg)
+}
+
+i.h-iconimg-maestro:before {
+    background-image: url(https://static.unzer.com/assets/images/brands/maestro.svg)
+}
+
+i.h-iconimg-china-union-pay:before {
+    background-image: url(https://static.unzer.com/assets/images/brands/china-union-pay.svg)
+}
+
+i.h-iconimg-unknown:before {
+    background-image: url(https://static.unzer.com/assets/images/common/group-5.svg)
+}
+
+i.h-iconimg-success:before {
+    background-image: url(https://static.unzer.com/assets/images/common/group-2.svg)
+}
+
+i.h-iconimg-error:before {
+    background-image: url(https://static.unzer.com/assets/images/common/group-3.svg)
+}
+
+i.h-iconimg-iban:before {
+    background-image: url(https://static.unzer.com/assets/images/common/card-debit-copy.svg)
+}
+
+i.h-iconimg-name:before {
+    background-image: url(https://static.unzer.com/assets/images/common/name-copy.svg)
+}
+
+i.h-iconimg-birthday:before {
+    background-image: url(https://static.unzer.com/assets/images/common/birthday-copy.svg)
+}
+
+i.h-iconimg-location:before {
+    background-image: url(https://static.unzer.com/assets/images/common/location-copy.svg)
+}
+
+i.h-iconimg-company:before {
+    background-image: url(https://static.unzer.com/assets/images/common/company-copy.svg)
+}
+
+i.h-iconimg-email:before {
+    background-image: url(https://static.unzer.com/assets/images/common/ico-email.svg)
+}
+
+i.h-iconimg-holder:before {
+    background-image: url(https://static.unzer.com/assets/images/common/name-copy.svg)
+}
+
+i.h-iconimg-downarrow:before {
+    background-image: url(https://static.unzer.com/assets/images/common/angle-arrow-down.svg);
+    margin-left: 0;
+    background-size: 9px 9px;
+    width: 9px;
+    height: 9px
+}
+
+i.h-iconimg-AT, i.h-iconimg-BE, i.h-iconimg-CH, i.h-iconimg-CZ, i.h-iconimg-DE, i.h-iconimg-DK, i.h-iconimg-ES, i.h-iconimg-FR, i.h-iconimg-GB, i.h-iconimg-IE, i.h-iconimg-IR, i.h-iconimg-IT, i.h-iconimg-LU, i.h-iconimg-NL, i.h-iconimg-PL, i.h-iconimg-RU, i.h-iconimg-SE, i.h-iconimg-TN, i.h-iconimg-UA, i.h-iconimg-US {
+    width: 22px;
+    height: 16px;
+    margin-left: 0;
+    margin-top: -2px;
+    margin-right: .5rem
+}
+
+i.h-iconimg-AT:before, i.h-iconimg-BE:before, i.h-iconimg-CH:before, i.h-iconimg-CZ:before, i.h-iconimg-DE:before, i.h-iconimg-DK:before, i.h-iconimg-ES:before, i.h-iconimg-FR:before, i.h-iconimg-GB:before, i.h-iconimg-IE:before, i.h-iconimg-IR:before, i.h-iconimg-IT:before, i.h-iconimg-LU:before, i.h-iconimg-NL:before, i.h-iconimg-PL:before, i.h-iconimg-RU:before, i.h-iconimg-SE:before, i.h-iconimg-TN:before, i.h-iconimg-UA:before, i.h-iconimg-US:before {
+    width: 22px;
+    height: 16px;
+    background-size: 22px 16px;
+    margin-top: -.4rem
+}
+
+i.h-iconimg-DE:before {
+    background-image: url(https://static.unzer.com/assets/images/common/german-flag.svg)
+}
+
+i.h-iconimg-AT:before {
+    background-image: url(https://static.unzer.com/assets/images/common/austrian-flag.svg)
+}
+
+i.h-iconimg-US:before {
+    background-image: url(https://static.unzer.com/assets/images/common/us-flag.svg)
+}
+
+i.h-iconimg-NL:before {
+    background-image: url(https://static.unzer.com/assets/images/common/netherlands-flag.svg)
+}
+
+i.h-iconimg-GB:before {
+    background-image: url(https://static.unzer.com/assets/images/common/uk-flag.svg)
+}
+
+i.h-iconimg-CZ:before {
+    background-image: url(https://static.unzer.com/assets/images/common/czech-flag.svg)
+}
+
+i.h-iconimg-IE:before {
+    background-image: url(https://static.unzer.com/assets/images/common/ireland-flag.svg)
+}
+
+i.h-iconimg-CH:before {
+    background-image: url(https://static.unzer.com/assets/images/common/switzerland-flag.svg)
+}
+
+i.h-iconimg-RU:before {
+    background-image: url(https://static.unzer.com/assets/images/common/russia-flag.svg)
+}
+
+i.h-iconimg-FR:before {
+    background-image: url(https://static.unzer.com/assets/images/common/france-flag.svg)
+}
+
+i.h-iconimg-BE:before {
+    background-image: url(https://static.unzer.com/assets/images/common/belgium-flag.svg)
+}
+
+i.h-iconimg-IR:before {
+    background-image: url(https://static.unzer.com/assets/images/common/iran-flag.svg)
+}
+
+i.h-iconimg-SE:before {
+    background-image: url(https://static.unzer.com/assets/images/common/sweden-flag.svg)
+}
+
+i.h-iconimg-IT:before {
+    background-image: url(https://static.unzer.com/assets/images/common/italy-flag.svg)
+}
+
+i.h-iconimg-DK:before {
+    background-image: url(https://static.unzer.com/assets/images/common/denmark-flag.svg)
+}
+
+i.h-iconimg-LU:before {
+    background-image: url(https://static.unzer.com/assets/images/common/luxembourg-flag.svg)
+}
+
+i.h-iconimg-TN:before {
+    background-image: url(https://static.unzer.com/assets/images/common/tunisia-flag.svg)
+}
+
+i.h-iconimg-PL:before {
+    background-image: url(https://static.unzer.com/assets/images/common/poland-flag.svg)
+}
+
+i.h-iconimg-UA:before {
+    background-image: url(https://static.unzer.com/assets/images/common/ukraine-flag.svg)
+}
+
+i.h-iconimg-ES:before {
+    background-image: url(https://static.unzer.com/assets/images/common/spain-flag.svg)
+}
+
+[class*=" h-iconimg-eps-"], [class*=" h-iconimg-ideal-"], [class^=h-iconimg-eps-], [class^=h-iconimg-ideal-] {
+    margin-left: 0;
+    margin-top: -1px;
+    margin-right: .5rem
+}
+
+[class*=" h-iconimg-eps-"]:before, [class*=" h-iconimg-ideal-"]:before, [class^=h-iconimg-eps-]:before, [class^=h-iconimg-ideal-]:before, i.icon[class*=" h-iconimg-eps-"]:before, i.icon[class*=" h-iconimg-ideal-"]:before, i.icon[class^=h-iconimg-eps-]:before, i.icon[class^=h-iconimg-ideal-]:before {
+    margin-top: -.4em;
+    left: 0
+}
+
+i.h-iconimg-ideal-bank-generic:before {
+    background-image: url(https://static.unzer.com/assets/images/common/bank-generic.svg) !important
+}
+
+i.h-iconimg-ideal-ideal:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-ideal-sqare.svg) !important
+}
+
+i.h-iconimg-ideal-abn-amro:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-abn-amro-sqare.svg) !important
+}
+
+i.h-iconimg-ideal-asn-bank:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-asn-bank-sqare.svg) !important
+}
+
+i.h-iconimg-ideal-bunq:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-bunq-sqare.svg) !important
+}
+
+i.h-iconimg-ideal-ing:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-ing-sqare.svg) !important
+}
+
+i.h-iconimg-ideal-knab:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-knab-sqare.svg) !important
+}
+
+i.h-iconimg-ideal-rabobank:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-rabobank-sqare.svg) !important
+}
+
+i.h-iconimg-ideal-regio-bank:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-regio-bank-sqare.svg) !important
+}
+
+i.h-iconimg-ideal-sns:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-sns-sqare.svg) !important
+}
+
+i.h-iconimg-ideal-triodos-bank:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-triodos-bank-square.svg) !important
+}
+
+i.h-iconimg-ideal-van-lanschot:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-van-lanschot-square.svg) !important
+}
+
+i.h-iconimg-eps-bank-generic:before {
+    background-image: url(https://static.unzer.com/assets/images/common/bank-generic.svg) !important
+}
+
+i.h-iconimg-eps-eps:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-ideal-sqare-copy-square.png) !important
+}
+
+i.h-iconimg-eps-anadi-bank:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-anadi-bank-square.png) !important
+}
+
+i.h-iconimg-eps-ba:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-ba-square.png) !important
+}
+
+i.h-iconimg-eps-bank-burgenland-logo:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-bank-burgenland-logo-square.svg) !important
+}
+
+i.h-iconimg-eps-bankhaus-carl-spaengler:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-bankhaus-carl-spaengler-square.svg) !important
+}
+
+i.h-iconimg-eps-bawag:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-bawag-square.svg) !important
+}
+
+i.h-iconimg-eps-bks:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-bks-square.svg) !important
+}
+
+i.h-iconimg-eps-bruell-kallmus:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-bruell-kallmus-square.svg) !important
+}
+
+i.h-iconimg-eps-btv:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-btv-square.png) !important
+}
+
+i.h-iconimg-eps-cb:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-cb-square.svg) !important
+}
+
+i.h-iconimg-eps-dolomitenbank:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-dolomitenbank-square.png) !important
+}
+
+i.h-iconimg-eps-easybank:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-easybank-square.png) !important
+}
+
+i.h-iconimg-eps-erste-bank-sparkasse:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-erste-bank-sparkasse-square.svg) !important
+}
+
+i.h-iconimg-eps-schelhammer:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-schelhammer-square.svg) !important
+}
+
+i.h-iconimg-eps-hypo-alpe-adria:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-hypo-alpe-adria-square.svg) !important
+}
+
+i.h-iconimg-eps-hypo-noe-gruppe:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-hypo-noe-gruppe-square.svg) !important
+}
+
+i.h-iconimg-eps-hypo-salzburg:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-hypo-salzburg-square.png) !important
+}
+
+i.h-iconimg-eps-hypo-tirol-bank:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-hypo-tirol-bank-square.svg) !important
+}
+
+i.h-iconimg-eps-hypo-vorarlberg:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-hypo-vorarlberg-square.svg) !important
+}
+
+i.h-iconimg-eps-immo-bank:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-immo-bank-square.svg) !important
+}
+
+i.h-iconimg-eps-marchfelder-bank:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-marchfelder-bank-square.png) !important
+}
+
+i.h-iconimg-eps-oberbank:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-oberbank-square.svg) !important
+}
+
+i.h-iconimg-eps-oe-ae-a-bank:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-oe-ae-a-bank-square.png) !important
+}
+
+i.h-iconimg-eps-raiffeisen:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-raiffeisen-square.svg) !important
+}
+
+i.h-iconimg-eps-schoeller:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-schoeller-square.png) !important
+}
+
+i.h-iconimg-eps-sparda-bank-linz:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-sparda-bank-linz-square.svg) !important
+}
+
+i.h-iconimg-eps-sparda-bank-wien:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-sparda-bank-wien-square.svg) !important
+}
+
+i.h-iconimg-eps-vkb:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-vkb-square.png) !important
+}
+
+i.h-iconimg-eps-volksbank:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-volksbank-square.svg) !important
+}
+
+i.h-iconimg-eps-vr-braunau:before {
+    background-image: url(https://static.unzer.com/assets/images/eps/logo-vr-braunau-square.png) !important
+}
+
+.unzerUI-installment-secured__choose-rate, .unzerUI-installment-secured__selected-rate {
+    display: flex;
+    align-items: center;
+    font-size: 1em;
+    color: #000;
+    height: 50px;
+    border-bottom: 1px solid #ececec;
+    cursor: pointer
+}
+
+.unzerUI-installment-secured__selected-rate {
+    justify-content: space-between;
+    margin-bottom: 12px
+}
+
+.unzerUI-installment-secured__choose-rate:hover, .unzerUI-installment-secured__selected-rate:hover {
+    color: #6cade4
+}
+
+.unzerUI-installment-secured__row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    border-left: 1px solid transparent
+}
+
+.unzerUI-installment-secured__row:last-of-type {
+    margin-bottom: 0
+}
+
+.unzerUI-installment-secured__column-item {
+    font-size: 1em;
+    color: #000
+}
+
+.unzerUI-installment-secured__column-item--bold {
+    font-weight: 800;
+    margin: 1em 0
+}
+
+.unzerUI-installment-secured__form {
+    min-height: 250px
+}
+
+.unzerUI-installment-secured__change-button {
+    background-color: #fff;
+    font-size: 1em;
+    border-radius: 13px;
+    border: 1px solid rgba(108, 173, 228, .5);
+    color: #6cade4;
+    cursor: pointer;
+    min-height: 26px;
+    min-width: 80px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    line-height: 1.5
+}
+
+.unzerUI-installment-secured__change-button:hover {
+    border: 1px solid #6cade4;
+    background-color: rgba(108, 173, 228, .08)
+}
+
+.unzerUI-installment-secured__change-button:active, .unzerUI-installment-secured__change-button:focus {
+    outline: none
+}
+
+.unzerUI-installment-secured__form-container .unzerUI.form {
+    margin-bottom: 1em
+}
+
+.unzer-installment-secured__box {
+    height: 40px;
+    padding: 0 15px;
+    display: flex;
+    font-size: 1em;
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, .12);
+    text-align: left;
+    align-items: center;
+    font-weight: 600;
+    line-height: 1.25;
+    background-color: #ececec
+}
+
+.unzerUI-installment-secured__margin--top-bottom {
+    margin: 1em 0
+}
+
+[class*=" h-iconideal-"], [class^=h-iconideal-] {
+    display: inline-block;
+    line-height: 16px;
+    height: 16px
+}
+
+[class*=" h-iconideal-"]:before, [class^=h-iconideal-]:before {
+    display: inline-block;
+    text-decoration: inherit;
+    margin-top: 0 !important;
+    margin-left: 0;
+    margin-right: 0;
+    text-align: center;
+    -o-object-fit: contain;
+    object-fit: contain;
+    line-height: 16px;
+    width: 16px;
+    height: 16px;
+    content: "";
+    background-size: 16px 16px !important;
+    background-position: 0 0 !important;
+    background-repeat: no-repeat !important
+}
+
+i.h-iconideal-ideal:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-ideal-sqare.svg) !important
+}
+
+i.h-iconideal-abn-amro:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-abn-amro-sqare.svg) !important
+}
+
+i.h-iconideal-asn-bank:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-asn-bank-sqare.svg) !important
+}
+
+i.h-iconideal-bunq:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-bunq-sqare.svg) !important
+}
+
+i.h-iconideal-ing:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-ing-sqare.svg) !important
+}
+
+i.h-iconideal-knab:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-knab-sqare.svg) !important
+}
+
+i.h-iconideal-rabobank:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-rabobank-sqare.svg) !important
+}
+
+i.h-iconideal-regio-bank:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-regio-bank-sqare.svg) !important
+}
+
+i.h-iconideal-sns:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-sns-sqare.svg) !important
+}
+
+i.h-iconideal-triodos-bank:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-triodos-bank-square.svg) !important
+}
+
+i.h-iconideal-van-lanschot:before {
+    background-image: url(https://static.unzer.com/assets/images/ideal/logo-van-lanschot-square.svg) !important
+}
+
+.unzerUI.message {
+    position: relative;
+    min-height: 1rem;
+    margin: 1rem 0;
+    background: #f8f8f8;
+    border: 1px solid #dadada;
+    padding: 11px;
+    line-height: 1rem;
+    color: #000;
+    border-radius: 2px
+}
+
+.unzerUI.message.downArrow {
+    margin-bottom: 1.5rem;
+    text-align: center
+}
+
+.unzerUI.message.downArrow:after, .unzerUI.message.downArrow:before {
+    top: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none
+}
+
+.unzerUI.message.downArrow:after {
+    border-color: #f8f8f8 hsla(0, 0%, 97.3%, 0) hsla(0, 0%, 97.3%, 0);
+    border-width: 10px;
+    margin-left: -10px
+}
+
+.unzerUI.message.downArrow:before {
+    border-color: #dadada hsla(0, 0%, 85.5%, 0) hsla(0, 0%, 85.5%, 0);
+    border-width: 11px;
+    margin-left: -11px
+}
+
+.unzerUI.message:first-child {
+    margin-top: 0
+}
+
+.unzerUI.message:last-child {
+    margin-bottom: 0
+}
+
+.unzerUI.message .header {
+    display: block;
+    font-weight: 700;
+    margin: -.14285714em 0 0
+}
+
+.unzerUI.message .header:not(.unzerUI) {
+    font-size: 1.14285714em
+}
+
+.unzerUI.message p {
+    opacity: .85;
+    margin: .75em 0
+}
+
+.unzerUI.message p:first-child {
+    margin-top: 0
+}
+
+.unzerUI.message p:last-child {
+    margin-bottom: 0
+}
+
+.unzerUI.message .header + p {
+    margin-top: .25em
+}
+
+.unzerUI.message .list:not(.unzerUI) {
+    text-align: left;
+    padding: 0;
+    opacity: .85;
+    list-style-position: inside;
+    margin: .5em 0 0
+}
+
+.unzerUI.message .list:not(.unzerUI):first-child {
+    margin-top: 0
+}
+
+.unzerUI.message .list:not(.unzerUI):last-child {
+    margin-bottom: 0
+}
+
+.unzerUI.message .list:not(.unzerUI) li {
+    position: relative;
+    list-style-type: none;
+    margin: 0 0 .3em 1em;
+    padding: 0
+}
+
+.unzerUI.message .list:not(.unzerUI) li:before {
+    position: absolute;
+    content: "\2022";
+    left: -1em;
+    height: 100%;
+    vertical-align: baseline
+}
+
+.unzerUI.message .list:not(.unzerUI) li:last-child {
+    margin-bottom: 0
+}
+
+.unzerUI.message > .icon {
+    margin-right: .6em
+}
+
+.unzerUI.message > .close.icon {
+    cursor: pointer;
+    position: absolute;
+    margin: 0;
+    top: .78575em;
+    right: .5em;
+    opacity: .7;
+    transition: opacity .1s ease
+}
+
+.unzerUI.message > .close.icon:hover {
+    opacity: 1
+}
+
+.unzerUI.message > :first-child {
+    margin-top: 0
+}
+
+.unzerUI.message > :last-child {
+    margin-bottom: 0
+}
+
+.unzerUI.black.message {
+    background-color: #1b1c1d;
+    color: hsla(0, 0%, 100%, .9)
+}
+
+.unzerUI.positive.message {
+    background-color: #fcfff5;
+    color: #2c662d
+}
+
+.unzerUI.attached.positive.message, .unzerUI.positive.message {
+    box-shadow: inset 0 0 0 1px #a3c293, 0 0 0 0 transparent
+}
+
+.unzerUI.positive.message .header {
+    color: #1a531b
+}
+
+.unzerUI.negative.message {
+    background-color: #fff6f6;
+    color: #9f3a38
+}
+
+.unzerUI.attached.negative.message, .unzerUI.negative.message {
+    box-shadow: inset 0 0 0 1px #e0b4b4, 0 0 0 0 transparent
+}
+
+.unzerUI.negative.message .header {
+    color: #912d2b
+}
+
+.unzerUI.info.message {
+    background-color: #f8ffff;
+    color: #276f86
+}
+
+.unzerUI.attached.info.message, .unzerUI.info.message {
+    box-shadow: inset 0 0 0 1px #a9d5de, 0 0 0 0 transparent
+}
+
+.unzerUI.info.message .header {
+    color: #0e566c
+}
+
+.unzerUI.warning.message {
+    background-color: #fffaf3;
+    color: #573a08
+}
+
+.unzerUI.attached.warning.message, .unzerUI.warning.message {
+    box-shadow: inset 0 0 0 1px #c9ba9b, 0 0 0 0 transparent
+}
+
+.unzerUI.warning.message .header {
+    color: #794b02
+}
+
+.unzerUI.error.message {
+    background-color: #fff6f6;
+    color: #9f3a38
+}
+
+.unzerUI.attached.error.message, .unzerUI.error.message {
+    box-shadow: inset 0 0 0 1px #e0b4b4, 0 0 0 0 transparent
+}
+
+.unzerUI.error.message .header {
+    color: #912d2b
+}
+
+.unzerUI.success.message {
+    background-color: #fcfff5;
+    color: #2c662d
+}
+
+.unzerUI.attached.success.message, .unzerUI.success.message {
+    box-shadow: inset 0 0 0 1px #a3c293, 0 0 0 0 transparent
+}
+
+.unzerUI.success.message .header {
+    color: #1a531b
+}
+
+.unzerUI.black.message, .unzerUI.inverted.message {
+    background-color: #1b1c1d;
+    color: hsla(0, 0%, 100%, .9)
+}
+
+.unzerUI.red.message {
+    background-color: #ffe8e6;
+    color: #db2828;
+    box-shadow: inset 0 0 0 1px #db2828, 0 0 0 0 transparent
+}
+
+.unzerUI.red.message .header {
+    color: #c82121
+}
+
+.unzerUI.orange.message {
+    background-color: #ffedde;
+    color: #f2711c;
+    box-shadow: inset 0 0 0 1px #f2711c, 0 0 0 0 transparent
+}
+
+.unzerUI.orange.message .header {
+    color: #e7640d
+}
+
+.unzerUI.yellow.message {
+    background-color: #fff8db;
+    color: #b58105;
+    box-shadow: inset 0 0 0 1px #b58105, 0 0 0 0 transparent
+}
+
+.unzerUI.yellow.message .header {
+    color: #9c6f04
+}
+
+.unzerUI.olive.message {
+    background-color: #fbfdef;
+    color: #8abc1e;
+    box-shadow: inset 0 0 0 1px #8abc1e, 0 0 0 0 transparent
+}
+
+.unzerUI.olive.message .header {
+    color: #7aa61a
+}
+
+.unzerUI.green.message {
+    background-color: #e5f9e7;
+    color: #1ebc30;
+    box-shadow: inset 0 0 0 1px #1ebc30, 0 0 0 0 transparent
+}
+
+.unzerUI.green.message .header {
+    color: #1aa62a
+}
+
+.unzerUI.teal.message {
+    background-color: #e1f7f7;
+    color: #10a3a3;
+    box-shadow: inset 0 0 0 1px #10a3a3, 0 0 0 0 transparent
+}
+
+.unzerUI.teal.message .header {
+    color: #0e8c8c
+}
+
+.unzerUI.blue.message {
+    background-color: #dff0ff;
+    color: #2185d0;
+    box-shadow: inset 0 0 0 1px #2185d0, 0 0 0 0 transparent
+}
+
+.unzerUI.blue.message .header {
+    color: #1e77ba
+}
+
+.unzerUI.violet.message {
+    background-color: #eae7ff;
+    color: #6435c9;
+    box-shadow: inset 0 0 0 1px #6435c9, 0 0 0 0 transparent
+}
+
+.unzerUI.violet.message .header {
+    color: #5a30b5
+}
+
+.unzerUI.purple.message {
+    background-color: #f6e7ff;
+    color: #a333c8;
+    box-shadow: inset 0 0 0 1px #a333c8, 0 0 0 0 transparent
+}
+
+.unzerUI.purple.message .header {
+    color: #922eb4
+}
+
+.unzerUI.pink.message {
+    background-color: #ffe3fb;
+    color: #e03997;
+    box-shadow: inset 0 0 0 1px #e03997, 0 0 0 0 transparent
+}
+
+.unzerUI.pink.message .header {
+    color: #dd238b
+}
+
+.unzerUI.brown.message {
+    background-color: #f1e2d3;
+    color: #a5673f;
+    box-shadow: inset 0 0 0 1px #a5673f, 0 0 0 0 transparent
+}
+
+.unzerUI.brown.message .header {
+    color: #935b38
+}
+
+.unzerUI.input {
+    position: relative;
+    font-weight: 400;
+    font-style: normal;
+    display: inline-flex
+}
+
+.unzerUI.input > .unzerInput, .unzerUI.input > input {
+    margin: 0;
+    max-width: 100%;
+    flex: 1 0 auto;
+    outline: none;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    text-align: left;
+    line-height: 1.2em;
+    padding: 10px 16px;
+    background: #fff;
+    border: 1px solid #dadada;
+    color: #000;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, .2);
+    box-sizing: content-box
+}
+
+.unzerUI.input > input::-webkit-input-placeholder {
+    color: #999;
+    line-height: normal !important
+}
+
+.unzerUI.input > input::-moz-placeholder {
+    color: #999
+}
+
+.unzerUI.input > input:-ms-input-placeholder {
+    color: #999
+}
+
+.unzerUI.input > input:focus::-webkit-input-placeholder {
+    color: transparent
+}
+
+.unzerUI.input > input:focus:-moz-placeholder, .unzerUI.input > input:focus::-moz-placeholder {
+    color: transparent
+}
+
+.unzerUI.input > input:focus:-ms-input-placeholder {
+    color: transparent
+}
+
+.unzerUI.input.error > .unzerInput, .unzerUI.input.error > input {
+    background-color: #fff6f6;
+    border-color: #d0021b;
+    box-shadow: none
+}
+
+.unzerUI.input.error > input::-webkit-input-placeholder {
+    color: #e7bdbc
+}
+
+.unzerUI.input.error > input::-moz-placeholder {
+    color: #e7bdbc
+}
+
+.unzerUI.input.error > input:-ms-input-placeholder {
+    color: #e7bdbc !important
+}
+
+.unzerUI.icon.input > i.icon {
+    cursor: default;
+    position: absolute;
+    line-height: 1;
+    text-align: center;
+    top: 0;
+    right: 0;
+    margin: 0;
+    height: 100%;
+    width: 2.67142857em;
+    border-radius: 0 .28571429rem .28571429rem 0;
+    transition: opacity .3s ease
+}
+
+.unzerUI.icon.input > i.icon:not(.link) {
+    pointer-events: none
+}
+
+.unzerUI.icon.input > .unzerInput, .unzerUI.icon.input > input {
+    padding-right: 50px !important
+}
+
+.unzerUI.icon.input > i.icon:after, .unzerUI.icon.input > i.icon:before {
+    left: .4em;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    width: 100%;
+    margin-top: -.5em
+}
+
+.unzerUI.icon.input > i.link.icon {
+    cursor: pointer
+}
+
+.unzerUI.icon.input > i.circular.icon {
+    top: .35em;
+    right: .5em
+}
+
+.unzerUI[class*="left icon"].input > i.icon {
+    right: auto;
+    left: 8px
+}
+
+.unzerUI[class*="left icon"].input > i.circular.icon {
+    right: auto;
+    left: .5em
+}
+
+.unzerUI[class*="left icon"].input > .unzerInput, .unzerUI[class*="left icon"].input > input {
+    padding-left: 50px !important;
+    padding-right: 1em !important
+}
+
+.unzerUI.checkbox {
+    position: relative;
+    display: inline-block;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    outline: none;
+    vertical-align: baseline;
+    font-style: normal;
+    min-height: 30px;
+    font-size: 1em;
+    line-height: 30px;
+    min-width: 30px
+}
+
+@media only screen and (max-width: 767px) {
+    .unzerUI.checkbox {
+        margin-bottom: 1em
+    }
+}
+
+.unzerUI.checkbox input[type=checkbox], .unzerUI.checkbox input[type=radio] {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0 !important;
+    outline: none;
+    width: 30px;
+    height: 30px;
+    z-index: 3;
+    padding: 0
+}
+
+.unzerUI.checkbox .box, .unzerUI.checkbox label {
+    cursor: auto;
+    position: relative;
+    display: block;
+    padding-left: 2.5em;
+    outline: none;
+    font-size: 1em;
+    cursor: pointer
+}
+
+.unzerUI.checkbox .box:before, .unzerUI.checkbox label:before {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    content: "";
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-size: 30px 30px;
+    background-image: url(https://static.unzer.com/assets/images/common/primary-copy-22.svg)
+}
+
+.unzerUI.checkbox + label, .unzerUI.checkbox label {
+    transition: color .1s ease
+}
+
+.unzerUI.checkbox + label {
+    vertical-align: middle
+}
+
+.checkboxLabel {
+    margin-bottom: .5em
+}
+
+.unzerUI.checkbox input:checked ~ .box:before, .unzerUI.checkbox input:checked ~ label:before {
+    background-image: url(https://static.unzer.com/assets/images/common/primary-copy-23.svg)
+}
+
+.unzerUI.read-only.checkbox, .unzerUI.read-only.checkbox label {
+    cursor: default
+}
+
+.unzerUI.checkbox input[disabled] ~ .box:after, .unzerUI.checkbox input[disabled] ~ label, .unzerUI.disabled.checkbox .box:after, .unzerUI.disabled.checkbox label {
+    cursor: default !important;
+    opacity: .5;
+    color: #000
+}
+
+.unzerChoices {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    outline: none;
+    text-align: left
+}
+
+.unzerChoices:focus {
+    outline: none
+}
+
+.unzerChoices:last-child {
+    margin-bottom: 0
+}
+
+.unzerChoices.is-disabled .unzerChoices__inner, .unzerChoices.is-disabled .unzerChoices__input {
+    background-color: #fff;
+    cursor: not-allowed;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.unzerChoices.is-disabled .unzerChoices__item {
+    cursor: not-allowed
+}
+
+.unzerChoices[data-type*=select-one] {
+    cursor: pointer
+}
+
+.unzerChoices[data-type*=select-one] .unzerChoices__inner {
+    padding-bottom: 10px
+}
+
+.unzerChoices[data-type*=select-one] .unzerChoices__input {
+    display: block;
+    border-bottom: 1px solid #dadada;
+    background-color: #fff
+}
+
+.unzerChoices[data-type*=select-one] .unzerChoices__button {
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMi41OTIuMDQ0bDE4LjM2NCAxOC4zNjQtMi41NDggMi41NDhMLjA0NCAyLjU5MnoiLz48cGF0aCBkPSJNMCAxOC4zNjRMMTguMzY0IDBsMi41NDggMi41NDhMMi41NDggMjAuOTEyeiIvPjwvZz48L3N2Zz4=);
+    padding: 0;
+    background-size: 9px;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -10px;
+    margin-right: 25px;
+    height: 20px;
+    width: 20px;
+    border-radius: 10em;
+    opacity: .5
+}
+
+.unzerChoices[data-type*=select-one] .unzerChoices__button:focus, .unzerChoices[data-type*=select-one] .unzerChoices__button:hover {
+    opacity: 1
+}
+
+.unzerChoices[data-type*=select-one] .unzerChoices__button:focus {
+    box-shadow: 0 0 0 2px #00bcd4
+}
+
+.unzerChoices[data-type*=select-one]:after {
+    content: "";
+    background-image: url(https://static.unzer.com/assets/images/common/angle-arrow-down.svg);
+    height: 9px;
+    width: 9px;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    margin-top: -4.5px;
+    pointer-events: none;
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg)
+}
+
+.unzerChoices[data-type*=select-one].is-open:after {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg)
+}
+
+.unzerChoices[data-type*=select-one][dir=rtl]:after {
+    left: 11.5px;
+    right: auto
+}
+
+.unzerChoices[data-type*=select-one][dir=rtl] .unzerChoices__button {
+    right: auto;
+    left: 0;
+    margin-left: 25px;
+    margin-right: 0
+}
+
+.unzerChoices[data-type*=select-multiple] .unzerChoices__inner, .unzerChoices[data-type*=text] .unzerChoices__inner {
+    cursor: text
+}
+
+.unzerChoices[data-type*=select-multiple] .unzerChoices__button, .unzerChoices[data-type*=text] .unzerChoices__button {
+    position: relative;
+    display: inline-block;
+    margin: 0 -3px 0 8px;
+    padding-left: 1rem;
+    border-left: 1px solid #dadada;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0iI0ZGRiIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMi41OTIuMDQ0bDE4LjM2NCAxOC4zNjQtMi41NDggMi41NDhMLjA0NCAyLjU5MnoiLz48cGF0aCBkPSJNMCAxOC4zNjRMMTguMzY0IDBsMi41NDggMi41NDhMMi41NDggMjAuOTEyeiIvPjwvZz48L3N2Zz4=);
+    background-size: 8px;
+    width: 8px;
+    line-height: 1;
+    opacity: .75;
+    border-radius: 0
+}
+
+.unzerChoices[data-type*=select-multiple] .unzerChoices__button:focus, .unzerChoices[data-type*=select-multiple] .unzerChoices__button:hover, .unzerChoices[data-type*=text] .unzerChoices__button:focus, .unzerChoices[data-type*=text] .unzerChoices__button:hover {
+    opacity: 1
+}
+
+.unzerChoices__inner {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: top;
+    width: 100%;
+    background-color: #f8f8f8;
+    padding: 10px 25px 10px 1rem;
+    border: 1px solid #dadada;
+    border-radius: 2px;
+    font-size: 1em;
+    height: 40px;
+    overflow: hidden;
+    cursor: pointer;
+    word-wrap: break-word;
+    line-height: 20px;
+    white-space: normal;
+    outline: 0;
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    min-width: 14em;
+    min-height: 20px;
+    box-sizing: border-box
+}
+
+.is-focused .unzerChoices__inner, .is-open .unzerChoices__inner {
+    border-color: #dadada
+}
+
+.is-open .unzerChoices__inner {
+    border-radius: 2px 2px 0 0
+}
+
+.is-flipped.is-open .unzerChoices__inner {
+    border-radius: 0 0 2px 2px
+}
+
+.unzerChoices__list {
+    background-color: #f8f8f8;
+    line-height: 20px;
+    margin: 0;
+    padding-left: 0;
+    list-style: none
+}
+
+.unzerChoices__list--single {
+    display: inline-block;
+    width: 100%
+}
+
+[dir=rtl] .unzerChoices__list--single {
+    padding-right: 4px;
+    padding-left: 1rem
+}
+
+.unzerChoices__list--single .unzerChoices__item {
+    width: 100%
+}
+
+.unzerChoices__list--multiple {
+    display: inline
+}
+
+.unzerChoices__list--multiple .unzerChoices__item {
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-right: 3.75px;
+    margin-bottom: 3.75px;
+    background-color: #f8f8f8;
+    border: 1px solid #dadada;
+    word-break: break-all
+}
+
+.unzerChoices__list--multiple .unzerChoices__item[data-deletable] {
+    padding-right: 5px
+}
+
+[dir=rtl] .unzerChoices__list--multiple .unzerChoices__item {
+    margin-right: 0;
+    margin-left: 3.75px
+}
+
+.unzerChoices__list--multiple .unzerChoices__item.is-highlighted {
+    background-color: #e9f8fe
+}
+
+.is-disabled .unzerChoices__list--multiple .unzerChoices__item {
+    background-color: #f8f8f8;
+    border: 1px solid #dadada
+}
+
+.unzerChoices__list--dropdown {
+    display: none;
+    z-index: 100;
+    position: absolute;
+    width: calc(100% - 2px);
+    background-color: #fff;
+    border: 1px solid #ddd;
+    top: 100%;
+    margin-top: -1px;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    overflow: hidden;
+    word-break: break-all
+}
+
+.unzerChoices__list--dropdown.is-active {
+    display: block
+}
+
+.is-open .unzerChoices__list--dropdown {
+    border-color: #dadada
+}
+
+.is-flipped .unzerChoices__list--dropdown {
+    top: auto;
+    bottom: 100%;
+    margin-top: 0;
+    margin-bottom: -1px;
+    border-radius: 2px 2px 0 0
+}
+
+.unzerChoices__list--dropdown .unzerChoices__list {
+    position: relative;
+    max-height: 300px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    will-change: scroll-position
+}
+
+.unzerChoices__list--dropdown .unzerChoices__item {
+    border-bottom: 1px solid #dadada;
+    position: relative;
+    padding: 10px 1rem;
+    font-size: 1em
+}
+
+.unzerChoices__list--dropdown .unzerChoices__item:last-child {
+    border-bottom: 0
+}
+
+[dir=rtl] .unzerChoices__list--dropdown .unzerChoices__item {
+    text-align: right
+}
+
+@media (min-width: 640px) {
+    .unzerChoices__list--dropdown .unzerChoices__item--selectable {
+        padding-right: 125px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis
+    }
+
+    .unzerChoices__list--dropdown .unzerChoices__item--selectable:after {
+        content: attr(data-select-text);
+        font-size: 1em;
+        opacity: 0;
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%)
+    }
+
+    [dir=rtl] .unzerChoices__list--dropdown .unzerChoices__item--selectable {
+        text-align: right;
+        padding-left: 100px;
+        padding-right: 10px
+    }
+
+    [dir=rtl] .unzerChoices__list--dropdown .unzerChoices__item--selectable:after {
+        right: auto;
+        left: 10px
+    }
+}
+
+.unzerChoices__list--dropdown .unzerChoices__item--selectable.is-highlighted {
+    background-color: #e9f8fe
+}
+
+.unzerChoices__list--dropdown .unzerChoices__item--selectable.is-highlighted:after {
+    opacity: .5
+}
+
+.unzerChoices__item {
+    cursor: default
+}
+
+.unzerChoices__item--selectable {
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.unzerChoices__item--disabled {
+    cursor: not-allowed;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    opacity: .5
+}
+
+.unzerChoices__item--hidden {
+    display: none
+}
+
+.unzerChoices__heading {
+    font-weight: 600;
+    font-size: 12px;
+    padding: 10px;
+    border-bottom: 1px solid #f7f7f7;
+    color: grey
+}
+
+.unzerChoices__button {
+    text-indent: -9999px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 0;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    cursor: pointer
+}
+
+.unzerChoices__button:focus {
+    outline: none
+}
+
+.unzerChoices__input, .unzerUI.form input.unzerChoices__input {
+    display: inline-block;
+    vertical-align: baseline;
+    border: 0;
+    border-bottom: 1px solid #dadada;
+    border-radius: 0;
+    max-width: calc(100% - 32px);
+    padding: 10px 1rem;
+    outline: none;
+    -webkit-appearance: none;
+    line-height: 20px;
+    height: 20px;
+    font-size: 1em;
+    background: #fff;
+    color: #000;
+    box-shadow: none
+}
+
+.unzerChoices__input:focus {
+    outline: 0
+}
+
+[dir=rtl] .unzerChoices__input {
+    padding-right: 2px;
+    padding-left: 0
+}
+
+.unzerChoices__placeholder {
+    opacity: .5
+}
+
+.unzerChoices[data-type*=select-multiple] .unzerChoices__input.is-hidden, .unzerChoices[data-type*=select-one] .unzerChoices__input.is-hidden, .unzerChoices__input.is-hidden {
+    display: none
+}

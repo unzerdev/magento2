@@ -17,7 +17,7 @@ define(
                     'invoice-guaranteed-b2b-customer',
                     'invoice-guaranteed-b2b-customer-error'
                 );
-                this.resourceProvider = this.sdk.InvoiceGuaranteed();
+                this.resourceProvider = this.sdk.InvoiceSecured();
             },
 
             allInputsValid: function () {

@@ -16,7 +16,7 @@ define(
                     'invoice-guaranteed-customer',
                     'invoice-guaranteed-customer-error'
                 );
-                this.resourceProvider = this.sdk.InvoiceGuaranteed();
+                this.resourceProvider = this.sdk.InvoiceSecured();
             },
 
             allInputsValid: function () {
