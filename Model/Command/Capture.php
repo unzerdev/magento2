@@ -5,7 +5,7 @@ namespace Unzer\PAPI\Model\Command;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
 use UnzerSDK\Exceptions\UnzerApiException;
-use UnzerSDK\Resources\AbstractHeidelpayResource;
+use UnzerSDK\Resources\AbstractUnzerResource;
 use UnzerSDK\Resources\TransactionTypes\Authorization;
 use UnzerSDK\Resources\TransactionTypes\Charge;
 use Magento\Checkout\Model\Session;
@@ -176,7 +176,7 @@ class Capture extends AbstractCommand
      */
     protected function _setPaymentTransaction(
         OrderPayment $payment,
-        AbstractHeidelpayResource $resource
+        AbstractUnzerResource $resource
     ): void
     {
         parent::_setPaymentTransaction($payment, $resource);

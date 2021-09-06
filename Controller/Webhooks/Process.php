@@ -7,7 +7,7 @@ use Unzer\PAPI\Helper\Payment as PaymentHelper;
 use Unzer\PAPI\Helper\Webhooks;
 use Unzer\PAPI\Model\Config;
 use UnzerSDK\Exceptions\UnzerApiException;
-use UnzerSDK\Resources\AbstractHeidelpayResource;
+use UnzerSDK\Resources\AbstractUnzerResource;
 use UnzerSDK\Resources\Payment;
 use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
 use Magento\Framework\App\Action\Action;

@@ -6,7 +6,7 @@ use Unzer\PAPI\Helper\Order;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
 use UnzerSDK\Unzer;
-use UnzerSDK\Resources\AbstractHeidelpayResource;
+use UnzerSDK\Resources\AbstractUnzerResource;
 use UnzerSDK\Resources\Customer;
 use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
 use UnzerSDK\Resources\TransactionTypes\Authorization;
@@ -125,7 +125,7 @@ abstract class AbstractCommand implements CommandInterface
      * @param string|null $storeCode
      * @return Heidelpay
      */
-    protected function _getClient(string $storeCode = null): Heidelpay
+    protected function _getClient(string $storeCode = null): Unzer
     {
         if ($this->_client === null) {
             $this->_client = $this->_config->getHeidelpayClient($storeCode);
@@ -176,14 +176,14 @@ abstract class AbstractCommand implements CommandInterface
      * Sets the transaction information on the given payment from an authorization or charge.
      *
      * @param OrderPayment $payment
-     * @param Authorization|Charge|AbstractHeidelpayResource $resource
+     * @param Authorization|Charge|AbstractUnzerResource $resource
      *
      * @return void
      * @throws LocalizedException
      */
     protected function _setPaymentTransaction(
         OrderPayment $payment,
-        AbstractHeidelpayResource $resource
+        AbstractUnzerResource $resource
     ): void
     {
         $payment->setLastTransId($resource->getId());

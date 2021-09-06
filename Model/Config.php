@@ -138,9 +138,9 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * @param string|null $storeId
      * @return Heidelpay
      */
-    public function getHeidelpayClient(string $storeId = null): Heidelpay
+    public function getHeidelpayClient(string $storeId = null): Unzer
     {
-        $client = new Heidelpay(
+        $client = new Unzer(
             $this->getPrivateKey($storeId),
             $this->_localeResolver->getLocale()
         );
