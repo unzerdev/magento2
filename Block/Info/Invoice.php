@@ -103,7 +103,7 @@ class Invoice extends Info
             $order = $this->getInfo()->getOrder();
 
             $storeId = $this->getStoreCode($order->getStoreId());
-            $client  = $this->_moduleConfig->getHeidelpayClient($storeId);
+            $client  = $this->_moduleConfig->getUnzerClient($storeId);
 
             $this->_payment = $client->fetchPaymentByOrderId($order->getIncrementId());
         }

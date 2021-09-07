@@ -34,23 +34,23 @@ use Magento\Store\Model\ScopeInterface;
  */
 class Config extends \Magento\Payment\Gateway\Config\Config
 {
-    const BASE_CONFIGURATION_PATH = 'payment/hpmgw/';
+    const BASE_CONFIGURATION_PATH = 'payment/unzer/';
 
     const KEY_PUBLIC_KEY = 'public_key';
     const KEY_PRIVATE_KEY = 'private_key';
     const KEY_LOGGING = 'logging';
 
-    const METHOD_BASE = 'hpmgw';
-    const METHOD_CARDS = 'hpmgw_cards';
-    const METHOD_DIRECT_DEBIT = 'hpmgw_direct_debit';
-    const METHOD_DIRECT_DEBIT_GUARANTEED = 'hpmgw_direct_debit_guaranteed';
-    const METHOD_FLEXIPAY_DIRECT = 'hpmgw_flexipay_direct';
-    const METHOD_IDEAL = 'hpmgw_ideal';
-    const METHOD_INVOICE = 'hpmgw_invoice';
-    const METHOD_INVOICE_GUARANTEED_B2B = 'hpmgw_invoice_guaranteed_b2b';
-    const METHOD_INVOICE_GUARANTEED = 'hpmgw_invoice_guaranteed';
-    const METHOD_PAYPAL = 'hpmgw_paypal';
-    const METHOD_SOFORT = 'hpmgw_sofort';
+    const METHOD_BASE = 'unzer';
+    const METHOD_CARDS = 'unzer_cards';
+    const METHOD_DIRECT_DEBIT = 'unzer_direct_debit';
+    const METHOD_DIRECT_DEBIT_GUARANTEED = 'unzer_direct_debit_guaranteed';
+    const METHOD_FLEXIPAY_DIRECT = 'unzer_flexipay_direct';
+    const METHOD_IDEAL = 'unzer_ideal';
+    const METHOD_INVOICE = 'unzer_invoice';
+    const METHOD_INVOICE_GUARANTEED_B2B = 'unzer_invoice_guaranteed_b2b';
+    const METHOD_INVOICE_GUARANTEED = 'unzer_invoice_guaranteed';
+    const METHOD_PAYPAL = 'unzer_paypal';
+    const METHOD_SOFORT = 'unzer_sofort';
 
     /**
      * @var DebugHandlerInterface
@@ -138,7 +138,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * @param string|null $storeId
      * @return Unzer
      */
-    public function getHeidelpayClient(string $storeId = null): Unzer
+    public function getUnzerClient(string $storeId = null): Unzer
     {
         $client = new Unzer(
             $this->getPrivateKey($storeId),

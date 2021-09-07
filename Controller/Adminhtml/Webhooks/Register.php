@@ -40,7 +40,7 @@ class Register extends AbstractAction
         try {
             $webhookUrl = $this->getWebhookUrl();
 
-            $client = $this->_moduleConfig->getHeidelpayClient($this->getStoreCode());
+            $client = $this->_moduleConfig->getUnzerClient($this->getStoreCode());
 
             $isRegistered = false;
 

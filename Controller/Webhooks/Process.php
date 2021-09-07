@@ -201,7 +201,7 @@ class Process extends Action implements CsrfAwareActionInterface
     protected function getPaymentFromEvent(string $requestBody): ?Payment
     {
         $resource = $this->_moduleConfig
-            ->getHeidelpayClient()
+            ->getUnzerClient()
             ->fetchResourceFromEvent($requestBody);
 
         if ($resource instanceof Payment) {

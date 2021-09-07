@@ -20,7 +20,7 @@ define(
             customerObservable = customerObservable || ko.observable(null);
 
             var request = storage.post(
-                urlBuilder.createUrl('/hpmgw/get-external-customer', {}),
+                urlBuilder.createUrl('/unzer/get-external-customer', {}),
                 JSON.stringify({
                     guestEmail: quote.guestEmail,
                 })

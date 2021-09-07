@@ -83,7 +83,7 @@ class WebhooksButtons extends Field
      */
     public function getRegisterAction(): string
     {
-        return $this->getUrl('hpmgw/webhooks/register', [
+        return $this->getUrl('unzer/webhooks/register', [
             AbstractAction::URL_PARAM_STORE => $this->getStoreIdentifier(),
         ]);
     }
@@ -96,7 +96,7 @@ class WebhooksButtons extends Field
     {
         $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button');
         $button->setData([
-            'id' => 'hpmgw_webhooks_register',
+            'id' => 'unzer_webhooks_register',
             'label' => __('Register webhooks'),
             'onclick' => 'location.href = ' . Zend_Json::encode($this->getRegisterAction()),
         ]);
@@ -110,7 +110,7 @@ class WebhooksButtons extends Field
      */
     public function getUnregisterAction(): string
     {
-        return $this->getUrl('hpmgw/webhooks/unregister', [
+        return $this->getUrl('unzer/webhooks/unregister', [
             AbstractAction::URL_PARAM_STORE => $this->getStoreIdentifier(),
         ]);
     }
@@ -123,7 +123,7 @@ class WebhooksButtons extends Field
     {
         $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button');
         $button->setData([
-            'id' => 'hpmgw_webhooks_unregister',
+            'id' => 'unzer_webhooks_unregister',
             'label' => __('Unregister webhooks'),
             'onclick' => 'location.href = ' . Zend_Json::encode($this->getUnregisterAction()),
         ]);

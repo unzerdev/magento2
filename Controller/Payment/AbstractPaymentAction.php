@@ -96,7 +96,7 @@ abstract class AbstractPaymentAction extends Action
 
         try {
             $payment = $this->_moduleConfig
-                ->getHeidelpayClient()
+                ->getUnzerClient()
                 ->fetchPaymentByOrderId($order->getIncrementId());
 
             $response = $this->executeWith($order, $payment);

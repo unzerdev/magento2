@@ -118,7 +118,7 @@ abstract class AbstractCommand implements CommandInterface
      */
     protected function _getCallbackUrl(): string
     {
-        return $this->_urlBuilder->getUrl('hpmgw/payment/callback');
+        return $this->_urlBuilder->getUrl('unzer/payment/callback');
     }
 
     /**
@@ -128,7 +128,7 @@ abstract class AbstractCommand implements CommandInterface
     protected function _getClient(string $storeCode = null): Unzer
     {
         if ($this->_client === null) {
-            $this->_client = $this->_config->getHeidelpayClient($storeCode);
+            $this->_client = $this->_config->getUnzerClient($storeCode);
         }
 
         return $this->_client;
@@ -200,10 +200,10 @@ abstract class AbstractCommand implements CommandInterface
      * @param SalesOrder $order
      * @param AbstractTransactionType $transaction
      */
-    protected function addHeidelpayIdsToHistory(SalesOrder $order, AbstractTransactionType $transaction): void
+    protected function addUnzerpayIdsToHistory(SalesOrder $order, AbstractTransactionType $transaction): void
     {
         $order->addCommentToStatusHistory(
-            'heidelpay ' . ResourceNameService::getClassShortName(get_class($transaction)) . ' transaction: ' .
+            'Unzer ' . ResourceNameService::getClassShortName(get_class($transaction)) . ' transaction: ' .
             'UniqueId: ' . $transaction->getUniqueId() . ' | ShortId: ' . $transaction->getShortId()
         );
     }
@@ -215,8 +215,8 @@ abstract class AbstractCommand implements CommandInterface
      * @param string $code
      * @param string $message
      */
-    protected function addHeidelpayErrorToOrderHistory(SalesOrder $order, $code, $message): void {
-        $order->addCommentToStatusHistory("heidelpay Error (${code}): ${message}");
+    protected function addUnzerErrorToOrderHistory(SalesOrder $order, $code, $message): void {
+        $order->addCommentToStatusHistory("Unzer Error (${code}): ${message}");
     }
 
     /**

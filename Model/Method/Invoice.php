@@ -107,7 +107,7 @@ class Invoice extends Base
     {
         /** @var Payment $payment */
         $payment = $this->_moduleConfig
-            ->getHeidelpayClient()
+            ->getUnzerClient()
             ->fetchPaymentByOrderId($order->getIncrementId());
 
         /** @var Charge|null $charge */

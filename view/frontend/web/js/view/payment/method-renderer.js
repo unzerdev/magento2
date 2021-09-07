@@ -10,43 +10,43 @@ define(
         'use strict';
         rendererList.push(
             {
-                type: 'hpmgw_cards',
+                type: 'unzer_cards',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/cards'
             },
             {
-                type: 'hpmgw_direct_debit',
+                type: 'unzer_direct_debit',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/direct_debit'
             },
             {
-                type: 'hpmgw_direct_debit_guaranteed',
+                type: 'unzer_direct_debit_guaranteed',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/direct_debit_guaranteed'
             },
             {
-                type: 'hpmgw_flexipay_direct',
+                type: 'unzer_flexipay_direct',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/flexipay_direct'
             },
             {
-                type: 'hpmgw_ideal',
+                type: 'unzer_ideal',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/ideal'
             },
             {
-                type: 'hpmgw_invoice',
+                type: 'unzer_invoice',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/invoice'
             },
             {
-                type: 'hpmgw_invoice_guaranteed',
+                type: 'unzer_invoice_guaranteed',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/invoice_guaranteed'
             },
             {
-                type: 'hpmgw_invoice_guaranteed_b2b',
+                type: 'unzer_invoice_guaranteed_b2b',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/invoice_guaranteed_b2b'
             },
             {
-                type: 'hpmgw_paypal',
+                type: 'unzer_paypal',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/paypal'
             },
             {
-                type: 'hpmgw_sofort',
+                type: 'unzer_sofort',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/sofort'
             }
         );

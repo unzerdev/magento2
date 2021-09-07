@@ -57,6 +57,6 @@ class Webhooks
     {
         return $this->_urlBuilder
             ->setScope($store)
-            ->getUrl('hpmgw/webhooks/process', ['_nosid' => true, self::URL_PARAM_STORE => $store->getId()]);
+            ->getUrl('unzer/webhooks/process', ['_nosid' => true, self::URL_PARAM_STORE => $store->getId()]);
     }
 }

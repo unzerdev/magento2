@@ -199,7 +199,7 @@ class Order
         $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $quote->getShippingAddress());
 
         /** @var Unzer $client */
-        $client = $this->_moduleConfig->getHeidelpayClient();
+        $client = $this->_moduleConfig->getUnzerClient();
 
         return $createResource ? $client->createCustomer($customer) : $customer;
     }
@@ -217,7 +217,7 @@ class Order
     public function createCustomerFromOrder(OrderModel $order, string $email, bool $createResource = false): ?Customer
     {
         /** @var Unzer $client */
-        $client = $this->_moduleConfig->getHeidelpayClient();
+        $client = $this->_moduleConfig->getUnzerClient();
 
         $billingAddress = $order->getBillingAddress();
 
@@ -307,7 +307,7 @@ class Order
             );
         }
 
-        $client = $this->_moduleConfig->getHeidelpayClient();
+        $client = $this->_moduleConfig->getUnzerClient();
         $client->updateCustomer($gatewayCustomer);
     }
 

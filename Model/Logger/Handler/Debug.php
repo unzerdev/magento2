@@ -31,7 +31,7 @@ use Monolog\Logger;
 class Debug extends Base
 {
     /** @var string */
-    protected $fileName = '/var/log/hpmgw_debug.log';
+    protected $fileName = '/var/log/unzer_debug.log';
 
     /** @var int */
     protected $loggerType = Logger::DEBUG;

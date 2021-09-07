@@ -64,13 +64,13 @@ class Authorize extends AbstractCommand
                 $this->_orderHelper->createBasketForOrder($order),
                 null
             );
-            $order->addCommentToStatusHistory('heidelpay paymentId: ' . $authorization->getPaymentId());
+            $order->addCommentToStatusHistory('Unzer paymentId: ' . $authorization->getPaymentId());
         } catch (UnzerApiException $e) {
             $this->_logger->error($e->getMerchantMessage(), ['incrementId' => $order->getIncrementId()]);
             throw new LocalizedException(__($e->getClientMessage()));
         }
 
-        $this->addHeidelpayIdsToHistory($order, $authorization);
+        $this->addUnzerpayIdsToHistory($order, $authorization);
 
         if ($authorization->isError()) {
             throw new LocalizedException(__('Failed to authorize payment.'));

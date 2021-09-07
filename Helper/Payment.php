@@ -39,7 +39,7 @@ use Magento\Sales\Model\OrderRepository;
  */
 class Payment
 {
-    public const STATUS_READY_TO_CAPTURE = 'heidelpay_ready_to_capture';
+    public const STATUS_READY_TO_CAPTURE = 'unzer_ready_to_capture';
 
     /**
      * @var Order\InvoiceRepository
@@ -130,7 +130,7 @@ class Payment
      */
     public function processState(Order $order, \UnzerSDK\Resources\Payment $payment)
     {
-        $lockName = sprintf('hpmgw_order_%d', $order->getId());
+        $lockName = sprintf('unzer_order_%d', $order->getId());
 
         $this->_lockManager->lock($lockName);
 

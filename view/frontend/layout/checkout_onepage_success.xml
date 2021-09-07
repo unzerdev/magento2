@@ -4,7 +4,7 @@
     <body>
         <referenceContainer name="order.success.additional.info">
             <block class="Unzer\PAPI\Block\Checkout\Success\AdditionalPaymentInformation"
-                   name="HeidelpayMGWCheckoutSuccessAdditionalPaymentInformation"
+                   name="UnzerCheckoutSuccessAdditionalPaymentInformation"
                    template="success/additional_payment_information.phtml" />
         </referenceContainer>
     </body>

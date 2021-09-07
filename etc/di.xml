@@ -4,7 +4,7 @@
 
     <virtualType name="Unzer\PAPI\Logger\Logger" type="\Magento\Framework\Logger\Monolog">
         <arguments>
-            <argument name="name" xsi:type="string">heidelpay</argument>
+            <argument name="name" xsi:type="string">unzer</argument>
             <argument name="handlers" xsi:type="array">
                 <item name="debug" xsi:type="object">Unzer\PAPI\Model\Logger\Handler\Debug</item>
             </argument>
@@ -28,7 +28,7 @@
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayMGWAuthorizeAndCaptureCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+    <virtualType name="UnzerAuthorizeAndCaptureCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="authorize" xsi:type="string">Unzer\PAPI\Model\Command\Authorize</item>
@@ -42,7 +42,7 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWCaptureCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+    <virtualType name="UnzerCaptureCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="cancel" xsi:type="string">Unzer\PAPI\Model\Command\Cancel</item>
@@ -57,22 +57,22 @@
 
     <!-- must be configured to avoid DI compilation errors since Base is interpreted as a normal payment method
          and thus requires a configuration, even though it is not used as payment method -->
-    <virtualType name="HeidelpayMGWBaseConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerBaseConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_BASE</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWBaseConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerBaseConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayMGWBaseConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerBaseConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWBaseValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerBaseValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayMGWBaseConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerBaseConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
                 <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -81,16 +81,16 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWBaseValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerBaseValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">HeidelpayMGWBaseConfig</argument>
+            <argument name="config" xsi:type="object">UnzerBaseConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWBaseValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerBaseValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">HeidelpayMGWBaseValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerBaseValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
@@ -100,28 +100,28 @@
             <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_BASE</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWBaseValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWBaseValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayMGWAuthorizeAndCaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerBaseValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerBaseValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayMGWCardsConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerCardsConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_CARDS</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWCardsConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerCardsConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayMGWCardsConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerCardsConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWCardsValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerCardsValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayMGWCardsConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerCardsConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
                 <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -130,16 +130,16 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWCardsValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerCardsValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">HeidelpayMGWCardsConfig</argument>
+            <argument name="config" xsi:type="object">UnzerCardsConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWCardsValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerCardsValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">HeidelpayMGWCardsValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerCardsValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
@@ -149,28 +149,28 @@
             <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_CARDS</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWCardsValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWCardsValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayMGWAuthorizeAndCaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerCardsValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerCardsValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayMGWDirectDebitConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerDirectDebitConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_DIRECT_DEBIT</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWDirectDebitConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerDirectDebitConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayMGWDirectDebitConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerDirectDebitConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWDirectDebitValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerDirectDebitValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayMGWDirectDebitConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerDirectDebitConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
                 <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -179,16 +179,16 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWDirectDebitValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerDirectDebitValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">HeidelpayMGWDirectDebitConfig</argument>
+            <argument name="config" xsi:type="object">UnzerDirectDebitConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWDirectDebitValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerDirectDebitValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">HeidelpayMGWDirectDebitValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerDirectDebitValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
@@ -198,28 +198,28 @@
             <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_DIRECT_DEBIT</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWDirectDebitValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWDirectDebitValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerDirectDebitValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerDirectDebitValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayMGWDirectDebitGuaranteedConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerDirectDebitGuaranteedConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_DIRECT_DEBIT_GUARANTEED</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWDirectDebitGuaranteedConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerDirectDebitGuaranteedConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayMGWDirectDebitGuaranteedConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerDirectDebitGuaranteedConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWDirectDebitGuaranteedValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerDirectDebitGuaranteedValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayMGWDirectDebitGuaranteedConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerDirectDebitGuaranteedConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
                 <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -228,16 +228,16 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWDirectDebitGuaranteedValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerDirectDebitGuaranteedValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">HeidelpayMGWDirectDebitGuaranteedConfig</argument>
+            <argument name="config" xsi:type="object">UnzerDirectDebitGuaranteedConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWDirectDebitGuaranteedValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerDirectDebitGuaranteedValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">HeidelpayMGWDirectDebitGuaranteedValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerDirectDebitGuaranteedValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
@@ -247,28 +247,28 @@
             <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_DIRECT_DEBIT_GUARANTEED</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWDirectDebitGuaranteedValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWDirectDebitGuaranteedValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerDirectDebitGuaranteedValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerDirectDebitGuaranteedValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayMGWFlexipayDirectConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerFlexipayDirectConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_FLEXIPAY_DIRECT</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWFlexipayDirectConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerFlexipayDirectConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayMGWFlexipayDirectConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerFlexipayDirectConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWFlexipayDirectValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerFlexipayDirectValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayMGWFlexipayDirectConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerFlexipayDirectConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
                 <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -277,16 +277,16 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWFlexipayDirectValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerFlexipayDirectValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">HeidelpayMGWFlexipayDirectConfig</argument>
+            <argument name="config" xsi:type="object">UnzerFlexipayDirectConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWFlexipayDirectValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerFlexipayDirectValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">HeidelpayMGWFlexipayDirectValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerFlexipayDirectValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
@@ -296,28 +296,28 @@
             <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_FLEXIPAY_DIRECT</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWFlexipayDirectValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWFlexipayDirectValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerFlexipayDirectValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerFlexipayDirectValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayMGWIdealConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerIdealConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_IDEAL</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWIdealConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerIdealConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayMGWIdealConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerIdealConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWIdealValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerIdealValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayMGWIdealConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerIdealConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
                 <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -326,16 +326,16 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWIdealValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerIdealValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">HeidelpayMGWIdealConfig</argument>
+            <argument name="config" xsi:type="object">UnzerIdealConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWIdealValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerIdealValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">HeidelpayMGWIdealValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerIdealValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
@@ -345,28 +345,28 @@
             <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_IDEAL</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWIdealValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWIdealValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerIdealValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerIdealValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayMGWInvoiceConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerInvoiceConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWInvoiceConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerInvoiceConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayMGWInvoiceConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerInvoiceConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWInvoiceValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerInvoiceValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayMGWInvoiceConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerInvoiceConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_capture" xsi:type="string">Unzer\PAPI\Model\Config\InvoiceCaptureHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -376,16 +376,16 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWInvoiceValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerInvoiceValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">HeidelpayMGWInvoiceConfig</argument>
+            <argument name="config" xsi:type="object">UnzerInvoiceConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWInvoiceValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerInvoiceValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">HeidelpayMGWInvoiceValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerInvoiceValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
@@ -395,28 +395,28 @@
             <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Unzer\PAPI\Block\Info\Invoice</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWInvoiceValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWInvoiceValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerInvoiceValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerInvoiceValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayMGWInvoiceGuaranteedB2bConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerInvoiceGuaranteedB2bConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_GUARANTEED_B2B</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWInvoiceGuaranteedB2bConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerInvoiceGuaranteedB2bConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayMGWInvoiceGuaranteedB2bConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerInvoiceGuaranteedB2bConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWInvoiceGuaranteedB2bValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerInvoiceGuaranteedB2bValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayMGWInvoiceGuaranteedB2bConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerInvoiceGuaranteedB2bConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_capture" xsi:type="string">Unzer\PAPI\Model\Config\InvoiceCaptureHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -426,16 +426,16 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWInvoiceGuaranteedB2bValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerInvoiceGuaranteedB2bValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">HeidelpayMGWInvoiceGuaranteedB2bConfig</argument>
+            <argument name="config" xsi:type="object">UnzerInvoiceGuaranteedB2bConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWInvoiceGuaranteedB2bValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerInvoiceGuaranteedB2bValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">HeidelpayMGWInvoiceGuaranteedB2bValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerInvoiceGuaranteedB2bValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
@@ -445,28 +445,28 @@
             <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_GUARANTEED_B2B</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Unzer\PAPI\Block\Info\InvoiceGuaranteedB2b</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWInvoiceGuaranteedB2bValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWInvoiceGuaranteedB2bValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerInvoiceGuaranteedB2bValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerInvoiceGuaranteedB2bValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayMGWInvoiceGuaranteedConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerInvoiceGuaranteedConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_GUARANTEED</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWInvoiceGuaranteedConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerInvoiceGuaranteedConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayMGWInvoiceGuaranteedConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerInvoiceGuaranteedConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWInvoiceGuaranteedValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerInvoiceGuaranteedValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayMGWInvoiceGuaranteedConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerInvoiceGuaranteedConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_capture" xsi:type="string">Unzer\PAPI\Model\Config\InvoiceCaptureHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -476,16 +476,16 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWInvoiceGuaranteedValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerInvoiceGuaranteedValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">HeidelpayMGWInvoiceGuaranteedConfig</argument>
+            <argument name="config" xsi:type="object">UnzerInvoiceGuaranteedConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWInvoiceGuaranteedValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerInvoiceGuaranteedValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">HeidelpayMGWInvoiceGuaranteedValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerInvoiceGuaranteedValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
@@ -495,28 +495,28 @@
             <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_GUARANTEED</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Unzer\PAPI\Block\Info\InvoiceGuaranteed</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWInvoiceGuaranteedValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWInvoiceGuaranteedValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerInvoiceGuaranteedValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerInvoiceGuaranteedValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayMGWPaypalConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerPaypalConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_PAYPAL</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWPaypalConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerPaypalConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayMGWPaypalConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerPaypalConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWPaypalValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerPaypalValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayMGWPaypalConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerPaypalConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
                 <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -525,16 +525,16 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWPaypalValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerPaypalValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">HeidelpayMGWPaypalConfig</argument>
+            <argument name="config" xsi:type="object">UnzerPaypalConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWPaypalValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerPaypalValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">HeidelpayMGWPaypalValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerPaypalValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
@@ -544,28 +544,28 @@
             <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_PAYPAL</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWPaypalValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWPaypalValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayMGWAuthorizeAndCaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerPaypalValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerPaypalValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="HeidelpayMGWSofortConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerSofortConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_SOFORT</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWSofortConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerSofortConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">HeidelpayMGWSofortConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerSofortConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWSofortValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerSofortValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">HeidelpayMGWSofortConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerSofortConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
                 <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -574,16 +574,16 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWSofortValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerSofortValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">HeidelpayMGWSofortConfig</argument>
+            <argument name="config" xsi:type="object">UnzerSofortConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="HeidelpayMGWSofortValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerSofortValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">HeidelpayMGWSofortValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerSofortValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
@@ -593,9 +593,9 @@
             <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_SOFORT</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">HeidelpayMGWSofortValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">HeidelpayMGWSofortValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">HeidelpayMGWCaptureCommandPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerSofortValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerSofortValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>
 </config>

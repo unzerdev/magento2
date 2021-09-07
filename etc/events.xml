@@ -1,33 +1,33 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="payment_method_assign_data_hpmgw_cards">
-        <observer name="hpmgw_cards_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_unzer_cards">
+        <observer name="unzer_cards_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpmgw_direct_debit">
-        <observer name="hpmgw_direct_debit_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_unzer_direct_debit">
+        <observer name="unzer_direct_debit_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpmgw_direct_debit_guaranteed">
-        <observer name="hpmgw_direct_debit_guaranteed_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_unzer_direct_debit_guaranteed">
+        <observer name="unzer_direct_debit_guaranteed_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpmgw_flexipay_direct">
-        <observer name="hpmgw_flexipay_direct_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_unzer_flexipay_direct">
+        <observer name="unzer_flexipay_direct_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpmgw_ideal">
-        <observer name="hpmgw_ideal_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_unzer_ideal">
+        <observer name="unzer_ideal_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpmgw_invoice">
-        <observer name="hpmgw_invoice_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_unzer_invoice">
+        <observer name="unzer_invoice_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpmgw_invoice_guaranteed">
-        <observer name="hpmgw_invoice_guaranteed_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_unzer_invoice_guaranteed">
+        <observer name="unzer_invoice_guaranteed_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpmgw_invoice_guaranteed_b2b">
-        <observer name="hpmgw_invoice_guaranteed_b2b_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_unzer_invoice_guaranteed_b2b">
+        <observer name="unzer_invoice_guaranteed_b2b_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpmgw_paypal">
-        <observer name="hpmgw_paypal_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_unzer_paypal">
+        <observer name="unzer_paypal_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_hpmgw_sofort">
-        <observer name="hpmgw_sofort_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_unzer_sofort">
+        <observer name="unzer_sofort_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
 </config>

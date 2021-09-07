@@ -84,7 +84,7 @@ class Plugin
             /** @var Payment $payment */
             try {
                 $payment = $this->_moduleConfig
-                    ->getHeidelpayClient()
+                    ->getUnzerClient()
                     ->fetchPaymentByOrderId($order->getIncrementId());
 
                 if (($payment->getAuthorization() && $payment->getAuthorization()->isPending()) ||

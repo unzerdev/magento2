@@ -1,13 +1,13 @@
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/heidelpay/magento2-merchant-gateway.svg?style=flat-square)](https://packagist.org/packages/heidelpay/magento2-merchant-gateway)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/unzerdev/magento2.svg?style=flat-square)](https://packagist.org/packages/unzerdev/magento2)
 [![PHP 7.1](https://img.shields.io/badge/php-7.1-blue.svg)](http://www.php.net)
 [![PHP 7.2](https://img.shields.io/badge/php-7.2-blue.svg)](http://www.php.net)
 [![PHP 7.3](https://img.shields.io/badge/php-7.3-blue.svg)](http://www.php.net)
 
-![Logo](http://dev.heidelpay.com/devHeidelpay_400_180.jpg)
+![Logo](https://dev.unzer.com/wp-content/uploads/2020/09/UNZER__PrimaryLogo_Raspberry_RGB.png)
 
-# Payment extension for Magento2 and heidelpay merchant gateway (MGW)  
+# Payment extension for Magento2 and Unzer merchant gateway (PAPI)  
 
-This extension for Magento2 provides a direct integration of the heidelpay payment methods to your Magento2 shop. 
+This extension for Magento2 provides a direct integration of the Unzer payment methods to your Magento2 shop. 
 
 Currently supported payment methods are:
 * Cards (Credit and Debit)
@@ -21,12 +21,12 @@ Currently supported payment methods are:
 
 ## SYSTEM REQUIREMENTS
 This extension requires PHP 7.1, PHP 7.2, PHP 7.3 or PHP 7.4. 
-It also depends on the heidelpay/heidelpay-php SDK, which will be installed along with the plugin.
+It also depends on the unzerdev/php-sdk, which will be installed along with the plugin.
 
-Please refer to the additional requirements listed under https://docs.heidelpay.com/docs/system-requirements (et seq.).
+Please refer to the additional requirements listed under https://docs.unzer.com/docs/system-requirements (et seq.).
 
 ## LICENSE
-Copyright (C) 2019 heidelpay GmbH
+Copyright (C) 2019 Unzer GmbH
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -41,17 +41,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ## User Guide
-Please find information on installation, configuration and usage here https://dev.heidelpay.com/user-guide-magento-2-mgw-plugin
+Please find information on installation, configuration and usage here https://dev.unzer.com/user-guide-magento-2-mgw-plugin
 
 ## Support
 For any issues or questions please get in touch with our support.
 
 #### Web pages
-* https://dev.heidelpay.com/
-* https://docs.heidelpay.com/
+* https://dev.unzer.com/
+* https://docs.unzer.com/
  
 #### Email
-support@heidelpay.com
+support@unzer.com
  
 #### Phone
 +49 (0)6221/6471-100

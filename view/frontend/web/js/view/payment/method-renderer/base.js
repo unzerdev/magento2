@@ -29,9 +29,9 @@ define(
 
         return Component.extend({
             redirectAfterPlaceOrder: false,
-            redirectUrl: 'hpmgw/payment/redirect',
-            sdk: new unzer(window.checkoutConfig.payment.hpmgw.publicKey),
-            sdkConfig: window.checkoutConfig.payment.hpmgw,
+            redirectUrl: 'unzer/payment/redirect',
+            sdk: new unzer(window.checkoutConfig.payment.unzer.publicKey),
+            sdkConfig: window.checkoutConfig.payment.unzer,
 
             defaults: {
                 config: null,
