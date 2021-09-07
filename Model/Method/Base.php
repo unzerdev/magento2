@@ -128,7 +128,7 @@ class Base extends Adapter
             return parent::isAvailable($quote);
         }
 
-        if ($quote->getIsVirtual() && $this->isGuaranteed()) {
+        if ($quote->getIsVirtual() && $this->isSecured()) {
             return false;
         }
 
@@ -170,7 +170,7 @@ class Base extends Adapter
      *
      * @return bool
      */
-    public function isGuaranteed(): bool
+    public function isSecured(): bool
     {
         return false;
     }

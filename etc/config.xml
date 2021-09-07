@@ -38,11 +38,11 @@
                 <can_use_internal>0</can_use_internal>
                 <model>Unzer\PAPI\Model\Method\DirectDebit</model>
             </unzer_direct_debit>
-            <unzer_direct_debit_guaranteed>
+            <unzer_direct_debit_secured>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[Direct Debit Guaranteed]]></title>
+                <title><![CDATA[Direct Debit Secured]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
@@ -52,8 +52,8 @@
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
-                <model>Unzer\PAPI\Model\Method\DirectDebitGuaranteed</model>
-            </unzer_direct_debit_guaranteed>
+                <model>Unzer\PAPI\Model\Method\DirectDebitSecured</model>
+            </unzer_direct_debit_secured>
             <unzer_flexipay_direct>
                 <active>0</active>
                 <payment_action>order</payment_action>
@@ -102,11 +102,11 @@
                 <pending_payment_state>processing</pending_payment_state>
                 <model>Unzer\PAPI\Model\Method\Invoice</model>
             </unzer_invoice>
-            <unzer_invoice_guaranteed>
+            <unzer_invoice_secured>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[Invoice Guaranteed]]></title>
+                <title><![CDATA[Invoice Secured]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
@@ -116,13 +116,13 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <pending_payment_state>processing</pending_payment_state>
-                <model>Unzer\PAPI\Model\Method\InvoiceGuaranteed</model>
-            </unzer_invoice_guaranteed>
-            <unzer_invoice_guaranteed_b2b>
+                <model>Unzer\PAPI\Model\Method\InvoiceSecured</model>
+            </unzer_invoice_secured>
+            <unzer_invoice_secured_b2b>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[Invoice Guaranteed B2B]]></title>
+                <title><![CDATA[Invoice Secured B2B]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
@@ -132,8 +132,8 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <pending_payment_state>processing</pending_payment_state>
-                <model>Unzer\PAPI\Model\Method\InvoiceGuaranteedB2b</model>
-            </unzer_invoice_guaranteed_b2b>
+                <model>Unzer\PAPI\Model\Method\InvoiceSecuredB2b</model>
+            </unzer_invoice_secured_b2b>
             <unzer_paypal>
                 <active>0</active>
                 <payment_action>order</payment_action>

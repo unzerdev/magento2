@@ -1,6 +1,9 @@
 <?php
+
+namespace Unzer\PAPI\Model\Method;
+
 /**
- * Customer Account Order Invoice Information Block
+ * Direct debit (secured) payment method
  *
  * Copyright (C) 2021 Unzer GmbH
  *
@@ -22,18 +25,21 @@
  *
  * @package  unzerdev/magento2
  */
+class DirectDebitSecured extends DirectDebit
+{
+    /**
+     * @return bool
+     */
+    public function isB2cOnly(): bool
+    {
+        return true;
+    }
 
-/**
- * @var $block \Unzer\PAPI\Block\Info\InvoiceGuaranteedB2b
- */
-?>
-<dl class="payment-method invoice">
-    <dt class="title"><?php echo $block->escapeHtml($block->getMethod()->getTitle()) ?></dt>
-    <?php $additionalInformation = $block->getMethod()->getAdditionalPaymentInformation($this->getOrder()); ?>
-    <?php if (!empty($additionalInformation)): ?>
-    <dd class="content">
-        <strong><?php echo $block->escapeHtml(__('Payment information')) ?></strong><br />
-        <?php echo $additionalInformation ?>
-    </dd>
-    <?php endif; ?>
-</dl>
+    /**
+     * @inheridoc
+     */
+    public function isSecured(): bool
+    {
+        return true;
+    }
+}

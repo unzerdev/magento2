@@ -204,22 +204,22 @@
         </arguments>
     </type>
 
-    <virtualType name="UnzerDirectDebitGuaranteedConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerDirectDebitSecuredConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_DIRECT_DEBIT_GUARANTEED</argument>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_DIRECT_DEBIT_SECURED</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerDirectDebitGuaranteedConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerDirectDebitSecuredConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">UnzerDirectDebitGuaranteedConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerDirectDebitSecuredConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerDirectDebitGuaranteedValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerDirectDebitSecuredValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">UnzerDirectDebitGuaranteedConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerDirectDebitSecuredConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
                 <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -228,27 +228,27 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerDirectDebitGuaranteedValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerDirectDebitSecuredValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">UnzerDirectDebitGuaranteedConfig</argument>
+            <argument name="config" xsi:type="object">UnzerDirectDebitSecuredConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerDirectDebitGuaranteedValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerDirectDebitSecuredValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">UnzerDirectDebitGuaranteedValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerDirectDebitSecuredValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Unzer\PAPI\Model\Method\DirectDebitGuaranteed">
+    <type name="Unzer\PAPI\Model\Method\DirectDebitSecured">
         <arguments>
-            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_DIRECT_DEBIT_GUARANTEED</argument>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_DIRECT_DEBIT_SECURED</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">UnzerDirectDebitGuaranteedValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">UnzerDirectDebitGuaranteedValidatorPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerDirectDebitSecuredValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerDirectDebitSecuredValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>
@@ -401,22 +401,22 @@
         </arguments>
     </type>
 
-    <virtualType name="UnzerInvoiceGuaranteedB2bConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerInvoiceSecuredB2bConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_GUARANTEED_B2B</argument>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_SECURED_B2B</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerInvoiceGuaranteedB2bConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerInvoiceSecuredB2bConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">UnzerInvoiceGuaranteedB2bConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerInvoiceSecuredB2bConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerInvoiceGuaranteedB2bValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerInvoiceSecuredB2bValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">UnzerInvoiceGuaranteedB2bConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerInvoiceSecuredB2bConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_capture" xsi:type="string">Unzer\PAPI\Model\Config\InvoiceCaptureHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -426,47 +426,47 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerInvoiceGuaranteedB2bValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerInvoiceSecuredB2bValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">UnzerInvoiceGuaranteedB2bConfig</argument>
+            <argument name="config" xsi:type="object">UnzerInvoiceSecuredB2bConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerInvoiceGuaranteedB2bValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerInvoiceSecuredB2bValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">UnzerInvoiceGuaranteedB2bValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerInvoiceSecuredB2bValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Unzer\PAPI\Model\Method\InvoiceGuaranteedB2b">
+    <type name="Unzer\PAPI\Model\Method\InvoiceSecuredB2b">
         <arguments>
-            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_GUARANTEED_B2B</argument>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_SECURED_B2B</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">Unzer\PAPI\Block\Info\InvoiceGuaranteedB2b</argument>
-            <argument name="valueHandlerPool" xsi:type="object">UnzerInvoiceGuaranteedB2bValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">UnzerInvoiceGuaranteedB2bValidatorPool</argument>
+            <argument name="infoBlockType" xsi:type="string">Unzer\PAPI\Block\Info\InvoiceSecuredB2b</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerInvoiceSecuredB2bValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerInvoiceSecuredB2bValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>
 
-    <virtualType name="UnzerInvoiceGuaranteedConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerInvoiceSecuredConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_GUARANTEED</argument>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_SECURED</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerInvoiceGuaranteedConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerInvoiceSecuredConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">UnzerInvoiceGuaranteedConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerInvoiceSecuredConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerInvoiceGuaranteedValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerInvoiceSecuredValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">UnzerInvoiceGuaranteedConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerInvoiceSecuredConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_capture" xsi:type="string">Unzer\PAPI\Model\Config\InvoiceCaptureHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -476,27 +476,27 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerInvoiceGuaranteedValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerInvoiceSecuredValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">UnzerInvoiceGuaranteedConfig</argument>
+            <argument name="config" xsi:type="object">UnzerInvoiceSecuredConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerInvoiceGuaranteedValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerInvoiceSecuredValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">UnzerInvoiceGuaranteedValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerInvoiceSecuredValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Unzer\PAPI\Model\Method\InvoiceGuaranteed">
+    <type name="Unzer\PAPI\Model\Method\InvoiceSecured">
         <arguments>
-            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_GUARANTEED</argument>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_SECURED</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">Unzer\PAPI\Block\Info\InvoiceGuaranteed</argument>
-            <argument name="valueHandlerPool" xsi:type="object">UnzerInvoiceGuaranteedValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">UnzerInvoiceGuaranteedValidatorPool</argument>
+            <argument name="infoBlockType" xsi:type="string">Unzer\PAPI\Block\Info\InvoiceSecured</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerInvoiceSecuredValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerInvoiceSecuredValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>

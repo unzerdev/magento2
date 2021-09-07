@@ -29,7 +29,7 @@
                                                                         <item name="unzer_direct_debit" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="unzer_direct_debit_guaranteed" xsi:type="array">
+                                                                        <item name="unzer_direct_debit_secured" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                         <item name="unzer_flexipay_direct" xsi:type="array">
@@ -41,10 +41,10 @@
                                                                         <item name="unzer_invoice" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="unzer_invoice_guaranteed_b2b" xsi:type="array">
+                                                                        <item name="unzer_invoice_secured_b2b" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="unzer_invoice_guaranteed" xsi:type="array">
+                                                                        <item name="unzer_invoice_secured" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                         <item name="unzer_paypal" xsi:type="array">

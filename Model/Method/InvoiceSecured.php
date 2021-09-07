@@ -1,9 +1,9 @@
 <?php
 
-namespace Unzer\PAPI\Block\Info;
+namespace Unzer\PAPI\Model\Method;
 
 /**
- * Customer Account Order Invoice Information Block
+ * Invoice (secured) payment method
  *
  * Copyright (C) 2021 Unzer GmbH
  *
@@ -25,16 +25,21 @@ namespace Unzer\PAPI\Block\Info;
  *
  * @package  unzerdev/magento2
  */
-class InvoiceGuaranteedB2b extends InvoiceGuaranteed
+class InvoiceSecured extends Invoice
 {
-    protected $_template = 'Unzer_PAPI::info/invoice_guaranteed_b2b.phtml';
+    /**
+     * @return bool
+     */
+    public function isB2cOnly(): bool
+    {
+        return true;
+    }
 
     /**
-     * @inheritDoc
+     * @inheridoc
      */
-    public function toPdf(): string
+    public function isSecured(): bool
     {
-        $this->setTemplate('Unzer_PAPI::info/pdf/invoice_guaranteed_b2b.phtml');
-        return $this->toHtml();
+        return true;
     }
 }

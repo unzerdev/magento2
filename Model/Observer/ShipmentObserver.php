@@ -45,8 +45,8 @@ class ShipmentObserver implements ObserverInterface
      * List of payment method codes for which the shipment can be tracked in the gateway.
      */
     public const SHIPPABLE_PAYMENT_METHODS = [
-        Config::METHOD_INVOICE_GUARANTEED,
-        Config::METHOD_INVOICE_GUARANTEED_B2B,
+        Config::METHOD_INVOICE_SECURED,
+        Config::METHOD_INVOICE_SECURED_B2B,
     ];
 
     /**

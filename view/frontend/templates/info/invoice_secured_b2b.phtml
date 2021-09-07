@@ -1,9 +1,6 @@
 <?php
-
-namespace Unzer\PAPI\Model\Method;
-
 /**
- * Invoice (factoring) payment method
+ * Customer Account Order Invoice Information Block
  *
  * Copyright (C) 2021 Unzer GmbH
  *
@@ -25,21 +22,18 @@ namespace Unzer\PAPI\Model\Method;
  *
  * @package  unzerdev/magento2
  */
-class InvoiceGuaranteedB2b extends Invoice
-{
-    /**
-     * @return bool
-     */
-    public function isB2bOnly(): bool
-    {
-        return true;
-    }
 
-    /**
-     * @inheridoc
-     */
-    public function isGuaranteed(): bool
-    {
-        return true;
-    }
-}
+/**
+ * @var $block \Unzer\PAPI\Block\Info\InvoiceSecuredB2b
+ */
+?>
+<dl class="payment-method invoice">
+    <dt class="title"><?php echo $block->escapeHtml($block->getMethod()->getTitle()) ?></dt>
+    <?php $additionalInformation = $block->getMethod()->getAdditionalPaymentInformation($this->getOrder()); ?>
+    <?php if (!empty($additionalInformation)): ?>
+    <dd class="content">
+        <strong><?php echo $block->escapeHtml(__('Payment information')) ?></strong><br />
+        <?php echo $additionalInformation ?>
+    </dd>
+    <?php endif; ?>
+</dl>

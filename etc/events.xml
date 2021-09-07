@@ -6,8 +6,8 @@
     <event name="payment_method_assign_data_unzer_direct_debit">
         <observer name="unzer_direct_debit_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_unzer_direct_debit_guaranteed">
-        <observer name="unzer_direct_debit_guaranteed_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_unzer_direct_debit_secured">
+        <observer name="unzer_direct_debit_secured_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
     <event name="payment_method_assign_data_unzer_flexipay_direct">
         <observer name="unzer_flexipay_direct_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
@@ -18,11 +18,11 @@
     <event name="payment_method_assign_data_unzer_invoice">
         <observer name="unzer_invoice_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_unzer_invoice_guaranteed">
-        <observer name="unzer_invoice_guaranteed_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_unzer_invoice_secured">
+        <observer name="unzer_invoice_secured_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_unzer_invoice_guaranteed_b2b">
-        <observer name="unzer_invoice_guaranteed_b2b_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_unzer_invoice_secured_b2b">
+        <observer name="unzer_invoice_secured_b2b_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
     <event name="payment_method_assign_data_unzer_paypal">
         <observer name="unzer_paypal_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />

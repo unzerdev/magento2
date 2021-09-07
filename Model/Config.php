@@ -43,12 +43,12 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     const METHOD_BASE = 'unzer';
     const METHOD_CARDS = 'unzer_cards';
     const METHOD_DIRECT_DEBIT = 'unzer_direct_debit';
-    const METHOD_DIRECT_DEBIT_GUARANTEED = 'unzer_direct_debit_guaranteed';
+    const METHOD_DIRECT_DEBIT_SECURED = 'unzer_direct_debit_secured';
     const METHOD_FLEXIPAY_DIRECT = 'unzer_flexipay_direct';
     const METHOD_IDEAL = 'unzer_ideal';
     const METHOD_INVOICE = 'unzer_invoice';
-    const METHOD_INVOICE_GUARANTEED_B2B = 'unzer_invoice_guaranteed_b2b';
-    const METHOD_INVOICE_GUARANTEED = 'unzer_invoice_guaranteed';
+    const METHOD_INVOICE_SECURED_B2B = 'unzer_invoice_secured_b2b';
+    const METHOD_INVOICE_SECURED = 'unzer_invoice_secured';
     const METHOD_PAYPAL = 'unzer_paypal';
     const METHOD_SOFORT = 'unzer_sofort';
 

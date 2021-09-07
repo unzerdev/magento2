@@ -25,36 +25,16 @@ namespace Unzer\PAPI\Block\Info;
  *
  * @package  unzerdev/magento2
  */
-class InvoiceGuaranteed extends Invoice
+class InvoiceSecuredB2b extends InvoiceSecured
 {
-    protected $_template = 'Unzer_PAPI::info/invoice_guaranteed.phtml';
+    protected $_template = 'Unzer_PAPI::info/invoice_secured_b2b.phtml';
 
     /**
      * @inheritDoc
      */
     public function toPdf(): string
     {
-        $this->setTemplate('Unzer_PAPI::info/pdf/invoice_guaranteed.phtml');
+        $this->setTemplate('Unzer_PAPI::info/pdf/invoice_secured_b2b.phtml');
         return $this->toHtml();
-    }
-
-    /**
-     * @return string
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\UnzerApiException
-     */
-    public function getCustomerSalutation(): string
-    {
-        return $this->_getPayment()->getCustomer()->getSalutation();
-    }
-
-    /**
-     * @return string|null
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\UnzerApiException
-     */
-    public function getCustomerBirthdate(): ?string
-    {
-        return $this->_getPayment()->getCustomer()->getBirthDate();
     }
 }

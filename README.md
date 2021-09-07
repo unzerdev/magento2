@@ -3,21 +3,23 @@
 [![PHP 7.2](https://img.shields.io/badge/php-7.2-blue.svg)](http://www.php.net)
 [![PHP 7.3](https://img.shields.io/badge/php-7.3-blue.svg)](http://www.php.net)
 
-![Logo](https://dev.unzer.com/wp-content/uploads/2020/09/UNZER__PrimaryLogo_Raspberry_RGB.png)
+![Logo](https://dev.unzer.com/wp-content/uploads/2020/09/Unzer__PrimaryLogo_Raspberry_RGB.png)
 
 # Payment extension for Magento2 and Unzer merchant gateway (PAPI)  
 
 This extension for Magento2 provides a direct integration of the Unzer payment methods to your Magento2 shop. 
 
 Currently supported payment methods are:
-* Cards (Credit and Debit)
-* Direct Debit (guaranteed) B2C
-* FlexiPay direct®
+* Cards (Credit Card / Debit Card)
 * iDEAL
-* Invoice (guaranteed) B2C
-* Invoice guaranteed B2B
 * PayPal
 * Sofort
+* Unzer (SEPA) Direct Debit
+* Unzer (SEPA) Direct Debit secured B2C
+* Unzer Bank Transfer
+* Unzer Invoice
+* Unzer Invoice secured B2B
+* Unzer Invoice secured B2C
 
 ## SYSTEM REQUIREMENTS
 This extension requires PHP 7.1, PHP 7.2, PHP 7.3 or PHP 7.4. 

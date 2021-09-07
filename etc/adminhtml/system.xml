@@ -92,21 +92,21 @@
                         <config_path>payment/unzer_direct_debit/sort_order</config_path>
                     </field>
                 </group>
-                <group id="direct_debit_guaranteed" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>UNZER_DIRECT_DEBIT_GUARANTEED</label>
+                <group id="direct_debit_secured" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>UNZER_DIRECT_DEBIT_SECURED</label>
                     <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Enabled</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                        <config_path>payment/unzer_direct_debit_guaranteed/active</config_path>
+                        <config_path>payment/unzer_direct_debit_secured/active</config_path>
                     </field>
                     <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Title</label>
-                        <config_path>payment/unzer_direct_debit_guaranteed/title</config_path>
+                        <config_path>payment/unzer_direct_debit_secured/title</config_path>
                     </field>
                     <field id="merchant_name" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Merchant Name</label>
                         <comment>Name of merchant for SEPA mandate.</comment>
-                        <config_path>payment/unzer_direct_debit_guaranteed/merchant_name</config_path>
+                        <config_path>payment/unzer_direct_debit_secured/merchant_name</config_path>
                         <validate>required-entry</validate>
                         <depends>
                             <field id="active">1</field>
@@ -114,16 +114,16 @@
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
-                        <config_path>payment/unzer_direct_debit_guaranteed/min_order_total</config_path>
+                        <config_path>payment/unzer_direct_debit_secured/min_order_total</config_path>
                     </field>
                     <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Maximum Order Total</label>
-                        <config_path>payment/unzer_direct_debit_guaranteed/max_order_total</config_path>
+                        <config_path>payment/unzer_direct_debit_secured/max_order_total</config_path>
                         <comment>Insert 0 to disable limit.</comment>
                     </field>
                     <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Sort Order</label>
-                        <config_path>payment/unzer_direct_debit_guaranteed/sort_order</config_path>
+                        <config_path>payment/unzer_direct_debit_secured/sort_order</config_path>
                     </field>
                 </group>
                 <group id="flexipay_direct" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -201,54 +201,54 @@
                         <config_path>payment/unzer_invoice/sort_order</config_path>
                     </field>
                 </group>
-                <group id="invoice_guaranteed" translate="label" type="text" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>UNZER_INVOICE_GUARANTEED</label>
+                <group id="invoice_secured" translate="label" type="text" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>UNZER_INVOICE_SECURED</label>
                     <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Enabled</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                        <config_path>payment/unzer_invoice_guaranteed/active</config_path>
+                        <config_path>payment/unzer_invoice_secured/active</config_path>
                     </field>
                     <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Title</label>
-                        <config_path>payment/unzer_invoice_guaranteed/title</config_path>
+                        <config_path>payment/unzer_invoice_secured/title</config_path>
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
-                        <config_path>payment/unzer_invoice_guaranteed/min_order_total</config_path>
+                        <config_path>payment/unzer_invoice_secured/min_order_total</config_path>
                     </field>
                     <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Maximum Order Total</label>
-                        <config_path>payment/unzer_invoice_guaranteed/max_order_total</config_path>
+                        <config_path>payment/unzer_invoice_secured/max_order_total</config_path>
                         <comment>Insert 0 to disable limit.</comment>
                     </field>
                     <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Sort Order</label>
-                        <config_path>payment/unzer_invoice_guaranteed/sort_order</config_path>
+                        <config_path>payment/unzer_invoice_secured/sort_order</config_path>
                     </field>
                 </group>
-                <group id="invoice_guaranteed_b2b" translate="label" type="text" sortOrder="68" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>UNZER_INVOICE_GUARANTEED_B2B</label>
+                <group id="invoice_secured_b2b" translate="label" type="text" sortOrder="68" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>UNZER_INVOICE_SECURED_B2B</label>
                     <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Enabled</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                        <config_path>payment/unzer_invoice_guaranteed_b2b/active</config_path>
+                        <config_path>payment/unzer_invoice_secured_b2b/active</config_path>
                     </field>
                     <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Title</label>
-                        <config_path>payment/unzer_invoice_guaranteed_b2b/title</config_path>
+                        <config_path>payment/unzer_invoice_secured_b2b/title</config_path>
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
-                        <config_path>payment/unzer_invoice_guaranteed_b2b/min_order_total</config_path>
+                        <config_path>payment/unzer_invoice_secured_b2b/min_order_total</config_path>
                     </field>
                     <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Maximum Order Total</label>
-                        <config_path>payment/unzer_invoice_guaranteed_b2b/max_order_total</config_path>
+                        <config_path>payment/unzer_invoice_secured_b2b/max_order_total</config_path>
                         <comment>Insert 0 to disable limit.</comment>
                     </field>
                     <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Sort Order</label>
-                        <config_path>payment/unzer_invoice_guaranteed_b2b/sort_order</config_path>
+                        <config_path>payment/unzer_invoice_secured_b2b/sort_order</config_path>
                     </field>
                 </group>
                 <group id="paypal" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">

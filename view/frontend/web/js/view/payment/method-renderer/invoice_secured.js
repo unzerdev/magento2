@@ -8,14 +8,13 @@ define(
 
         return Component.extend({
             defaults: {
-                customerType: 'b2b',
-                template: 'Unzer_PAPI/payment/invoice_guaranteed_b2b'
+                template: 'Unzer_PAPI/payment/invoice_secured'
             },
 
             initializeForm: function () {
                 this.initializeCustomerForm(
-                    'invoice-guaranteed-b2b-customer',
-                    'invoice-guaranteed-b2b-customer-error'
+                    'invoice-secured-customer',
+                    'invoice-secured-customer-error'
                 );
                 this.resourceProvider = this.sdk.InvoiceSecured();
             },

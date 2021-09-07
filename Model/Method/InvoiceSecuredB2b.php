@@ -3,7 +3,7 @@
 namespace Unzer\PAPI\Model\Method;
 
 /**
- * Invoice (guaranteed) payment method
+ * Invoice (factoring) payment method
  *
  * Copyright (C) 2021 Unzer GmbH
  *
@@ -25,12 +25,12 @@ namespace Unzer\PAPI\Model\Method;
  *
  * @package  unzerdev/magento2
  */
-class InvoiceGuaranteed extends Invoice
+class InvoiceSecuredB2b extends Invoice
 {
     /**
      * @return bool
      */
-    public function isB2cOnly(): bool
+    public function isB2bOnly(): bool
     {
         return true;
     }
@@ -38,7 +38,7 @@ class InvoiceGuaranteed extends Invoice
     /**
      * @inheridoc
      */
-    public function isGuaranteed(): bool
+    public function isSecured(): bool
     {
         return true;
     }

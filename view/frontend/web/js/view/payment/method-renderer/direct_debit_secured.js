@@ -10,20 +10,20 @@ define(
         return Component.extend({
             defaults: {
                 ibanValid: false,
-                template: 'Unzer_PAPI/payment/direct_debit_guaranteed'
+                template: 'Unzer_PAPI/payment/direct_debit_secured'
             },
 
             initializeForm: function () {
                 var self = this;
 
                 this.initializeCustomerForm(
-                    'sepa-direct-debit-guaranteed-customer',
-                    'sepa-direct-debit-guaranteed-customer-error'
+                    'sepa-direct-debit-secured-customer',
+                    'sepa-direct-debit-secured-customer-error'
                 );
 
                 this.resourceProvider = this.sdk.SepaDirectDebit();
-                this.resourceProvider.create('sepa-direct-debit-guaranteed', {
-                    containerId: 'sepa-direct-debit-guaranteed-iban-field'
+                this.resourceProvider.create('sepa-direct-debit-secured', {
+                    containerId: 'sepa-direct-debit-secured-iban-field'
                 });
 
                 this.ibanValid = ko.observable(false);
@@ -32,7 +32,7 @@ define(
                     self.ibanValid("success" in event && event.success);
                 });
 
-                var sepaMandateElement = document.querySelector('.sepa-direct-debit-guaranteed-mandate'),
+                var sepaMandateElement = document.querySelector('.sepa-direct-debit-secured-mandate'),
                     sepaMandateTexts = [
                         $.mage.__('By signing this mandate form, you authorise %1 to send instructions to '
                             + 'your bank to debit your account and your bank to debit your account in accordance with the '

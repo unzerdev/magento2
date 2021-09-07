@@ -17,8 +17,9 @@
         </div>
 
         <form class="unzerUI form" novalidate>
-            <div id="invoice-guaranteed-customer" class="field"></div>
-            <div id="invoice-guaranteed-customer-error" class="field" style="color: #9f3a38"></div>
+            <div id="sepa-direct-debit-secured-iban-field" class="field"></div>
+            <div id="sepa-direct-debit-secured-customer" class="field"></div>
+            <div id="sepa-direct-debit-secured-customer-error" class="field" style="color: #9f3a38"></div>
             <div class="field">
                 <div class="checkout-agreements-block">
                     <!-- ko foreach: $parent.getRegion('before-place-order') -->
@@ -35,6 +36,9 @@
                         type="submit">
                     <span data-bind="i18n: 'Place Order'"></span>
                 </button>
+            </div>
+            <div class="field sepa-direct-debit-secured-mandate">
+                <h3 data-bind="i18n: 'SEPA Direct Debit Mandate'"></h3>
             </div>
         </form>
     </div>
