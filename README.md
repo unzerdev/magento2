@@ -5,7 +5,7 @@
 
 ![Logo](https://dev.unzer.com/wp-content/uploads/2020/09/Unzer__PrimaryLogo_Raspberry_RGB.png)
 
-# Payment extension for Magento2 and Unzer merchant gateway (PAPI)  
+# Payment extension for Magento2 and Unzer Payment API (PAPI)  
 
 This extension for Magento2 provides a direct integration of the Unzer payment methods to your Magento2 shop. 
 
