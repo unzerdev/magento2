@@ -3,7 +3,7 @@
 namespace Unzer\PAPI\Model\Method;
 
 /**
- * Flexipay Direct payment method
+ * Unzer Bank Transfer payment method
  *
  * Copyright (C) 2021 - today Unzer GmbH
  *

@@ -58,7 +58,7 @@
                 <active>0</active>
                 <payment_action>order</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[FlexiPay Direct]]></title>
+                <title><![CDATA[Unzer Bank Transfer]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
