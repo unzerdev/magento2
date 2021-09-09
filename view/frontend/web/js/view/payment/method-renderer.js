@@ -22,8 +22,8 @@ define(
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/direct_debit_secured'
             },
             {
-                type: 'unzer_flexipay_direct',
-                component: 'Unzer_PAPI/js/view/payment/method-renderer/flexipay_direct'
+                type: 'unzer_bank_transfer',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/bank_transfer'
             },
             {
                 type: 'unzer_ideal',

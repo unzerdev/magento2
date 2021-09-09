@@ -9,8 +9,8 @@
     <event name="payment_method_assign_data_unzer_direct_debit_secured">
         <observer name="unzer_direct_debit_secured_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_unzer_flexipay_direct">
-        <observer name="unzer_flexipay_direct_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    <event name="payment_method_assign_data_unzer_bank_transfer">
+        <observer name="unzer_bank_transfer_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
     <event name="payment_method_assign_data_unzer_ideal">
         <observer name="unzer_ideal_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />

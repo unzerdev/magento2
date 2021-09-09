@@ -54,7 +54,7 @@
                 <can_use_internal>0</can_use_internal>
                 <model>Unzer\PAPI\Model\Method\DirectDebitSecured</model>
             </unzer_direct_debit_secured>
-            <unzer_flexipay_direct>
+            <unzer_bank_transfer>
                 <active>0</active>
                 <payment_action>order</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
@@ -69,8 +69,8 @@
                 <can_void>1</can_void>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
-                <model>Unzer\PAPI\Model\Method\FlexipayDirect</model>
-            </unzer_flexipay_direct>
+                <model>Unzer\PAPI\Model\Method\BankTransfer</model>
+            </unzer_bank_transfer>
             <unzer_ideal>
                 <active>0</active>
                 <payment_action>order</payment_action>

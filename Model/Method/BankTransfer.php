@@ -25,7 +25,7 @@ namespace Unzer\PAPI\Model\Method;
  *
  * @package  unzerdev/magento2
  */
-class FlexipayDirect extends Base
+class BankTransfer extends Base
 {
     /**
      * @inheritDoc

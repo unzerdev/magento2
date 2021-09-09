@@ -32,7 +32,7 @@
                                                                         <item name="unzer_direct_debit_secured" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="unzer_flexipay_direct" xsi:type="array">
+                                                                        <item name="unzer_bank_transfer" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                         <item name="unzer_ideal" xsi:type="array">

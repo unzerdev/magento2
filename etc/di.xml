@@ -255,7 +255,7 @@
 
     <virtualType name="UnzerFlexipayDirectConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_FLEXIPAY_DIRECT</argument>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_BANK_TRANSFER</argument>
         </arguments>
     </virtualType>
 
@@ -291,9 +291,9 @@
         </arguments>
     </virtualType>
 
-    <type name="Unzer\PAPI\Model\Method\FlexipayDirect">
+    <type name="Unzer\PAPI\Model\Method\BankTransfer">
         <arguments>
-            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_FLEXIPAY_DIRECT</argument>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_BANK_TRANSFER</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">UnzerFlexipayDirectValueHandlerPool</argument>

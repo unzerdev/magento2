@@ -40,7 +40,7 @@ class Provider implements ConfigProviderInterface
         Config::METHOD_CARDS,
         Config::METHOD_DIRECT_DEBIT,
         Config::METHOD_DIRECT_DEBIT_SECURED,
-        Config::METHOD_FLEXIPAY_DIRECT,
+        Config::METHOD_BANK_TRANSFER,
         Config::METHOD_IDEAL,
         Config::METHOD_INVOICE,
         Config::METHOD_INVOICE_SECURED_B2B,

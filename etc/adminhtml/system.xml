@@ -126,29 +126,29 @@
                         <config_path>payment/unzer_direct_debit_secured/sort_order</config_path>
                     </field>
                 </group>
-                <group id="flexipay_direct" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>UNZER_FLEXIPAY_DIRECT</label>
+                <group id="bank_transfer" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>UNZER_BANK_TRANSFER</label>
                     <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Enabled</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                        <config_path>payment/unzer_flexipay_direct/active</config_path>
+                        <config_path>payment/unzer_bank_transfer/active</config_path>
                     </field>
                     <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Title</label>
-                        <config_path>payment/unzer_flexipay_direct/title</config_path>
+                        <config_path>payment/unzer_bank_transfer/title</config_path>
                     </field>
                     <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Minimum Order Total</label>
-                        <config_path>payment/unzer_flexipay_direct/min_order_total</config_path>
+                        <config_path>payment/unzer_bank_transfer/min_order_total</config_path>
                     </field>
                     <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Maximum Order Total</label>
-                        <config_path>payment/unzer_flexipay_direct/max_order_total</config_path>
+                        <config_path>payment/unzer_bank_transfer/max_order_total</config_path>
                         <comment>Insert 0 to disable limit.</comment>
                     </field>
                     <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Sort Order</label>
-                        <config_path>payment/unzer_flexipay_direct/sort_order</config_path>
+                        <config_path>payment/unzer_bank_transfer/sort_order</config_path>
                     </field>
                 </group>
                 <group id="ideal" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
