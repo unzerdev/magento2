@@ -1,11 +1,11 @@
 <?php
 
-namespace Heidelpay\MGW\Block\Info;
+namespace Unzer\PAPI\Block\Info;
 
 /**
  * Customer Account Order Invoice Information Block
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,29 +19,29 @@ namespace Heidelpay\MGW\Block\Info;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
-class InvoiceGuaranteed extends Invoice
+class InvoiceSecured extends Invoice
 {
-    protected $_template = 'Unzer_PAPI::info/invoice_guaranteed.phtml';
+    protected $_template = 'Unzer_PAPI::info/invoice_secured.phtml';
 
     /**
      * @inheritDoc
      */
     public function toPdf(): string
     {
-        $this->setTemplate('Unzer_PAPI::info/pdf/invoice_guaranteed.phtml');
+        $this->setTemplate('Unzer_PAPI::info/pdf/invoice_secured.phtml');
         return $this->toHtml();
     }
 
     /**
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      */
     public function getCustomerSalutation(): string
     {
@@ -51,7 +51,7 @@ class InvoiceGuaranteed extends Invoice
     /**
      * @return string|null
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      */
     public function getCustomerBirthdate(): ?string
     {

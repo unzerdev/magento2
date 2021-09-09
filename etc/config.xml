@@ -1,14 +1,14 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <payment>
-            <hpmgw>
+            <unzer>
                 <active>0</active>
                 <public_key>s-pub-2a10ifVINFAjpQJ9qW8jBe5OJPBx6Gxa</public_key>
                 <private_key>s-priv-2a102ZMq3gV4I3zJ888J7RR6u75oqK3n</private_key>
-                <model>Heidelpay\MGW\Model\Method\Base</model>
+                <model>Unzer\PAPI\Model\Method\Base</model>
                 <logging>0</logging>
-            </hpmgw>
-            <hpmgw_cards>
+            </unzer>
+            <unzer_cards>
                 <active>0</active>
                 <payment_action>order</payment_action>
                 <order_payment_action>authorize</order_payment_action>
@@ -21,9 +21,9 @@
                 <can_order>1</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
-                <model>Heidelpay\MGW\Model\Method\Cards</model>
-            </hpmgw_cards>
-            <hpmgw_direct_debit>
+                <model>Unzer\PAPI\Model\Method\Cards</model>
+            </unzer_cards>
+            <unzer_direct_debit>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
@@ -36,13 +36,13 @@
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
-                <model>Heidelpay\MGW\Model\Method\DirectDebit</model>
-            </hpmgw_direct_debit>
-            <hpmgw_direct_debit_guaranteed>
+                <model>Unzer\PAPI\Model\Method\DirectDebit</model>
+            </unzer_direct_debit>
+            <unzer_direct_debit_secured>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[Direct Debit Guaranteed]]></title>
+                <title><![CDATA[Direct Debit Secured]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
@@ -52,13 +52,13 @@
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
-                <model>Heidelpay\MGW\Model\Method\DirectDebitGuaranteed</model>
-            </hpmgw_direct_debit_guaranteed>
-            <hpmgw_flexipay_direct>
+                <model>Unzer\PAPI\Model\Method\DirectDebitSecured</model>
+            </unzer_direct_debit_secured>
+            <unzer_bank_transfer>
                 <active>0</active>
                 <payment_action>order</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[FlexiPay Direct]]></title>
+                <title><![CDATA[Unzer Bank Transfer]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
@@ -69,9 +69,9 @@
                 <can_void>1</can_void>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
-                <model>Heidelpay\MGW\Model\Method\FlexipayDirect</model>
-            </hpmgw_flexipay_direct>
-            <hpmgw_ideal>
+                <model>Unzer\PAPI\Model\Method\BankTransfer</model>
+            </unzer_bank_transfer>
+            <unzer_ideal>
                 <active>0</active>
                 <payment_action>order</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
@@ -85,9 +85,9 @@
                 <can_order>1</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
-                <model>Heidelpay\MGW\Model\Method\Ideal</model>
-            </hpmgw_ideal>
-            <hpmgw_invoice>
+                <model>Unzer\PAPI\Model\Method\Ideal</model>
+            </unzer_ideal>
+            <unzer_invoice>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
@@ -100,13 +100,13 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <pending_payment_state>processing</pending_payment_state>
-                <model>Heidelpay\MGW\Model\Method\Invoice</model>
-            </hpmgw_invoice>
-            <hpmgw_invoice_guaranteed>
+                <model>Unzer\PAPI\Model\Method\Invoice</model>
+            </unzer_invoice>
+            <unzer_invoice_secured>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[Invoice Guaranteed]]></title>
+                <title><![CDATA[Invoice Secured]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
@@ -116,13 +116,13 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <pending_payment_state>processing</pending_payment_state>
-                <model>Heidelpay\MGW\Model\Method\InvoiceGuaranteed</model>
-            </hpmgw_invoice_guaranteed>
-            <hpmgw_invoice_guaranteed_b2b>
+                <model>Unzer\PAPI\Model\Method\InvoiceSecured</model>
+            </unzer_invoice_secured>
+            <unzer_invoice_secured_b2b>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[Invoice Guaranteed B2B]]></title>
+                <title><![CDATA[Invoice Secured B2B]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
@@ -132,9 +132,9 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <pending_payment_state>processing</pending_payment_state>
-                <model>Heidelpay\MGW\Model\Method\InvoiceGuaranteedB2b</model>
-            </hpmgw_invoice_guaranteed_b2b>
-            <hpmgw_paypal>
+                <model>Unzer\PAPI\Model\Method\InvoiceSecuredB2b</model>
+            </unzer_invoice_secured_b2b>
+            <unzer_paypal>
                 <active>0</active>
                 <payment_action>order</payment_action>
                 <order_payment_action>authorize</order_payment_action>
@@ -147,9 +147,9 @@
                 <can_order>1</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
-                <model>Heidelpay\MGW\Model\Method\Paypal</model>
-            </hpmgw_paypal>
-            <hpmgw_sofort>
+                <model>Unzer\PAPI\Model\Method\Paypal</model>
+            </unzer_paypal>
+            <unzer_sofort>
                 <active>0</active>
                 <payment_action>order</payment_action>
                 <order_payment_action>authorize_capture</order_payment_action>
@@ -163,8 +163,8 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>AT,BE,CH,DE,ES,GB,IT,NL,PL</country_restrictions>
-                <model>Heidelpay\MGW\Model\Method\Sofort</model>
-            </hpmgw_sofort>
+                <model>Unzer\PAPI\Model\Method\Sofort</model>
+            </unzer_sofort>
         </payment>
     </default>
 </config>

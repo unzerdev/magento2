@@ -1,9 +1,9 @@
 <?php
 
-namespace Heidelpay\MGW\Controller\Adminhtml\Webhooks;
+namespace Unzer\PAPI\Controller\Adminhtml\Webhooks;
 
-use Heidelpay\MGW\Helper\Webhooks as WebhooksHelper;
-use Heidelpay\MGW\Model\Config;
+use Unzer\PAPI\Helper\Webhooks as WebhooksHelper;
+use Unzer\PAPI\Model\Config;
 use Magento\Backend\App\Action;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
@@ -11,7 +11,7 @@ use Magento\Store\Model\StoreManagerInterface;
 /**
  * Abstract controller base for webhook processing.
  *
- * Copyright (C) 2021 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ use Magento\Store\Model\StoreManagerInterface;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 abstract class AbstractAction extends Action
 {

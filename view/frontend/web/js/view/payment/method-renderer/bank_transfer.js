@@ -7,7 +7,7 @@ define(
 
         return Component.extend({
             defaults: {
-                template: 'Unzer_PAPI/payment/flexipay_direct'
+                template: 'Unzer_PAPI/payment/bank_transfer'
             },
 
             initializeForm: function () {

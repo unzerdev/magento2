@@ -1,10 +1,10 @@
 <?php
 
-namespace Heidelpay\MGW\Controller\Payment;
+namespace Unzer\PAPI\Controller\Payment;
 
-use Heidelpay\MGW\Helper\Payment as PaymentHelper;
-use Heidelpay\MGW\Model\Config;
-use heidelpayPHP\Resources\Payment;
+use Unzer\PAPI\Helper\Payment as PaymentHelper;
+use Unzer\PAPI\Model\Config;
+use UnzerSDK\Resources\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Message\ManagerInterface;
@@ -14,7 +14,7 @@ use Magento\Sales\Model\Order;
 /**
  * Callback action called when customers return from a payment provider
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,11 +28,11 @@ use Magento\Sales\Model\Order;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Callback extends AbstractPaymentAction
 {

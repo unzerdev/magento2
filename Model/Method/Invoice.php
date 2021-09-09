@@ -1,10 +1,10 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Method;
+namespace Unzer\PAPI\Model\Method;
 
-use Heidelpay\MGW\Model\Config;
-use heidelpayPHP\Resources\Payment;
-use heidelpayPHP\Resources\TransactionTypes\Charge;
+use Unzer\PAPI\Model\Config;
+use UnzerSDK\Resources\Payment;
+use UnzerSDK\Resources\TransactionTypes\Charge;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Invoice payment method
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,11 +33,11 @@ use Psr\Log\LoggerInterface;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Invoice extends Base
 {
@@ -107,7 +107,7 @@ class Invoice extends Base
     {
         /** @var Payment $payment */
         $payment = $this->_moduleConfig
-            ->getHeidelpayClient()
+            ->getUnzerClient()
             ->fetchPaymentByOrderId($order->getIncrementId());
 
         /** @var Charge|null $charge */

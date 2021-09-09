@@ -1,11 +1,11 @@
 <?php
 
-namespace Heidelpay\MGW\Block\Info;
+namespace Unzer\PAPI\Block\Info;
 
-use Heidelpay\MGW\Helper\Order as OrderHelper;
-use Heidelpay\MGW\Model\Config;
-use heidelpayPHP\Resources\Payment;
-use heidelpayPHP\Resources\TransactionTypes\Charge;
+use Unzer\PAPI\Helper\Order as OrderHelper;
+use Unzer\PAPI\Model\Config;
+use UnzerSDK\Resources\Payment;
+use UnzerSDK\Resources\TransactionTypes\Charge;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Template;
 use Magento\Payment\Block\Info;
@@ -14,7 +14,7 @@ use Magento\Sales\Model\Order;
 /**
  * Customer Account Order Invoice Information Block
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,11 +28,11 @@ use Magento\Sales\Model\Order;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Invoice extends Info
 {
@@ -79,7 +79,7 @@ class Invoice extends Info
      * Returns the first charge for the payment.
      *
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      *
      * @return Charge|null
      */
@@ -92,7 +92,7 @@ class Invoice extends Info
      * Returns the payment.
      *
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      *
      * @return Payment
      */
@@ -103,7 +103,7 @@ class Invoice extends Info
             $order = $this->getInfo()->getOrder();
 
             $storeId = $this->getStoreCode($order->getStoreId());
-            $client  = $this->_moduleConfig->getHeidelpayClient($storeId);
+            $client  = $this->_moduleConfig->getUnzerClient($storeId);
 
             $this->_payment = $client->fetchPaymentByOrderId($order->getIncrementId());
         }
@@ -113,7 +113,7 @@ class Invoice extends Info
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      * @return string
      */
     public function getAccountHolder(): string
@@ -123,7 +123,7 @@ class Invoice extends Info
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      * @return string
      */
     public function getAccountIban(): string
@@ -133,7 +133,7 @@ class Invoice extends Info
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      * @return string
      */
     public function getAccountBic(): string
@@ -143,7 +143,7 @@ class Invoice extends Info
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      * @return string
      */
     public function getReference(): string

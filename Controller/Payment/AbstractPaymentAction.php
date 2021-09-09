@@ -1,12 +1,12 @@
 <?php
 
-namespace Heidelpay\MGW\Controller\Payment;
+namespace Unzer\PAPI\Controller\Payment;
 
-use Heidelpay\MGW\Helper\Payment as PaymentHelper;
-use Heidelpay\MGW\Model\Config;
-use heidelpayPHP\Constants\ApiResponseCodes;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Resources\Payment;
+use Unzer\PAPI\Helper\Payment as PaymentHelper;
+use Unzer\PAPI\Model\Config;
+use UnzerSDK\Constants\ApiResponseCodes;
+use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -18,7 +18,7 @@ use Magento\Sales\Model\Order;
 /**
  * Abstract action for accessing the current order and payment
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@ use Magento\Sales\Model\Order;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 abstract class AbstractPaymentAction extends Action
 {
@@ -96,7 +96,7 @@ abstract class AbstractPaymentAction extends Action
 
         try {
             $payment = $this->_moduleConfig
-                ->getHeidelpayClient()
+                ->getUnzerClient()
                 ->fetchPaymentByOrderId($order->getIncrementId());
 
             $response = $this->executeWith($order, $payment);
@@ -111,7 +111,7 @@ abstract class AbstractPaymentAction extends Action
         } catch (\Exception $e) {
             $message = $e->getMessage();
 
-            if ($e instanceof HeidelpayApiException) {
+            if ($e instanceof UnzerApiException) {
                 $message = $e->getClientMessage();
             }
 
@@ -125,7 +125,7 @@ abstract class AbstractPaymentAction extends Action
      * @param Order $order
      * @param Payment $payment
      * @return ResultInterface|ResponseInterface
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      */
     abstract public function executeWith(Order $order, Payment $payment);
 

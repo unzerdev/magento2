@@ -1,17 +1,17 @@
 <?php
 
-namespace Heidelpay\MGW\Api;
+namespace Unzer\PAPI\Api;
 
 use Exception;
-use Heidelpay\MGW\Api\Data\Customer;
-use Heidelpay\MGW\Helper\Order as OrderHelper;
+use Unzer\PAPI\Api\Data\Customer;
+use Unzer\PAPI\Helper\Order as OrderHelper;
 use Magento\Checkout\Model\Session;
 use Magento\Quote\Model\Quote;
 
 /**
  * Checkout API Interface Implementation.
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ use Magento\Quote\Model\Quote;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Checkout implements CheckoutInterface
 {

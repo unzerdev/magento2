@@ -8,15 +8,15 @@ define(
 
         return Component.extend({
             defaults: {
-                template: 'Unzer_PAPI/payment/invoice_guaranteed'
+                template: 'Unzer_PAPI/payment/invoice_secured'
             },
 
             initializeForm: function () {
                 this.initializeCustomerForm(
-                    'invoice-guaranteed-customer',
-                    'invoice-guaranteed-customer-error'
+                    'invoice-secured-customer',
+                    'invoice-secured-customer-error'
                 );
-                this.resourceProvider = this.sdk.InvoiceGuaranteed();
+                this.resourceProvider = this.sdk.InvoiceSecured();
             },
 
             allInputsValid: function () {

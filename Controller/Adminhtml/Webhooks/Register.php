@@ -1,16 +1,16 @@
 <?php
 
-namespace Heidelpay\MGW\Controller\Adminhtml\Webhooks;
+namespace Unzer\PAPI\Controller\Adminhtml\Webhooks;
 
 use Exception;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Resources\Webhook;
+use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\Webhook;
 use Magento\Framework\Controller\Result\Redirect;
 
 /**
  * Controller for registering webhooks via the backend
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@ use Magento\Framework\Controller\Result\Redirect;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Register extends AbstractAction
 {
@@ -40,7 +40,7 @@ class Register extends AbstractAction
         try {
             $webhookUrl = $this->getWebhookUrl();
 
-            $client = $this->_moduleConfig->getHeidelpayClient($this->getStoreCode());
+            $client = $this->_moduleConfig->getUnzerClient($this->getStoreCode());
 
             $isRegistered = false;
 
@@ -57,7 +57,7 @@ class Register extends AbstractAction
             }
 
             $this->messageManager->addSuccessMessage(__('Successfully registered webhooks'));
-        } catch (HeidelpayApiException $e) {
+        } catch (UnzerApiException $e) {
             $this->messageManager->addErrorMessage(__($e->getMerchantMessage()));
         } catch (Exception $e) {
             $this->messageManager->addErrorMessage(__($e->getMessage()));

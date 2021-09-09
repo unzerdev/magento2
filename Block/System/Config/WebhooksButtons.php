@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\MGW\Block\System\Config;
+namespace Unzer\PAPI\Block\System\Config;
 
-use Heidelpay\MGW\Controller\Adminhtml\Webhooks\AbstractAction;
+use Unzer\PAPI\Controller\Adminhtml\Webhooks\AbstractAction;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\App\RequestInterface;
@@ -15,7 +15,7 @@ use Zend_Json;
 /**
  * Adminhtml Webhook Configuration Buttons Block
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,11 @@ use Zend_Json;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class WebhooksButtons extends Field
 {
@@ -83,7 +83,7 @@ class WebhooksButtons extends Field
      */
     public function getRegisterAction(): string
     {
-        return $this->getUrl('hpmgw/webhooks/register', [
+        return $this->getUrl('unzer/webhooks/register', [
             AbstractAction::URL_PARAM_STORE => $this->getStoreIdentifier(),
         ]);
     }
@@ -96,7 +96,7 @@ class WebhooksButtons extends Field
     {
         $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button');
         $button->setData([
-            'id' => 'hpmgw_webhooks_register',
+            'id' => 'unzer_webhooks_register',
             'label' => __('Register webhooks'),
             'onclick' => 'location.href = ' . Zend_Json::encode($this->getRegisterAction()),
         ]);
@@ -110,7 +110,7 @@ class WebhooksButtons extends Field
      */
     public function getUnregisterAction(): string
     {
-        return $this->getUrl('hpmgw/webhooks/unregister', [
+        return $this->getUrl('unzer/webhooks/unregister', [
             AbstractAction::URL_PARAM_STORE => $this->getStoreIdentifier(),
         ]);
     }
@@ -123,7 +123,7 @@ class WebhooksButtons extends Field
     {
         $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button');
         $button->setData([
-            'id' => 'hpmgw_webhooks_unregister',
+            'id' => 'unzer_webhooks_unregister',
             'label' => __('Unregister webhooks'),
             'onclick' => 'location.href = ' . Zend_Json::encode($this->getUnregisterAction()),
         ]);

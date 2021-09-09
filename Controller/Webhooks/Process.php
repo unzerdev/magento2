@@ -1,15 +1,15 @@
 <?php
 
-namespace Heidelpay\MGW\Controller\Webhooks;
+namespace Unzer\PAPI\Controller\Webhooks;
 
 use Exception;
-use Heidelpay\MGW\Helper\Payment as PaymentHelper;
-use Heidelpay\MGW\Helper\Webhooks;
-use Heidelpay\MGW\Model\Config;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Resources\AbstractHeidelpayResource;
-use heidelpayPHP\Resources\Payment;
-use heidelpayPHP\Resources\TransactionTypes\AbstractTransactionType;
+use Unzer\PAPI\Helper\Payment as PaymentHelper;
+use Unzer\PAPI\Helper\Webhooks;
+use Unzer\PAPI\Model\Config;
+use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\AbstractUnzerResource;
+use UnzerSDK\Resources\Payment;
+use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CsrfAwareActionInterface;
@@ -30,7 +30,7 @@ use stdClass;
 /**
  * Controller for processing webhook events
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,11 +44,11 @@ use stdClass;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Process extends Action implements CsrfAwareActionInterface
 {
@@ -178,7 +178,7 @@ class Process extends Action implements CsrfAwareActionInterface
                     $response->setBody('Not found');
                 }
             }
-        } catch (HeidelpayApiException $e) {
+        } catch (UnzerApiException $e) {
             $response->setStatusCode(500);
             $response->setBody($e->getClientMessage());
 
@@ -196,12 +196,12 @@ class Process extends Action implements CsrfAwareActionInterface
     /**
      * @param string $requestBody
      * @return Payment|null
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      */
     protected function getPaymentFromEvent(string $requestBody): ?Payment
     {
         $resource = $this->_moduleConfig
-            ->getHeidelpayClient()
+            ->getUnzerClient()
             ->fetchResourceFromEvent($requestBody);
 
         if ($resource instanceof Payment) {

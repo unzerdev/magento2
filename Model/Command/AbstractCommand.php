@@ -1,17 +1,17 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Command;
+namespace Unzer\PAPI\Model\Command;
 
-use Heidelpay\MGW\Helper\Order;
-use Heidelpay\MGW\Model\Config;
-use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
-use heidelpayPHP\Heidelpay;
-use heidelpayPHP\Resources\AbstractHeidelpayResource;
-use heidelpayPHP\Resources\Customer;
-use heidelpayPHP\Resources\TransactionTypes\AbstractTransactionType;
-use heidelpayPHP\Resources\TransactionTypes\Authorization;
-use heidelpayPHP\Resources\TransactionTypes\Charge;
-use heidelpayPHP\Services\ResourceNameService;
+use Unzer\PAPI\Helper\Order;
+use Unzer\PAPI\Model\Config;
+use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
+use UnzerSDK\Unzer;
+use UnzerSDK\Resources\AbstractUnzerResource;
+use UnzerSDK\Resources\Customer;
+use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
+use UnzerSDK\Resources\TransactionTypes\Authorization;
+use UnzerSDK\Resources\TransactionTypes\Charge;
+use UnzerSDK\Services\ResourceNameService;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -26,9 +26,9 @@ use Psr\Log\LoggerInterface;
 use function get_class;
 
 /**
- * Abstract Command for using the heidelpay SDK
+ * Abstract Command for using the Unzer SDK
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,11 +42,11 @@ use function get_class;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 abstract class AbstractCommand implements CommandInterface
 {
@@ -58,7 +58,7 @@ abstract class AbstractCommand implements CommandInterface
     protected $_checkoutSession;
 
     /**
-     * @var Heidelpay
+     * @var Unzer
      */
     protected $_client;
 
@@ -118,17 +118,17 @@ abstract class AbstractCommand implements CommandInterface
      */
     protected function _getCallbackUrl(): string
     {
-        return $this->_urlBuilder->getUrl('hpmgw/payment/callback');
+        return $this->_urlBuilder->getUrl('unzer/payment/callback');
     }
 
     /**
      * @param string|null $storeCode
-     * @return Heidelpay
+     * @return Unzer
      */
-    protected function _getClient(string $storeCode = null): Heidelpay
+    protected function _getClient(string $storeCode = null): Unzer
     {
         if ($this->_client === null) {
-            $this->_client = $this->_config->getHeidelpayClient($storeCode);
+            $this->_client = $this->_config->getUnzerClient($storeCode);
         }
 
         return $this->_client;
@@ -142,7 +142,7 @@ abstract class AbstractCommand implements CommandInterface
      * @return string|null
      * @throws LocalizedException
      * @throws NoSuchEntityException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      */
     protected function _getCustomerId(InfoInterface $payment, \Magento\Sales\Model\Order $order): ?string
     {
@@ -176,14 +176,14 @@ abstract class AbstractCommand implements CommandInterface
      * Sets the transaction information on the given payment from an authorization or charge.
      *
      * @param OrderPayment $payment
-     * @param Authorization|Charge|AbstractHeidelpayResource $resource
+     * @param Authorization|Charge|AbstractUnzerResource $resource
      *
      * @return void
      * @throws LocalizedException
      */
     protected function _setPaymentTransaction(
         OrderPayment $payment,
-        AbstractHeidelpayResource $resource
+        AbstractUnzerResource $resource
     ): void
     {
         $payment->setLastTransId($resource->getId());
@@ -195,28 +195,28 @@ abstract class AbstractCommand implements CommandInterface
     }
 
     /**
-     * Writes heidelpay Ids of the transaction to order history.
+     * Writes Unzer Ids of the transaction to order history.
      *
      * @param SalesOrder $order
      * @param AbstractTransactionType $transaction
      */
-    protected function addHeidelpayIdsToHistory(SalesOrder $order, AbstractTransactionType $transaction): void
+    protected function addUnzerpayIdsToHistory(SalesOrder $order, AbstractTransactionType $transaction): void
     {
         $order->addCommentToStatusHistory(
-            'heidelpay ' . ResourceNameService::getClassShortName(get_class($transaction)) . ' transaction: ' .
+            'Unzer ' . ResourceNameService::getClassShortName(get_class($transaction)) . ' transaction: ' .
             'UniqueId: ' . $transaction->getUniqueId() . ' | ShortId: ' . $transaction->getShortId()
         );
     }
 
     /**
-     * Add heidelpay error messages to order history.
+     * Add Unzer error messages to order history.
      *
      * @param SalesOrder $order
      * @param string $code
      * @param string $message
      */
-    protected function addHeidelpayErrorToOrderHistory(SalesOrder $order, $code, $message): void {
-        $order->addCommentToStatusHistory("heidelpay Error (${code}): ${message}");
+    protected function addUnzerErrorToOrderHistory(SalesOrder $order, $code, $message): void {
+        $order->addCommentToStatusHistory("Unzer Error (${code}): ${message}");
     }
 
     /**

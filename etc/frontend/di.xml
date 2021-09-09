@@ -2,12 +2,12 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\Checkout\Block\Onepage\Success">
-        <plugin name="hpmgw_checkout_onepage_success" type="Heidelpay\MGW\Block\Checkout\Onepage\Success\Plugin"/>
+        <plugin name="unzer_checkout_onepage_success" type="Unzer\PAPI\Block\Checkout\Onepage\Success\Plugin"/>
     </type>
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="hpmgw_config_provider" xsi:type="object">Heidelpay\MGW\Model\Config\Provider</item>
+                <item name="unzer_config_provider" xsi:type="object">Unzer\PAPI\Model\Config\Provider</item>
             </argument>
         </arguments>
     </type>

@@ -1,10 +1,10 @@
 <?php
 
-namespace Heidelpay\MGW\Helper;
+namespace Unzer\PAPI\Helper;
 
 use Exception;
-use heidelpayPHP\Constants\PaymentState;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
+use UnzerSDK\Constants\PaymentState;
+use UnzerSDK\Exceptions\UnzerApiException;
 use Magento\Framework\Lock\LockManagerInterface;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
@@ -17,7 +17,7 @@ use Magento\Sales\Model\OrderRepository;
 /**
  * Helper for cancellation state management
  *
- * Copyright (C) 2020 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,15 +31,15 @@ use Magento\Sales\Model\OrderRepository;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Payment
 {
-    public const STATUS_READY_TO_CAPTURE = 'heidelpay_ready_to_capture';
+    public const STATUS_READY_TO_CAPTURE = 'unzer_ready_to_capture';
 
     /**
      * @var Order\InvoiceRepository
@@ -123,14 +123,14 @@ class Payment
 
     /**
      * @param Order $order
-     * @param \heidelpayPHP\Resources\Payment $payment
-     * @throws HeidelpayApiException
+     * @param \UnzerSDK\Resources\Payment $payment
+     * @throws UnzerApiException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function processState(Order $order, \heidelpayPHP\Resources\Payment $payment)
+    public function processState(Order $order, \UnzerSDK\Resources\Payment $payment)
     {
-        $lockName = sprintf('hpmgw_order_%d', $order->getId());
+        $lockName = sprintf('unzer_order_%d', $order->getId());
 
         $this->_lockManager->lock($lockName);
 
@@ -190,10 +190,10 @@ class Payment
 
     /**
      * @param Order $order
-     * @param \heidelpayPHP\Resources\Payment $payment
-     * @throws HeidelpayApiException
+     * @param \UnzerSDK\Resources\Payment $payment
+     * @throws UnzerApiException
      */
-    private function processCompletedState(Order $order, \heidelpayPHP\Resources\Payment $payment)
+    private function processCompletedState(Order $order, \UnzerSDK\Resources\Payment $payment)
     {
         $orderPayment = $order->getPayment();
 
@@ -253,10 +253,10 @@ class Payment
 
     /**
      * @param Order $order
-     * @param \heidelpayPHP\Resources\Payment $payment
-     * @throws HeidelpayApiException
+     * @param \UnzerSDK\Resources\Payment $payment
+     * @throws UnzerApiException
      */
-    private function processPartlyState(Order $order, \heidelpayPHP\Resources\Payment $payment)
+    private function processPartlyState(Order $order, \UnzerSDK\Resources\Payment $payment)
     {
         $this->processPendingState($order, $payment);
     }
@@ -271,11 +271,11 @@ class Payment
 
     /**
      * @param Order $order
-     * @param \heidelpayPHP\Resources\Payment $payment
-     * @throws HeidelpayApiException
+     * @param \UnzerSDK\Resources\Payment $payment
+     * @throws UnzerApiException
      * @throws Exception
      */
-    private function processPendingState(Order $order, \heidelpayPHP\Resources\Payment $payment)
+    private function processPendingState(Order $order, \UnzerSDK\Resources\Payment $payment)
     {
         $authorization = $payment->getAuthorization();
 

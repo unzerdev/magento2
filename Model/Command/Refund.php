@@ -1,12 +1,12 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Command;
+namespace Unzer\PAPI\Model\Command;
 
-use heidelpayPHP\Constants\CancelReasonCodes;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Resources\Payment;
-use heidelpayPHP\Resources\TransactionTypes\Cancellation;
-use heidelpayPHP\Resources\TransactionTypes\Charge;
+use UnzerSDK\Constants\CancelReasonCodes;
+use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\Payment;
+use UnzerSDK\Resources\TransactionTypes\Cancellation;
+use UnzerSDK\Resources\TransactionTypes\Charge;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order;
@@ -14,7 +14,7 @@ use Magento\Sales\Model\Order;
 /**
  * Refund Command for payments
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,11 +28,11 @@ use Magento\Sales\Model\Order;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Refund extends Cancel
 {

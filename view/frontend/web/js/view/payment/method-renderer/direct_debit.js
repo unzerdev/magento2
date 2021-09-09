@@ -43,7 +43,7 @@ define(
 
                 sepaMandateTexts.forEach(function(text) {
                     var p = document.createElement("p");
-                    p.innerText = text.replace(/%1/g, window.checkoutConfig.payment.hpmgw_direct_debit.merchantName);
+                    p.innerText = text.replace(/%1/g, window.checkoutConfig.payment.unzer_direct_debit.merchantName);
                     sepaMandateElement.appendChild(p);
                 });
             },

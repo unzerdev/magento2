@@ -1,11 +1,11 @@
 <?php
 
-namespace Heidelpay\MGW\Api\Data;
+namespace Unzer\PAPI\Api\Data;
 
 /**
  * Checkout API Customer DTO.
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ namespace Heidelpay\MGW\Api\Data;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Customer
 {
@@ -71,10 +71,10 @@ class Customer
     }
 
     /**
-     * @param \heidelpayPHP\Resources\Customer $customerResource
+     * @param \UnzerSDK\Resources\Customer $customerResource
      * @return static
      */
-    public static function fromResource(\heidelpayPHP\Resources\Customer $customerResource): self
+    public static function fromResource(\UnzerSDK\Resources\Customer $customerResource): self
     {
         $customer = new self();
         $customer->id = $customerResource->getId();
@@ -175,7 +175,7 @@ class Customer
     }
 
     /**
-     * @return \Heidelpay\MGW\Api\Data\Address|null
+     * @return \Unzer\PAPI\Api\Data\Address|null
      */
     public function getBillingAddress(): ?Address
     {
@@ -183,7 +183,7 @@ class Customer
     }
 
     /**
-     * @return \Heidelpay\MGW\Api\Data\Address|null
+     * @return \Unzer\PAPI\Api\Data\Address|null
      */
     public function getShippingAddress(): ?Address
     {
@@ -191,9 +191,9 @@ class Customer
     }
 
     /**
-     * @return \Heidelpay\MGW\Api\Data\CompanyInfo|null
+     * @return \Unzer\PAPI\Api\Data\CompanyInfo|null
      */
-    public function getCompanyInfo(): ?\Heidelpay\MGW\Api\Data\CompanyInfo
+    public function getCompanyInfo(): ?\Unzer\PAPI\Api\Data\CompanyInfo
     {
         return $this->companyInfo;
     }

@@ -1,10 +1,10 @@
 <?php
 
-namespace Heidelpay\MGW\Model;
+namespace Unzer\PAPI\Model;
 
-use Heidelpay\MGW\Model\Logger\DebugHandler;
-use heidelpayPHP\Heidelpay;
-use heidelpayPHP\Interfaces\DebugHandlerInterface;
+use Unzer\PAPI\Model\Logger\DebugHandler;
+use UnzerSDK\Unzer;
+use UnzerSDK\Interfaces\DebugHandlerInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Locale\Resolver;
 use Magento\Store\Model\ScopeInterface;
@@ -12,7 +12,7 @@ use Magento\Store\Model\ScopeInterface;
 /**
  * Global Module configuration and SDK provider
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,31 +26,31 @@ use Magento\Store\Model\ScopeInterface;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Config extends \Magento\Payment\Gateway\Config\Config
 {
-    const BASE_CONFIGURATION_PATH = 'payment/hpmgw/';
+    const BASE_CONFIGURATION_PATH = 'payment/unzer/';
 
     const KEY_PUBLIC_KEY = 'public_key';
     const KEY_PRIVATE_KEY = 'private_key';
     const KEY_LOGGING = 'logging';
 
-    const METHOD_BASE = 'hpmgw';
-    const METHOD_CARDS = 'hpmgw_cards';
-    const METHOD_DIRECT_DEBIT = 'hpmgw_direct_debit';
-    const METHOD_DIRECT_DEBIT_GUARANTEED = 'hpmgw_direct_debit_guaranteed';
-    const METHOD_FLEXIPAY_DIRECT = 'hpmgw_flexipay_direct';
-    const METHOD_IDEAL = 'hpmgw_ideal';
-    const METHOD_INVOICE = 'hpmgw_invoice';
-    const METHOD_INVOICE_GUARANTEED_B2B = 'hpmgw_invoice_guaranteed_b2b';
-    const METHOD_INVOICE_GUARANTEED = 'hpmgw_invoice_guaranteed';
-    const METHOD_PAYPAL = 'hpmgw_paypal';
-    const METHOD_SOFORT = 'hpmgw_sofort';
+    const METHOD_BASE = 'unzer';
+    const METHOD_CARDS = 'unzer_cards';
+    const METHOD_DIRECT_DEBIT = 'unzer_direct_debit';
+    const METHOD_DIRECT_DEBIT_SECURED = 'unzer_direct_debit_secured';
+    const METHOD_BANK_TRANSFER = 'unzer_bank_transfer';
+    const METHOD_IDEAL = 'unzer_ideal';
+    const METHOD_INVOICE = 'unzer_invoice';
+    const METHOD_INVOICE_SECURED_B2B = 'unzer_invoice_secured_b2b';
+    const METHOD_INVOICE_SECURED = 'unzer_invoice_secured';
+    const METHOD_PAYPAL = 'unzer_paypal';
+    const METHOD_SOFORT = 'unzer_sofort';
 
     /**
      * @var DebugHandlerInterface
@@ -136,11 +136,11 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * Returns an API client using the configured private key.
      *
      * @param string|null $storeId
-     * @return Heidelpay
+     * @return Unzer
      */
-    public function getHeidelpayClient(string $storeId = null): Heidelpay
+    public function getUnzerClient(string $storeId = null): Unzer
     {
-        $client = new Heidelpay(
+        $client = new Unzer(
             $this->getPrivateKey($storeId),
             $this->_localeResolver->getLocale()
         );

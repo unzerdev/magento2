@@ -1,11 +1,11 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Method;
+namespace Unzer\PAPI\Model\Method;
 
 /**
- * Direct debit (guaranteed) payment method
+ * Direct debit (secured) payment method
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,13 @@ namespace Heidelpay\MGW\Model\Method;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
-class DirectDebitGuaranteed extends DirectDebit
+class DirectDebitSecured extends DirectDebit
 {
     /**
      * @return bool
@@ -38,7 +38,7 @@ class DirectDebitGuaranteed extends DirectDebit
     /**
      * @inheridoc
      */
-    public function isGuaranteed(): bool
+    public function isSecured(): bool
     {
         return true;
     }

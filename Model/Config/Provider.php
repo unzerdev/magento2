@@ -1,9 +1,9 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Config;
+namespace Unzer\PAPI\Model\Config;
 
-use Heidelpay\MGW\Model\Config;
-use Heidelpay\MGW\Model\Method\Base as MethodBase;
+use Unzer\PAPI\Model\Config;
+use Unzer\PAPI\Model\Method\Base as MethodBase;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Helper\Data as PaymentHelper;
@@ -11,7 +11,7 @@ use Magento\Payment\Helper\Data as PaymentHelper;
 /**
  * JavaScript configuration provider
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ use Magento\Payment\Helper\Data as PaymentHelper;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Provider implements ConfigProviderInterface
 {
@@ -39,12 +39,12 @@ class Provider implements ConfigProviderInterface
     protected $_methodCodes = [
         Config::METHOD_CARDS,
         Config::METHOD_DIRECT_DEBIT,
-        Config::METHOD_DIRECT_DEBIT_GUARANTEED,
-        Config::METHOD_FLEXIPAY_DIRECT,
+        Config::METHOD_DIRECT_DEBIT_SECURED,
+        Config::METHOD_BANK_TRANSFER,
         Config::METHOD_IDEAL,
         Config::METHOD_INVOICE,
-        Config::METHOD_INVOICE_GUARANTEED_B2B,
-        Config::METHOD_INVOICE_GUARANTEED,
+        Config::METHOD_INVOICE_SECURED_B2B,
+        Config::METHOD_INVOICE_SECURED,
         Config::METHOD_PAYPAL,
         Config::METHOD_SOFORT,
     ];

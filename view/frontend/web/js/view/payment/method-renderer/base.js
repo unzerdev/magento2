@@ -10,7 +10,7 @@ define(
         'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/view/payment/default',
         'Magento_Ui/js/model/messageList',
-        '//static.heidelpay.com/v1/heidelpay.js',
+        '//static.unzer.com/v1/unzer.js',
     ],
     function (
         $,
@@ -23,15 +23,15 @@ define(
         fullScreenLoader,
         Component,
         globalMessageList,
-        heidelpay
+        unzer
     ) {
         'use strict';
 
         return Component.extend({
             redirectAfterPlaceOrder: false,
-            redirectUrl: 'hpmgw/payment/redirect',
-            sdk: new heidelpay(window.checkoutConfig.payment.hpmgw.publicKey),
-            sdkConfig: window.checkoutConfig.payment.hpmgw,
+            redirectUrl: 'unzer/payment/redirect',
+            sdk: new unzer(window.checkoutConfig.payment.unzer.publicKey),
+            sdkConfig: window.checkoutConfig.payment.unzer,
 
             defaults: {
                 config: null,
@@ -99,7 +99,7 @@ define(
                 // Hide them manually since users are not allowed to change them anyways.
                 var field = $('#' + fieldId);
                 field.find('.field').filter('.city, .company, :has(.country), .street, .zip').hide();
-                field.find('.heidelpayUI.divider-horizontal:eq(0)').hide();
+                field.find('.unzerUI.divider-horizontal:eq(0)').hide();
             },
 
             _initializeCustomerFormForB2cCustomer: function (fieldId, errorFieldId, customer) {
@@ -113,8 +113,8 @@ define(
 
                 var field = $('#' + fieldId);
                 field.find('.field').filter('.city, .company, :has(.country), .street, .zip, .firstname, .lastname').hide();
-                field.find('.heidelpayUI.divider-horizontal:eq(0)').hide();
-                field.find('.heidelpayUI.message.downArrow').hide();
+                field.find('.unzerUI.divider-horizontal:eq(0)').hide();
+                field.find('.unzerUI.message.downArrow').hide();
             },
 
             initializeForm: function () {
@@ -150,7 +150,7 @@ define(
                 // We need to wait for multiple Promises but the jQuery version used by Magento 2 (jQuery 1.x) does not
                 // support non-jQuery Promises in $.when(), so we use the Promise.all method instead.
                 // In case a browser has no native Promise support (IE) we fallback to the Promise implementation
-                // shipped with the heidelpay SDK, by accessing the Promise constructor from one of the existing
+                // shipped with the Unzer SDK, by accessing the Promise constructor from one of the existing
                 // promises, to avoid having to implement or load our own implementation of Promise.all.
                 var Promise = window.Promise || promises[0].constructor;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace Heidelpay\MGW\Api\Data;
+namespace Unzer\PAPI\Api\Data;
 
 /**
  * Checkout API CompanyInfo DTO.
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ namespace Heidelpay\MGW\Api\Data;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class CompanyInfo
 {
@@ -47,10 +47,10 @@ class CompanyInfo
     }
 
     /**
-     * @param \heidelpayPHP\Resources\EmbeddedResources\CompanyInfo $companyInfoResource
+     * @param \UnzerSDK\Resources\EmbeddedResources\CompanyInfo $companyInfoResource
      * @return static
      */
-    public static function fromResource(\heidelpayPHP\Resources\EmbeddedResources\CompanyInfo $companyInfoResource): self
+    public static function fromResource(\UnzerSDK\Resources\EmbeddedResources\CompanyInfo $companyInfoResource): self
     {
         $companyInfo = new self();
         $companyInfo->registrationType = $companyInfoResource->getRegistrationType();

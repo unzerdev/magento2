@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\MGW\Setup;
+namespace Unzer\PAPI\Setup;
 
-use Heidelpay\MGW\Helper\Payment;
+use Unzer\PAPI\Helper\Payment;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
@@ -11,7 +11,7 @@ use Magento\Sales\Model\Order\StatusFactory;
 /**
  * Module Data Setup
  *
- * Copyright (C) 2020 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ use Magento\Sales\Model\Order\StatusFactory;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class InstallData implements InstallDataInterface
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Heidelpay\MGW\Block\Checkout\Success;
+namespace Unzer\PAPI\Block\Checkout\Success;
 
-use Heidelpay\MGW\Model\Method\Base;
+use Unzer\PAPI\Model\Method\Base;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
@@ -12,7 +12,7 @@ use Magento\Sales\Model\Order;
 /**
  * Onepage Checkout Success Payment Information Block
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,11 @@ use Magento\Sales\Model\Order;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class AdditionalPaymentInformation extends Template
 {

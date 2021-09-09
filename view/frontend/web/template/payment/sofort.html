@@ -16,14 +16,14 @@
             <!--/ko-->
         </div>
 
-        <form class="heidelpayUI form" novalidate>
+        <form class="unzerUI form" novalidate>
             <div class="field">
                 <div class="checkout-agreements-block">
                     <!-- ko foreach: $parent.getRegion('before-place-order') -->
                     <!-- ko template: getTemplate() --><!-- /ko -->
                     <!--/ko-->
                 </div>
-                <button class="heidelpayUI primary button fluid"
+                <button class="unzerUI primary button fluid"
                         data-bind="
                         click: placeOrder,
                         attr: {title: $t('Place Order')},

@@ -1,9 +1,9 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Command;
+namespace Unzer\PAPI\Model\Command;
 
-use Heidelpay\MGW\Model\Method\Observer\BaseDataAssignObserver;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
+use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
+use UnzerSDK\Exceptions\UnzerApiException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
@@ -11,7 +11,7 @@ use Magento\Sales\Model\Order\Payment as OrderPayment;
 /**
  * Authorize Command for payments
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,18 +25,18 @@ use Magento\Sales\Model\Order\Payment as OrderPayment;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Authorize extends AbstractCommand
 {
     /**
      * @inheritDoc
      * @throws LocalizedException
-     * @throws \heidelpayPHP\Exceptions\HeidelpayApiException
+     * @throws \UnzerSDK\Exceptions\UnzerApiException
      */
     public function execute(array $commandSubject)
     {
@@ -64,13 +64,13 @@ class Authorize extends AbstractCommand
                 $this->_orderHelper->createBasketForOrder($order),
                 null
             );
-            $order->addCommentToStatusHistory('heidelpay paymentId: ' . $authorization->getPaymentId());
-        } catch (HeidelpayApiException $e) {
+            $order->addCommentToStatusHistory('Unzer paymentId: ' . $authorization->getPaymentId());
+        } catch (UnzerApiException $e) {
             $this->_logger->error($e->getMerchantMessage(), ['incrementId' => $order->getIncrementId()]);
             throw new LocalizedException(__($e->getClientMessage()));
         }
 
-        $this->addHeidelpayIdsToHistory($order, $authorization);
+        $this->addUnzerpayIdsToHistory($order, $authorization);
 
         if ($authorization->isError()) {
             throw new LocalizedException(__('Failed to authorize payment.'));

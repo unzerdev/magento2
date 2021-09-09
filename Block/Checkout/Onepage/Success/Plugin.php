@@ -1,11 +1,11 @@
 <?php
 
-namespace Heidelpay\MGW\Block\Checkout\Onepage\Success;
+namespace Unzer\PAPI\Block\Checkout\Onepage\Success;
 
-use Heidelpay\MGW\Model\Config;
-use Heidelpay\MGW\Model\Method\Base;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
-use heidelpayPHP\Resources\Payment;
+use Unzer\PAPI\Model\Config;
+use Unzer\PAPI\Model\Method\Base;
+use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Template;
@@ -15,7 +15,7 @@ use Magento\Sales\Model\Order;
 /**
  * Onepage Checkout Onepage Success Plugin
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,11 @@ use Magento\Sales\Model\Order;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class Plugin
 {
@@ -84,7 +84,7 @@ class Plugin
             /** @var Payment $payment */
             try {
                 $payment = $this->_moduleConfig
-                    ->getHeidelpayClient()
+                    ->getUnzerClient()
                     ->fetchPaymentByOrderId($order->getIncrementId());
 
                 if (($payment->getAuthorization() && $payment->getAuthorization()->isPending()) ||
@@ -92,7 +92,7 @@ class Plugin
                     $subject->setTemplate(self::PENDING_TEMPLATE);
                 }
             } catch (NoSuchEntityException $e) {
-            } catch (HeidelpayApiException $e) {
+            } catch (UnzerApiException $e) {
             }
         }
     }

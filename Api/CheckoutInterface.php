@@ -1,13 +1,13 @@
 <?php
 
-namespace Heidelpay\MGW\Api;
+namespace Unzer\PAPI\Api;
 
-use Heidelpay\MGW\Api\Data\Customer;
+use Unzer\PAPI\Api\Data\Customer;
 
 /**
  * Checkout API Interface.
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,11 @@ use Heidelpay\MGW\Api\Data\Customer;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 interface CheckoutInterface
 {
@@ -34,7 +34,7 @@ interface CheckoutInterface
      *
      * @param string|null $guestEmail Customer E-Mail address.
      *
-     * @return \Heidelpay\MGW\Api\Data\Customer|null
+     * @return \Unzer\PAPI\Api\Data\Customer|null
      */
     public function getExternalCustomer(?string $guestEmail = null): ?Customer;
 }

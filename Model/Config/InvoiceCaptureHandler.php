@@ -1,6 +1,6 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Config;
+namespace Unzer\PAPI\Model\Config;
 
 use Magento\Payment\Gateway\Config\ValueHandlerInterface;
 use Magento\Sales\Model\Order\Payment;
@@ -8,7 +8,7 @@ use Magento\Sales\Model\Order\Payment;
 /**
  * Handler for checking if invoice payments can be captured.
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,11 @@ use Magento\Sales\Model\Order\Payment;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class InvoiceCaptureHandler implements ValueHandlerInterface
 {

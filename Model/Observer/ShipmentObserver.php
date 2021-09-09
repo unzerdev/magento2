@@ -1,12 +1,12 @@
 <?php
 
-namespace Heidelpay\MGW\Model\Observer;
+namespace Unzer\PAPI\Model\Observer;
 
-use Heidelpay\MGW\Helper\Payment as PaymentHelper;
-use Heidelpay\MGW\Model\Config;
-use Heidelpay\MGW\Model\Method\Base;
-use heidelpayPHP\Constants\ApiResponseCodes;
-use heidelpayPHP\Exceptions\HeidelpayApiException;
+use Unzer\PAPI\Helper\Payment as PaymentHelper;
+use Unzer\PAPI\Model\Config;
+use Unzer\PAPI\Model\Method\Base;
+use UnzerSDK\Constants\ApiResponseCodes;
+use UnzerSDK\Exceptions\UnzerApiException;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -19,7 +19,7 @@ use Magento\Store\Model\StoreManagerInterface;
 /**
  * Observer for automatically tracking shipments in the Gateway
  *
- * Copyright (C) 2019 heidelpay GmbH
+ * Copyright (C) 2021 - today Unzer GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,11 +33,11 @@ use Magento\Store\Model\StoreManagerInterface;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * @link  https://docs.heidelpay.com/
+ * @link  https://docs.unzer.com/
  *
  * @author Justin Nuß
  *
- * @package  heidelpay/magento2-merchant-gateway
+ * @package  unzerdev/magento2
  */
 class ShipmentObserver implements ObserverInterface
 {
@@ -45,8 +45,8 @@ class ShipmentObserver implements ObserverInterface
      * List of payment method codes for which the shipment can be tracked in the gateway.
      */
     public const SHIPPABLE_PAYMENT_METHODS = [
-        Config::METHOD_INVOICE_GUARANTEED,
-        Config::METHOD_INVOICE_GUARANTEED_B2B,
+        Config::METHOD_INVOICE_SECURED,
+        Config::METHOD_INVOICE_SECURED_B2B,
     ];
 
     /**
@@ -90,7 +90,7 @@ class ShipmentObserver implements ObserverInterface
     /**
      * @param Observer $observer
      * @return void
-     * @throws HeidelpayApiException
+     * @throws UnzerApiException
      * @throws NoSuchEntityException
      */
     public function execute(Observer $observer): void
@@ -114,7 +114,7 @@ class ShipmentObserver implements ObserverInterface
         }
 
         $payment = $this->_moduleConfig
-            ->getHeidelpayClient($storeCode)
+            ->getUnzerClient($storeCode)
             ->fetchPaymentByOrderId($order->getIncrementId());
 
         $this->_paymentHelper->processState($order, $payment);
@@ -127,7 +127,7 @@ class ShipmentObserver implements ObserverInterface
 
             try {
                 $payment->ship($invoice->getId());
-            } catch (HeidelpayApiException $e) {
+            } catch (UnzerApiException $e) {
                 if ($e->getCode() !== ApiResponseCodes::API_ERROR_TRANSACTION_SHIP_NOT_ALLOWED &&
                     $e->getCode() !== ApiResponseCodes::CORE_ERROR_INSURANCE_ALREADY_ACTIVATED) {
                     throw $e;
