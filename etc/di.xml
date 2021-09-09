@@ -253,22 +253,22 @@
         </arguments>
     </type>
 
-    <virtualType name="UnzerFlexipayDirectConfig" type="Unzer\PAPI\Model\Config">
+    <virtualType name="UnzerBankTransferConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_BANK_TRANSFER</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerFlexipayDirectConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerBankTransferConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">UnzerFlexipayDirectConfig</argument>
+            <argument name="configInterface" xsi:type="object">UnzerBankTransferConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerFlexipayDirectValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <virtualType name="UnzerBankTransferValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">UnzerFlexipayDirectConfigValueHandler</item>
+                <item name="default" xsi:type="string">UnzerBankTransferConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
                 <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
@@ -277,16 +277,16 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerFlexipayDirectValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerBankTransferValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
-            <argument name="config" xsi:type="object">UnzerFlexipayDirectConfig</argument>
+            <argument name="config" xsi:type="object">UnzerBankTransferConfig</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerFlexipayDirectValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+    <virtualType name="UnzerBankTransferValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">UnzerFlexipayDirectValidatorCountry</item>
+                <item name="country" xsi:type="string">UnzerBankTransferValidatorCountry</item>
             </argument>
         </arguments>
     </virtualType>
@@ -296,8 +296,8 @@
             <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_BANK_TRANSFER</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">UnzerFlexipayDirectValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">UnzerFlexipayDirectValidatorPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerBankTransferValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerBankTransferValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>
