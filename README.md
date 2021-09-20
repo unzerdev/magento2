@@ -44,7 +44,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ## User Guide
-Please find information on installation, configuration and usage here https://dev.unzer.com/user-guide-magento-2-mgw-plugin
+Please find information on installation, configuration and usage here https://dev.unzer.com/user-guide-magento-2-unzer_papi-module
 
 ## Support
 For any issues or questions please get in touch with our support.
