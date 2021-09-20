@@ -30,4 +30,7 @@
     <event name="payment_method_assign_data_unzer_sofort">
         <observer name="unzer_sofort_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
+    <event name="payment_method_assign_data_unzer_giropay">
+        <observer name="unzer_giropay_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    </event>
 </config>
