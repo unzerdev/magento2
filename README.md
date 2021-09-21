@@ -12,7 +12,6 @@ This extension for Magento2 provides a direct integration of the Unzer payment m
 
 Currently supported payment methods are:
 * Cards (Credit Card / Debit Card)
-* Giropay
 * iDEAL
 * PayPal
 * Sofort
