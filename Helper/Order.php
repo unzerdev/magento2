@@ -153,7 +153,7 @@ class Order
             ->setShopVersion($this->_productMetadata->getVersion())
             ->addMetadata('customerId', $order->getCustomerId())
             ->addMetadata('customerGroupId', $order->getCustomerGroupId())
-            ->addMetadata('pluginType', 'magento2-unzer-papi')
+            ->addMetadata('pluginType', 'unzerdev/magento2')
             ->addMetadata('pluginVersion', $this->_moduleList->getOne('Unzer_PAPI')['setup_version'])
             ->addMetadata('storeId', $order->getStoreId());
 
