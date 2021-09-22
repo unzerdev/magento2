@@ -48,10 +48,6 @@ define(
             {
                 type: 'unzer_sofort',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/sofort'
-            },
-            {
-                type: 'unzer_giropay',
-                component: 'Unzer_PAPI/js/view/payment/method-renderer/giropay'
             }
         );
         return Component.extend({});
