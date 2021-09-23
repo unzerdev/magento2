@@ -3,7 +3,7 @@
     <system>
         <section id="payment">
             <group id="unzer" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>UNZER_PAYMENT</label>
+                <label>UNZER_PAYMENTS</label>
                 <comment>
                     <![CDATA[UNZER_ABOUT_US]]>
                 </comment>
