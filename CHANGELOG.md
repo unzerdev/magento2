@@ -9,5 +9,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 * Remove preconfigured test keypair from config.
 * Switch to Unzer PHP SDK.
 * Switch to Unzer UI components.
+* Fixed an issue regarding inconsistent dependency of `messageManager` used in `AbstractPaymentAction`.
 
 [1.0.0]: https://github.com/unzerdev/magento2/compare/06675c1be6009ce9f4e4cc78f8eecfc8447b2f5d..1.0.0

@@ -42,11 +42,6 @@ class Callback extends AbstractPaymentAction
     protected $_cartManagement;
 
     /**
-     * @var ManagerInterface
-     */
-    protected $_messageManager;
-
-    /**
      * @var PaymentHelper
      */
     protected $_paymentHelper;
@@ -64,7 +59,6 @@ class Callback extends AbstractPaymentAction
         Context $context,
         CartManagementInterface $cartManagement,
         Session $checkoutSession,
-        ManagerInterface $messageManager,
         Config $moduleConfig,
         PaymentHelper $paymentHelper
     )
@@ -72,7 +66,6 @@ class Callback extends AbstractPaymentAction
         parent::__construct($context, $checkoutSession, $moduleConfig, $paymentHelper);
 
         $this->_cartManagement = $cartManagement;
-        $this->_messageManager = $messageManager;
     }
 
     /**
