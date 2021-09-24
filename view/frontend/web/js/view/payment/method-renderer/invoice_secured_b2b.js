@@ -14,8 +14,8 @@ define(
 
             initializeForm: function () {
                 this.initializeCustomerForm(
-                    'invoice-secured-b2b-customer',
-                    'invoice-secured-b2b-customer-error'
+                    'unzer-invoice-secured-b2b-customer',
+                    'unzer-invoice-secured-b2b-customer-error'
                 );
                 this.resourceProvider = this.sdk.InvoiceSecured();
             },

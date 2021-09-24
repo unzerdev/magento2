@@ -138,7 +138,7 @@ abstract class AbstractPaymentAction extends Action
         $this->_checkoutSession->restoreQuote();
 
         if (!empty($message)) {
-            $this->_messageManager->addErrorMessage($message);
+            $this->messageManager->addErrorMessage($message);
         }
 
         $redirect = $this->resultRedirectFactory->create();
