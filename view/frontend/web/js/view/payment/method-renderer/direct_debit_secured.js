@@ -17,13 +17,13 @@ define(
                 var self = this;
 
                 this.initializeCustomerForm(
-                    'sepa-direct-debit-secured-customer',
-                    'sepa-direct-debit-secured-customer-error'
+                    'unzer-sepa-direct-debit-secured-customer',
+                    'unzer-sepa-direct-debit-secured-customer-error'
                 );
 
                 this.resourceProvider = this.sdk.SepaDirectDebit();
                 this.resourceProvider.create('sepa-direct-debit-secured', {
-                    containerId: 'sepa-direct-debit-secured-iban-field'
+                    containerId: 'unzer-sepa-direct-debit-secured-iban-field'
                 });
 
                 this.ibanValid = ko.observable(false);

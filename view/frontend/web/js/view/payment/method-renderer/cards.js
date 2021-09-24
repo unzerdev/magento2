@@ -21,15 +21,15 @@ define(
 
                 this.resourceProvider = this.sdk.Card();
                 this.resourceProvider.create('number', {
-                    containerId: 'card-element-id-number',
+                    containerId: 'unzer-card-element-id-number',
                     onlyIframe: false
                 });
                 this.resourceProvider.create('expiry', {
-                    containerId: 'card-element-id-expiry',
+                    containerId: 'unzer-card-element-id-expiry',
                     onlyIframe: false
                 });
                 this.resourceProvider.create('cvc', {
-                    containerId: 'card-element-id-cvc',
+                    containerId: 'unzer-card-element-id-cvc',
                     onlyIframe: false
                 });
 
