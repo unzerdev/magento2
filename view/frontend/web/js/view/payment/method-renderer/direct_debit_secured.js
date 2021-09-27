@@ -48,7 +48,7 @@ define(
 
                 sepaMandateTexts.forEach(function(text) {
                     var p = document.createElement("p");
-                    p.innerText = text.replace(/%1/g, window.checkoutConfig.payment.unzer_direct_debit.merchantName);
+                    p.innerText = text.replace(/%1/g, window.checkoutConfig.payment.unzer_direct_debit_secured.merchantName);
                     sepaMandateElement.appendChild(p);
                 });
             },
