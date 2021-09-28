@@ -27,7 +27,7 @@
 "Reference","Verwendungszweck"
 "Please transfer the amount of %1 to the following account after your order has arrived:<br /><br />Holder: %2<br/>IBAN: %3<br/>BIC: %4<br/><br/><i>Please use only this identification number as the descriptor: </i><br/>%5","Bitte überweisen Sie uns den Betrag von %1 nach Erhalt der Ware auf folgendes Konto:<br/><br/>Inhaber: %2<br/>IBAN: %3<br/>BIC: %4<br/><br/><i>Geben Sie als Verwendungszweck bitte ausschlie&szlig;lich diese Identifikationsnummer an:</i><br/>%5"
 
-"Cards","Kreditkarte / Debitkarte"
+"Credit Card / Debit Card","Kreditkarte / Debitkarte"
 "Direct Debit","SEPA Lastschrift"
 "Direct Debit Secured","SEPA Lastschrift gesichert"
 "Unzer Bank Transfer","Unzer Direktüberweisung"
