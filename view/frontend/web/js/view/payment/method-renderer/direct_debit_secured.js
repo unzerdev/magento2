@@ -21,7 +21,7 @@ define(
                     'unzer-sepa-direct-debit-secured-customer-error'
                 );
 
-                this.resourceProvider = this.sdk.SepaDirectDebit();
+                this.resourceProvider = this.sdk.SepaDirectDebitSecured();
                 this.resourceProvider.create('sepa-direct-debit-secured', {
                     containerId: 'unzer-sepa-direct-debit-secured-iban-field'
                 });
