@@ -75,8 +75,6 @@ class Callback extends AbstractPaymentAction
     {
         $this->_paymentHelper->processState($order, $payment);
 
-        $redirect = $this->resultRedirectFactory->create();
-        $redirect->setPath('checkout/onepage/success');
-        return $redirect;
+        return $this->_redirect('checkout/onepage/success/', ['_secure' => true]);
     }
 }
