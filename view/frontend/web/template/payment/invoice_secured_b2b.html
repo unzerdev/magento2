@@ -20,11 +20,6 @@
             <div id="unzer-invoice-secured-b2b-customer" class="field"></div>
             <div id="unzer-invoice-secured-b2b-customer-error" class="field" style="color: #9f3a38"></div>
             <div class="field">
-                <div class="checkout-agreements-block">
-                    <!-- ko foreach: $parent.getRegion('before-place-order') -->
-                    <!-- ko template: getTemplate() --><!-- /ko -->
-                    <!--/ko-->
-                </div>
                 <button class="unzerUI primary button fluid"
                         data-bind="
                         click: placeOrder,
@@ -37,5 +32,10 @@
                 </button>
             </div>
         </form>
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
     </div>
 </div>
