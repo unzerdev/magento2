@@ -133,7 +133,7 @@ abstract class AbstractPaymentAction extends Action
      * @param string|null $message
      * @return \Magento\Framework\Controller\Result\Redirect
      */
-    protected function abortCheckout(?string $message = Null): \Magento\Framework\Controller\Result\Redirect
+    protected function abortCheckout(?string $message = Null): ResponseInterface
     {
         $this->_checkoutSession->restoreQuote();
 
@@ -141,9 +141,6 @@ abstract class AbstractPaymentAction extends Action
             $this->messageManager->addErrorMessage($message);
         }
 
-        $redirect = $this->resultRedirectFactory->create();
-        $redirect->setPath('checkout/cart');
-
-        return $redirect;
+        return $this->_redirect('checkout/cart', ['_secure' => true]);
     }
 }
