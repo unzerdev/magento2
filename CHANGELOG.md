@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 * Switch to Unzer UI components.
 * Fixed an issue regarding inconsistent dependency of `messageManager` used in `AbstractPaymentAction`.
 * Controller uses already existing `_redirect()` method for redirects now.
+* Added necessary sources to whitelist for content security policy.
 
 ### Fix
 * `Sepa Direct Debit Secured` now uses the merchant name configured in this payment method for the sepa direct debit mandate text. Previously the merchant name configured in `Sepa Direct Debit` was used.
