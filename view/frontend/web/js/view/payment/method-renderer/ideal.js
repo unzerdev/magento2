@@ -17,7 +17,7 @@ define(
 
                 this.resourceProvider = this.sdk.Ideal();
                 this.resourceProvider.create('ideal', {
-                    containerId: 'ideal-field'
+                    containerId: 'unzer-ideal-field'
                 });
 
                 this.field.valid = ko.observable(false);

@@ -17,13 +17,8 @@
         </div>
 
         <form class="unzerUI form" novalidate>
-            <div id="sepa-direct-debit-iban-field" class="field"></div>
+            <div id="unzer-sepa-direct-debit-iban-field" class="field"></div>
             <div class="field">
-                <div class="checkout-agreements-block">
-                    <!-- ko foreach: $parent.getRegion('before-place-order') -->
-                    <!-- ko template: getTemplate() --><!-- /ko -->
-                    <!--/ko-->
-                </div>
                 <button class="unzerUI primary button fluid"
                         data-bind="
                         click: placeOrder,
@@ -39,5 +34,10 @@
                 <h3 data-bind="i18n: 'SEPA Direct Debit Mandate'"></h3>
             </div>
         </form>
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
     </div>
 </div>

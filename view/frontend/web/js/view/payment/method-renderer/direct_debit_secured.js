@@ -17,13 +17,13 @@ define(
                 var self = this;
 
                 this.initializeCustomerForm(
-                    'sepa-direct-debit-secured-customer',
-                    'sepa-direct-debit-secured-customer-error'
+                    'unzer-sepa-direct-debit-secured-customer',
+                    'unzer-sepa-direct-debit-secured-customer-error'
                 );
 
-                this.resourceProvider = this.sdk.SepaDirectDebit();
+                this.resourceProvider = this.sdk.SepaDirectDebitSecured();
                 this.resourceProvider.create('sepa-direct-debit-secured', {
-                    containerId: 'sepa-direct-debit-secured-iban-field'
+                    containerId: 'unzer-sepa-direct-debit-secured-iban-field'
                 });
 
                 this.ibanValid = ko.observable(false);
@@ -48,7 +48,7 @@ define(
 
                 sepaMandateTexts.forEach(function(text) {
                     var p = document.createElement("p");
-                    p.innerText = text.replace(/%1/g, window.checkoutConfig.payment.unzer_direct_debit.merchantName);
+                    p.innerText = text.replace(/%1/g, window.checkoutConfig.payment.unzer_direct_debit_secured.merchantName);
                     sepaMandateElement.appendChild(p);
                 });
             },
