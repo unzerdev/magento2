@@ -18,22 +18,17 @@
 
         <form class="unzerUI form" novalidate>
             <div class="field">
-                <div id="card-element-id-number" class="unzerInput"></div>
+                <div id="unzer-card-element-id-number" class="unzerInput"></div>
             </div>
             <div class="two fields">
                 <div class="field eight wide">
-                    <div id="card-element-id-expiry" class="unzerInput"></div>
+                    <div id="unzer-card-element-id-expiry" class="unzerInput"></div>
                 </div>
                 <div class="field eight wide">
-                    <div id="card-element-id-cvc" class="unzerInput"></div>
+                    <div id="unzer-card-element-id-cvc" class="unzerInput"></div>
                 </div>
             </div>
             <div class="field">
-                <div class="checkout-agreements-block">
-                    <!-- ko foreach: $parent.getRegion('before-place-order') -->
-                    <!-- ko template: getTemplate() --><!-- /ko -->
-                    <!--/ko-->
-                </div>
                 <button class="unzerUI primary button fluid"
                         data-bind="
                         click: placeOrder,
@@ -46,5 +41,10 @@
                 </button>
             </div>
         </form>
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
     </div>
 </div>

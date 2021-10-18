@@ -13,8 +13,8 @@ define(
 
             initializeForm: function () {
                 this.initializeCustomerForm(
-                    'invoice-secured-customer',
-                    'invoice-secured-customer-error'
+                    'unzer-invoice-secured-customer',
+                    'unzer-invoice-secured-customer-error'
                 );
                 this.resourceProvider = this.sdk.InvoiceSecured();
             },

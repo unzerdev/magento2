@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <value id="unzer-ui-js" type="host">https://static.unzer.com</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="unzer-payment-1" type="host">https://payment.unzer.com</value>
+                <value id="unzer-payment-2" type="host">https://payment.heidelpay.com</value>
+                <value id="unzer-api-1" type="host">https://api.unzer.com</value>
+                <value id="unzer-api-2" type="host">https://api.heidelpay.com</value>
+            </values>
+        </policy>
+        <policy id="frame-src">
+            <values>
+                <value id="unzer-frame-1" type="host">https://payment.unzer.com/</value>
+                <value id="unzer-frame-2" type="host">https://payment.heidelpay.com/</value>
+            </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <value id="unzer-fonts-src" type="host">https://static.unzer.com</value>
+            </values>
+        </policy>
+        <policy id="img-src">
+            <values>
+                <value id="unzer-img-src" type="host">https://static.unzer.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

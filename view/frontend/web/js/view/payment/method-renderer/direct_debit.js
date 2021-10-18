@@ -18,7 +18,7 @@ define(
 
                 this.resourceProvider = this.sdk.SepaDirectDebit();
                 this.resourceProvider.create('sepa-direct-debit', {
-                    containerId: 'sepa-direct-debit-iban-field'
+                    containerId: 'unzer-sepa-direct-debit-iban-field'
                 });
 
                 this.field.valid = ko.observable(false);
