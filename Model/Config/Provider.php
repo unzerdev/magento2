@@ -37,14 +37,15 @@ class Provider implements ConfigProviderInterface
      * @var array
      */
     protected $_methodCodes = [
+        Config::METHOD_BANK_TRANSFER,
         Config::METHOD_CARDS,
         Config::METHOD_DIRECT_DEBIT,
         Config::METHOD_DIRECT_DEBIT_SECURED,
-        Config::METHOD_BANK_TRANSFER,
+        Config::METHOD_GIROPAY,
         Config::METHOD_IDEAL,
         Config::METHOD_INVOICE,
-        Config::METHOD_INVOICE_SECURED_B2B,
         Config::METHOD_INVOICE_SECURED,
+        Config::METHOD_INVOICE_SECURED_B2B,
         Config::METHOD_PAYPAL,
         Config::METHOD_SOFORT,
     ];
