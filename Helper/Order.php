@@ -240,7 +240,7 @@ class Order
         $this->updateGatewayAddressFromMagento($customer->getBillingAddress(), $billingAddress);
 
         $shippingAddress = $order->getShippingAddress();
-        if($shippingAddress) {
+        if ($shippingAddress) {
             $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $shippingAddress);
         }
 
