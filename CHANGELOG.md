@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [1.1.0](https://github.com/unzerdev/magento2/compare/1.0.0..1.1.0)
 ### Added
+*   Payment method EPS.
 *   Payment method Giropay.
 
 ## [1.0.0](https://github.com/unzerdev/magento2/compare/06675c1be6009ce9f4e4cc78f8eecfc8447b2f5d..1.0.0)
