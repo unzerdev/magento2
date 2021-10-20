@@ -2,16 +2,6 @@
 
 namespace Unzer\PAPI\Model\Command;
 
-use Unzer\PAPI\Helper\Order;
-use Unzer\PAPI\Model\Config;
-use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
-use UnzerSDK\Unzer;
-use UnzerSDK\Resources\AbstractUnzerResource;
-use UnzerSDK\Resources\Customer;
-use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
-use UnzerSDK\Resources\TransactionTypes\Authorization;
-use UnzerSDK\Resources\TransactionTypes\Charge;
-use UnzerSDK\Services\ResourceNameService;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -20,9 +10,18 @@ use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order as SalesOrder;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
-use Magento\Store\Model\StoreManager;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
+use Unzer\PAPI\Helper\Order;
+use Unzer\PAPI\Model\Config;
+use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
+use UnzerSDK\Resources\AbstractUnzerResource;
+use UnzerSDK\Resources\Customer;
+use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
+use UnzerSDK\Resources\TransactionTypes\Authorization;
+use UnzerSDK\Resources\TransactionTypes\Charge;
+use UnzerSDK\Services\ResourceNameService;
+use UnzerSDK\Unzer;
 use function get_class;
 
 /**
@@ -135,13 +134,13 @@ abstract class AbstractCommand implements CommandInterface
     }
 
     /**
-     * Returns the customer ID for given current payment or quote.
+     * Returns the customer ID for given current payment or quote. Creates or update customer on Api side if needed.
+     * An UnzerApiException is thrown when customer creation/update fails.
      *
      * @param InfoInterface $payment
      * @param \Magento\Sales\Model\Order $order
+     *
      * @return string|null
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
      * @throws \UnzerSDK\Exceptions\UnzerApiException
      */
     protected function _getCustomerId(InfoInterface $payment, \Magento\Sales\Model\Order $order): ?string
@@ -150,16 +149,8 @@ abstract class AbstractCommand implements CommandInterface
         $customerId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
 
         if (empty($customerId)) {
-            try {
-                $papiCustomer = $this->_orderHelper->createCustomerFromOrder($order, $order->getCustomerEmail(), true);
-                $customerId = $papiCustomer->getId();
-            } catch (\Exception $exception) {
-                $customerId = null;
-            }
-        }
-
-        if (empty($customerId)) {
-            return null;
+            $papiCustomer = $this->_orderHelper->createCustomerFromOrder($order, $order->getCustomerEmail(), true);
+            $customerId = $papiCustomer->getId();
         }
 
         /** @var Customer $customer */
