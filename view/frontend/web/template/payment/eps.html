@@ -17,13 +17,14 @@
         </div>
 
         <form class="unzerUI form" novalidate>
+            <div id="eps-field" class="field"></div>
             <div class="field">
                 <button class="unzerUI primary button fluid"
                         data-bind="
                         click: placeOrder,
                         attr: {title: $t('Place Order')},
                         css: {disabled: !isPlaceOrderActionAllowed()},
-                        enable: (getCode() == isChecked())
+                        enable: (getCode() == isChecked() && allInputsValid())
                         "
                         type="submit">
                     <span data-bind="i18n: 'Place Order'"></span>

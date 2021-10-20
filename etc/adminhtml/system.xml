@@ -331,6 +331,31 @@
                         <config_path>payment/unzer_giropay/sort_order</config_path>
                     </field>
                 </group>
+                <group id="eps" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>UNZER_EPS</label>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/unzer_eps/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/unzer_eps/title</config_path>
+                    </field>
+                    <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Minimum Order Total</label>
+                        <config_path>payment/unzer_eps/min_order_total</config_path>
+                    </field>
+                    <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Maximum Order Total</label>
+                        <config_path>payment/unzer_eps/max_order_total</config_path>
+                        <comment>Insert 0 to disable limit.</comment>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sort Order</label>
+                        <config_path>payment/unzer_eps/sort_order</config_path>
+                    </field>
+                </group>
             </group>
         </section>
     </system>

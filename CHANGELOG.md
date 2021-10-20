@@ -5,7 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [1.1.0](https://github.com/unzerdev/magento2/compare/1.0.0..1.1.0)
 ### Added
-* Payment method Giropay.
+*   Payment method EPS.
+*   Payment method Giropay.
 
 ### Changed
 * Checkout will be aborted now if customer creation fails. The error message will be displayed in checkout.
