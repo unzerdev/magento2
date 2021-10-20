@@ -39,7 +39,7 @@
                         <label>Title</label>
                         <config_path>payment/unzer_cards/title</config_path>
                     </field>
-                    <field id="order_payment_action" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1">
+                    <field id="order_payment_action" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Booking Mode</label>
                         <config_path>payment/unzer_cards/order_payment_action</config_path>
                         <source_model>Unzer\PAPI\Model\System\Config\Source\PaymentAction</source_model>
@@ -262,7 +262,7 @@
                         <label>Title</label>
                         <config_path>payment/unzer_paypal/title</config_path>
                     </field>
-                    <field id="order_payment_action" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1">
+                    <field id="order_payment_action" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Payment Action</label>
                         <config_path>payment/unzer_paypal/order_payment_action</config_path>
                         <source_model>Unzer\PAPI\Model\System\Config\Source\PaymentAction</source_model>
