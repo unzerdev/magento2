@@ -220,24 +220,25 @@ class Order
         $client = $this->_moduleConfig->getUnzerClient();
 
         $billingAddress = $order->getBillingAddress();
+        $customer = new Customer();
 
-        /** @var Customer $customer */
-        $customer = CustomerFactory::createCustomer(
-            $billingAddress->getFirstname(),
-            $billingAddress->getLastname()
-        );
+        if ($billingAddress !== null) {
+            $customer->setFirstname($billingAddress->getFirstname())
+                ->setLastname($billingAddress->getLastname());
 
-        $gender = $order->getCustomerGender();
-        $customer->setSalutation($this->getSalutationFromGender($gender));
-        $customer->setEmail($email);
-        $customer->setPhone($billingAddress->getTelephone());
+            $customer->setPhone($billingAddress->getTelephone());
 
-        $company = $billingAddress->getCompany();
-        if (!empty($company)) {
-            $customer->setCompany($company);
+            $company = $billingAddress->getCompany();
+            if (!empty($company)) {
+                $customer->setCompany($company);
+            }
+
+            $gender = $order->getCustomerGender();
+            $customer->setSalutation($this->getSalutationFromGender($gender));
+            $customer->setEmail($email);
+
+            $this->updateGatewayAddressFromMagento($customer->getBillingAddress(), $billingAddress);
         }
-
-        $this->updateGatewayAddressFromMagento($customer->getBillingAddress(), $billingAddress);
 
         $shippingAddress = $order->getShippingAddress();
         if ($shippingAddress) {
