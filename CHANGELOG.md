@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Changed
 * Checkout will be aborted now if customer creation fails. The error message will be displayed in checkout.
 * Allow configuration of booking mode on store level for "Credit Card / Debit Card" and "PayPal".
+* If possible, display a more descriptive message to the customer if card submission fails.
 
 ## [1.0.0](https://github.com/unzerdev/magento2/compare/06675c1be6009ce9f4e4cc78f8eecfc8447b2f5d..1.0.0)
 ### Changed
