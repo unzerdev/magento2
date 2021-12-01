@@ -169,8 +169,13 @@ define(
                                 deferred.reject(request.responseJSON.message);
                             });
                     },
-                    function () {
-                        deferred.reject($t("There was an error placing your order"));
+                    function (error) {
+                        let customerMessage = "";
+                        try {
+                            customerMessage = error.message;
+                        } catch (e) {}
+
+                        deferred.reject($t("There was an error placing your order. " + customerMessage));
                     }
                 );
 

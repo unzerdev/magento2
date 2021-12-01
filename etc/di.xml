@@ -106,6 +106,7 @@
         </arguments>
     </type>
 
+    <!--    Define types for Cards payment method-->
     <virtualType name="UnzerCardsConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_CARDS</argument>
@@ -155,6 +156,7 @@
         </arguments>
     </type>
 
+    <!--    Define types for DirectDebit payment method -->
     <virtualType name="UnzerDirectDebitConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_DIRECT_DEBIT</argument>
@@ -204,6 +206,7 @@
         </arguments>
     </type>
 
+    <!--    Define types for DirectDebitSecured payment method  -->
     <virtualType name="UnzerDirectDebitSecuredConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_DIRECT_DEBIT_SECURED</argument>
@@ -253,6 +256,7 @@
         </arguments>
     </type>
 
+    <!--    Define types for BankTransfer payment method  -->
     <virtualType name="UnzerBankTransferConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_BANK_TRANSFER</argument>
@@ -302,6 +306,7 @@
         </arguments>
     </type>
 
+    <!--    Define types for Ideal payment method  -->
     <virtualType name="UnzerIdealConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_IDEAL</argument>
@@ -351,6 +356,7 @@
         </arguments>
     </type>
 
+    <!--    Define types for Invoice payment method  -->
     <virtualType name="UnzerInvoiceConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE</argument>
@@ -401,6 +407,7 @@
         </arguments>
     </type>
 
+    <!--    Define types for InvoiceSecuredB2b payment method  -->
     <virtualType name="UnzerInvoiceSecuredB2bConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_SECURED_B2B</argument>
@@ -451,6 +458,7 @@
         </arguments>
     </type>
 
+    <!--    Define types for InvoiceSecured payment method  -->
     <virtualType name="UnzerInvoiceSecuredConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_SECURED</argument>
@@ -501,6 +509,7 @@
         </arguments>
     </type>
 
+    <!--    Define types for PayPal payment method  -->
     <virtualType name="UnzerPaypalConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_PAYPAL</argument>
@@ -550,6 +559,7 @@
         </arguments>
     </type>
 
+    <!--    Define types for Sofort payment method-->
     <virtualType name="UnzerSofortConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_SOFORT</argument>
@@ -595,6 +605,106 @@
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">UnzerSofortValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">UnzerSofortValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
+        </arguments>
+    </type>
+
+    <!--    Define types for Giropay payment method-->
+    <virtualType name="UnzerGiropayConfig" type="Unzer\PAPI\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_GIROPAY</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerGiropayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerGiropayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerGiropayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerGiropayConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerGiropayValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerGiropayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerGiropayValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">UnzerGiropayValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Unzer\PAPI\Model\Method\Giropay">
+        <arguments>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_GIROPAY</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerGiropayValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerGiropayValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
+        </arguments>
+    </type>
+
+    <!--    Define types for EPS payment method-->
+    <virtualType name="UnzerEPSConfig" type="Unzer\PAPI\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_EPS</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerEPSConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerEPSConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerEPSValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerEPSConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerEPSValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerEPSConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerEPSValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">UnzerEPSValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Unzer\PAPI\Model\Method\EPS">
+        <arguments>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_EPS</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerEPSValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerEPSValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>

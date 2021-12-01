@@ -40,17 +40,19 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     const KEY_PRIVATE_KEY = 'private_key';
     const KEY_LOGGING = 'logging';
 
-    const METHOD_BASE = 'unzer';
-    const METHOD_CARDS = 'unzer_cards';
-    const METHOD_DIRECT_DEBIT = 'unzer_direct_debit';
-    const METHOD_DIRECT_DEBIT_SECURED = 'unzer_direct_debit_secured';
-    const METHOD_BANK_TRANSFER = 'unzer_bank_transfer';
-    const METHOD_IDEAL = 'unzer_ideal';
-    const METHOD_INVOICE = 'unzer_invoice';
-    const METHOD_INVOICE_SECURED_B2B = 'unzer_invoice_secured_b2b';
-    const METHOD_INVOICE_SECURED = 'unzer_invoice_secured';
-    const METHOD_PAYPAL = 'unzer_paypal';
-    const METHOD_SOFORT = 'unzer_sofort';
+    public const METHOD_BASE = 'unzer';
+    public const METHOD_CARDS = 'unzer_cards';
+    public const METHOD_DIRECT_DEBIT = 'unzer_direct_debit';
+    public const METHOD_DIRECT_DEBIT_SECURED = 'unzer_direct_debit_secured';
+    public const METHOD_EPS = 'unzer_eps';
+    public const METHOD_GIROPAY = 'unzer_giropay';
+    public const METHOD_BANK_TRANSFER = 'unzer_bank_transfer';
+    public const METHOD_IDEAL = 'unzer_ideal';
+    public const METHOD_INVOICE = 'unzer_invoice';
+    public const METHOD_INVOICE_SECURED_B2B = 'unzer_invoice_secured_b2b';
+    public const METHOD_INVOICE_SECURED = 'unzer_invoice_secured';
+    public const METHOD_PAYPAL = 'unzer_paypal';
+    public const METHOD_SOFORT = 'unzer_sofort';
 
     /**
      * @var DebugHandlerInterface
