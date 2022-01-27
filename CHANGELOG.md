@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Changed
 * If no, or invalid keys are configured payment methods are not active in checkout.
 * Update broken documentation links in readme.
+* Set minimum php-sdk version [1.1.4.2](https://github.com/unzerdev/php-sdk/releases/tag/1.1.4.2).
 * Several minor improvements.
 
 ### Fix
