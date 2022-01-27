@@ -41,10 +41,6 @@ use Psr\Log\LoggerInterface;
  */
 class Invoice extends Base
 {
-    /**
-     * @var Config
-     */
-    protected $_moduleConfig;
 
     /**
      * @var PriceCurrencyInterface
@@ -90,13 +86,13 @@ class Invoice extends Base
             $formBlockType,
             $infoBlockType,
             $scopeConfig,
+            $moduleConfig,
             $commandPool,
             $validatorPool,
             $commandExecutor,
             $logger
         );
 
-        $this->_moduleConfig = $moduleConfig;
         $this->_priceCurrency = $priceCurrency;
     }
 

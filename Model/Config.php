@@ -108,9 +108,9 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * Returns the public key.
      *
      * @param string|null $storeId
-     * @return string
+     * @return string|null
      */
-    public function getPublicKey(string $storeId = null): string
+    public function getPublicKey(string $storeId = null): ?string
     {
         return $this->_scopeConfig->getValue(
             self::BASE_CONFIGURATION_PATH . self::KEY_PUBLIC_KEY,
@@ -123,9 +123,9 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * Returns the private key.
      *
      * @param string|null $storeId
-     * @return string
+     * @return string|null
      */
-    public function getPrivateKey(string $storeId = null): string
+    public function getPrivateKey(string $storeId = null): ?string
     {
         return $this->_scopeConfig->getValue(
             self::BASE_CONFIGURATION_PATH . self::KEY_PRIVATE_KEY,

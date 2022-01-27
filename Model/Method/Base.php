@@ -13,6 +13,9 @@ use Magento\Payment\Model\Method\Adapter;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface;
+use Unzer\PAPI\Model\Config;
+use UnzerSDK\Validators\PrivateKeyValidator;
+use UnzerSDK\Validators\PublicKeyValidator;
 
 /**
  * Abstract base payment method
@@ -43,6 +46,10 @@ class Base extends Adapter
      * @var ScopeConfigInterface
      */
     protected $_scopeConfig;
+    /**
+     * @var Config
+     */
+    protected $_moduleConfig;
 
     /**
      * Base constructor.
@@ -66,6 +73,7 @@ class Base extends Adapter
         $formBlockType,
         $infoBlockType,
         ScopeConfigInterface $scopeConfig,
+        Config $moduleConfig,
         CommandPoolInterface $commandPool = null,
         ValidatorPoolInterface $validatorPool = null,
         CommandManagerInterface $commandExecutor = null,
@@ -86,6 +94,7 @@ class Base extends Adapter
         );
 
         $this->_scopeConfig = $scopeConfig;
+        $this->_moduleConfig = $moduleConfig;
     }
 
     /**
@@ -124,8 +133,15 @@ class Base extends Adapter
      */
     public function isAvailable(CartInterface $quote = null)
     {
+        $moduleConfig = $this->_moduleConfig;
         if ($quote === null) {
             return parent::isAvailable($quote);
+        }
+
+        $isPrivateKeyValid = PrivateKeyValidator::validate($moduleConfig->getPrivateKey());
+        $isPublicKeyValid = PublicKeyValidator::validate($moduleConfig->getPublicKey());
+        if (!$isPrivateKeyValid || !$isPublicKeyValid) {
+            return false;
         }
 
         if ($quote->getIsVirtual() && $this->isSecured()) {
