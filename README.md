@@ -28,7 +28,7 @@ Currently supported payment methods are:
 This extension requires PHP 7.1, PHP 7.2, PHP 7.3 or PHP 7.4. 
 It also depends on the unzerdev/php-sdk, which will be installed along with the plugin.
 
-Please refer to the additional requirements listed under [System Requirement](https://docs.unzer.com/server-side-integration/php-sdk-integration/php-installation/#system-requirements) (et seq.).
+Please refer to the additional requirements listed under [System Requirements](https://docs.unzer.com/server-side-integration/php-sdk-integration/php-installation/#system-requirements) (et seq.).
 
 ## LICENSE
 Copyright (C) 2021 - today Unzer GmbH
@@ -46,7 +46,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ## User Guide
-Please find information on installation, configuration and usage within the [manual](https://docs.unzer.com/plugins/magento-2)
+Please find information on installation, configuration and usage within the [manual](https://docs.unzer.com/plugins/magento-2).
 
 ## Support
 For any issues or questions please get in touch with our support.
