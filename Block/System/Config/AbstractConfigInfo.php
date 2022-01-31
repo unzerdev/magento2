@@ -10,7 +10,7 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
- * Adminhtml Webhook Configuration Buttons Block
+ * Adminhtml Abstract Info Block
  *
  * Copyright (C) 2021 - today Unzer GmbH
  *
