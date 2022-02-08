@@ -4,9 +4,17 @@
         <section id="payment">
             <group id="unzer" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>UNZER_PAYMENTS</label>
-                <comment>
-                    <![CDATA[UNZER_ABOUT_US]]>
-                </comment>
+                <group id="info" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>UNZER_INFO_LABEL</label>
+                    <field id="version" translate="label" type="note" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="0">
+                        <label>MODULE_VERSION_LABEL</label>
+                        <frontend_model>Unzer\PAPI\Block\System\Config\Version</frontend_model>
+                    </field>
+                    <field id="about_unzer" translate="label" type="note" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="0">
+                        <label>ABOUT_UNZER_LABEL</label>
+                        <frontend_model>Unzer\PAPI\Block\System\Config\AboutUs</frontend_model>
+                    </field>
+                </group>
                 <group id="global" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>UNZER_MAIN</label>
                     <field id="public_key" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="1">
