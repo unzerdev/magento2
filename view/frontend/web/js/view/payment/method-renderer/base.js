@@ -54,6 +54,10 @@ define(
             initializeCustomerForm: function (fieldId, errorFieldId) {
                 var self = this;
 
+                if (this.customer._latestValue !== null) {
+                    self._initializeCustomerForm(fieldId, errorFieldId);
+                }
+
                 self.customerSubscription = this.customer.subscribe(function(customer) {
                     if (customer === null) {
                         return;
