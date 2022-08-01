@@ -54,7 +54,7 @@ define(
             initializeCustomerForm: function (fieldId, errorFieldId) {
                 var self = this;
 
-                if (this.customer._latestValue !== null) {
+                if (this.customer() !== null) {
                     self._initializeCustomerForm(fieldId, errorFieldId);
                 }
 
