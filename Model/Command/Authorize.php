@@ -52,10 +52,16 @@ class Authorize extends AbstractCommand
         /** @var string $resourceId */
         $resourceId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_RESOURCE_ID);
 
+        $currency =  $order->getBaseCurrencyCode();
+        if($this->_config->getTransmitCurrency($order->getStore()->getCode()) === $this->_config::CURRENCY_CUSTOMER) {
+            $currency = $order->getOrderCurrencyCode();
+            $amount = (float)$order->getTotalDue();
+        }
+
         try {
             $authorization = $this->_getClient()->authorize(
                 $amount,
-                $order->getOrderCurrencyCode(),
+                $currency,
                 $resourceId,
                 $this->_getCallbackUrl(),
                 $this->_getCustomerId($payment, $order),
