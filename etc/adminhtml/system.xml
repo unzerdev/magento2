@@ -29,6 +29,12 @@
                         <label>Webhooks</label>
                         <frontend_model>Unzer\PAPI\Block\System\Config\WebhooksButtons</frontend_model>
                     </field>
+                    <field id="currency" translate="label,hint" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Currency</label>
+                        <source_model>Unzer\PAPI\Model\Source\Currency</source_model>
+                        <comment>Transmit payment information using the selected currency</comment>
+                        <config_path>payment/unzer/currency</config_path>
+                    </field>
                     <field id="logging" translate="label,comment" type="select" sortOrder="50"  showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Logging and Debugging</label>
                         <comment>The SDK provides error and debug information which you can catch and write to your log.</comment>
@@ -362,6 +368,131 @@
                     <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Sort Order</label>
                         <config_path>payment/unzer_eps/sort_order</config_path>
+                    </field>
+                </group>
+                <group id="alipay" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>UNZER_ALIPAY</label>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/unzer_alipay/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/unzer_alipay/title</config_path>
+                    </field>
+                    <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Minimum Order Total</label>
+                        <config_path>payment/unzer_alipay/min_order_total</config_path>
+                    </field>
+                    <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Maximum Order Total</label>
+                        <config_path>payment/unzer_alipay/max_order_total</config_path>
+                        <comment>Insert 0 to disable limit.</comment>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sort Order</label>
+                        <config_path>payment/unzer_alipay/sort_order</config_path>
+                    </field>
+                </group>
+                <group id="wechatpay" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>UNZER_WECHATPAY</label>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/unzer_wechatpay/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/unzer_wechatpay/title</config_path>
+                    </field>
+                    <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Minimum Order Total</label>
+                        <config_path>payment/unzer_wechatpay/min_order_total</config_path>
+                    </field>
+                    <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Maximum Order Total</label>
+                        <config_path>payment/unzer_wechatpay/max_order_total</config_path>
+                        <comment>Insert 0 to disable limit.</comment>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sort Order</label>
+                        <config_path>payment/unzer_wechatpay/sort_order</config_path>
+                    </field>
+                </group>
+                <group id="przelewy24" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>UNZER_PRZELEWY24</label>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/unzer_przelewy24/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/unzer_przelewy24/title</config_path>
+                    </field>
+                    <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Minimum Order Total</label>
+                        <config_path>payment/unzer_przelewy24/min_order_total</config_path>
+                    </field>
+                    <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Maximum Order Total</label>
+                        <config_path>payment/unzer_przelewy24/max_order_total</config_path>
+                        <comment>Insert 0 to disable limit.</comment>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sort Order</label>
+                        <config_path>payment/unzer_przelewy24/sort_order</config_path>
+                    </field>
+                </group>
+                <group id="bancontact" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>UNZER_BANCONTACT</label>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/unzer_bancontact/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/unzer_bancontact/title</config_path>
+                    </field>
+                    <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Minimum Order Total</label>
+                        <config_path>payment/unzer_bancontact/min_order_total</config_path>
+                    </field>
+                    <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Maximum Order Total</label>
+                        <config_path>payment/unzer_bancontact/max_order_total</config_path>
+                        <comment>Insert 0 to disable limit.</comment>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sort Order</label>
+                        <config_path>payment/unzer_bancontact/sort_order</config_path>
+                    </field>
+                </group>
+                <group id="prepayment" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>UNZER_PREPAYMENT</label>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/unzer_prepayment/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/unzer_prepayment/title</config_path>
+                    </field>
+                    <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Minimum Order Total</label>
+                        <config_path>payment/unzer_prepayment/min_order_total</config_path>
+                    </field>
+                    <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Maximum Order Total</label>
+                        <config_path>payment/unzer_prepayment/max_order_total</config_path>
+                        <comment>Insert 0 to disable limit.</comment>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sort Order</label>
+                        <config_path>payment/unzer_prepayment/sort_order</config_path>
                     </field>
                 </group>
             </group>

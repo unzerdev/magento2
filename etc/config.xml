@@ -7,6 +7,7 @@
                 <private_key></private_key>
                 <model>Unzer\PAPI\Model\Method\Base</model>
                 <logging>0</logging>
+                <currency>customer</currency>
             </unzer>
             <unzer_cards>
                 <active>0</active>
@@ -197,6 +198,86 @@
                 <country_restrictions>AT</country_restrictions>
                 <model>Unzer\PAPI\Model\Method\EPS</model>
             </unzer_eps>
+            <unzer_alipay>
+                <active>0</active>
+                <payment_action>order</payment_action>
+                <order_payment_action>authorize_capture</order_payment_action>
+                <title><![CDATA[Alipay]]></title>
+                <allowspecific>0</allowspecific>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <can_authorize>0</can_authorize>
+                <can_capture>1</can_capture>
+                <can_order>1</can_order>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <country_restrictions>DE,AT,BE,IT,ES,NL</country_restrictions>
+                <model>Unzer\PAPI\Model\Method\Alipay</model>
+            </unzer_alipay>
+            <unzer_wechatpay>
+                <active>0</active>
+                <payment_action>order</payment_action>
+                <order_payment_action>authorize_capture</order_payment_action>
+                <title><![CDATA[WeChat Pay]]></title>
+                <allowspecific>0</allowspecific>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <can_authorize>0</can_authorize>
+                <can_capture>1</can_capture>
+                <can_order>1</can_order>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <country_restrictions>AT,BE,DK,FI,FR,DE,ES,GB,GR,HU,IE,IS,IT,LI,LU,MT,NL,NO,PT,SE</country_restrictions>
+                <model>Unzer\PAPI\Model\Method\Wechatpay</model>
+            </unzer_wechatpay>
+            <unzer_przelewy24>
+                <active>0</active>
+                <payment_action>order</payment_action>
+                <order_payment_action>authorize_capture</order_payment_action>
+                <title><![CDATA[Przelewy24]]></title>
+                <allowspecific>0</allowspecific>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <can_authorize>0</can_authorize>
+                <can_capture>1</can_capture>
+                <can_order>1</can_order>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <country_restrictions>PL</country_restrictions>
+                <model>Unzer\PAPI\Model\Method\Przelewy24</model>
+            </unzer_przelewy24>
+            <unzer_bancontact>
+                <active>0</active>
+                <payment_action>order</payment_action>
+                <order_payment_action>authorize_capture</order_payment_action>
+                <title><![CDATA[Bancontact]]></title>
+                <allowspecific>0</allowspecific>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <can_authorize>0</can_authorize>
+                <can_capture>1</can_capture>
+                <can_order>1</can_order>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <country_restrictions>BE</country_restrictions>
+                <model>Unzer\PAPI\Model\Method\Bancontact</model>
+            </unzer_bancontact>
+            <unzer_prepayment>
+                <active>0</active>
+                <payment_action>order</payment_action>
+                <order_payment_action>authorize_capture</order_payment_action>
+                <title><![CDATA[Unzer Prepayment]]></title>
+                <allowspecific>0</allowspecific>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <can_authorize>0</can_authorize>
+                <can_capture>1</can_capture>
+                <can_order>1</can_order>
+                <can_void>1</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <model>Unzer\PAPI\Model\Method\Prepayment</model>
+            </unzer_prepayment>
         </payment>
     </default>
 </config>

@@ -56,6 +56,26 @@ define(
             {
                 type: 'unzer_eps',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/eps'
+            },
+            {
+                type: 'unzer_alipay',
+                    component: 'Unzer_PAPI/js/view/payment/method-renderer/alipay'
+            },
+            {
+                type: 'unzer_wechatpay',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/wechatpay'
+            },
+            {
+                type: 'unzer_przelewy24',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/przelewy24'
+            },
+            {
+                type: 'unzer_bancontact',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/bancontact'
+            },
+            {
+                type: 'unzer_prepayment',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/prepayment'
             }
         );
         return Component.extend({});

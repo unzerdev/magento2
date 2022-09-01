@@ -7,9 +7,9 @@
 
 ![Logo](unzer_logo.svg)
 
-# Payment extension for Magento2 and Unzer Payment API (PAPI)  
+# Payment extension for Magento2 and Unzer Payment API (PAPI)
 
-This extension for Magento2 provides a direct integration of the Unzer payment methods to your Magento2 shop. 
+This extension for Magento2 provides a direct integration of the Unzer payment methods to your Magento2 shop.
 
 Currently supported payment methods are:
 * Cards (Credit Card / Debit Card)
@@ -24,9 +24,14 @@ Currently supported payment methods are:
 * Unzer Invoice
 * Unzer Invoice secured B2B
 * Unzer Invoice secured B2C
+* Unzer Prepayment
+* Bancontact
+* Przelewy
+* Alipay
+* Wechat
 
 ## SYSTEM REQUIREMENTS
-This extension requires PHP 7.1, PHP 7.2, PHP 7.3, PHP 7.4 or PHP 8.1. 
+This extension requires PHP 7.1, PHP 7.2, PHP 7.3, PHP 7.4 or PHP 8.1.
 It also depends on the unzerdev/php-sdk, which will be installed along with the plugin.
 
 Please refer to the additional requirements listed under [System Requirements](https://docs.unzer.com/server-side-integration/php-sdk-integration/php-installation/#system-requirements) (et seq.).
@@ -55,10 +60,10 @@ For any issues or questions please get in touch with our support.
 #### Web pages
 * https://unzer.com/
 * https://docs.unzer.com/
- 
+
 #### Email
 support@unzer.com
- 
+
 #### Phone
 +49 (0)6221/6471-100
 
