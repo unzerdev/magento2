@@ -93,9 +93,9 @@ class Capture extends AbstractCommand
 
         try {
             if ($paymentId !== null) {
-                $charge = $this->_chargeExisting($paymentId, $amount, $storeCode);
+                $charge = $this->_chargeExisting($order, $paymentId, $amount, $storeCode);
             } else {
-                $charge = $this->_chargeNew($payment, $amount);
+                $charge = $this->_chargeNew($order, $payment, $amount);
                 $order->addCommentToStatusHistory('Unzer paymentId: ' . $charge->getPaymentId());
             }
         } catch (UnzerApiException $e) {
@@ -116,15 +116,20 @@ class Capture extends AbstractCommand
     /**
      * Charges an existing payment.
      *
+     * @param Order $order
      * @param string $paymentId
      * @param float $amount
      * @param string|null $storeId
      * @return Charge
      * @throws UnzerApiException
      */
-    protected function _chargeExisting(string $paymentId, float $amount, string $storeId = null): Charge
+    protected function _chargeExisting(Order $order, string $paymentId, float $amount, string $storeId = null): Charge
     {
         $payment = $this->_getClient($storeId)->fetchPayment($paymentId);
+
+        if($this->_config->getTransmitCurrency($order->getStore()->getCode()) === $this->_config::CURRENCY_CUSTOMER) {
+            $amount = (float)$order->getTotalDue();
+        }
 
         /** @var Authorization|null $authorization */
         $authorization = $payment->getAuthorization();
@@ -139,6 +144,7 @@ class Capture extends AbstractCommand
     /**
      * Charges a new payment.
      *
+     * @param Order $order
      * @param InfoInterface $payment
      * @param float $amount
      * @return Charge
@@ -146,19 +152,22 @@ class Capture extends AbstractCommand
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    protected function _chargeNew(InfoInterface $payment, float $amount): Charge
+    protected function _chargeNew(Order $order, InfoInterface $payment, float $amount): Charge
     {
-        /** @var Order $order */
-        $order = $payment->getOrder();
-
         $storeId = $order->getStoreId();
 
         /** @var string $resourceId */
         $resourceId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_RESOURCE_ID);
 
+        $currency =  $order->getBaseCurrencyCode();
+        if($this->_config->getTransmitCurrency($order->getStore()->getCode()) === $this->_config::CURRENCY_CUSTOMER) {
+            $currency = $order->getOrderCurrencyCode();
+            $amount = (float)$order->getTotalDue();
+        }
+
         return $this->_getClient($storeId)->charge(
             $amount,
-            $order->getOrderCurrencyCode(),
+            $currency,
             $resourceId,
             $this->_getCallbackUrl(),
             $this->_getCustomerId($payment, $order),

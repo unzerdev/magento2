@@ -34,11 +34,15 @@ use Magento\Store\Model\ScopeInterface;
  */
 class Config extends \Magento\Payment\Gateway\Config\Config
 {
-    const BASE_CONFIGURATION_PATH = 'payment/unzer/';
+    public const BASE_CONFIGURATION_PATH = 'payment/unzer/';
 
-    const KEY_PUBLIC_KEY = 'public_key';
-    const KEY_PRIVATE_KEY = 'private_key';
-    const KEY_LOGGING = 'logging';
+    public const KEY_PUBLIC_KEY = 'public_key';
+    public const KEY_PRIVATE_KEY = 'private_key';
+    public const KEY_LOGGING = 'logging';
+    public const KEY_CURRENCY = 'currency';
+
+    public const CURRENCY_BASE = 'base';
+    public const CURRENCY_CUSTOMER = 'customer';
 
     public const METHOD_BASE = 'unzer';
     public const METHOD_CARDS = 'unzer_cards';
@@ -53,6 +57,11 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public const METHOD_INVOICE_SECURED = 'unzer_invoice_secured';
     public const METHOD_PAYPAL = 'unzer_paypal';
     public const METHOD_SOFORT = 'unzer_sofort';
+    public const METHOD_ALIPAY = 'unzer_alipay';
+    public const METHOD_WECHATPAY = 'unzer_wechatpay';
+    public const METHOD_PRZELEWY24 = 'unzer_przelewy24';
+    public const METHOD_BANCONTACT = 'unzer_bancontact';
+    public const METHOD_PREPAYMENT = 'unzer_prepayment';
 
     /**
      * @var DebugHandlerInterface
@@ -151,5 +160,14 @@ class Config extends \Magento\Payment\Gateway\Config\Config
         $client->setDebugHandler($this->_debugHandler);
 
         return $client;
+    }
+
+    public function getTransmitCurrency(string $storeId = null): string
+    {
+        return $this->_scopeConfig->getValue(
+            self::BASE_CONFIGURATION_PATH . self::KEY_CURRENCY,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
     }
 }
