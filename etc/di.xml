@@ -708,4 +708,254 @@
             <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>
+
+    <!--    Define types for Alipay payment method  -->
+    <virtualType name="UnzerAlipayConfig" type="Unzer\PAPI\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_ALIPAY</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerAlipayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerAlipayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerAlipayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerAlipayConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerAlipayValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerAlipayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerAlipayValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">UnzerAlipayValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Unzer\PAPI\Model\Method\Alipay">
+        <arguments>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_ALIPAY</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerAlipayValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerAlipayValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
+        </arguments>
+    </type>
+
+    <!--    Define types for WeChat Pay payment method  -->
+    <virtualType name="UnzerWechatpayConfig" type="Unzer\PAPI\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_WECHATPAY</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerWechatpayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerWechatpayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerWechatpayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerWechatpayConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerWechatpayValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerWechatpayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerWechatpayValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">UnzerWechatpayValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Unzer\PAPI\Model\Method\Wechatpay">
+        <arguments>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_WECHATPAY</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerWechatpayValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerWechatpayValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
+        </arguments>
+    </type>
+
+    <!--    Define types for Przelewy24 payment method-->
+    <virtualType name="UnzerPrzelewy24Config" type="Unzer\PAPI\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_PRZELEWY24</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerPrzelewy24ConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerPrzelewy24Config</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerPrzelewy24ValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerPrzelewy24ConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerPrzelewy24ValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerPrzelewy24Config</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerPrzelewy24ValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">UnzerPrzelewy24ValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Unzer\PAPI\Model\Method\Przelewy24">
+        <arguments>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_PRZELEWY24</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerPrzelewy24ValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerPrzelewy24ValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
+        </arguments>
+    </type>
+
+    <!--    Define types for Bancontact payment method-->
+    <virtualType name="UnzerBancontactConfig" type="Unzer\PAPI\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_BANCONTACT</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerBancontactConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerBancontactConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerBancontactValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerBancontactConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerBancontactValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerBancontactConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerBancontactValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">UnzerBancontactValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Unzer\PAPI\Model\Method\Bancontact">
+        <arguments>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_BANCONTACT</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerBancontactValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerBancontactValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
+        </arguments>
+    </type>
+
+    <!--    Define types for Prepayment payment method-->
+    <virtualType name="UnzerPrepaymentConfig" type="Unzer\PAPI\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_PREPAYMENT</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerPrepaymentConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerPrepaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerPrepaymentValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerPrepaymentConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerPrepaymentValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerPrepaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerPrepaymentValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">UnzerPrepaymentValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Unzer\PAPI\Model\Method\Prepayment">
+        <arguments>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_PREPAYMENT</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Unzer\PAPI\Block\Info\Prepayment</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerPrepaymentValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerPrepaymentValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
+        </arguments>
+    </type>
 </config>

@@ -45,8 +45,8 @@ use Magento\Sales\Model\Order as OrderModel;
  */
 class Order
 {
-    const GENDER_MALE = 1;
-    const GENDER_FEMALE = 2;
+    public const GENDER_MALE = 1;
+    public const GENDER_FEMALE = 2;
 
     /**
      * @var Config
@@ -90,19 +90,35 @@ class Order
      */
     public function createBasketForOrder(OrderModel $order): Basket
     {
+        $transmitInCustomerCurrency = $this->_moduleConfig->getTransmitCurrency($order->getStore()->getCode()) === $this->_moduleConfig::CURRENCY_CUSTOMER;
+
         $basket = new Basket();
-        $basket->setAmountTotalGross($order->getGrandTotal());
-        $basket->setAmountTotalDiscount(abs($order->getDiscountAmount()));
-        $basket->setCurrencyCode($order->getOrderCurrencyCode());
+        if($transmitInCustomerCurrency) {
+            $basket->setAmountTotalGross($order->getGrandTotal());
+            $basket->setAmountTotalDiscount(abs($order->getDiscountAmount()));
+            $basket->setCurrencyCode($order->getOrderCurrencyCode());
+        } else {
+            $basket->setAmountTotalGross($order->getBaseGrandTotal());
+            $basket->setAmountTotalDiscount(abs($order->getBaseDiscountAmount()));
+            $basket->setCurrencyCode($order->getBaseCurrencyCode());
+        }
         $basket->setOrderId($order->getIncrementId());
 
         if ($order->getShippingAmount() > 0) {
             $basketItem = new BasketItem();
-            $basketItem->setAmountNet($order->getShippingAmount());
-            $basketItem->setAmountDiscount(abs($order->getShippingDiscountAmount()));
-            $basketItem->setAmountGross($order->getShippingInclTax());
-            $basketItem->setAmountPerUnit($order->getShippingInclTax());
-            $basketItem->setAmountVat($order->getShippingTaxAmount());
+            if($transmitInCustomerCurrency) {
+                $basketItem->setAmountNet($order->getShippingAmount());
+                $basketItem->setAmountDiscount(abs($order->getShippingDiscountAmount()));
+                $basketItem->setAmountGross($order->getShippingInclTax());
+                $basketItem->setAmountPerUnit($order->getShippingInclTax());
+                $basketItem->setAmountVat($order->getShippingTaxAmount());
+            } else {
+                $basketItem->setAmountNet($order->getBaseShippingAmount());
+                $basketItem->setAmountDiscount(abs($order->getBaseShippingDiscountAmount()));
+                $basketItem->setAmountGross($order->getBaseShippingInclTax());
+                $basketItem->setAmountPerUnit($order->getBaseShippingInclTax());
+                $basketItem->setAmountVat($order->getBaseShippingTaxAmount());
+            }
             $basketItem->setTitle('Shipment');
             $basketItem->setType(BasketItemTypes::SHIPMENT);
 
@@ -118,17 +134,30 @@ class Order
                 continue;
             }
 
-            $totalInclTax = $orderItem->getRowTotalInclTax();
-            if ($totalInclTax === null) {
-                $totalInclTax = $orderItem->getRowTotal();
-            }
-
             $basketItem = new BasketItem();
-            $basketItem->setAmountNet($orderItem->getRowTotal());
-            $basketItem->setAmountDiscount(abs($orderItem->getDiscountAmount()));
-            $basketItem->setAmountGross($totalInclTax);
-            $basketItem->setAmountPerUnit($orderItem->getPrice());
-            $basketItem->setAmountVat($orderItem->getTaxAmount());
+            if($transmitInCustomerCurrency) {
+                $totalInclTax = $orderItem->getRowTotalInclTax();
+                if ($totalInclTax === null) {
+                    $totalInclTax = $orderItem->getRowTotal();
+                }
+
+                $basketItem->setAmountNet($orderItem->getRowTotal());
+                $basketItem->setAmountDiscount(abs($orderItem->getDiscountAmount()));
+                $basketItem->setAmountGross($totalInclTax);
+                $basketItem->setAmountPerUnit($orderItem->getPrice());
+                $basketItem->setAmountVat($orderItem->getTaxAmount());
+            } else {
+                $totalInclTax = $orderItem->getBaseRowTotalInclTax();
+                if ($totalInclTax === null) {
+                    $totalInclTax = $orderItem->getBaseRowTotal();
+                }
+
+                $basketItem->setAmountNet($orderItem->getBaseRowTotal());
+                $basketItem->setAmountDiscount(abs($orderItem->getBaseDiscountAmount()));
+                $basketItem->setAmountGross($totalInclTax);
+                $basketItem->setAmountPerUnit($orderItem->getBasePrice());
+                $basketItem->setAmountVat($orderItem->getBaseTaxAmount());
+            }
             $basketItem->setQuantity($orderItem->getQtyOrdered());
             $basketItem->setTitle($orderItem->getName());
             $basketItem->setType($orderItem->getIsVirtual() ? BasketItemTypes::DIGITAL : BasketItemTypes::GOODS);

@@ -36,4 +36,19 @@
     <event name="payment_method_assign_data_unzer_eps">
         <observer name="unzer_eps_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
+    <event name="payment_method_assign_data_unzer_alipay">
+        <observer name="unzer_alipay_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    </event>
+    <event name="payment_method_assign_data_unzer_wechatpay">
+        <observer name="unzer_wechatpay_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    </event>
+    <event name="payment_method_assign_data_unzer_przelewy24">
+        <observer name="unzer_przelewy24_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    </event>
+    <event name="payment_method_assign_data_unzer_bancontact">
+        <observer name="unzer_bancontact_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    </event>
+    <event name="payment_method_assign_data_unzer_prepayment">
+        <observer name="unzer_prepayment_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    </event>
 </config>

@@ -2,10 +2,6 @@
 
 namespace Unzer\PAPI\Model\Method;
 
-use Unzer\PAPI\Model\Config;
-use UnzerSDK\Exceptions\UnzerApiException;
-use UnzerSDK\Resources\Payment;
-use UnzerSDK\Resources\TransactionTypes\Charge;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
@@ -16,9 +12,12 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectFactory;
 use Magento\Payment\Gateway\Validator\ValidatorPoolInterface;
 use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface;
+use Unzer\PAPI\Model\Config;
+use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\TransactionTypes\Charge;
 
 /**
- * Invoice payment method
+ * Prepayment payment method
  *
  * Copyright (C) 2021 - today Unzer GmbH
  *
@@ -36,17 +35,16 @@ use Psr\Log\LoggerInterface;
  *
  * @link  https://docs.unzer.com/
  *
- * @author Justin Nuß
+ * @author magento@neusta.de
  *
  * @package  unzerdev/magento2
  */
-class Invoice extends Base
+class Prepayment extends Base
 {
-
     /**
      * @var PriceCurrencyInterface
      */
-    protected $_priceCurrency;
+    private $priceCurrency;
 
     /**
      * Base constructor.
@@ -79,22 +77,9 @@ class Invoice extends Base
         CommandManagerInterface $commandExecutor = null,
         LoggerInterface $logger = null
     ) {
-        parent::__construct(
-            $eventManager,
-            $valueHandlerPool,
-            $paymentDataObjectFactory,
-            $code,
-            $formBlockType,
-            $infoBlockType,
-            $scopeConfig,
-            $moduleConfig,
-            $commandPool,
-            $validatorPool,
-            $commandExecutor,
-            $logger
-        );
-
-        $this->_priceCurrency = $priceCurrency;
+        parent::__construct($eventManager, $valueHandlerPool, $paymentDataObjectFactory, $code, $formBlockType,
+            $infoBlockType, $scopeConfig, $moduleConfig, $commandPool, $validatorPool, $commandExecutor, $logger);
+        $this->priceCurrency = $priceCurrency;
     }
 
     /**
@@ -103,7 +88,6 @@ class Invoice extends Base
      */
     public function getAdditionalPaymentInformation(Order $order): string
     {
-        /** @var Payment $payment */
         $payment = $this->_moduleConfig
             ->getUnzerClient()
             ->fetchPaymentByOrderId($order->getIncrementId());
@@ -115,8 +99,8 @@ class Invoice extends Base
             return '';
         }
 
-        $formattedAmount = $this->_priceCurrency->format(
-            $charge->getAmount(),
+        $formattedAmount = $this->priceCurrency->format(
+            $order->getTotalDue(),
             false,
             PriceCurrencyInterface::DEFAULT_PRECISION,
             $order->getStoreId(),

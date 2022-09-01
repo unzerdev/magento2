@@ -49,6 +49,11 @@ class Provider implements ConfigProviderInterface
         Config::METHOD_INVOICE_SECURED_B2B,
         Config::METHOD_PAYPAL,
         Config::METHOD_SOFORT,
+        Config::METHOD_ALIPAY,
+        Config::METHOD_WECHATPAY,
+        Config::METHOD_PRZELEWY24,
+        Config::METHOD_BANCONTACT,
+        Config::METHOD_PREPAYMENT,
     ];
 
     /**
