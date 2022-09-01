@@ -3,6 +3,7 @@
 namespace Unzer\PAPI\Helper;
 
 use Exception;
+use Psr\Log\LoggerInterface;
 use UnzerSDK\Constants\PaymentState;
 use UnzerSDK\Exceptions\UnzerApiException;
 use Magento\Framework\Lock\LockManagerInterface;
@@ -87,6 +88,11 @@ class Payment
     private $_transactionRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    private $_logger;
+
+    /**
      * Payment constructor.
      * @param InvoiceRepositoryInterface $invoiceRepository
      * @param InvoiceSender $invoiceSender
@@ -107,7 +113,8 @@ class Payment
         Order\OrderStateResolverInterface $orderStateResolver,
         Order\StatusResolver $orderStatusResolver,
         OrderPaymentRepositoryInterface $paymentRepository,
-        TransactionRepositoryInterface $transactionRepository
+        TransactionRepositoryInterface $transactionRepository,
+        LoggerInterface $logger
     )
     {
         $this->_invoiceRepository = $invoiceRepository;
@@ -119,6 +126,7 @@ class Payment
         $this->_orderStatusResolver = $orderStatusResolver;
         $this->_paymentRepository = $paymentRepository;
         $this->_transactionRepository = $transactionRepository;
+        $this->_logger = $logger;
     }
 
     /**
@@ -133,6 +141,7 @@ class Payment
         $lockName = sprintf('unzer_order_%d', $order->getId());
 
         $this->_lockManager->lock($lockName);
+        $this->_logger->debug('Unzer-Module: Begin locked operation with lock name: ' . $lockName);
 
         // Reload order to get current state
         $order = $this->_orderRepository->get($order->getId());
@@ -159,6 +168,7 @@ class Payment
                     break;
             }
         } finally {
+            $this->_logger->debug('Unzer-Module: End locked operation with lock name: ' . $lockName);
             $this->_lockManager->unlock($lockName);
         }
     }
@@ -310,6 +320,8 @@ class Payment
      */
     public function setOrderState(Order $order, ?string $state = null, ?string $status = null)
     {
+        $this->_logger->debug('Unzer-Module: Set Order state "' . $state . '" and status "' . $status . '" for: ' . $order->getIncrementId());
+
         if ($state === null) {
             $state = $this->_orderStateResolver->getStateForOrder($order, [
                 Order\OrderStateResolverInterface::IN_PROGRESS,
@@ -325,18 +337,23 @@ class Payment
 
         if ($order->hasDataChanges()) {
             $this->_orderRepository->save($order);
+            $this->_logger->debug('Unzer-Module: Order "'. $order->getIncrementId() .'" saved with state "' . $order->getState() . '" and status "' . $order->getStatus());
         }
 
         // Trigger new order email once, if not already sent, since we skipped sending it when creating the order.
         if (!$order->getEmailSent() && !in_array($state, [Order::STATE_NEW, Order::STATE_CANCELED])) {
             $this->_orderSender->send($order);
+            $this->_logger->debug('Unzer-Module: The Order mail sent for order: ' . $order->getIncrementId());
 
             foreach ($order->getInvoiceCollection() as $invoice) {
                 /** @var Order\Invoice $invoice */
                 if (!$invoice->getEmailSent()) {
                     $this->_invoiceSender->send($invoice);
+                    $this->_logger->debug('Unzer-Module: The Invoice mail sent for invoice: ' . $invoice->getIncrementId());
                 }
             }
+        } else {
+            $this->_logger->debug('Unzer-Module: NO Order mail sent for order: ' . $order->getIncrementId());
         }
     }
 }

@@ -172,6 +172,7 @@ class Process extends Action implements CsrfAwareActionInterface
                 $order->loadByIncrementId($payment->getOrderId());
 
                 if ($order->getId()) {
+                    $this->_logger->info('Unzer-Module: Webhook event: "' . $event->event . '" for order: "' . $order->getIncrementId() . '"');
                     $this->_paymentHelper->processState($order, $payment);
                 } else {
                     $response->setStatusCode(404);
