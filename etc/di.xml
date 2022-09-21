@@ -22,6 +22,12 @@
         </arguments>
     </type>
 
+    <type name="Unzer\PAPI\Helper\Payment">
+        <arguments>
+            <argument name="logger" xsi:type="object">Unzer\PAPI\Logger\Logger</argument>
+        </arguments>
+    </type>
+
     <type name="Unzer\PAPI\Model\Command\AbstractCommand">
         <arguments>
             <argument name="logger" xsi:type="object">Unzer\PAPI\Logger\Logger</argument>
