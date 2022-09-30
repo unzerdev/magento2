@@ -2,23 +2,28 @@
 
 namespace Unzer\PAPI\Helper;
 
+use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Module\ModuleListInterface;
+use Magento\Payment\Model\InfoInterface;
+use Magento\Payment\Model\MethodInterface;
+use Magento\Quote\Model\Quote;
+use Magento\Sales\Api\Data\OrderAddressInterface;
+use Magento\Sales\Model\Order as OrderModel;
+use Unzer\PAPI\Block\System\Config\Form\Field\BirthDateFactory;
 use Unzer\PAPI\Model\Config;
 use UnzerSDK\Constants\BasketItemTypes;
 use UnzerSDK\Constants\Salutations;
 use UnzerSDK\Exceptions\UnzerApiException;
-use UnzerSDK\Unzer;
 use UnzerSDK\Resources\Basket;
+use UnzerSDK\Resources\BasketFactory;
 use UnzerSDK\Resources\Customer;
 use UnzerSDK\Resources\CustomerFactory;
 use UnzerSDK\Resources\EmbeddedResources;
 use UnzerSDK\Resources\EmbeddedResources\BasketItem;
+use UnzerSDK\Resources\EmbeddedResources\BasketItemFactory;
 use UnzerSDK\Resources\Metadata;
-use Magento\Framework\App\ProductMetadataInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Module\ModuleListInterface;
-use Magento\Quote\Model\Quote;
-use Magento\Sales\Api\Data\OrderAddressInterface;
-use Magento\Sales\Model\Order as OrderModel;
+use UnzerSDK\Resources\PaymentTypes\BasePaymentType;
 
 /**
  * Helper for generating Unzer resources for new orders
@@ -63,22 +68,35 @@ class Order
      */
     private $_productMetadata;
 
+    /**
+     * @var Basket
+     */
+    private $basketFactory;
 
     /**
-     * Order constructor.
-     * @param Config $moduleConfig
-     * @param ModuleListInterface $moduleList
-     * @param ProductMetadataInterface $productMetadata
+     * @var BasketItemFactory
      */
+    private $basketItemFactory;
+
+    /**
+     * @var BirthDateFactory
+     */
+    private $birthDateFactory;
+
     public function __construct(
         Config $moduleConfig,
         ModuleListInterface $moduleList,
-        ProductMetadataInterface $productMetadata
-    )
-    {
+        ProductMetadataInterface $productMetadata,
+        BasketFactory $basketFactory,
+        BasketItemFactory $basketItemFactory,
+        BirthDateFactory $birthDateFactory
+    ) {
         $this->_moduleConfig = $moduleConfig;
         $this->_moduleList = $moduleList;
         $this->_productMetadata = $productMetadata;
+        $this->basketFactory = $basketFactory;
+        $this->basketItemFactory = $basketItemFactory;
+        $this->birthDateFactory = $birthDateFactory;
     }
 
     /**
@@ -92,32 +110,26 @@ class Order
     {
         $transmitInCustomerCurrency = $this->_moduleConfig->getTransmitCurrency($order->getStore()->getCode()) === $this->_moduleConfig::CURRENCY_CUSTOMER;
 
-        $basket = new Basket();
-        if($transmitInCustomerCurrency) {
-            $basket->setAmountTotalGross($order->getGrandTotal());
-            $basket->setAmountTotalDiscount(abs($order->getDiscountAmount()));
+        /** @var Basket $basket */
+        $basket = $this->basketFactory->create();
+        if ($transmitInCustomerCurrency) {
+            $basket->setTotalValueGross($order->getGrandTotal());
             $basket->setCurrencyCode($order->getOrderCurrencyCode());
         } else {
-            $basket->setAmountTotalGross($order->getBaseGrandTotal());
-            $basket->setAmountTotalDiscount(abs($order->getBaseDiscountAmount()));
+            $basket->setTotalValueGross($order->getBaseGrandTotal());
             $basket->setCurrencyCode($order->getBaseCurrencyCode());
         }
         $basket->setOrderId($order->getIncrementId());
 
         if ($order->getShippingAmount() > 0) {
-            $basketItem = new BasketItem();
-            if($transmitInCustomerCurrency) {
-                $basketItem->setAmountNet($order->getShippingAmount());
-                $basketItem->setAmountDiscount(abs($order->getShippingDiscountAmount()));
-                $basketItem->setAmountGross($order->getShippingInclTax());
-                $basketItem->setAmountPerUnit($order->getShippingInclTax());
-                $basketItem->setAmountVat($order->getShippingTaxAmount());
+            /** @var BasketItem $basketItem */
+            $basketItem = $this->basketItemFactory->create();
+            if ($transmitInCustomerCurrency) {
+                $basketItem->setAmountDiscountPerUnitGross(abs($order->getShippingDiscountAmount()));
+                $basketItem->setAmountPerUnitGross($order->getShippingInclTax());
             } else {
-                $basketItem->setAmountNet($order->getBaseShippingAmount());
-                $basketItem->setAmountDiscount(abs($order->getBaseShippingDiscountAmount()));
-                $basketItem->setAmountGross($order->getBaseShippingInclTax());
-                $basketItem->setAmountPerUnit($order->getBaseShippingInclTax());
-                $basketItem->setAmountVat($order->getBaseShippingTaxAmount());
+                $basketItem->setAmountDiscountPerUnitGross(abs($order->getBaseShippingDiscountAmount()));
+                $basketItem->setAmountPerUnitGross($order->getBaseShippingInclTax());
             }
             $basketItem->setTitle('Shipment');
             $basketItem->setType(BasketItemTypes::SHIPMENT);
@@ -134,29 +146,14 @@ class Order
                 continue;
             }
 
-            $basketItem = new BasketItem();
-            if($transmitInCustomerCurrency) {
-                $totalInclTax = $orderItem->getRowTotalInclTax();
-                if ($totalInclTax === null) {
-                    $totalInclTax = $orderItem->getRowTotal();
-                }
-
-                $basketItem->setAmountNet($orderItem->getRowTotal());
-                $basketItem->setAmountDiscount(abs($orderItem->getDiscountAmount()));
-                $basketItem->setAmountGross($totalInclTax);
-                $basketItem->setAmountPerUnit($orderItem->getPrice());
-                $basketItem->setAmountVat($orderItem->getTaxAmount());
+            /** @var BasketItem $basketItem */
+            $basketItem = $this->basketItemFactory->create();
+            if ($transmitInCustomerCurrency) {
+                $basketItem->setAmountDiscountPerUnitGross(abs($orderItem->getDiscountAmount()));
+                $basketItem->setAmountPerUnitGross($orderItem->getPrice());
             } else {
-                $totalInclTax = $orderItem->getBaseRowTotalInclTax();
-                if ($totalInclTax === null) {
-                    $totalInclTax = $orderItem->getBaseRowTotal();
-                }
-
-                $basketItem->setAmountNet($orderItem->getBaseRowTotal());
-                $basketItem->setAmountDiscount(abs($orderItem->getBaseDiscountAmount()));
-                $basketItem->setAmountGross($totalInclTax);
-                $basketItem->setAmountPerUnit($orderItem->getBasePrice());
-                $basketItem->setAmountVat($orderItem->getBaseTaxAmount());
+                $basketItem->setAmountDiscountPerUnitGross(abs($orderItem->getBaseDiscountAmount()));
+                $basketItem->setAmountPerUnitGross($orderItem->getBasePrice());
             }
             $basketItem->setQuantity($orderItem->getQtyOrdered());
             $basketItem->setTitle($orderItem->getName());
@@ -196,7 +193,7 @@ class Order
      * @param string $email
      * @param bool $createResource
      *
-     * @return Customer
+     * @return Customer|null
      * @throws UnzerApiException
      */
     public function createCustomerFromQuote(Quote $quote, string $email, bool $createResource = false): ?Customer
@@ -206,10 +203,8 @@ class Order
             return null;
         }
 
-        /** @var Quote\Address $billingAddress */
         $billingAddress = $quote->getBillingAddress();
 
-        /** @var Customer $customer */
         $customer = CustomerFactory::createCustomer(
             $billingAddress->getFirstname(),
             $billingAddress->getLastname()
@@ -227,7 +222,6 @@ class Order
         $this->updateGatewayAddressFromMagento($customer->getBillingAddress(), $billingAddress);
         $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $quote->getShippingAddress());
 
-        /** @var Unzer $client */
         $client = $this->_moduleConfig->getUnzerClient();
 
         return $createResource ? $client->createCustomer($customer) : $customer;
@@ -240,12 +234,11 @@ class Order
      * @param string $email
      * @param bool $createResource
      *
-     * @return Customer
+     * @return Customer|null
      * @throws UnzerApiException
      */
     public function createCustomerFromOrder(OrderModel $order, string $email, bool $createResource = false): ?Customer
     {
-        /** @var Unzer $client */
         $client = $this->_moduleConfig->getUnzerClient();
 
         $billingAddress = $order->getBillingAddress();
@@ -263,7 +256,15 @@ class Order
             }
 
             $gender = $order->getCustomerGender();
-            $customer->setSalutation($this->getSalutationFromGender($gender));
+            if ($gender) {
+                $customer->setSalutation($this->getSalutationFromGender($gender));
+            } else {
+                $customer->setSalutation($this->getSalutationFromPayment($order->getPayment()));
+            }
+            $birthDate = $this->getBirthdateFromPayment($order->getPayment());
+            if ($birthDate) {
+                $customer->setBirthDate($birthDate);
+            }
             $customer->setEmail($email);
 
             $this->updateGatewayAddressFromMagento($customer->getBillingAddress(), $billingAddress);
@@ -278,6 +279,29 @@ class Order
     }
 
     /**
+     * Returns a new Unzer Payment resource. Only used in adminhtml!
+     *
+     * @param OrderModel $order
+     *
+     * @return BasePaymentType|null
+     * @throws UnzerApiException
+     * @throws LocalizedException
+     */
+    public function createPaymentFromOrder(OrderModel $order): ?BasePaymentType
+    {
+        $method = $order->getPayment()->getMethodInstance();
+        if (!$method instanceof MethodInterface) {
+            return null;
+        }
+
+        return $this->_moduleConfig
+            ->getUnzerClient()
+            ->createPaymentType(
+                $method->createPaymentType()
+            );
+    }
+
+    /**
      * Updates an Unzer address from an address in Magento.
      *
      * @param EmbeddedResources\Address $gatewayAddress
@@ -286,8 +310,7 @@ class Order
     private function updateGatewayAddressFromMagento(
         EmbeddedResources\Address $gatewayAddress,
         $magentoAddress
-    ): void
-    {
+    ): void {
         $street = $this->convertStreetLinesToString($magentoAddress->getStreet());
 
         $gatewayAddress->setName($magentoAddress->getName());
@@ -312,9 +335,8 @@ class Order
      * @param OrderModel $order
      * @param Customer $gatewayCustomer
      * @throws UnzerApiException
-     * @throws NoSuchEntityException
      */
-    public function updateGatewayCustomerFromOrder(OrderModel $order, Customer $gatewayCustomer)
+    public function updateGatewayCustomerFromOrder(OrderModel $order, Customer $gatewayCustomer): void
     {
         $billingAddress = $order->getBillingAddress();
 
@@ -365,7 +387,7 @@ class Order
 
         $shippingAddress = $order->getShippingAddress();
         $shippingAddressValid = true;
-        if($shippingAddress !== null) {
+        if ($shippingAddress !== null) {
             $shippingAddressValid = $this->validateGatewayAddressAgainstOrderAddress(
                 $gatewayCustomer->getShippingAddress(),
                 $shippingAddress
@@ -383,8 +405,7 @@ class Order
     private function validateGatewayAddressAgainstOrderAddress(
         EmbeddedResources\Address $gatewayAddress,
         OrderAddressInterface $magentoAddress
-    ): bool
-    {
+    ): bool {
         $street = $this->convertStreetLinesToString($magentoAddress->getStreet());
 
         return $gatewayAddress->getCity() === $magentoAddress->getCity()
@@ -425,5 +446,22 @@ class Order
                 $salutation = Salutations::UNKNOWN;
         }
         return $salutation;
-}
+    }
+
+    protected function getSalutationFromPayment(InfoInterface $payment): ?string
+    {
+        return $payment->getAdditionalInformation('salutation');
+    }
+
+    protected function getBirthdateFromPayment(InfoInterface $payment): ?string
+    {
+        $birthDate = $this->birthDateFactory->create();
+        $birthDate->setDate($payment->getAdditionalInformation('birthDate'));
+
+        $date = $birthDate->getDate();
+        if(is_null($date)) {
+            return null;
+        }
+        return $date->format('Y-m-d');
+    }
 }

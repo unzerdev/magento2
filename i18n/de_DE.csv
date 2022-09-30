@@ -60,6 +60,11 @@
 "mr","Herr"
 "mrs","Frau"
 "Birthdate","Geburtsdatum"
+"Day","Tag"
+"Month","Monat"
+"Year","Jahr"
+"Salutation","Anrede"
+"Unkown","Divers"
 "Your date of birth","Ihr Geburtsdatum"
 
 "Name of merchant for SEPA mandate.","Händlername der für das SEPA Mandat genutzt wird."

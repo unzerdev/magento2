@@ -501,7 +501,7 @@
     <type name="Unzer\PAPI\Model\Method\InvoiceSecured">
         <arguments>
             <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_INVOICE_SECURED</argument>
-            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="formBlockType" xsi:type="string">Unzer\PAPI\Block\Form\InvoiceSecured</argument>
             <argument name="infoBlockType" xsi:type="string">Unzer\PAPI\Block\Info\InvoiceSecured</argument>
             <argument name="valueHandlerPool" xsi:type="object">UnzerInvoiceSecuredValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">UnzerInvoiceSecuredValidatorPool</argument>

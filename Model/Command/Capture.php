@@ -2,16 +2,11 @@
 
 namespace Unzer\PAPI\Model\Command;
 
-use Unzer\PAPI\Model\Config;
-use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
-use UnzerSDK\Exceptions\UnzerApiException;
-use UnzerSDK\Resources\AbstractUnzerResource;
-use UnzerSDK\Resources\TransactionTypes\Authorization;
-use UnzerSDK\Resources\TransactionTypes\Charge;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
+use Magento\Payment\Gateway\Command\ResultInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
@@ -20,6 +15,12 @@ use Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface;
 use Magento\Sales\Model\Order\Payment\TransactionFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
+use Unzer\PAPI\Model\Config;
+use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\AbstractUnzerResource;
+use UnzerSDK\Resources\TransactionTypes\Authorization;
+use UnzerSDK\Resources\TransactionTypes\Charge;
+use UnzerSDK\Resources\TransactionTypes\ChargeFactory;
 
 /**
  * Capture Command for payments
@@ -52,6 +53,11 @@ class Capture extends AbstractCommand
     private $_transactionBuilder;
 
     /**
+     * @var ChargeFactory
+     */
+    private $chargeFactory;
+
+    /**
      * @inheritDoc
      * @param TransactionFactory $_transactionFactory
      */
@@ -62,12 +68,13 @@ class Capture extends AbstractCommand
         \Unzer\PAPI\Helper\Order $orderHelper,
         UrlInterface $urlBuilder,
         BuilderInterface $transactionBuilder,
-        StoreManagerInterface $storeManager
-    )
-    {
+        StoreManagerInterface $storeManager,
+        ChargeFactory $chargeFactory
+    ) {
         parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder, $storeManager);
 
         $this->_transactionBuilder = $transactionBuilder;
+        $this->chargeFactory = $chargeFactory;
     }
 
     /**
@@ -75,7 +82,7 @@ class Capture extends AbstractCommand
      * @throws LocalizedException
      * @throws UnzerApiException
      */
-    public function execute(array $commandSubject)
+    public function execute(array $commandSubject): ?ResultInterface
     {
         /** @var OrderPayment $payment */
         $payment = $commandSubject['payment']->getPayment();
@@ -83,7 +90,6 @@ class Capture extends AbstractCommand
         /** @var float $amount */
         $amount = $commandSubject['amount'];
 
-        /** @var Order $order */
         $order = $payment->getOrder();
 
         /** @var string|null $paymentId */
@@ -127,7 +133,7 @@ class Capture extends AbstractCommand
     {
         $payment = $this->_getClient($storeId)->fetchPayment($paymentId);
 
-        if($this->_config->getTransmitCurrency($order->getStore()->getCode()) === $this->_config::CURRENCY_CUSTOMER) {
+        if ($this->_config->getTransmitCurrency($order->getStore()->getCode()) === $this->_config::CURRENCY_CUSTOMER) {
             $amount = (float)$order->getTotalDue();
         }
 
@@ -156,38 +162,37 @@ class Capture extends AbstractCommand
     {
         $storeId = $order->getStoreId();
 
-        /** @var string $resourceId */
-        $resourceId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_RESOURCE_ID);
-
-        $currency =  $order->getBaseCurrencyCode();
-        if($this->_config->getTransmitCurrency($order->getStore()->getCode()) === $this->_config::CURRENCY_CUSTOMER) {
+        $currency = $order->getBaseCurrencyCode();
+        if ($this->_config->getTransmitCurrency($order->getStore()->getCode()) === $this->_config::CURRENCY_CUSTOMER) {
             $currency = $order->getOrderCurrencyCode();
             $amount = (float)$order->getTotalDue();
         }
 
-        return $this->_getClient($storeId)->charge(
-            $amount,
-            $currency,
-            $resourceId,
-            $this->_getCallbackUrl(),
+        /** @var Charge $charge */
+        $charge = $this->chargeFactory->create([
+            'amount' => $amount,
+            'currency' => $currency,
+            'returnUrl' => $this->_getCallbackUrl()
+        ]);
+        $charge->setOrderId($order->getIncrementId());
+
+        return $this->_getClient($storeId)->performCharge(
+            $charge,
+            $this->_getResourceId($payment, $order),
             $this->_getCustomerId($payment, $order),
-            $order->getIncrementId(),
             $this->_orderHelper->createMetadataForOrder($order),
             $this->_orderHelper->createBasketForOrder($order),
-            null,
-            null,
-            null
         );
     }
 
     /**
      * @inheritDoc
+     * @throws UnzerApiException
      */
     protected function _setPaymentTransaction(
         OrderPayment $payment,
         AbstractUnzerResource $resource
-    ): void
-    {
+    ): void {
         parent::_setPaymentTransaction($payment, $resource);
 
         $parentTransactionId = null;
