@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.4.0](https://github.com/unzerdev/magento2/compare/1.3.0..1.4.0)
+### Added
+* Requirement for unzerdev/php-sdk 1.2.x
+* Support for backend order creation to Unzer Invoice Secured payment method
+
+### Changed
+* Authorization and capture handling to use unzerdev/php-sdk 1.2.x
+
+### Fixed
+* multiple order emails being sent in some cases
+* invoice email showing total amount instead of due amount in some cases
+
 ## [1.3.0](https://github.com/unzerdev/magento2/compare/1.2.0..1.3.0)
 ### Added
 * configuration setting to be able to switch between base currency or customer (storeview) currency for transfers to unzer servers

@@ -60,6 +60,11 @@
 "mr","Mr."
 "mrs","Mrs."
 "Birthdate","Date of birth"
+"Day","Day"
+"Month","Month"
+"Year","Year"
+"Salutation","Salutation"
+"Unkown","Diverse"
 "Your date of birth","Your date of birth"
 
 "Name of merchant for SEPA mandate.","Name of merchant for SEPA mandate."
