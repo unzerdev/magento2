@@ -15,6 +15,7 @@ use Psr\Log\LoggerInterface;
 use Unzer\PAPI\Helper\Order;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
+use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\AbstractUnzerResource;
 use UnzerSDK\Resources\Customer;
 use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
@@ -138,12 +139,12 @@ abstract class AbstractCommand implements CommandInterface
      * An UnzerApiException is thrown when customer creation/update fails.
      *
      * @param InfoInterface $payment
-     * @param \Magento\Sales\Model\Order $order
+     * @param SalesOrder $order
      *
      * @return string|null
-     * @throws \UnzerSDK\Exceptions\UnzerApiException
+     * @throws UnzerApiException
      */
-    protected function _getCustomerId(InfoInterface $payment, \Magento\Sales\Model\Order $order): ?string
+    protected function _getCustomerId(InfoInterface $payment, SalesOrder $order): ?string
     {
         /** @var string|null $customerId */
         $customerId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
@@ -161,6 +162,28 @@ abstract class AbstractCommand implements CommandInterface
         }
 
         return $customerId;
+    }
+
+    /**
+     * Returns the resource ID for given current payment or quote. Creates or update customer on Api side if needed.
+     * An UnzerApiException is thrown when customer creation/update fails.
+     *
+     * @param InfoInterface $payment
+     * @param SalesOrder $order
+     *
+     * @return string|null
+     * @throws UnzerApiException|LocalizedException
+     */
+    protected function _getResourceId(InfoInterface $payment, SalesOrder $order): ?string
+    {
+        /** @var string $resourceId */
+        $resourceId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_RESOURCE_ID);
+        if (empty($resourceId)) {
+            $papiPayment = $this->_orderHelper->createPaymentFromOrder($order);
+            $resourceId = $papiPayment->getId();
+        }
+
+        return $resourceId;
     }
 
     /**

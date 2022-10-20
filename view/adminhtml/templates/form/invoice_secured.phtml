@@ -1,0 +1,115 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
+use Unzer\PAPI\Block\Form\InvoiceSecured;
+
+/**
+ * @var InvoiceSecured $block
+ * @var SecureHtmlRenderer $secureRenderer
+ * @var Escaper $escaper
+ */
+
+
+if (!isset($escaper)) {
+    $escaper = $block;
+}
+$code = $block->escapeHtml($block->getMethodCode());
+$birthDateDay = $block->getBirthDate()->getDay();
+$birthDateMonth = $block->getBirthDate()->getMonth();
+$birthDateYear = $block->getBirthDate()->getYear();
+$salutation = $block->getInfoData('salutation');
+?>
+<fieldset class="admin__fieldset payment-method" id="payment_form_<?= /* @noEscape */ $code ?>">
+    <div class="admin__field _required">
+        <label class="label admin__field-label" for="<?= /* @noEscape */ $code ?>_salutation">
+            <span><?= $escaper->escapeHtml(__('Salutation')) ?></span>
+        </label>
+        <div class="admin__field-control">
+            <select id="<?= /* @noEscape */ $code ?>_salutation"
+                    name="payment[salutation]"
+                    data-validate='{required:true}'
+                    class="admin__control-select">
+                <?php foreach ($block->getSalutationOptions() as $salutationValue => $salutationLabel): ?>
+                    <option value="<?= $escaper->escapeHtml($salutationValue) ?>"
+                        <?php if ($salutationValue === $salutation): ?> selected="selected"<?php endif ?>>
+                        <?= $escaper->escapeHtml($salutationLabel) ?>
+                    </option>
+                <?php endforeach ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="admin__field _required">
+        <label class="admin__field-label" for="<?= /* @noEscape */ $code ?>_birthDate">
+            <?= __('Birthdate') ?>
+        </label>
+        <div class="admin__field-control control _required">
+            <div class="multi-input admin__field-control _required">
+                <label class="admin__field-label" for="<?= /* @noEscape */ $code ?>_birthDate[day]">
+                    <?= __('Day') ?>
+                </label>
+                <div class="admin__field-control">
+                    <select id="<?= /* @noEscape */ $code ?>_birthDate[day]" name="payment[birthDate][day]"
+                            data-container="<?= /* @noEscape */
+                            $code ?>-birthDate-day"
+                            class="admin__control-select admin__control-select-day"
+                            data-validate='{required:true}'>
+                        <?php foreach ($block->getBirthDate()->getDays() as $k => $v): ?>
+                            <option value="<?= /* @noEscape */ $k ? $escaper->escapeHtml($k) : '' ?>"
+                                <?php if ((string)$k === $birthDateDay): ?> selected="selected"<?php endif; ?>>
+                                <?= $escaper->escapeHtml($v) ?>
+                            </option>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+            </div>
+            <div class="multi-input admin__field-control _required">
+                <label class="admin__field-label" for="<?= /* @noEscape */ $code ?>_birthDate[month]">
+                    <?= __('Month') ?>
+                </label>
+                <div class="admin__field-control">
+                    <select id="<?= /* @noEscape */ $code ?>_birthDate[month]" name="payment[birthDate][month]"
+                            data-container="<?= /* @noEscape */
+                            $code ?>-birthDate-month"
+                            class="admin__control-select admin__control-select-month"
+                            data-validate='{required:true}'>
+                        <?php foreach ($block->getBirthDate()->getMonths() as $k => $v): ?>
+                            <option value="<?= /* @noEscape */ $k ? $escaper->escapeHtml($k) : '' ?>"
+                                <?php if ((string)$k === $birthDateMonth): ?> selected="selected"<?php endif; ?>>
+                                <?= $escaper->escapeHtml($v) ?>
+                            </option>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+            </div>
+            <div class="multi-input admin__field-control required _required">
+                <label class="admin__field-label" for="<?= /* @noEscape */ $code ?>_birthDate[year]">
+                    <?= __('Year') ?>
+                </label>
+                <div class="admin__field-control">
+                    <select id="<?= /* @noEscape */ $code ?>_birthDate[year]" name="payment[birthDate][year]"
+                            class="admin__control-select admin__control-select-year"
+                            data-container="<?= /* @noEscape */
+                            $code ?>-birthDate-year" data-validate='{required:true}'>
+                        <?php foreach ($block->getBirthDate()->getYears() as $k => $v): ?>
+                            <option value="<?= /* @noEscape */ $k ? $escaper->escapeHtml($k) : '' ?>"
+                                <?php if ((string)$k === $birthDateYear): ?> selected="selected"<?php endif ?>>
+                                <?= $escaper->escapeHtml($v) ?>
+                            </option>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</fieldset>
+<?
+if (isset($secureRenderer)) {
+/* @noEscape */
+echo $secureRenderer->renderStyleAsTag(
+    "display:none",
+    'fieldset#payment_form_' . /* @noEscape */ $code);
+}
+ ?>

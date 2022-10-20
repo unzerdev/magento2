@@ -2,6 +2,9 @@
 
 namespace Unzer\PAPI\Model\Method;
 
+use UnzerSDK\Resources\PaymentTypes\BasePaymentType;
+use UnzerSDK\Resources\PaymentTypes\InvoiceSecured as InvoiceSecuredPaymentType;
+
 /**
  * Invoice (secured) payment method
  *
@@ -41,5 +44,10 @@ class InvoiceSecured extends Invoice
     public function isSecured(): bool
     {
         return true;
+    }
+
+    public function createPaymentType(): BasePaymentType
+    {
+        return new InvoiceSecuredPaymentType();
     }
 }
