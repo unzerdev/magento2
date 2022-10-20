@@ -116,7 +116,7 @@ class Invoice extends Info
      * @throws \UnzerSDK\Exceptions\UnzerApiException
      * @return string
      */
-    public function getAccountHolder(): string
+    public function getAccountHolder(): ?string
     {
         return $this->_getCharge()->getHolder();
     }
@@ -126,7 +126,7 @@ class Invoice extends Info
      * @throws \UnzerSDK\Exceptions\UnzerApiException
      * @return string
      */
-    public function getAccountIban(): string
+    public function getAccountIban(): ?string
     {
         return $this->_getCharge()->getIban();
     }
@@ -136,7 +136,7 @@ class Invoice extends Info
      * @throws \UnzerSDK\Exceptions\UnzerApiException
      * @return string
      */
-    public function getAccountBic(): string
+    public function getAccountBic(): ?string
     {
         return $this->_getCharge()->getBic();
     }
@@ -146,7 +146,7 @@ class Invoice extends Info
      * @throws \UnzerSDK\Exceptions\UnzerApiException
      * @return string
      */
-    public function getReference(): string
+    public function getReference(): ?string
     {
         return $this->_getCharge()->getDescriptor();
     }

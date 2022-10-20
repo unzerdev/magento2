@@ -35,6 +35,8 @@ class BaseDataAssignObserver extends AbstractDataAssignObserver
 {
     const KEY_CUSTOMER_ID = 'customer_id';
     const KEY_RESOURCE_ID = 'resource_id';
+    const KEY_BIRTHDATE = 'birthDate';
+    const KEY_SALUTATION = 'salutation';
 
     /**
      * @var array
@@ -42,6 +44,8 @@ class BaseDataAssignObserver extends AbstractDataAssignObserver
     protected $additionalInformationList = [
         self::KEY_CUSTOMER_ID,
         self::KEY_RESOURCE_ID,
+        self::KEY_BIRTHDATE,
+        self::KEY_SALUTATION
     ];
 
     /**

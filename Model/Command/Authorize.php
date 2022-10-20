@@ -2,11 +2,19 @@
 
 namespace Unzer\PAPI\Model\Command;
 
+use Magento\Checkout\Model\Session;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\UrlInterface;
+use Magento\Payment\Gateway\Command\ResultInterface;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
+use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
+use Unzer\PAPI\Helper\Order;
+use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
 use UnzerSDK\Exceptions\UnzerApiException;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Payment as OrderPayment;
+use UnzerSDK\Resources\TransactionTypes\Authorization;
+use UnzerSDK\Resources\TransactionTypes\AuthorizationFactory;
 
 /**
  * Authorize Command for payments
@@ -34,11 +42,29 @@ use Magento\Sales\Model\Order\Payment as OrderPayment;
 class Authorize extends AbstractCommand
 {
     /**
+     * @var AuthorizationFactory
+     */
+    private $authorizationFactory;
+
+    public function __construct(
+        Session $checkoutSession,
+        Config $config,
+        LoggerInterface $logger,
+        Order $orderHelper,
+        UrlInterface $urlBuilder,
+        StoreManagerInterface $storeManager,
+        AuthorizationFactory $authorizationFactory
+    ) {
+        parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder, $storeManager);
+        $this->authorizationFactory = $authorizationFactory;
+    }
+
+    /**
      * @inheritDoc
      * @throws LocalizedException
-     * @throws \UnzerSDK\Exceptions\UnzerApiException
+     * @throws UnzerApiException
      */
-    public function execute(array $commandSubject)
+    public function execute(array $commandSubject): ?ResultInterface
     {
         /** @var OrderPayment $payment */
         $payment = $commandSubject['payment']->getPayment();
@@ -46,30 +72,34 @@ class Authorize extends AbstractCommand
         /** @var float $amount */
         $amount = $commandSubject['amount'];
 
-        /** @var Order $order */
         $order = $payment->getOrder();
 
         /** @var string $resourceId */
         $resourceId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_RESOURCE_ID);
 
-        $currency =  $order->getBaseCurrencyCode();
-        if($this->_config->getTransmitCurrency($order->getStore()->getCode()) === $this->_config::CURRENCY_CUSTOMER) {
+        $currency = $order->getBaseCurrencyCode();
+        if ($this->_config->getTransmitCurrency($order->getStore()->getCode()) === $this->_config::CURRENCY_CUSTOMER) {
             $currency = $order->getOrderCurrencyCode();
             $amount = (float)$order->getTotalDue();
         }
 
         try {
-            $authorization = $this->_getClient()->authorize(
-                $amount,
-                $currency,
+            /** @var Authorization $authorization */
+            $authorization = $this->authorizationFactory->create([
+                'amount' => $amount,
+                'currency' => $currency,
+                'returnUrl' => $this->_getCallbackUrl()
+            ]);
+            $authorization->setOrderId($order->getIncrementId());
+
+            $authorization = $this->_getClient()->performAuthorization(
+                $authorization,
                 $resourceId,
-                $this->_getCallbackUrl(),
                 $this->_getCustomerId($payment, $order),
-                $order->getIncrementId(),
                 $this->_orderHelper->createMetadataForOrder($order),
-                $this->_orderHelper->createBasketForOrder($order),
-                null
+                $this->_orderHelper->createBasketForOrder($order)
             );
+
             $order->addCommentToStatusHistory('Unzer paymentId: ' . $authorization->getPaymentId());
         } catch (UnzerApiException $e) {
             $this->_logger->error($e->getMerchantMessage(), ['incrementId' => $order->getIncrementId()]);

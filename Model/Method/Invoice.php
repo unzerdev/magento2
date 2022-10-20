@@ -116,7 +116,7 @@ class Invoice extends Base
         }
 
         $formattedAmount = $this->_priceCurrency->format(
-            $charge->getAmount(),
+            $this->calculateRemainingAmount($payment),
             false,
             PriceCurrencyInterface::DEFAULT_PRECISION,
             $order->getStoreId(),
@@ -136,5 +136,19 @@ class Invoice extends Base
             $charge->getBic(),
             $charge->getDescriptor()
         );
+    }
+
+    protected function calculateRemainingAmount(Payment $payment): float
+    {
+        $charges = $payment->getCharges();
+        $chargedAmount = 0;
+        foreach ($charges as $charge) {
+            /** @var Charge $charge */
+            if ($charge->isSuccess()) {
+                $chargedAmount += (float)$charge->getAmount();
+            }
+        }
+
+        return $payment->getAmount()->getTotal() - $charges[0]->getCancelledAmount() - $chargedAmount;
     }
 }

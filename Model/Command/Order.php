@@ -2,20 +2,20 @@
 
 namespace Unzer\PAPI\Model\Command;
 
+use Magento\Checkout\Model\Session;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\UrlInterface;
+use Magento\Payment\Gateway\Command\ResultInterface;
+use Magento\Sales\Api\Data\OrderPaymentInterface;
+use Magento\Sales\Model\Order\Payment\Operations\AuthorizeOperation;
+use Magento\Sales\Model\Order\Payment\Operations\CaptureOperation;
+use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
 use Unzer\PAPI\Helper\Order as OrderHelper;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Method\Base;
 use Unzer\PAPI\Model\System\Config\Source\PaymentAction;
 use UnzerSDK\Exceptions\UnzerApiException;
-use Magento\Checkout\Model\Session;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\UrlInterface;
-use Magento\Sales\Api\Data\OrderPaymentInterface;
-use Magento\Sales\Model\Order as OrderModel;
-use Magento\Sales\Model\Order\Payment\Operations\AuthorizeOperation;
-use Magento\Sales\Model\Order\Payment\Operations\CaptureOperation;
-use Magento\Store\Model\StoreManagerInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Order Command for payments
@@ -86,12 +86,11 @@ class Order extends AbstractCommand
      * @throws UnzerApiException
      * @throws \Exception
      */
-    public function execute(array $commandSubject)
+    public function execute(array $commandSubject): ?ResultInterface
     {
         /** @var OrderPaymentInterface $payment */
         $payment = $commandSubject['payment']->getPayment();
 
-        /** @var OrderModel $order */
         $order = $payment->getOrder();
         $order->setCanSendNewEmailFlag(false);
 
