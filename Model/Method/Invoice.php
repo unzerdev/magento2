@@ -149,6 +149,6 @@ class Invoice extends Base
             }
         }
 
-        return $payment->getAmount()->getTotal() - $payment->getAmount()->getCanceled() - $chargedAmount;
+        return $payment->getAmount()->getTotal() - $charges[0]->getCancelledAmount() - $chargedAmount;
     }
 }

@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Fixed
 * multiple order emails being sent in some cases
-* invoice email showing total amount instead of due amount in some cases
+* invoice or credit memo emails showing total amount or negative amount instead of due amount in some cases
 
 ## [1.3.0](https://github.com/unzerdev/magento2/compare/1.2.0..1.3.0)
 ### Added
