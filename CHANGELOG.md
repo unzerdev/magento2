@@ -5,7 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [1.4.1](https://github.com/unzerdev/magento2/compare/1.4.0..1.4.1)
 ### Fixed
-* Prices of basket items not containing tax 
+* Prices of basket items not including tax  
+* basket items missing tax percent and reference id
 
 ## [1.4.0](https://github.com/unzerdev/magento2/compare/1.3.0..1.4.0)
 ### Added

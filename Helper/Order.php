@@ -175,7 +175,9 @@ class Order
 
             $basketItem->setAmountDiscountPerUnitGross($amountDiscountPerUnitGross);
             $basketItem->setAmountPerUnitGross($amountPerUnitGross);
+            $basketItem->setVat($orderItem->getTaxPercent());
 
+            $basketItem->setBasketItemReferenceId($orderItem->getSku());
             $basketItem->setQuantity($orderItem->getQtyOrdered());
             $basketItem->setTitle($orderItem->getName());
             $basketItem->setType($orderItem->getIsVirtual() ? BasketItemTypes::DIGITAL : BasketItemTypes::GOODS);
