@@ -151,11 +151,11 @@ class Order
 
             if ($transmitInCustomerCurrency) {
                 $amountDiscountPerUnitGross = abs($orderItem->getDiscountAmount());
-                $amountPerUnitGross = $orderItem->getPrice();
+                $amountPerUnitGross = $orderItem->getPriceInclTax();
             }
             else{
                 $amountDiscountPerUnitGross = abs($orderItem->getBaseDiscountAmount());
-                $amountPerUnitGross = $orderItem->getBasePrice();
+                $amountPerUnitGross = $orderItem->getBasePriceInclTax();
             }
             //add Discount as Voucher for Items qty gt 1 to prevent of 10 / 3 rounding error
             if($amountDiscountPerUnitGross > 0 && $orderItem->getQtyOrdered() > 1){
@@ -175,7 +175,9 @@ class Order
 
             $basketItem->setAmountDiscountPerUnitGross($amountDiscountPerUnitGross);
             $basketItem->setAmountPerUnitGross($amountPerUnitGross);
+            $basketItem->setVat($orderItem->getTaxPercent());
 
+            $basketItem->setBasketItemReferenceId($orderItem->getSku());
             $basketItem->setQuantity($orderItem->getQtyOrdered());
             $basketItem->setTitle($orderItem->getName());
             $basketItem->setType($orderItem->getIsVirtual() ? BasketItemTypes::DIGITAL : BasketItemTypes::GOODS);
