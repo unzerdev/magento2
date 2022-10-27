@@ -105,11 +105,11 @@ $salutation = $block->getInfoData('salutation');
         </div>
     </div>
 </fieldset>
-<?
+<?php
 if (isset($secureRenderer)) {
-/* @noEscape */
-echo $secureRenderer->renderStyleAsTag(
-    "display:none",
-    'fieldset#payment_form_' . /* @noEscape */ $code);
+    /* @noEscape */
+    echo $secureRenderer->renderStyleAsTag(
+        "display:none",
+        'fieldset#payment_form_' . /* @noEscape */ $code);
 }
- ?>
+?>
