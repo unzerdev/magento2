@@ -91,6 +91,10 @@ class BirthDate
 
     public function setDate($date): self
     {
+        if(is_null($date)) {
+            $date = '';
+        }
+
         if (is_string($date)) {
             $this->date = $this->dateTimeFactory->create($date);
         }
