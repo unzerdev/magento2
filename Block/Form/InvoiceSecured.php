@@ -50,4 +50,9 @@ class InvoiceSecured extends Form
         }
         return $this->birthDate;
     }
+
+    public function getInfoData($field)
+    {
+        return $this->getMethod()->getInfoInstance()->getData($field);
+    }
 }

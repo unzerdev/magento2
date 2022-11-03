@@ -5,7 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [1.4.2](https://github.com/unzerdev/magento2/compare/1.4.1..1.4.2)
 ### Fixed
-* fixed php short tag in backend order template
+* php short tag in backend order template
+* totals update in backend order
+* invoice email not send in backend order
+* state not correct on backend order creation
 
 ## [1.4.1](https://github.com/unzerdev/magento2/compare/1.4.0..1.4.1)
 ### Fixed
