@@ -1,16 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Block\Checkout\Onepage\Success;
 
+use Magento\Checkout\Block\Onepage\Success;
+use Magento\Checkout\Model\Session;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Payment\Model\InfoInterface;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Method\Base;
 use UnzerSDK\Exceptions\UnzerApiException;
-use UnzerSDK\Resources\Payment;
-use Magento\Checkout\Model\Session;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\View\Element\Template;
-use Magento\Payment\Model\MethodInterface;
-use Magento\Sales\Model\Order;
 
 /**
  * Onepage Checkout Onepage Success Plugin
@@ -31,15 +31,13 @@ use Magento\Sales\Model\Order;
  *
  * @link  https://docs.unzer.com/
  *
- * @author Justin Nuß
- *
  * @package  unzerdev/magento2
  */
 class Plugin
 {
-    const BLOCK_NAME = 'checkout.success';
+    public const BLOCK_NAME = 'checkout.success';
 
-    const PENDING_TEMPLATE = 'Unzer_PAPI::success/pending.phtml';
+    public const PENDING_TEMPLATE = 'Unzer_PAPI::success/pending.phtml';
 
     /**
      * @var Session
@@ -51,10 +49,6 @@ class Plugin
      */
     protected $_moduleConfig;
 
-    /**
-     * Plugin constructor.
-     * @param Session $checkoutSession
-     */
     public function __construct(Session $checkoutSession, Config $moduleConfig)
     {
         $this->_checkoutSession = $checkoutSession;
@@ -62,9 +56,9 @@ class Plugin
     }
 
     /**
-     * @param Template $subject
+     * @throws LocalizedException
      */
-    public function beforeToHtml(Template $subject): void
+    public function beforeToHtml(Success $subject): void
     {
         // There may me multiple instances of the block in the layout (e.g. checkout.success.print.button) so we
         // must check for the correct one otherwise we may get duplicate output.
@@ -72,27 +66,26 @@ class Plugin
             return;
         }
 
-        /** @var Order $order */
         $order = $this->_checkoutSession->getLastRealOrder();
 
-        /** @var MethodInterface $methodInstance */
-        $methodInstance = $order
-            ->getPayment()
-            ->getMethodInstance();
+        $payment = $order->getPayment();
+        if(!$payment instanceof InfoInterface) {
+            return;
+        }
+
+        $methodInstance = $payment->getMethodInstance();
 
         if ($methodInstance instanceof Base && $methodInstance->hasRedirect()) {
-            /** @var Payment $payment */
             try {
                 $payment = $this->_moduleConfig
-                    ->getUnzerClient()
+                    ->getUnzerClient($order->getStore()->getCode(), $order->getPayment()->getMethodInstance())
                     ->fetchPaymentByOrderId($order->getIncrementId());
 
-                if (($payment->getAuthorization() && $payment->getAuthorization()->isPending()) ||
-                    ($payment->getChargeByIndex(0) && $payment->getChargeByIndex(0)->isPending())) {
+                $initialTransaction = $payment->getInitialTransaction();
+                if (($initialTransaction && $initialTransaction->isPending())) {
                     $subject->setTemplate(self::PENDING_TEMPLATE);
                 }
-            } catch (NoSuchEntityException $e) {
-            } catch (UnzerApiException $e) {
+            } catch (NoSuchEntityException|UnzerApiException $e) {
             }
         }
     }

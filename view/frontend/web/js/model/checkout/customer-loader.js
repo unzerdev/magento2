@@ -11,31 +11,31 @@ define(
     function ($, ko, storage, errorProcessor, fullScreenLoader, quote, urlBuilder) {
         'use strict';
 
-        var currentRequest = null,
-            customerObservable = null;
+        var currentRequest = [],
+            customerObservableList = [];
 
-        function loadCustomer() {
+        function loadCustomer(index) {
             fullScreenLoader.startLoader();
 
-            customerObservable = customerObservable || ko.observable(null);
+            customerObservableList[index] = customerObservableList[index] || ko.observable(null);
 
             var request = storage.post(
                 urlBuilder.createUrl('/unzer/get-external-customer', {}),
                 JSON.stringify({
-                    guestEmail: quote.guestEmail,
+                    guestEmail: quote.guestEmail
                 })
             );
 
             request.always(fullScreenLoader.stopLoader);
             request.fail(errorProcessor.process);
             request.done(function(customer) {
-                if (currentRequest !== request ||
+                if (currentRequest[index] !== request ||
                     customer === null ||
                     (customer instanceof Array && customer.length === 0)) {
                     return;
                 }
 
-                currentRequest = null;
+                currentRequest[index] = null;
 
                 // Magento converts camel case to snake case in API responses so we must manually map
                 // the properties to be consistent with the casing for the Unzer SDK.
@@ -49,14 +49,14 @@ define(
                 customer.companyInfo = customer.company_info;
                 delete customer.company_info;
 
-                customerObservable(customer);
+                customerObservableList[index](customer);
             });
 
-            if (currentRequest) {
-                currentRequest.abort();
+            if (currentRequest[index]) {
+                currentRequest[index].abort();
             }
 
-            currentRequest = request;
+            currentRequest[index] = request;
         }
 
         $(window).on('hashchange', function() {
@@ -64,17 +64,18 @@ define(
             // his billing and/or shipping address, in which case we can not use the customer
             // that we already loaded.
             if (location.hash === '#payment') {
-                loadCustomer();
+                customerObservableList.forEach((customerObservable, index) => {
+                    loadCustomer(index);
+                });
             }
         });
 
         return {
-            getCustomerObservable: function() {
-                if (customerObservable === null) {
-                    loadCustomer();
+            getCustomerObservable: function(index) {
+                if (!(index in customerObservableList)) {
+                    loadCustomer(index);
                 }
-
-                return customerObservable;
+                return customerObservableList[index];
             },
         };
     }

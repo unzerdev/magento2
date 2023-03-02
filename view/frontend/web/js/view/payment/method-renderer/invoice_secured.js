@@ -12,11 +12,11 @@ define(
             },
 
             initializeForm: function () {
+                this.resourceProvider = this.sdk.InvoiceSecured();
                 this.initializeCustomerForm(
                     'unzer-invoice-secured-customer',
                     'unzer-invoice-secured-customer-error'
                 );
-                this.resourceProvider = this.sdk.InvoiceSecured();
             },
 
             allInputsValid: function () {

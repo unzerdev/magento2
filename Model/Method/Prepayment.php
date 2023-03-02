@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Method;
 
@@ -14,6 +15,7 @@ use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface;
 use Unzer\PAPI\Model\Config;
 use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\TransactionTypes\Authorization;
 use UnzerSDK\Resources\TransactionTypes\Charge;
 
 /**
@@ -35,8 +37,6 @@ use UnzerSDK\Resources\TransactionTypes\Charge;
  *
  * @link  https://docs.unzer.com/
  *
- * @author magento@neusta.de
- *
  * @package  unzerdev/magento2
  */
 class Prepayment extends Base
@@ -46,22 +46,6 @@ class Prepayment extends Base
      */
     private $priceCurrency;
 
-    /**
-     * Base constructor.
-     * @param ManagerInterface $eventManager
-     * @param ValueHandlerPoolInterface $valueHandlerPool
-     * @param PaymentDataObjectFactory $paymentDataObjectFactory
-     * @param string $code
-     * @param string $formBlockType
-     * @param string $infoBlockType
-     * @param ScopeConfigInterface $scopeConfig
-     * @param Config $moduleConfig
-     * @param PriceCurrencyInterface $priceCurrency
-     * @param CommandPoolInterface|null $commandPool
-     * @param ValidatorPoolInterface|null $validatorPool
-     * @param CommandManagerInterface|null $commandExecutor
-     * @param LoggerInterface|null $logger
-     */
     public function __construct(
         ManagerInterface $eventManager,
         ValueHandlerPoolInterface $valueHandlerPool,
@@ -89,13 +73,13 @@ class Prepayment extends Base
     public function getAdditionalPaymentInformation(Order $order): string
     {
         $payment = $this->_moduleConfig
-            ->getUnzerClient()
+            ->getUnzerClient($order->getStore()->getCode(), $order->getPayment()->getMethodInstance())
             ->fetchPaymentByOrderId($order->getIncrementId());
 
-        /** @var Charge|null $charge */
-        $charge = $payment->getChargeByIndex(0);
+        /** @var Authorization|Charge|null $initialTransaction */
+        $initialTransaction = $payment->getInitialTransaction();
 
-        if ($charge === null) {
+        if ($initialTransaction === null) {
             return '';
         }
 
@@ -107,7 +91,7 @@ class Prepayment extends Base
             $order->getOrderCurrency()
         );
 
-        return __(
+        return (string)__(
             'Please transfer the amount of %1 to the following account after your order has arrived:<br /><br />'
             . 'Holder: %2<br/>'
             . 'IBAN: %3<br/>'
@@ -115,10 +99,10 @@ class Prepayment extends Base
             . '<i>Please use only this identification number as the descriptor: </i><br/>'
             . '%5',
             $formattedAmount,
-            $charge->getHolder(),
-            $charge->getIban(),
-            $charge->getBic(),
-            $charge->getDescriptor()
+            $initialTransaction->getHolder(),
+            $initialTransaction->getIban(),
+            $initialTransaction->getBic(),
+            $initialTransaction->getDescriptor()
         );
     }
 }

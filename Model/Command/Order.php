@@ -91,14 +91,14 @@ class Order extends AbstractCommand
         /** @var OrderPaymentInterface $payment */
         $payment = $commandSubject['payment']->getPayment();
 
-        $order = $payment->getOrder();
-        $order->setCanSendNewEmailFlag(false);
-
         /** @var Base $method */
         $method = $payment->getMethodInstance();
 
         /** @var string|null $action */
         $action = $method->getConfigData('order_payment_action');
+
+        $order = $payment->getOrder();
+        $order->setCanSendNewEmailFlag($method->getConfigData('can_send_new_email'));
 
         switch ($action) {
             case PaymentAction::ACTION_AUTHORIZE:

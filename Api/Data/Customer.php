@@ -2,6 +2,8 @@
 
 namespace Unzer\PAPI\Api\Data;
 
+use Unzer\PAPI\Model\Resource\Customer as CustomerResource;
+
 /**
  * Checkout API Customer DTO.
  *
@@ -63,6 +65,9 @@ class Customer
     /** @var CompanyInfo $companyInfo */
     protected $companyInfo;
 
+    /** @var String $threatMetrixId */
+    protected $threatMetrixId;
+
     /**
      * Customer constructor.
      */
@@ -71,10 +76,10 @@ class Customer
     }
 
     /**
-     * @param \UnzerSDK\Resources\Customer $customerResource
+     * @param CustomerResource $customerResource
      * @return static
      */
-    public static function fromResource(\UnzerSDK\Resources\Customer $customerResource): self
+    public static function fromResource(CustomerResource $customerResource): self
     {
         $customer = new self();
         $customer->id = $customerResource->getId();
@@ -86,6 +91,7 @@ class Customer
         $customer->email = $customerResource->getEmail();
         $customer->phone = $customerResource->getPhone();
         $customer->mobile = $customerResource->getMobile();
+        $customer->threatMetrixId = $customerResource->getThreatMetrixId();
 
         if ($customerResource->getBillingAddress() !== null) {
             $customer->billingAddress = Address::fromResource($customerResource->getBillingAddress());
@@ -196,5 +202,13 @@ class Customer
     public function getCompanyInfo(): ?\Unzer\PAPI\Api\Data\CompanyInfo
     {
         return $this->companyInfo;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getThreatMetrixId(): string
+    {
+        return $this->threatMetrixId;
     }
 }

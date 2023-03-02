@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Method;
 
 use Unzer\PAPI\Model\Config;
 use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\Payment;
+use UnzerSDK\Resources\TransactionTypes\Authorization;
 use UnzerSDK\Resources\TransactionTypes\Charge;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\ManagerInterface;
@@ -36,8 +38,6 @@ use Psr\Log\LoggerInterface;
  *
  * @link  https://docs.unzer.com/
  *
- * @author Justin Nuß
- *
  * @package  unzerdev/magento2
  */
 class Invoice extends Base
@@ -48,22 +48,6 @@ class Invoice extends Base
      */
     protected $_priceCurrency;
 
-    /**
-     * Base constructor.
-     * @param ManagerInterface $eventManager
-     * @param ValueHandlerPoolInterface $valueHandlerPool
-     * @param PaymentDataObjectFactory $paymentDataObjectFactory
-     * @param string $code
-     * @param string $formBlockType
-     * @param string $infoBlockType
-     * @param ScopeConfigInterface $scopeConfig
-     * @param Config $moduleConfig
-     * @param PriceCurrencyInterface $priceCurrency
-     * @param CommandPoolInterface|null $commandPool
-     * @param ValidatorPoolInterface|null $validatorPool
-     * @param CommandManagerInterface|null $commandExecutor
-     * @param LoggerInterface|null $logger
-     */
     public function __construct(
         ManagerInterface $eventManager,
         ValueHandlerPoolInterface $valueHandlerPool,
@@ -103,15 +87,14 @@ class Invoice extends Base
      */
     public function getAdditionalPaymentInformation(Order $order): string
     {
-        /** @var Payment $payment */
         $payment = $this->_moduleConfig
-            ->getUnzerClient()
+            ->getUnzerClient($order->getStore()->getCode(), $order->getPayment()->getMethodInstance())
             ->fetchPaymentByOrderId($order->getIncrementId());
 
-        /** @var Charge|null $charge */
-        $charge = $payment->getChargeByIndex(0);
+        /** @var Authorization|Charge|null $initialTransaction */
+        $initialTransaction = $payment->getInitialTransaction();
 
-        if ($charge === null) {
+        if ($initialTransaction === null) {
             return '';
         }
 
@@ -123,7 +106,7 @@ class Invoice extends Base
             $order->getOrderCurrency()
         );
 
-        return __(
+        return (string)__(
             'Please transfer the amount of %1 to the following account after your order has arrived:<br /><br />'
             . 'Holder: %2<br/>'
             . 'IBAN: %3<br/>'
@@ -131,16 +114,26 @@ class Invoice extends Base
             . '<i>Please use only this identification number as the descriptor: </i><br/>'
             . '%5',
             $formattedAmount,
-            $charge->getHolder(),
-            $charge->getIban(),
-            $charge->getBic(),
-            $charge->getDescriptor()
+            $initialTransaction->getHolder(),
+            $initialTransaction->getIban(),
+            $initialTransaction->getBic(),
+            $initialTransaction->getDescriptor()
         );
     }
 
+    /**
+     * @throws UnzerApiException
+     */
     protected function calculateRemainingAmount(Payment $payment): float
     {
         $charges = $payment->getCharges();
+        $initialTransaction = $payment->getInitialTransaction();
+
+        //TODO WIP! we need a working unzer insights account first, to test all invoice payment methods
+        if($initialTransaction instanceof Authorization && count($charges) === 0) {
+            return $initialTransaction->getAmount();
+        }
+
         $chargedAmount = 0;
         foreach ($charges as $charge) {
             /** @var Charge $charge */

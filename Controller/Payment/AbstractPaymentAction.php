@@ -1,12 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Controller\Payment;
 
-use Unzer\PAPI\Helper\Payment as PaymentHelper;
-use Unzer\PAPI\Model\Config;
-use UnzerSDK\Constants\ApiResponseCodes;
-use UnzerSDK\Exceptions\UnzerApiException;
-use UnzerSDK\Resources\Payment;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -14,6 +10,12 @@ use Magento\Framework\App\Response\HttpInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Sales\Model\Order;
+use Unzer\PAPI\Helper\Payment as PaymentHelper;
+use Unzer\PAPI\Model\Config;
+use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\Payment;
+use UnzerSDK\Resources\TransactionTypes\Authorization;
+use UnzerSDK\Resources\TransactionTypes\Charge;
 
 /**
  * Abstract action for accessing the current order and payment
@@ -34,8 +36,6 @@ use Magento\Sales\Model\Order;
  *
  * @link  https://docs.unzer.com/
  *
- * @author Justin Nuß
- *
  * @package  unzerdev/magento2
  */
 abstract class AbstractPaymentAction extends Action
@@ -55,13 +55,6 @@ abstract class AbstractPaymentAction extends Action
      */
     protected $_paymentHelper;
 
-    /**
-     * AbstractPaymentAction constructor.
-     * @param Context $context
-     * @param Session $checkoutSession
-     * @param Config $moduleConfig
-     * @param PaymentHelper $paymentHelper
-     */
     public function __construct(
         Context $context,
         Session $checkoutSession,
@@ -75,10 +68,6 @@ abstract class AbstractPaymentAction extends Action
     }
 
     /**
-     * Execute action based on request and return result
-     *
-     * Note: Request will be added as operation argument in future
-     *
      * @return ResultInterface|ResponseInterface
      */
     public function execute()
@@ -96,17 +85,17 @@ abstract class AbstractPaymentAction extends Action
 
         try {
             $payment = $this->_moduleConfig
-                ->getUnzerClient()
+                ->getUnzerClient($order->getStore()->getCode(), $order->getPayment()->getMethodInstance())
                 ->fetchPaymentByOrderId($order->getIncrementId());
 
             $response = $this->executeWith($order, $payment);
 
             if ($payment->isCanceled()) {
-                $message = $payment->getAuthorization() !== null
-                    ? $payment->getAuthorization()->getMessage()
-                    : $payment->getChargeByIndex(0)->getMessage();
+                /** @var Authorization|Charge $initialTransaction */
+                $initialTransaction = $payment->getInitialTransaction();
+                $message = $initialTransaction->getMessage()->getCustomer();
 
-                $response = $this->abortCheckout($message->getCustomer());
+                $response = $this->abortCheckout($message);
             }
         } catch (\Exception $e) {
             $message = $e->getMessage();
@@ -122,17 +111,11 @@ abstract class AbstractPaymentAction extends Action
     }
 
     /**
-     * @param Order $order
-     * @param Payment $payment
      * @return ResultInterface|ResponseInterface
      * @throws UnzerApiException
      */
     abstract public function executeWith(Order $order, Payment $payment);
 
-    /**
-     * @param string|null $message
-     * @return \Magento\Framework\Controller\Result\Redirect
-     */
     protected function abortCheckout(?string $message = Null): ResponseInterface
     {
         $this->_checkoutSession->restoreQuote();

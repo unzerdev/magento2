@@ -36,8 +36,6 @@ use UnzerSDK\Validators\PublicKeyValidator;
  *
  * @link  https://docs.unzer.com/
  *
- * @author Justin Nuß
- *
  * @package  unzerdev/magento2
  */
 class Base extends Adapter
@@ -60,6 +58,7 @@ class Base extends Adapter
      * @param string $formBlockType
      * @param string $infoBlockType
      * @param ScopeConfigInterface $scopeConfig
+     * @param Config $moduleConfig
      * @param CommandPoolInterface|null $commandPool
      * @param ValidatorPoolInterface|null $validatorPool
      * @param CommandManagerInterface|null $commandExecutor
@@ -78,8 +77,7 @@ class Base extends Adapter
         ValidatorPoolInterface $validatorPool = null,
         CommandManagerInterface $commandExecutor = null,
         LoggerInterface $logger = null
-    )
-    {
+    ) {
         parent::__construct(
             $eventManager,
             $valueHandlerPool,
@@ -104,7 +102,13 @@ class Base extends Adapter
      */
     public function getFrontendConfig(): array
     {
-        return [];
+        if(!$this->hasMethodValidOverrideKeys()) {
+            return [];
+        }
+
+        return [
+            'publicKey' => $this->getMethodOverridePublicKey((string)$this->getStore()),
+        ];
     }
 
     /**
@@ -138,8 +142,9 @@ class Base extends Adapter
             return parent::isAvailable($quote);
         }
 
-        $isPrivateKeyValid = PrivateKeyValidator::validate($moduleConfig->getPrivateKey());
-        $isPublicKeyValid = PublicKeyValidator::validate($moduleConfig->getPublicKey());
+        $storeCode = $quote->getStore()->getCode();
+        $isPrivateKeyValid = PrivateKeyValidator::validate($moduleConfig->getPrivateKey($storeCode, $this));
+        $isPublicKeyValid = PublicKeyValidator::validate($moduleConfig->getPublicKey($storeCode, $this));
         if (!$isPrivateKeyValid || !$isPublicKeyValid) {
             return false;
         }
@@ -150,11 +155,7 @@ class Base extends Adapter
 
         $hasCompany = !empty($quote->getBillingAddress()->getCompany());
 
-        if ($hasCompany) {
-            if ($this->isB2cOnly()) {
-                return false;
-            }
-        } elseif ($this->isB2bOnly()) {
+        if (!$hasCompany && $this->isB2bOnly()) {
             return false;
         }
 
@@ -199,5 +200,37 @@ class Base extends Adapter
         return __(parent::getTitle());
     }
 
+    /**
+     * Can be used with risk data
+     *
+     * @return bool
+     */
+    public function hasRiskData(): bool
+    {
+        return false;
+    }
 
+    public function hasMethodValidOverrideKeys(string $storeId = null): bool
+    {
+        if(!$this->getConfigData(Config::OVERRIDE_API_KEYS, $storeId)) {
+            return false;
+        }
+
+        $isPrivateKeyValid = PrivateKeyValidator::validate($this->getConfigData(Config::KEY_PRIVATE_KEY, $storeId));
+        $isPublicKeyValid = PublicKeyValidator::validate($this->getConfigData(Config::KEY_PUBLIC_KEY, $storeId));
+        if (!$isPrivateKeyValid || !$isPublicKeyValid) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getMethodOverridePublicKey(string $storeId = null): string
+    {
+        return (string)$this->getConfigData(Config::KEY_PUBLIC_KEY, $storeId);
+    }
+
+    public function getMethodOverridePrivateKey(string $storeId = null): string
+    {
+        return (string)$this->getConfigData(Config::KEY_PRIVATE_KEY, $storeId);
+    }
 }

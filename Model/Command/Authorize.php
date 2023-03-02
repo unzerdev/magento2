@@ -9,6 +9,7 @@ use Magento\Payment\Gateway\Command\ResultInterface;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
+use Unzer\PAPI\Api\Data\CreateRiskDataInterfaceFactory;
 use Unzer\PAPI\Helper\Order;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
@@ -35,8 +36,6 @@ use UnzerSDK\Resources\TransactionTypes\AuthorizationFactory;
  *
  * @link  https://docs.unzer.com/
  *
- * @author Justin Nuß
- *
  * @package  unzerdev/magento2
  */
 class Authorize extends AbstractCommand
@@ -46,6 +45,11 @@ class Authorize extends AbstractCommand
      */
     private $authorizationFactory;
 
+    /**
+     * @var CreateRiskDataInterfaceFactory
+     */
+    private $createRiskDataFactory;
+
     public function __construct(
         Session $checkoutSession,
         Config $config,
@@ -53,10 +57,12 @@ class Authorize extends AbstractCommand
         Order $orderHelper,
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
-        AuthorizationFactory $authorizationFactory
+        AuthorizationFactory $authorizationFactory,
+        CreateRiskDataInterfaceFactory $createRiskDataFactory
     ) {
         parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder, $storeManager);
         $this->authorizationFactory = $authorizationFactory;
+        $this->createRiskDataFactory = $createRiskDataFactory;
     }
 
     /**
@@ -92,7 +98,13 @@ class Authorize extends AbstractCommand
             ]);
             $authorization->setOrderId($order->getIncrementId());
 
-            $authorization = $this->_getClient()->performAuthorization(
+            if ($payment->getMethodInstance()->hasRiskData()) {
+                $authorization->setRiskData(
+                    $this->createRiskDataFactory->create(['payment' => $payment])->execute()
+                );
+            }
+
+            $authorization = $this->_getClient($order->getStore()->getCode(), $payment->getMethodInstance())->performAuthorization(
                 $authorization,
                 $resourceId,
                 $this->_getCustomerId($payment, $order),

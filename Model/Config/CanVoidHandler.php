@@ -1,9 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Config;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Payment\Gateway\Config\ValueHandlerInterface;
+use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order\Payment;
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Handler for checking if payments can be voided
@@ -24,24 +28,41 @@ use Magento\Sales\Model\Order\Payment;
  *
  * @link  https://docs.unzer.com/
  *
- * @author Justin Nuß
- *
  * @package  unzerdev/magento2
  */
 class CanVoidHandler implements ValueHandlerInterface
 {
+    private ScopeConfigInterface $scopeConfig;
+
+    public function __construct(
+        ScopeConfigInterface $scopeConfig
+    ) {
+        $this->scopeConfig = $scopeConfig;
+    }
+
     /**
      * @inheritDoc
      */
     public function handle(array $subject, $storeId = null)
     {
+        /** @var OrderPaymentInterface $payment */
         $payment = $subject['payment']->getPayment();
         if (!$payment instanceof Payment) {
             return false;
         }
-        if ($payment->getBaseAmountAuthorized() > $payment->getBaseAmountPaid()) {
-            return true;
+
+        if(!$this->canVoid($payment)) {
+            return false;
         }
-        return false;
+
+        return (float)$payment->getBaseAmountAuthorized() > (float)$payment->getBaseAmountPaid();
+    }
+
+    private function canVoid(Payment $payment)
+    {
+        $storeId = $payment->getOrder()->getStoreId();
+
+        $path = 'payment/' . $payment->getMethodInstance()->getCode() . '/' . 'can_void';
+        return $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $storeId);
     }
 }

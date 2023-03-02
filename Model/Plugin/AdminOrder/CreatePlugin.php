@@ -3,12 +3,17 @@ declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Plugin\AdminOrder;
 
+use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Model\AdminOrder\Create;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
 use Unzer\PAPI\Helper\Payment as PaymentHelper;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Method\Base;
+use UnzerSDK\Exceptions\UnzerApiException;
 
 class CreatePlugin
 {
@@ -37,6 +42,13 @@ class CreatePlugin
         $this->paymentHelper = $paymentHelper;
     }
 
+    /**
+     * @throws NoSuchEntityException
+     * @throws UnzerApiException
+     * @throws AlreadyExistsException
+     * @throws InputException
+     * @throws LocalizedException
+     */
     public function afterCreateOrder(Create $create, Order $order): Order
     {
         $payment = $order->getPayment();
@@ -50,7 +62,7 @@ class CreatePlugin
         }
 
         $payment = $this->moduleConfig
-            ->getUnzerClient($storeCode)
+            ->getUnzerClient($storeCode, $methodInstance)
             ->fetchPaymentByOrderId($order->getIncrementId());
 
         $this->paymentHelper->processState($order, $payment);
