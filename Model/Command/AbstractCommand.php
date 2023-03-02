@@ -8,6 +8,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Model\InfoInterface;
+use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order as SalesOrder;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Magento\Store\Model\StoreManagerInterface;
@@ -15,6 +16,7 @@ use Psr\Log\LoggerInterface;
 use Unzer\PAPI\Helper\Order;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
+use UnzerSDK\Constants\ApiResponseCodes;
 use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\AbstractUnzerResource;
 use UnzerSDK\Resources\Customer;
@@ -43,8 +45,6 @@ use function get_class;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
  *
  * @package  unzerdev/magento2
  */
@@ -81,6 +81,7 @@ abstract class AbstractCommand implements CommandInterface
      * @var UrlInterface
      */
     protected $_urlBuilder;
+
     /**
      * @var StoreManagerInterface
      */
@@ -123,12 +124,13 @@ abstract class AbstractCommand implements CommandInterface
 
     /**
      * @param string|null $storeCode
+     * @param MethodInterface|null $paymentMethodInstance
      * @return Unzer
      */
-    protected function _getClient(string $storeCode = null): Unzer
+    protected function _getClient(string $storeCode = null, MethodInterface $paymentMethodInstance = null): Unzer
     {
         if ($this->_client === null) {
-            $this->_client = $this->_config->getUnzerClient($storeCode);
+            $this->_client = $this->_config->getUnzerClient($storeCode, $paymentMethodInstance);
         }
 
         return $this->_client;
@@ -142,26 +144,57 @@ abstract class AbstractCommand implements CommandInterface
      * @param SalesOrder $order
      *
      * @return string|null
-     * @throws UnzerApiException
+     * @throws UnzerApiException|LocalizedException
      */
     protected function _getCustomerId(InfoInterface $payment, SalesOrder $order): ?string
     {
         /** @var string|null $customerId */
-        $customerId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
+        $customerId = (string)$payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
 
-        if (empty($customerId)) {
-            $papiCustomer = $this->_orderHelper->createCustomerFromOrder($order, $order->getCustomerEmail(), true);
-            $customerId = $papiCustomer->getId();
+        $customer = $this->getCustomer(
+            $customerId,
+            $order->getStore()->getCode(),
+            $order->getPayment()->getMethodInstance()
+        );
+
+        //customer not found on this account. create a new one...
+        if (is_null($customer)) {
+            $customer = $this->_orderHelper->createCustomerFromOrder($order, $order->getCustomerEmail(), true);
+
+            $payment->setAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID, $customer->getId());
         }
-
-        /** @var Customer $customer */
-        $customer = $this->_getClient()->fetchCustomer($customerId);
 
         if (!$this->_orderHelper->validateGatewayCustomerAgainstOrder($order, $customer)) {
             $this->_orderHelper->updateGatewayCustomerFromOrder($order, $customer);
         }
 
-        return $customerId;
+        return $customer->getId();
+    }
+
+    /**
+     * @throws UnzerApiException
+     */
+    protected function getCustomer(
+        string $customerId,
+        string $storeCode,
+        MethodInterface $paymentMethodInstance
+    ): ?Customer {
+
+        if ($customerId === '') {
+            return null;
+        }
+
+        try {
+            return $this->_getClient($storeCode, $paymentMethodInstance)
+                ->fetchCustomer($customerId);
+        } catch (UnzerApiException $e) {
+            //customer with given customerId not found on this account, create new customer, later.
+            if ($e->getCode() === ApiResponseCodes::API_ERROR_CUSTOMER_DOES_NOT_EXIST) {
+                return null;
+            }
+            //all other exceptions are still valid exceptions
+            throw $e;
+        }
     }
 
     /**
@@ -198,8 +231,7 @@ abstract class AbstractCommand implements CommandInterface
     protected function _setPaymentTransaction(
         OrderPayment $payment,
         AbstractUnzerResource $resource
-    ): void
-    {
+    ): void {
         $payment->setLastTransId($resource->getId());
         $payment->setTransactionId($resource->getId());
         $payment->setIsTransactionClosed(false);
@@ -229,16 +261,15 @@ abstract class AbstractCommand implements CommandInterface
      * @param string $code
      * @param string $message
      */
-    protected function addUnzerErrorToOrderHistory(SalesOrder $order, $code, $message): void {
+    protected function addUnzerErrorToOrderHistory(SalesOrder $order, string $code, string $message): void
+    {
         $order->addCommentToStatusHistory("Unzer Error (${code}): ${message}");
     }
 
     /**
-     * @param int $storeId
-     * @return string
      * @throws NoSuchEntityException
      */
-    public function getStoreCode(int $storeId)
+    public function getStoreCode(int $storeId): string
     {
         return $this->storeManager->getStore($storeId)->getCode();
     }

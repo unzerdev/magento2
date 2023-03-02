@@ -30,41 +30,43 @@
 <div class="order-payment-method-name">
     <?php echo $block->escapeHtml($block->getMethod()->getTitle()); ?>
 </div>
-<table class="data-table admin__table-secondary">
-    <tr>
-        <th colspan="2" style="text-align: center; font-weight: bold;">
-            <?php echo $block->escapeHtml(__('Unzer Payment Information')); ?>
-        </th>
-    </tr>
-    <tr>
-        <th><?php echo $block->escapeHtml(__('Account Holder')); ?>:</th>
-        <td><?php echo $block->escapeHtml($block->getAccountHolder()); ?></td>
-    </tr>
-    <tr>
-        <th><?php echo $block->escapeHtml(__('IBAN')); ?>:</th>
-        <td><?php echo $block->escapeHtml($block->getAccountIban()); ?></td>
-    </tr>
-    <tr>
-        <th><?php echo $block->escapeHtml(__('BIC')); ?>:</th>
-        <td><?php echo $block->escapeHtml($block->getAccountBic()); ?></td>
-    </tr>
-    <tr>
-        <th><?php echo $block->escapeHtml(__('Reference')); ?>:</th>
-        <td><?php echo $block->escapeHtml($block->getReference()); ?></td>
-    </tr>
-    <tr>
-        <th colspan="2" style="text-align: center; font-weight: bold;">
-            <?php echo $block->escapeHtml(__('Customer Information')); ?>
-        </th>
-    </tr>
-    <tr>
-        <th><?php echo $block->escapeHtml(__('Salutation')); ?>:</th>
-        <td><?php echo $block->escapeHtml(__($block->getCustomerSalutation())); ?></td>
-    </tr>
-    <?php if ($block->getCustomerBirthdate()): ?>
+<?php if($block->hasAccountData()): ?>
+    <table class="data-table admin__table-secondary">
         <tr>
-            <th><?php echo $block->escapeHtml(__('Birthdate')); ?>:</th>
-            <td><?php echo $block->escapeHtml($block->getCustomerBirthdate()); ?></td>
+            <th colspan="2" style="text-align: center; font-weight: bold;">
+                <?php echo $block->escapeHtml(__('Unzer Payment Information')); ?>
+            </th>
         </tr>
-    <?php endif; ?>
-</table>
+        <tr>
+            <th><?php echo $block->escapeHtml(__('Account Holder')); ?>:</th>
+            <td><?php echo $block->escapeHtml($block->getAccountHolder()); ?></td>
+        </tr>
+        <tr>
+            <th><?php echo $block->escapeHtml(__('IBAN')); ?>:</th>
+            <td><?php echo $block->escapeHtml($block->getAccountIban()); ?></td>
+        </tr>
+        <tr>
+            <th><?php echo $block->escapeHtml(__('BIC')); ?>:</th>
+            <td><?php echo $block->escapeHtml($block->getAccountBic()); ?></td>
+        </tr>
+        <tr>
+            <th><?php echo $block->escapeHtml(__('Reference')); ?>:</th>
+            <td><?php echo $block->escapeHtml($block->getReference()); ?></td>
+        </tr>
+        <tr>
+            <th colspan="2" style="text-align: center; font-weight: bold;">
+                <?php echo $block->escapeHtml(__('Customer Information')); ?>
+            </th>
+        </tr>
+        <tr>
+            <th><?php echo $block->escapeHtml(__('Salutation')); ?>:</th>
+            <td><?php echo $block->escapeHtml(__($block->getCustomerSalutation())); ?></td>
+        </tr>
+        <?php if ($block->getCustomerBirthdate()): ?>
+            <tr>
+                <th><?php echo $block->escapeHtml(__('Birthdate')); ?>:</th>
+                <td><?php echo $block->escapeHtml($block->getCustomerBirthdate()); ?></td>
+            </tr>
+        <?php endif; ?>
+    </table>
+<?php endif; ?>

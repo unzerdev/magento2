@@ -31,19 +31,22 @@ use Unzer\PAPI\Block\Info\Prepayment;
 
 ?>
 <?php echo $block->escapeHtml($block->getMethod()->getTitle()); ?>
-{{pdf_row_separator}}
-<?php echo $block->escapeHtml(__('Account Holder')); ?>
-<?php echo ': '; ?>
-<?php echo $block->escapeHtml($block->getAccountHolder()) ?>
-{{pdf_row_separator}}
-<?php echo $block->escapeHtml(__('IBAN')); ?>
-<?php echo ': '; ?>
-<?php echo $block->escapeHtml($block->getAccountIban()) ?>
-{{pdf_row_separator}}
-<?php echo $block->escapeHtml(__('BIC')); ?>
-<?php echo ': '; ?>
-<?php echo $block->escapeHtml($block->getAccountBic()) ?>
-{{pdf_row_separator}}
-<?php echo $block->escapeHtml(__('Reference')); ?>
-<?php echo ': '; ?>
-<?php echo $block->escapeHtml($block->getReference()) ?>
+
+<?php if($block->hasAccountData()): ?>
+    {{pdf_row_separator}}
+    <?php echo $block->escapeHtml(__('Account Holder')); ?>
+    <?php echo ': '; ?>
+    <?php echo $block->escapeHtml($block->getAccountHolder()) ?>
+    {{pdf_row_separator}}
+    <?php echo $block->escapeHtml(__('IBAN')); ?>
+    <?php echo ': '; ?>
+    <?php echo $block->escapeHtml($block->getAccountIban()) ?>
+    {{pdf_row_separator}}
+    <?php echo $block->escapeHtml(__('BIC')); ?>
+    <?php echo ': '; ?>
+    <?php echo $block->escapeHtml($block->getAccountBic()) ?>
+    {{pdf_row_separator}}
+    <?php echo $block->escapeHtml(__('Reference')); ?>
+    <?php echo ': '; ?>
+    <?php echo $block->escapeHtml($block->getReference()) ?>
+<?php endif; ?>

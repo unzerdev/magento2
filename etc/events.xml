@@ -24,6 +24,12 @@
     <event name="payment_method_assign_data_unzer_invoice_secured_b2b">
         <observer name="unzer_invoice_secured_b2b_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
+    <event name="payment_method_assign_data_unzer_paylater_invoice">
+        <observer name="unzer_paylater_invoice_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    </event>
+    <event name="payment_method_assign_data_unzer_paylater_invoice_b2b">
+        <observer name="unzer_paylater_invoice_b2b_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    </event>
     <event name="payment_method_assign_data_unzer_paypal">
         <observer name="unzer_paypal_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>

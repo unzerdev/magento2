@@ -37,17 +37,17 @@ class BirthDate
 
     public function getDay(): string
     {
-        return $this->date->format('d');
+        return !is_null($this->date) ? $this->date->format('d') : '';
     }
 
     public function getMonth(): string
     {
-        return $this->date->format('m');
+        return !is_null($this->date) ? $this->date->format('m') : '';
     }
 
     public function getYear(): string
     {
-        return $this->date->format('Y');
+        return !is_null($this->date) ? $this->date->format('Y') : '';
     }
 
     public function getDays(): array
@@ -95,7 +95,7 @@ class BirthDate
             $date = '';
         }
 
-        if (is_string($date)) {
+        if (is_string($date) && $date !== '') {
             $this->date = $this->dateTimeFactory->create($date);
         }
 

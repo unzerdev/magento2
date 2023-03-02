@@ -47,8 +47,24 @@ define(
 
             initialize: function() {
                 this._super();
-                this.customer = customerLoader.getCustomerObservable();
+                this.customer = customerLoader.getCustomerObservable('default');
                 this.customerValid = ko.observable(false);
+
+                let overridePublicKey = this._getMethodOverrideApiKey();
+                if(overridePublicKey) {
+                    this.sdk = new unzer(overridePublicKey);
+                    this.customer = customerLoader.getCustomerObservable(this.item.method);
+                }
+            },
+
+            _getMethodOverrideApiKey: function(){
+                if(!window.checkoutConfig.payment[this.item.method]) {
+                    return false;
+                }
+                if(!window.checkoutConfig.payment[this.item.method].publicKey) {
+                    return false;
+                }
+                return window.checkoutConfig.payment[this.item.method].publicKey;
             },
 
             initializeCustomerForm: function (fieldId, errorFieldId) {
@@ -99,11 +115,7 @@ define(
                     showHeader: false
                 });
 
-                // The SDK currently always shows these fields, although we don't specify them in the options above.
-                // Hide them manually since users are not allowed to change them anyways.
-                var field = $('#' + fieldId);
-                field.find('.field').filter('.city, .company, :has(.country), .street, .zip').hide();
-                field.find('.unzerUI.divider-horizontal:eq(0)').hide();
+                this.hideFormFields(fieldId);
             },
 
             _initializeCustomerFormForB2cCustomer: function (fieldId, errorFieldId, customer) {
@@ -115,6 +127,10 @@ define(
                     showHeader: false
                 });
 
+                this.hideFormFields(fieldId);
+            },
+
+            hideFormFields: function (fieldId) {
                 var field = $('#' + fieldId);
                 field.find('.field').filter('.city, .company, :has(.country), .street, .zip, .firstname, .lastname').hide();
                 field.find('.unzerUI.divider-horizontal:eq(0)').hide();
@@ -135,7 +151,8 @@ define(
                     'po_number': null,
                     'additional_data': {
                         'customer_id': this.customer !== null && this.customer() !== null ? this.customer().id : null,
-                        'resource_id': this.resourceId
+                        'resource_id': this.resourceId,
+                        'threat_metrix_id': this.customer !== null && this.customer() !== null ? this.customer().threat_metrix_id : null,
                     }
                 };
             },

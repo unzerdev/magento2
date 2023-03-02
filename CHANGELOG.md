@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0](https://github.com/unzerdev/magento2/compare/1.4.2..2.0.0)
+
+### Added
+* new Payment Methods Paylater Invoice B2C and Paylater Invoice B2B
+* Payment Methods Paylater Invoice B2C/B2B have a new setting to override general API Keys and use separate ones
+  * Attention! The changes we had to make here, might be backwards incompatible changes, affecting all payment methods, depending on your own extensions of this module.
+
+### Fixed
+* Cancel of authorization payment methods (credit card / paypal) not being send to unzer account, resulting in an "offline" Cancel. Now "Online" Cancel is possible.
+* Void of authorization payment methods (credit card / paypal) is now possible
+* Order Emails now being send for method Unzer Prepayment
+
 ## [1.4.2](https://github.com/unzerdev/magento2/compare/1.4.1..1.4.2)
 ### Fixed
 * php short tag in backend order template

@@ -42,6 +42,14 @@ define(
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/invoice_secured_b2b'
             },
             {
+                type: 'unzer_paylater_invoice',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/paylater_invoice'
+            },
+            {
+                type: 'unzer_paylater_invoice_b2b',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/paylater_invoice_b2b'
+            },
+            {
                 type: 'unzer_paypal',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/paypal'
             },

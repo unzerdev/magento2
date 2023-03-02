@@ -34,14 +34,16 @@ class DirectDebit extends Base
      */
     public function getFrontendConfig(): array
     {
+        $parentConfig = parent::getFrontendConfig();
+
         $merchantName = $this->getConfigData('merchant_name');
 
         if (empty($merchantName)) {
             $merchantName = $this->_scopeConfig->getValue(self::CONFIG_PATH_STORE_NAME);
         }
 
-        return [
-            'merchantName' => $merchantName,
-        ];
+        $parentConfig['merchantName'] = $merchantName;
+
+        return $parentConfig;
     }
 }

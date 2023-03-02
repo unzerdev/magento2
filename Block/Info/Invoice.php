@@ -1,15 +1,18 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Block\Info;
 
-use Unzer\PAPI\Helper\Order as OrderHelper;
-use Unzer\PAPI\Model\Config;
-use UnzerSDK\Resources\Payment;
-use UnzerSDK\Resources\TransactionTypes\Charge;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Template;
 use Magento\Payment\Block\Info;
 use Magento\Sales\Model\Order;
+use Unzer\PAPI\Model\Config;
+use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\Payment;
+use UnzerSDK\Resources\TransactionTypes\Authorization;
+use UnzerSDK\Resources\TransactionTypes\Charge;
 
 /**
  * Customer Account Order Invoice Information Block
@@ -30,8 +33,6 @@ use Magento\Sales\Model\Order;
  *
  * @link  https://docs.unzer.com/
  *
- * @author Justin Nuß
- *
  * @package  unzerdev/magento2
  */
 class Invoice extends Info
@@ -48,17 +49,9 @@ class Invoice extends Info
      */
     protected $_payment = null;
 
-    /**
-     * Invoice constructor.
-     * @param Template\Context $context
-     * @param Config $moduleConfig
-     * @param OrderHelper $orderHelper
-     * @param array $data
-     */
     public function __construct(
         Template\Context $context,
         Config $moduleConfig,
-        OrderHelper $orderHelper,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -76,25 +69,32 @@ class Invoice extends Info
     }
 
     /**
-     * Returns the first charge for the payment.
-     *
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\UnzerApiException
-     *
-     * @return Charge|null
+     * @return Authorization|Charge|null
+     * @throws UnzerApiException
+     * @throws LocalizedException
      */
-    protected function _getCharge()
+    protected function getInitialTransaction()
     {
-        return $this->_getPayment()->getChargeByIndex(0);
+        $transaction = $this->_getPayment()->getInitialTransaction();
+
+        if($transaction instanceof Authorization || $transaction instanceof Charge) {
+            return $transaction;
+        }
+        return null;
     }
 
     /**
-     * Returns the payment.
-     *
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\UnzerApiException
-     *
-     * @return Payment
+     * @throws UnzerApiException
+     * @throws LocalizedException
+     */
+    public function hasAccountData(): bool
+    {
+        return !is_null($this->getInitialTransaction());
+    }
+
+    /**
+     * @throws UnzerApiException
+     * @throws LocalizedException
      */
     protected function _getPayment(): Payment
     {
@@ -103,7 +103,7 @@ class Invoice extends Info
             $order = $this->getInfo()->getOrder();
 
             $storeId = $this->getStoreCode($order->getStoreId());
-            $client  = $this->_moduleConfig->getUnzerClient($storeId);
+            $client = $this->_moduleConfig->getUnzerClient($storeId, $order->getPayment()->getMethodInstance());
 
             $this->_payment = $client->fetchPaymentByOrderId($order->getIncrementId());
         }
@@ -112,51 +112,60 @@ class Invoice extends Info
     }
 
     /**
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\UnzerApiException
-     * @return string
+     * @throws UnzerApiException
+     * @throws LocalizedException
      */
     public function getAccountHolder(): ?string
     {
-        return $this->_getCharge()->getHolder();
+        $initalTransaction = $this->getInitialTransaction();
+        if (is_null($initalTransaction)) {
+            return null;
+        }
+
+        return $initalTransaction->getHolder();
     }
 
     /**
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\UnzerApiException
-     * @return string
+     * @throws UnzerApiException
+     * @throws LocalizedException
      */
     public function getAccountIban(): ?string
     {
-        return $this->_getCharge()->getIban();
+        $initalTransaction = $this->getInitialTransaction();
+        if (is_null($initalTransaction)) {
+            return null;
+        }
+        return $initalTransaction->getIban();
     }
 
     /**
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\UnzerApiException
-     * @return string
+     * @throws UnzerApiException
+     * @throws LocalizedException
      */
     public function getAccountBic(): ?string
     {
-        return $this->_getCharge()->getBic();
+        $initalTransaction = $this->getInitialTransaction();
+        if (is_null($initalTransaction)) {
+            return null;
+        }
+        return $initalTransaction->getBic();
     }
 
     /**
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\UnzerApiException
-     * @return string
+     * @throws UnzerApiException
+     * @throws LocalizedException
      */
     public function getReference(): ?string
     {
-        return $this->_getCharge()->getDescriptor();
+        $initalTransaction = $this->getInitialTransaction();
+        if (is_null($initalTransaction)) {
+            return null;
+        }
+        return $initalTransaction->getDescriptor();
     }
 
     /**
-     * Returns the order for the invoice.
-     *
-     * @throws \Magento\Framework\Exception\LocalizedException
-     *
-     * @return Order
+     * @throws LocalizedException
      */
     public function getOrder(): Order
     {
@@ -168,11 +177,9 @@ class Invoice extends Info
     }
 
     /**
-     * @param string|null $storeId
-     * @return string
      * @throws NoSuchEntityException
      */
-    public function getStoreCode(string $storeId = null)
+    public function getStoreCode(string $storeId = null): string
     {
         return $this->_storeManager->getStore($storeId)->getCode();
     }

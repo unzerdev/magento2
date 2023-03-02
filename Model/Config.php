@@ -2,12 +2,14 @@
 
 namespace Unzer\PAPI\Model;
 
-use Unzer\PAPI\Model\Logger\DebugHandler;
-use UnzerSDK\Unzer;
-use UnzerSDK\Interfaces\DebugHandlerInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Locale\Resolver;
+use Magento\Payment\Model\MethodInterface;
 use Magento\Store\Model\ScopeInterface;
+use Unzer\PAPI\Model\Logger\DebugHandler;
+use Unzer\PAPI\Model\Method\OverrideApiCredentialInterface;
+use UnzerSDK\Interfaces\DebugHandlerInterface;
+use UnzerSDK\Unzer;
 
 /**
  * Global Module configuration and SDK provider
@@ -28,14 +30,13 @@ use Magento\Store\Model\ScopeInterface;
  *
  * @link  https://docs.unzer.com/
  *
- * @author Justin Nuß
- *
  * @package  unzerdev/magento2
  */
 class Config extends \Magento\Payment\Gateway\Config\Config
 {
     public const BASE_CONFIGURATION_PATH = 'payment/unzer/';
 
+    public const OVERRIDE_API_KEYS = 'override_api_keys';
     public const KEY_PUBLIC_KEY = 'public_key';
     public const KEY_PRIVATE_KEY = 'private_key';
     public const KEY_LOGGING = 'logging';
@@ -53,6 +54,8 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public const METHOD_BANK_TRANSFER = 'unzer_bank_transfer';
     public const METHOD_IDEAL = 'unzer_ideal';
     public const METHOD_INVOICE = 'unzer_invoice';
+    public const METHOD_PAYLATER_INVOICE = 'unzer_paylater_invoice';
+    public const METHOD_PAYLATER_INVOICE_B2B = 'unzer_paylater_invoice_b2b';
     public const METHOD_INVOICE_SECURED_B2B = 'unzer_invoice_secured_b2b';
     public const METHOD_INVOICE_SECURED = 'unzer_invoice_secured';
     public const METHOD_PAYPAL = 'unzer_paypal';
@@ -117,10 +120,15 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * Returns the public key.
      *
      * @param string|null $storeId
+     * @param MethodInterface|null $paymentMethodInstance
      * @return string|null
      */
-    public function getPublicKey(string $storeId = null): ?string
+    public function getPublicKey(string $storeId = null, MethodInterface $paymentMethodInstance = null): ?string
     {
+        if ($paymentMethodInstance instanceof OverrideApiCredentialInterface && $paymentMethodInstance->hasMethodValidOverrideKeys($storeId)) {
+            return $paymentMethodInstance->getMethodOverridePublicKey($storeId);
+        }
+
         return $this->_scopeConfig->getValue(
             self::BASE_CONFIGURATION_PATH . self::KEY_PUBLIC_KEY,
             ScopeInterface::SCOPE_STORE,
@@ -132,10 +140,15 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * Returns the private key.
      *
      * @param string|null $storeId
+     * @param MethodInterface|null $paymentMethodInstance
      * @return string|null
      */
-    public function getPrivateKey(string $storeId = null): ?string
+    public function getPrivateKey(string $storeId = null, MethodInterface $paymentMethodInstance = null): ?string
     {
+        if ($paymentMethodInstance instanceof OverrideApiCredentialInterface && $paymentMethodInstance->hasMethodValidOverrideKeys($storeId)) {
+            return $paymentMethodInstance->getMethodOverridePrivateKey($storeId);
+        }
+
         return $this->_scopeConfig->getValue(
             self::BASE_CONFIGURATION_PATH . self::KEY_PRIVATE_KEY,
             ScopeInterface::SCOPE_STORE,
@@ -147,12 +160,13 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * Returns an API client using the configured private key.
      *
      * @param string|null $storeId
+     * @param MethodInterface|null $paymentMethodInstance
      * @return Unzer
      */
-    public function getUnzerClient(string $storeId = null): Unzer
+    public function getUnzerClient(string $storeId = null, MethodInterface $paymentMethodInstance = null): Unzer
     {
         $client = new Unzer(
-            $this->getPrivateKey($storeId),
+            $this->getPrivateKey($storeId, $paymentMethodInstance),
             $this->_localeResolver->getLocale()
         );
 

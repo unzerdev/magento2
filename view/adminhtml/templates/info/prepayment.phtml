@@ -33,26 +33,28 @@ use Unzer\PAPI\Block\Info\Prepayment;
 <div class="order-payment-method-name">
     <?php echo $block->escapeHtml($block->getMethod()->getTitle()); ?>
 </div>
-<table class="data-table admin__table-secondary">
-    <tr>
-        <th colspan="2" style="text-align: center; font-weight: bold;">
-            <?php echo $block->escapeHtml(__('Unzer Payment Information')); ?>
-        </th>
-    </tr>
-    <tr>
-        <th><?php echo $block->escapeHtml(__('Account Holder')); ?>:</th>
-        <td><?php echo $block->escapeHtml($block->getAccountHolder()); ?></td>
-    </tr>
-    <tr>
-        <th><?php echo $block->escapeHtml(__('IBAN')); ?>:</th>
-        <td><?php echo $block->escapeHtml($block->getAccountIban()); ?></td>
-    </tr>
-    <tr>
-        <th><?php echo $block->escapeHtml(__('BIC')); ?>:</th>
-        <td><?php echo $block->escapeHtml($block->getAccountBic()); ?></td>
-    </tr>
-    <tr>
-        <th><?php echo $block->escapeHtml(__('Reference')); ?>:</th>
-        <td><?php echo $block->escapeHtml($block->getReference()); ?></td>
-    </tr>
-</table>
+<?php if($block->hasAccountData()): ?>
+    <table class="data-table admin__table-secondary">
+        <tr>
+            <th colspan="2" style="text-align: center; font-weight: bold;">
+                <?php echo $block->escapeHtml(__('Unzer Payment Information')); ?>
+            </th>
+        </tr>
+        <tr>
+            <th><?php echo $block->escapeHtml(__('Account Holder')); ?>:</th>
+            <td><?php echo $block->escapeHtml($block->getAccountHolder()); ?></td>
+        </tr>
+        <tr>
+            <th><?php echo $block->escapeHtml(__('IBAN')); ?>:</th>
+            <td><?php echo $block->escapeHtml($block->getAccountIban()); ?></td>
+        </tr>
+        <tr>
+            <th><?php echo $block->escapeHtml(__('BIC')); ?>:</th>
+            <td><?php echo $block->escapeHtml($block->getAccountBic()); ?></td>
+        </tr>
+        <tr>
+            <th><?php echo $block->escapeHtml(__('Reference')); ?>:</th>
+            <td><?php echo $block->escapeHtml($block->getReference()); ?></td>
+        </tr>
+    </table>
+<?php endif; ?>
