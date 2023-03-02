@@ -27,8 +27,6 @@ use Magento\Payment\Helper\Data as PaymentHelper;
  *
  * @link  https://docs.unzer.com/
  *
- * @author Justin Nuß
- *
  * @package  unzerdev/magento2
  */
 class Provider implements ConfigProviderInterface
@@ -47,6 +45,8 @@ class Provider implements ConfigProviderInterface
         Config::METHOD_INVOICE,
         Config::METHOD_INVOICE_SECURED,
         Config::METHOD_INVOICE_SECURED_B2B,
+        Config::METHOD_PAYLATER_INVOICE,
+        Config::METHOD_PAYLATER_INVOICE_B2B,
         Config::METHOD_PAYPAL,
         Config::METHOD_SOFORT,
         Config::METHOD_ALIPAY,

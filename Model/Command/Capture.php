@@ -41,8 +41,6 @@ use UnzerSDK\Resources\TransactionTypes\ChargeFactory;
  *
  * @link  https://docs.unzer.com/
  *
- * @author Justin Nuß
- *
  * @package  unzerdev/magento2
  */
 class Capture extends AbstractCommand
@@ -131,7 +129,8 @@ class Capture extends AbstractCommand
      */
     protected function _chargeExisting(Order $order, string $paymentId, float $amount, string $storeId = null): Charge
     {
-        $payment = $this->_getClient($storeId)->fetchPayment($paymentId);
+        $payment = $this->_getClient($storeId, $order->getPayment()->getMethodInstance())
+            ->fetchPayment($paymentId);
 
         if ($this->_config->getTransmitCurrency($order->getStore()->getCode()) === $this->_config::CURRENCY_CUSTOMER) {
             $amount = (float)$order->getTotalDue();
@@ -176,7 +175,7 @@ class Capture extends AbstractCommand
         ]);
         $charge->setOrderId($order->getIncrementId());
 
-        return $this->_getClient($storeId)->performCharge(
+        return $this->_getClient($storeId, $order->getPayment()->getMethodInstance())->performCharge(
             $charge,
             $this->_getResourceId($payment, $order),
             $this->_getCustomerId($payment, $order),

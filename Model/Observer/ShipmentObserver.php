@@ -114,7 +114,7 @@ class ShipmentObserver implements ObserverInterface
         }
 
         $payment = $this->_moduleConfig
-            ->getUnzerClient($storeCode)
+            ->getUnzerClient($storeCode, $methodInstance)
             ->fetchPaymentByOrderId($order->getIncrementId());
 
         $this->_paymentHelper->processState($order, $payment);

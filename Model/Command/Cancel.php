@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Command;
 
-use UnzerSDK\Constants\CancelReasonCodes;
-use UnzerSDK\Exceptions\UnzerApiException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
+use UnzerSDK\Constants\CancelReasonCodes;
+use UnzerSDK\Exceptions\UnzerApiException;
 
 /**
  * Cancel Command for payments
@@ -26,8 +27,6 @@ use Magento\Sales\Model\Order;
  *
  * @link  https://docs.unzer.com/
  *
- * @author Justin Nuß
- *
  * @package  unzerdev/magento2
  */
 class Cancel extends AbstractCommand
@@ -46,15 +45,22 @@ class Cancel extends AbstractCommand
 
         $order = $payment->getOrder();
 
-        $storeCode = $this->getStoreCode($order->getStoreId());
+        $storeCode = $order->getStore()->getCode();
 
-        $hpPayment = $this->_getClient($storeCode)->fetchPaymentByOrderId($order->getIncrementId());
+        $client = $this->_getClient($storeCode, $payment->getMethodInstance());
+
+        $hpPayment = $client->fetchPaymentByOrderId($order->getIncrementId());
 
         if ($hpPayment->isCanceled()) {
             return;
         }
 
-        $cancellations = $hpPayment->cancelAmount($commandSubject['amount'] ?? null, static::REASON);
+        $amount = null;
+        if(array_key_exists('amount', $commandSubject) && !is_null($commandSubject['amount'])) {
+            $amount = (float)$commandSubject['amount'];
+        }
+
+        $cancellations = $client->cancelPayment($hpPayment, $amount, static::REASON);
 
         if (count($cancellations) > 0) {
             $lastCancellation = end($cancellations);

@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Controller\Payment;
 
+use Magento\Sales\Model\Order;
 use UnzerSDK\Resources\Payment;
 use UnzerSDK\Resources\TransactionTypes\Authorization;
 use UnzerSDK\Resources\TransactionTypes\Charge;
-use Magento\Sales\Model\Order;
 
 /**
  * Action for redirecting customers to payment providers
@@ -26,8 +27,6 @@ use Magento\Sales\Model\Order;
  *
  * @link  https://docs.unzer.com/
  *
- * @author Justin Nuß
- *
  * @package  unzerdev/magento2
  */
 class Redirect extends AbstractPaymentAction
@@ -38,7 +37,7 @@ class Redirect extends AbstractPaymentAction
     public function executeWith(Order $order, Payment $payment)
     {
         /** @var Authorization|Charge $transaction */
-        $transaction = $payment->getAuthorization() ?? $payment->getChargeByIndex(0);
+        $transaction = $payment->getInitialTransaction();
 
         if ($transaction->isError()) {
             return $this->abortCheckout($transaction->getMessage()->getCustomer());

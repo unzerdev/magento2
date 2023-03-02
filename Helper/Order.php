@@ -12,14 +12,16 @@ use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Model\Order as OrderModel;
 use Unzer\PAPI\Block\System\Config\Form\Field\BirthDateFactory;
 use Unzer\PAPI\Model\Config;
+use Unzer\PAPI\Model\Resource\CreateThreatMetrixId;
+use Unzer\PAPI\Model\Resource\Customer as CustomerResource;
 use UnzerSDK\Constants\BasketItemTypes;
 use UnzerSDK\Constants\Salutations;
+use UnzerSDK\Constants\ShippingTypes;
 use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\Basket;
 use UnzerSDK\Resources\BasketFactory;
 use UnzerSDK\Resources\Customer;
-use UnzerSDK\Resources\CustomerFactory;
-use UnzerSDK\Resources\EmbeddedResources;
+use UnzerSDK\Resources\EmbeddedResources\Address;
 use UnzerSDK\Resources\EmbeddedResources\BasketItem;
 use UnzerSDK\Resources\EmbeddedResources\BasketItemFactory;
 use UnzerSDK\Resources\Metadata;
@@ -43,8 +45,6 @@ use UnzerSDK\Resources\PaymentTypes\BasePaymentType;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
  *
  * @package  unzerdev/magento2
  */
@@ -83,13 +83,19 @@ class Order
      */
     private $birthDateFactory;
 
+    /**
+     * @var CreateThreatMetrixId
+     */
+    private $createThreatMetrixId;
+
     public function __construct(
         Config $moduleConfig,
         ModuleListInterface $moduleList,
         ProductMetadataInterface $productMetadata,
         BasketFactory $basketFactory,
         BasketItemFactory $basketItemFactory,
-        BirthDateFactory $birthDateFactory
+        BirthDateFactory $birthDateFactory,
+        CreateThreatMetrixId $createThreatMetrixId
     ) {
         $this->_moduleConfig = $moduleConfig;
         $this->_moduleList = $moduleList;
@@ -97,6 +103,7 @@ class Order
         $this->basketFactory = $basketFactory;
         $this->basketItemFactory = $basketItemFactory;
         $this->birthDateFactory = $birthDateFactory;
+        $this->createThreatMetrixId = $createThreatMetrixId;
     }
 
     /**
@@ -152,14 +159,13 @@ class Order
             if ($transmitInCustomerCurrency) {
                 $amountDiscountPerUnitGross = abs($orderItem->getDiscountAmount());
                 $amountPerUnitGross = $orderItem->getPriceInclTax();
-            }
-            else{
+            } else {
                 $amountDiscountPerUnitGross = abs($orderItem->getBaseDiscountAmount());
                 $amountPerUnitGross = $orderItem->getBasePriceInclTax();
             }
             //add Discount as Voucher for Items qty gt 1 to prevent of 10 / 3 rounding error
-            if($amountDiscountPerUnitGross > 0 && $orderItem->getQtyOrdered() > 1){
-                /** @var BasketVoucherItem $basketItem */
+            if ($amountDiscountPerUnitGross > 0 && $orderItem->getQtyOrdered() > 1) {
+                /** @var BasketItem $basketItem */
                 $basketVoucherItem = $this->basketItemFactory->create();
                 $basketVoucherItem->setAmountDiscountPerUnitGross($amountDiscountPerUnitGross);
                 $basketVoucherItem->setAmountPerUnitGross(0);
@@ -176,8 +182,6 @@ class Order
             $basketItem->setAmountDiscountPerUnitGross($amountDiscountPerUnitGross);
             $basketItem->setAmountPerUnitGross($amountPerUnitGross);
             $basketItem->setVat($orderItem->getTaxPercent());
-
-            $basketItem->setBasketItemReferenceId($orderItem->getSku());
             $basketItem->setQuantity($orderItem->getQtyOrdered());
             $basketItem->setTitle($orderItem->getName());
             $basketItem->setType($orderItem->getIsVirtual() ? BasketItemTypes::DIGITAL : BasketItemTypes::GOODS);
@@ -200,8 +204,8 @@ class Order
 
         $metaData->setShopType('Magento 2')
             ->setShopVersion($this->_productMetadata->getVersion())
-            ->addMetadata('customerId', $order->getCustomerId())
-            ->addMetadata('customerGroupId', $order->getCustomerGroupId())
+            ->addMetadata('customerId', (string)$order->getCustomerId())
+            ->addMetadata('customerGroupId', (string)$order->getCustomerGroupId())
             ->addMetadata('pluginType', 'unzerdev/magento2')
             ->addMetadata('pluginVersion', $this->_moduleList->getOne('Unzer_PAPI')['setup_version'])
             ->addMetadata('storeId', $order->getStoreId());
@@ -218,6 +222,7 @@ class Order
      *
      * @return Customer|null
      * @throws UnzerApiException
+     * @throws LocalizedException
      */
     public function createCustomerFromQuote(Quote $quote, string $email, bool $createResource = false): ?Customer
     {
@@ -228,24 +233,31 @@ class Order
 
         $billingAddress = $quote->getBillingAddress();
 
-        $customer = CustomerFactory::createCustomer(
-            $billingAddress->getFirstname(),
-            $billingAddress->getLastname()
-        );
+        $customer = (new CustomerResource())
+            ->setFirstname($billingAddress->getFirstname())
+            ->setLastname($billingAddress->getLastname());
 
         $customer->setSalutation($this->getSalutationFromQuote($quote));
         $customer->setEmail($email);
         $customer->setPhone($billingAddress->getTelephone());
 
+        $threatMetrixId = $this->createThreatMetrixId->execute($quote);
+        if (!is_null($threatMetrixId)) {
+            $customer->setThreatMetrixId($threatMetrixId);
+        }
+
         $company = $billingAddress->getCompany();
         if (!empty($company)) {
             $customer->setCompany($company);
         }
+        $shippingAddress = $quote->getShippingAddress();
+        $shippingType = $this->getShippingType($billingAddress, $shippingAddress);
 
         $this->updateGatewayAddressFromMagento($customer->getBillingAddress(), $billingAddress);
-        $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $quote->getShippingAddress());
+        $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $shippingAddress, $shippingType);
 
-        $client = $this->_moduleConfig->getUnzerClient();
+        $methodInstance = $quote->getPayment()->getMethod() ? $quote->getPayment()->getMethodInstance() : null;
+        $client = $this->_moduleConfig->getUnzerClient($quote->getStore()->getCode(), $methodInstance);
 
         return $createResource ? $client->createCustomer($customer) : $customer;
     }
@@ -262,7 +274,7 @@ class Order
      */
     public function createCustomerFromOrder(OrderModel $order, string $email, bool $createResource = false): ?Customer
     {
-        $client = $this->_moduleConfig->getUnzerClient();
+        $client = $this->_moduleConfig->getUnzerClient($order->getStore()->getCode(), $order->getPayment()->getMethodInstance());
 
         $billingAddress = $order->getBillingAddress();
         $customer = new Customer();
@@ -295,7 +307,8 @@ class Order
 
         $shippingAddress = $order->getShippingAddress();
         if ($shippingAddress) {
-            $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $shippingAddress);
+            $shippingType = $this->getShippingType($billingAddress, $shippingAddress);
+            $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $shippingAddress, $shippingType);
         }
 
         return $createResource ? $client->createCustomer($customer) : $customer;
@@ -318,7 +331,7 @@ class Order
         }
 
         return $this->_moduleConfig
-            ->getUnzerClient()
+            ->getUnzerClient($order->getStore()->getCode(), $method)
             ->createPaymentType(
                 $method->createPaymentType()
             );
@@ -327,12 +340,13 @@ class Order
     /**
      * Updates an Unzer address from an address in Magento.
      *
-     * @param EmbeddedResources\Address $gatewayAddress
+     * @param Address $gatewayAddress
      * @param Quote\Address|OrderAddressInterface $magentoAddress
      */
     private function updateGatewayAddressFromMagento(
-        EmbeddedResources\Address $gatewayAddress,
-        $magentoAddress
+        Address $gatewayAddress,
+        $magentoAddress,
+        string $shippingType = ShippingTypes::EQUALS_BILLING
     ): void {
         $street = $this->convertStreetLinesToString($magentoAddress->getStreet());
 
@@ -341,6 +355,33 @@ class Order
         $gatewayAddress->setCountry($magentoAddress->getCountryId());
         $gatewayAddress->setStreet($street);
         $gatewayAddress->setZip($magentoAddress->getPostcode());
+        if ($magentoAddress->getAddressType() === Quote\Address::ADDRESS_TYPE_SHIPPING) {
+            $gatewayAddress->setShippingType($shippingType);
+        }
+    }
+
+    public function getShippingType($billingAddress, $shippingAddress): string
+    {
+        $billingStreet = $this->convertStreetLinesToString($billingAddress->getStreet());
+        $shippingStreet = $this->convertStreetLinesToString($shippingAddress->getStreet());
+
+        if ($billingAddress->getName() !== $shippingAddress->getName()) {
+            return ShippingTypes::DIFFERENT_ADDRESS;
+        }
+        if ($billingAddress->getCity() !== $shippingAddress->getCity()) {
+            return ShippingTypes::DIFFERENT_ADDRESS;
+        }
+        if ($billingAddress->getCountryId() !== $shippingAddress->getCountryId()) {
+            return ShippingTypes::DIFFERENT_ADDRESS;
+        }
+        if ($billingStreet !== $shippingStreet) {
+            return ShippingTypes::DIFFERENT_ADDRESS;
+        }
+        if ($billingAddress->getZip() !== $shippingAddress->getZip()) {
+            return ShippingTypes::DIFFERENT_ADDRESS;
+        }
+
+        return ShippingTypes::EQUALS_BILLING;
     }
 
     /**
@@ -374,15 +415,17 @@ class Order
             $billingAddress
         );
 
-        $magentoShippingAddress = $order->getShippingAddress();
-        if (null !== $magentoShippingAddress) {
+        $shippingAddress = $order->getShippingAddress();
+        if (null !== $shippingAddress) {
+            $shippingType = $this->getShippingType($billingAddress, $shippingAddress);
             $this->updateGatewayAddressFromMagento(
                 $gatewayCustomer->getShippingAddress(),
-                $magentoShippingAddress
+                $shippingAddress,
+                $shippingType
             );
         }
 
-        $client = $this->_moduleConfig->getUnzerClient();
+        $client = $this->_moduleConfig->getUnzerClient($order->getStore()->getCode(), $order->getPayment()->getMethodInstance());
         $client->updateCustomer($gatewayCustomer);
     }
 
@@ -421,12 +464,12 @@ class Order
     }
 
     /**
-     * @param EmbeddedResources\Address $gatewayAddress
+     * @param Address $gatewayAddress
      * @param OrderAddressInterface $magentoAddress
      * @return bool
      */
     private function validateGatewayAddressAgainstOrderAddress(
-        EmbeddedResources\Address $gatewayAddress,
+        Address $gatewayAddress,
         OrderAddressInterface $magentoAddress
     ): bool {
         $street = $this->convertStreetLinesToString($magentoAddress->getStreet());
@@ -482,7 +525,7 @@ class Order
         $birthDate->setDate($payment->getAdditionalInformation('birthDate'));
 
         $date = $birthDate->getDate();
-        if(is_null($date)) {
+        if (is_null($date)) {
             return null;
         }
         return $date->format('Y-m-d');

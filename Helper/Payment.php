@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Helper;
 
@@ -8,6 +9,9 @@ use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Lock\LockManagerInterface;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\Data\OrderPaymentInterface;
+use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
@@ -18,6 +22,7 @@ use Magento\Sales\Model\OrderRepository;
 use UnzerSDK\Constants\PaymentState;
 use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\Payment as PaymentResource;
+use UnzerSDK\Resources\PaymentTypes\BasePaymentType;
 
 /**
  * Helper for cancellation state management
@@ -37,8 +42,6 @@ use UnzerSDK\Resources\Payment as PaymentResource;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
  *
  * @package  unzerdev/magento2
  */
@@ -91,18 +94,6 @@ class Payment
      */
     private $_transactionRepository;
 
-    /**
-     * Payment constructor.
-     * @param InvoiceRepositoryInterface $invoiceRepository
-     * @param InvoiceSender $invoiceSender
-     * @param LockManagerInterface $lockManager
-     * @param OrderRepository $orderRepository
-     * @param OrderSender $orderSender
-     * @param Order\OrderStateResolverInterface $orderStateResolver
-     * @param Order\StatusResolver $orderStatusResolver
-     * @param OrderPaymentRepositoryInterface $paymentRepository
-     * @param TransactionRepositoryInterface $transactionRepository
-     */
     public function __construct(
         InvoiceRepositoryInterface $invoiceRepository,
         InvoiceSender $invoiceSender,
@@ -126,16 +117,13 @@ class Payment
     }
 
     /**
-     * @param Order $order
-     * @param PaymentResource $payment
-     * @return void
      * @throws AlreadyExistsException
      * @throws InputException
      * @throws LocalizedException
      * @throws NoSuchEntityException
      * @throws UnzerApiException
      */
-    public function processState(Order $order, PaymentResource $payment): void
+    public function processState(OrderInterface $order, PaymentResource $payment): void
     {
         $lockName = sprintf('unzer_order_%d', $order->getId());
 
@@ -147,7 +135,7 @@ class Payment
         try {
             switch ($payment->getState()) {
                 case PaymentState::STATE_CANCELED:
-                    $this->processCanceledState($order);
+                    $this->processCanceledState($order, $payment);
                     break;
                 case PaymentState::STATE_COMPLETED:
                     $this->processCompletedState($order, $payment);
@@ -171,13 +159,12 @@ class Payment
     }
 
     /**
-     * @param Order $order
-     * @return void
      * @throws AlreadyExistsException
      * @throws InputException
      * @throws NoSuchEntityException
+     * @throws UnzerApiException
      */
-    private function processCanceledState(Order $order): void
+    private function processCanceledState(OrderInterface $order, PaymentResource $payment): void
     {
         // Orders in payment_review can't be cancelled so we must manually
         // change the status so that we can cancel the Order.
@@ -185,31 +172,43 @@ class Payment
             $order->setState(Order::STATE_PROCESSING);
         }
 
-        /** @var Order\Invoice[] $invoices */
-        $invoices = $order->getInvoiceCollection()->getItems();
+        // if the payment was voided, we do not want to cancel the whole order and invoice
+       if(!$this->isOrderVoided($order)) {
 
-        foreach ($invoices as $invoice) {
-            $invoice->cancel();
-            $this->_invoiceRepository->save($invoice);
-        }
+            /** @var Order\Invoice[] $invoices */
+            $invoices = $order->getInvoiceCollection()->getItems();
 
-        if ($order->canCancel()) {
-            $order->cancel();
-            $this->_orderRepository->save($order);
+            foreach ($invoices as $invoice) {
+                $invoice->cancel();
+                $this->_invoiceRepository->save($invoice);
+            }
+
+            if ($order->canCancel()) {
+                $order->cancel();
+                $this->_orderRepository->save($order);
+            }
         }
     }
 
+    private function isOrderVoided(OrderInterface $order): bool
+    {
+        $voidedPaymentTransaction = $this->_transactionRepository->getByTransactionType(
+            TransactionInterface::TYPE_VOID,
+            $order->getPayment()->getId()
+        );
+
+        return (bool)$voidedPaymentTransaction;
+    }
+
+
     /**
-     * @param Order $order
-     * @param PaymentResource $payment
-     * @return void
      * @throws AlreadyExistsException
      * @throws InputException
      * @throws LocalizedException
      * @throws NoSuchEntityException
      * @throws UnzerApiException
      */
-    private function processCompletedState(Order $order, PaymentResource $payment): void
+    private function processCompletedState(OrderInterface $order, PaymentResource $payment): void
     {
         $orderPayment = $order->getPayment();
 
@@ -258,14 +257,12 @@ class Payment
     }
 
     /**
-     * @param Order $order
-     * @return void
      * @throws AlreadyExistsException
      * @throws InputException
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    private function processChargebackState(Order $order): void
+    private function processChargebackState(OrderInterface $order): void
     {
         if ($order->getState() !== Order::STATE_CANCELED &&
             $order->getState() !== Order::STATE_CLOSED) {
@@ -274,57 +271,49 @@ class Payment
     }
 
     /**
-     * @param Order $order
-     * @param PaymentResource $payment
      * @throws UnzerApiException
      */
-    private function processPartlyState(Order $order, PaymentResource $payment): void
+    private function processPartlyState(OrderInterface $order, PaymentResource $payment): void
     {
         $this->processPendingState($order, $payment);
     }
 
     /**
-     * @param Order $order
-     * @return void
      * @throws AlreadyExistsException
      * @throws InputException
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    private function processPaymentReviewState(Order $order): void
+    private function processPaymentReviewState(OrderInterface $order): void
     {
         $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
     }
 
     /**
-     * @param Order $order
-     * @param PaymentResource $payment
      * @throws UnzerApiException
      * @throws Exception
      */
-    private function processPendingState(Order $order, PaymentResource $payment): void
+    private function processPendingState(OrderInterface $order, PaymentResource $payment): void
     {
         $authorization = $payment->getAuthorization();
 
         if ($authorization !== null && $authorization->isSuccess() && $order->getState() !== Order::STATE_PROCESSING) {
             $this->setOrderState($order, Order::STATE_PROCESSING, self::STATUS_READY_TO_CAPTURE);
-        } elseif ($payment->getPaymentType()->isInvoiceType()) {
+        } elseif ($payment->getPaymentType() instanceof BasePaymentType && $payment->getPaymentType()->isInvoiceType()) {
             $this->setInvoiceTypeState($order);
         }
     }
 
     /**
-     * @param Order $order
-     * @return void
      * @throws AlreadyExistsException
      * @throws InputException
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    private function setInvoiceTypeState(Order $order): void
+    private function setInvoiceTypeState(OrderInterface $order): void
     {
         // canShip returns false when the order is currently in payment_review state so we must temporarily change
-        // change the state for canShip to return the desired value.
+        // the state for canShip to return the desired value.
         $order->setState(Order::STATE_PROCESSING);
 
         // The order has not been shipped yet.
@@ -336,17 +325,13 @@ class Payment
     }
 
     /**
-     * @param Order $order
-     * @param string|null $state
-     * @param string|null $status
-     * @return void
      * @throws AlreadyExistsException
      * @throws InputException
      * @throws LocalizedException
      * @throws NoSuchEntityException
      * @throws Exception
      */
-    public function setOrderState(Order $order, ?string $state = null, ?string $status = null): void
+    public function setOrderState(OrderInterface $order, ?string $state = null, ?string $status = null): void
     {
         if ($state === null) {
             $state = $this->_orderStateResolver->getStateForOrder($order, [
@@ -375,7 +360,7 @@ class Payment
         }
 
         //send order emails now, since we skipped them in Unzer\PAPI\Model\Command\Order which is only used for canOrder methods
-        if ($order->getPayment()->getMethodInstance()->canOrder()) {
+        if ($order->getPayment() instanceof OrderPaymentInterface && $order->getPayment()->getMethodInstance()->canOrder()) {
             $this->_orderSender->send($order);
 
             foreach ($order->getInvoiceCollection() as $invoice) {

@@ -1,17 +1,17 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Block\Info;
 
 use Magento\Framework\Exception\LocalizedException;
-use Unzer\PAPI\Helper\Order as OrderHelper;
-use Unzer\PAPI\Model\Config;
-use UnzerSDK\Exceptions\UnzerApiException;
-use UnzerSDK\Resources\Payment;
-use UnzerSDK\Resources\TransactionTypes\Charge;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Template;
 use Magento\Payment\Block\Info;
 use Magento\Sales\Model\Order;
+use Unzer\PAPI\Model\Config;
+use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\Payment;
+use UnzerSDK\Resources\TransactionTypes\Authorization;
+use UnzerSDK\Resources\TransactionTypes\Charge;
 
 /**
  * Customer Account Order Prepayment Information Block
@@ -48,19 +48,11 @@ class Prepayment extends Info
     /**
      * @var Payment
      */
-    protected $_payment = null;
+    protected $_payment;
 
-    /**
-     * Invoice constructor.
-     * @param Template\Context $context
-     * @param Config $moduleConfig
-     * @param OrderHelper $orderHelper
-     * @param array $data
-     */
     public function __construct(
         Template\Context $context,
         Config $moduleConfig,
-        OrderHelper $orderHelper,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -78,25 +70,32 @@ class Prepayment extends Info
     }
 
     /**
-     * Returns the first charge for the payment.
-     *
-     * @throws LocalizedException
+     * @return Authorization|Charge|null
      * @throws UnzerApiException
-     *
-     * @return Charge|null
+     * @throws LocalizedException
      */
-    protected function _getCharge()
+    protected function getInitialTransaction()
     {
-        return $this->_getPayment()->getChargeByIndex(0);
+        $transaction = $this->_getPayment()->getInitialTransaction();
+
+        if($transaction instanceof Authorization || $transaction instanceof Charge) {
+            return $transaction;
+        }
+        return null;
     }
 
     /**
-     * Returns the payment.
-     *
+     * @throws UnzerApiException
+     * @throws LocalizedException
+     */
+    public function hasAccountData(): bool
+    {
+        return !is_null($this->getInitialTransaction());
+    }
+
+    /**
      * @throws LocalizedException
      * @throws UnzerApiException
-     *
-     * @return Payment
      */
     protected function _getPayment(): Payment
     {
@@ -104,8 +103,7 @@ class Prepayment extends Info
             /** @var Order $order */
             $order = $this->getInfo()->getOrder();
 
-            $storeId = $this->getStoreCode($order->getStoreId());
-            $client  = $this->_moduleConfig->getUnzerClient($storeId);
+            $client  = $this->_moduleConfig->getUnzerClient($order->getStore()->getCode(), $order->getPayment()->getMethodInstance());
 
             $this->_payment = $client->fetchPaymentByOrderId($order->getIncrementId());
         }
@@ -114,51 +112,60 @@ class Prepayment extends Info
     }
 
     /**
-     * @throws LocalizedException
      * @throws UnzerApiException
-     * @return string
+     * @throws LocalizedException
      */
-    public function getAccountHolder(): string
+    public function getAccountHolder(): ?string
     {
-        return $this->_getCharge()->getHolder();
+        $initalTransaction = $this->getInitialTransaction();
+        if (is_null($initalTransaction)) {
+            return null;
+        }
+
+        return $initalTransaction->getHolder();
+    }
+
+    /**
+     * @throws UnzerApiException
+     * @throws LocalizedException
+     */
+    public function getAccountIban(): ?string
+    {
+        $initalTransaction = $this->getInitialTransaction();
+        if (is_null($initalTransaction)) {
+            return null;
+        }
+        return $initalTransaction->getIban();
+    }
+
+    /**
+     * @throws UnzerApiException
+     * @throws LocalizedException
+     */
+    public function getAccountBic(): ?string
+    {
+        $initalTransaction = $this->getInitialTransaction();
+        if (is_null($initalTransaction)) {
+            return null;
+        }
+        return $initalTransaction->getBic();
+    }
+
+    /**
+     * @throws UnzerApiException
+     * @throws LocalizedException
+     */
+    public function getReference(): ?string
+    {
+        $initalTransaction = $this->getInitialTransaction();
+        if (is_null($initalTransaction)) {
+            return null;
+        }
+        return $initalTransaction->getDescriptor();
     }
 
     /**
      * @throws LocalizedException
-     * @throws UnzerApiException
-     * @return string
-     */
-    public function getAccountIban(): string
-    {
-        return $this->_getCharge()->getIban();
-    }
-
-    /**
-     * @throws LocalizedException
-     * @throws UnzerApiException
-     * @return string
-     */
-    public function getAccountBic(): string
-    {
-        return $this->_getCharge()->getBic();
-    }
-
-    /**
-     * @throws LocalizedException
-     * @throws UnzerApiException
-     * @return string
-     */
-    public function getReference(): string
-    {
-        return $this->_getCharge()->getDescriptor();
-    }
-
-    /**
-     * Returns the order for the prepayment.
-     *
-     * @throws LocalizedException
-     *
-     * @return Order
      */
     public function getOrder(): Order
     {
@@ -167,15 +174,5 @@ class Prepayment extends Info
             return $order;
         }
         return $this->getInfo()->getOrder();
-    }
-
-    /**
-     * @param string|null $storeId
-     * @return string
-     * @throws NoSuchEntityException
-     */
-    public function getStoreCode(string $storeId = null)
-    {
-        return $this->_storeManager->getStore($storeId)->getCode();
     }
 }

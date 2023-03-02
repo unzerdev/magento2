@@ -1,15 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Command;
 
 use UnzerSDK\Constants\CancelReasonCodes;
-use UnzerSDK\Exceptions\UnzerApiException;
-use UnzerSDK\Resources\Payment;
-use UnzerSDK\Resources\TransactionTypes\Cancellation;
-use UnzerSDK\Resources\TransactionTypes\Charge;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Payment\Model\InfoInterface;
-use Magento\Sales\Model\Order;
 
 /**
  * Refund Command for payments
@@ -36,5 +30,5 @@ use Magento\Sales\Model\Order;
  */
 class Refund extends Cancel
 {
-    const REASON = CancelReasonCodes::REASON_CODE_RETURN;
+    public const REASON = CancelReasonCodes::REASON_CODE_RETURN;
 }
