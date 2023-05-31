@@ -54,6 +54,7 @@ class Provider implements ConfigProviderInterface
         Config::METHOD_PRZELEWY24,
         Config::METHOD_BANCONTACT,
         Config::METHOD_PREPAYMENT,
+        Config::METHOD_APPLEPAY,
     ];
 
     /**

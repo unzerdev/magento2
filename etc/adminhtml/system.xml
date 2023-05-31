@@ -583,6 +583,87 @@
                         <config_path>payment/unzer_prepayment/sort_order</config_path>
                     </field>
                 </group>
+                <group id="applepay" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>UNZER_APPLEPAY</label>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/unzer_applepay/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/unzer_applepay/title</config_path>
+                    </field>
+                    <field id="order_payment_action" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Booking Mode</label>
+                        <config_path>payment/unzer_applepay/order_payment_action</config_path>
+                        <source_model>Unzer\PAPI\Model\System\Config\Source\PaymentAction</source_model>
+                    </field>
+                    <field id="min_order_total" translate="label" type="text" sortOrder="27" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Minimum Order Total</label>
+                        <config_path>payment/unzer_applepay/min_order_total</config_path>
+                    </field>
+                    <field id="max_order_total" translate="label" type="text" sortOrder="28" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Maximum Order Total</label>
+                        <config_path>payment/unzer_applepay/max_order_total</config_path>
+                        <comment>Insert 0 to disable limit.</comment>
+                    </field>
+                    <field id="apple_pay_merchant_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Apple Pay Merchant Id</label>
+                        <config_path>payment/unzer_applepay/apple_pay_merchant_id</config_path>
+                    </field>
+                    <field id="display_name" translate="label" type="text" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Display Name</label>
+                        <config_path>payment/unzer_applepay/display_name</config_path>
+                    </field>
+                    <field id="domain_name" translate="label" type="text" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Domain Name</label>
+                        <config_path>payment/unzer_applepay/domain_name</config_path>
+                    </field>
+                    <field id="certificate_file" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" >
+                        <label>Merchant Identification Certificate</label>
+                        <backend_model>Unzer\PAPI\Model\System\Config\Backend\Upload</backend_model>
+                        <upload_dir config="system">upload/applepay</upload_dir>
+                    </field>
+                    <field id="private_key_file" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" >
+                        <label>Merchant Identification Certificate Key (Private Key)</label>
+                        <backend_model>Unzer\PAPI\Model\System\Config\Backend\Upload</backend_model>
+                        <upload_dir config="system">upload/applepay</upload_dir>
+                    </field>
+                    <!--
+                    <field id="csr_privat_key" translate="label" type="text" sortOrder="53" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>CSR Private-Key</label>
+                        <config_path>payment/unzer_applepay/csr_private_key</config_path>
+                    </field>
+                    <field id="csr_certificate" translate="label" type="text" sortOrder="54" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>CSR Certificate</label>
+                        <config_path>payment/unzer_applepay/csr_certificate</config_path>
+                    </field>
+                    -->
+                    <field id="csr_certificate_upload" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment Processing Certificate</label>
+                        <backend_model>Unzer\PAPI\Model\System\Config\Backend\Upload</backend_model>
+                        <upload_dir config="system">upload/applepay_csr</upload_dir>
+                    </field>
+                    <field id="csr_privat_key_upload" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="56" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment Processing Certificate Key (Private Key)</label>
+                        <backend_model>Unzer\PAPI\Model\System\Config\Backend\Upload</backend_model>
+                        <upload_dir config="system">upload/applepay_csr</upload_dir>
+                    </field>
+
+                    <field id="webhooks_applepay" translate="label" type="button" sortOrder="57" showInDefault="1" showInWebsite="0" showInStore="1">
+                        <label>Merchant Identification Certificate</label>
+                        <frontend_model>Unzer\PAPI\Block\System\Config\WebhooksApplepayButtons</frontend_model>
+                    </field>
+                    <field id="supported_networks" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Suported Networks</label>
+                        <source_model>Unzer\PAPI\Model\Source\SupportedNetworks</source_model>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sort Order</label>
+                        <config_path>payment/unzer_applepay/sort_order</config_path>
+                    </field>
+                </group>
             </group>
         </section>
     </system>

@@ -162,10 +162,17 @@ define(
                     promises,
                     self = this;
 
+
                 if (this.customerProvider) {
-                    promises = [this.resourceProvider.createResource(), this.customerProvider.createCustomer()];
-                } else {
                     promises = [this.resourceProvider.createResource()];
+                }
+                else {
+                    if(this.paymentData){
+                        promises = [this.resourceProvider.createResource(this.paymentData)];
+                    }
+                    else{
+                        promises = [this.resourceProvider.createResource()];
+                    }
                 }
 
                 // We need to wait for multiple Promises but the jQuery version used by Magento 2 (jQuery 1.x) does not

@@ -57,4 +57,7 @@
     <event name="payment_method_assign_data_unzer_prepayment">
         <observer name="unzer_prepayment_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
+    <event name="payment_method_assign_data_unzer_applepay">
+        <observer name="unzer_applepay_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    </event>
 </config>
