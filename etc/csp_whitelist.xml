@@ -4,6 +4,8 @@
         <policy id="script-src">
             <values>
                 <value id="unzer-ui-js" type="host">https://static.unzer.com</value>
+                <value id="apple-js" type="host">https://applepay.cdn-apple.com</value>
+                <value id="jquery-js" type="host">https://code.jquery.com</value>
             </values>
         </policy>
         <policy id="connect-src">

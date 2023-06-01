@@ -84,6 +84,10 @@ define(
             {
                 type: 'unzer_prepayment',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/prepayment'
+            },
+            {
+                type: 'unzer_applepay',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/applepay'
             }
         );
         return Component.extend({});
