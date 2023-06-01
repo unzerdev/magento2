@@ -65,7 +65,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public const METHOD_PRZELEWY24 = 'unzer_przelewy24';
     public const METHOD_BANCONTACT = 'unzer_bancontact';
     public const METHOD_PREPAYMENT = 'unzer_prepayment';
-
+    public const METHOD_APPLEPAY = 'unzer_applepay';
     /**
      * @var DebugHandlerInterface
      */
