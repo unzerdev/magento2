@@ -164,7 +164,7 @@ define(
 
 
                 if (this.customerProvider) {
-                    promises = [this.resourceProvider.createResource()];
+                    promises = [this.resourceProvider.createResource(), this.customerProvider.createCustomer()];
                 }
                 else {
                     if(this.paymentData){

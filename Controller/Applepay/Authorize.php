@@ -14,7 +14,7 @@ use Unzer\PAPI\Controller\Payment\AbstractPaymentAction;
 
 use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\Payment;
-use UnzerSDK\Resources\TransactionTypes\Authorization;
+
 use UnzerSDK\Resources\TransactionTypes\AuthorizationFactory;
 class Authorize extends AbstractPaymentAction implements CsrfAwareActionInterface
 {
@@ -22,25 +22,15 @@ class Authorize extends AbstractPaymentAction implements CsrfAwareActionInterfac
     {
         header("Content-type: application/json; charset=utf-8");
         $jsonData = json_decode(file_get_contents('php://input'), true);
-        //$transactionType = $jsonData['transaction_type'];
+
         $paymentTypeId = $jsonData['typeId'];
-        $returnController = 'https://applepay.c-2334.maxcluster.net';
+        $this->_objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('payment/unzer_applepay/domain_name');
         try {
             $unzer = $this->_moduleConfig->getUnzerClient();
-            //$applePay = $unzer->fetchPaymentType($paymentTypeId);
 
             $quote = $this->_checkoutSession->getQuote();
 
-
-
-            //switch ($transactionType) {
-            //    case 'charge':
-            //        $transaction = $unzer->charge(number_format((float)$quote->getBaseGrandTotal(),2), $quote->getBaseCurrencyCode(), $paymentTypeId, $returnController);
-            //        break;
-            //    default:
-                    $transaction = $unzer->authorize(number_format((float)$quote->getBaseGrandTotal(),2), $quote->getBaseCurrencyCode(), $paymentTypeId, $returnController);
-            //        break;
-            //}
+            $transaction = $unzer->authorize(number_format((float)$quote->getBaseGrandTotal(),2), $quote->getBaseCurrencyCode(), $paymentTypeId, $returnController);
 
             if ($transaction->isSuccess()) {
                 echo json_encode(['transactionStatus' => 'success']);
