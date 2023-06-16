@@ -4,12 +4,14 @@ namespace Unzer\PAPI\Helper;
 
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Model\Order as OrderModel;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Unzer\PAPI\Block\System\Config\Form\Field\BirthDateFactory;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Resource\CreateThreatMetrixId;
@@ -88,6 +90,11 @@ class Order
      */
     private $createThreatMetrixId;
 
+    /**
+     * @var CheckoutSession
+     */
+    private CheckoutSession $checkoutSession;
+
     public function __construct(
         Config $moduleConfig,
         ModuleListInterface $moduleList,
@@ -95,7 +102,8 @@ class Order
         BasketFactory $basketFactory,
         BasketItemFactory $basketItemFactory,
         BirthDateFactory $birthDateFactory,
-        CreateThreatMetrixId $createThreatMetrixId
+        CreateThreatMetrixId $createThreatMetrixId,
+        CheckoutSession $checkoutSession
     ) {
         $this->_moduleConfig = $moduleConfig;
         $this->_moduleList = $moduleList;
@@ -104,6 +112,7 @@ class Order
         $this->basketItemFactory = $basketItemFactory;
         $this->birthDateFactory = $birthDateFactory;
         $this->createThreatMetrixId = $createThreatMetrixId;
+        $this->checkoutSession = $checkoutSession;
     }
 
     /**
@@ -144,6 +153,8 @@ class Order
             $basket->addBasketItem($basketItem);
         }
 
+        $sumAmountDiscountPerUnitGross = 0;
+
         foreach ($order->getAllVisibleItems() as $orderItem) {
             /** @var OrderModel\Item $orderItem */
 
@@ -163,6 +174,7 @@ class Order
                 $amountDiscountPerUnitGross = abs($orderItem->getBaseDiscountAmount());
                 $amountPerUnitGross = $orderItem->getBasePriceInclTax();
             }
+
             //add Discount as Voucher for Items qty gt 1 to prevent of 10 / 3 rounding error
             if ($amountDiscountPerUnitGross > 0 && $orderItem->getQtyOrdered() > 1) {
                 /** @var BasketItem $basketItem */
@@ -176,6 +188,7 @@ class Order
                 $basket->addBasketItem($basketVoucherItem);
 
                 //remove amountDiscountPerUnitGross
+                $sumAmountDiscountPerUnitGross = $sumAmountDiscountPerUnitGross + $amountDiscountPerUnitGross;
                 $amountDiscountPerUnitGross = 0;
             }
 
@@ -187,6 +200,29 @@ class Order
             $basketItem->setType($orderItem->getIsVirtual() ? BasketItemTypes::DIGITAL : BasketItemTypes::GOODS);
 
             $basket->addBasketItem($basketItem);
+
+            $sumAmountDiscountPerUnitGross = $sumAmountDiscountPerUnitGross + $amountDiscountPerUnitGross;
+        }
+
+        //add Discount as Voucher if Discount is set in quote_address:
+        $shippingAddressDiscountAmount = 0;
+        try {
+            $getCurrentQuote = $this->checkoutSession->getQuote();
+            $shippingAddressDiscountAmount = $getCurrentQuote->getShippingAddress()->getDiscountAmount();
+        } catch (NoSuchEntityException|LocalizedException $e) {
+
+        }
+        $shippingAddressDiscountAmount = $sumAmountDiscountPerUnitGross + $shippingAddressDiscountAmount;
+
+        if($shippingAddressDiscountAmount < 0){
+            $basketVoucherItemDiscountAmount = $this->basketItemFactory->create();
+            $basketVoucherItemDiscountAmount->setAmountDiscountPerUnitGross($shippingAddressDiscountAmount * -1);
+            $basketVoucherItemDiscountAmount->setAmountPerUnitGross(0);
+            $basketVoucherItemDiscountAmount->setQuantity(1);
+            $basketVoucherItemDiscountAmount->setTitle('Voucher by CartPriceRule');
+            $basketVoucherItemDiscountAmount->setType(BasketItemTypes::VOUCHER);
+
+            $basket->addBasketItem($basketVoucherItemDiscountAmount);
         }
 
         return $basket;
