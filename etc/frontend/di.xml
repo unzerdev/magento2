@@ -11,4 +11,14 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Magento\Vault\Model\Ui\TokensConfigProvider">
+        <arguments>
+            <argument name="tokenUiComponentProviders" xsi:type="array">
+                <item name="unzer_cards" xsi:type="object">Unzer\PAPI\Model\Vault\Type\CardsTokenUiComponentProvider</item>
+                <item name="unzer_paypal" xsi:type="object">Unzer\PAPI\Model\Vault\Type\PaypalTokenUiComponentProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
 </config>

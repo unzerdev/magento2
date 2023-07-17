@@ -18,13 +18,26 @@
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
                 <can_authorize>1</can_authorize>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture_vault>1</can_capture_vault>
                 <can_capture>1</can_capture>
                 <can_order>1</can_order>
                 <can_void>1</can_void>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
+                <create_vault_token_on_success>0</create_vault_token_on_success>
                 <model>Unzer\PAPI\Model\Method\Cards</model>
             </unzer_cards>
+            <unzer_cards_vault>
+                <active>0</active>
+                <instant_purchase_active>0</instant_purchase_active>
+                <instant_purchase>
+                    <available>Unzer\PAPI\Model\InstantPurchase\CreditCard\AvailabilityChecker</available>
+                    <tokenFormat>Unzer\PAPI\Model\InstantPurchase\CreditCard\TokenFormatter</tokenFormat>
+                </instant_purchase>
+                <model>UnzerCardsVault</model>
+                <title><![CDATA[Stored Credit Card / Debit Card]]></title>
+            </unzer_cards_vault>
             <unzer_direct_debit>
                 <active>0</active>
                 <payment_action>authorize_capture</payment_action>
@@ -181,13 +194,26 @@
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
                 <can_authorize>1</can_authorize>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture_vault>1</can_capture_vault>
                 <can_capture>1</can_capture>
                 <can_order>1</can_order>
                 <can_void>1</can_void>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
+                <create_vault_token_on_success>1</create_vault_token_on_success>
                 <model>Unzer\PAPI\Model\Method\Paypal</model>
             </unzer_paypal>
+            <unzer_paypal_vault>
+                <active>0</active>
+                <instant_purchase_active>0</instant_purchase_active>
+                <instant_purchase>
+                    <available>Unzer\PAPI\Model\InstantPurchase\PayPal\AvailabilityChecker</available>
+                    <tokenFormat>Unzer\PAPI\Model\InstantPurchase\PayPal\TokenFormatter</tokenFormat>
+                </instant_purchase>
+                <model>UnzerPaypalVault</model>
+                <title><![CDATA[Stored Paypal Account]]></title>
+            </unzer_paypal_vault>
             <unzer_sofort>
                 <active>0</active>
                 <payment_action>order</payment_action>

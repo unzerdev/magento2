@@ -55,6 +55,8 @@ define(
                     this.sdk = new unzer(overridePublicKey);
                     this.customer = customerLoader.getCustomerObservable(this.item.method);
                 }
+
+                return this;
             },
 
             _getMethodOverrideApiKey: function(){

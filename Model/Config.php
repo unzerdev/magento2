@@ -4,11 +4,11 @@ namespace Unzer\PAPI\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Locale\Resolver;
+use Magento\Payment\Model\CcConfig;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Store\Model\ScopeInterface;
 use Unzer\PAPI\Model\Logger\DebugHandler;
 use Unzer\PAPI\Model\Method\OverrideApiCredentialInterface;
-use UnzerSDK\Interfaces\DebugHandlerInterface;
 use UnzerSDK\Unzer;
 
 /**
@@ -29,8 +29,6 @@ use UnzerSDK\Unzer;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 class Config extends \Magento\Payment\Gateway\Config\Config
 {
@@ -45,8 +43,13 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public const CURRENCY_BASE = 'base';
     public const CURRENCY_CUSTOMER = 'customer';
 
+    public const CREATE_VAULT_TOKEN_ON_SUCCESS = 'create_vault_token_on_success';
+
     public const METHOD_BASE = 'unzer';
     public const METHOD_CARDS = 'unzer_cards';
+
+    public const METHOD_CARDS_VAULT = 'unzer_cards_vault';
+
     public const METHOD_DIRECT_DEBIT = 'unzer_direct_debit';
     public const METHOD_DIRECT_DEBIT_SECURED = 'unzer_direct_debit_secured';
     public const METHOD_EPS = 'unzer_eps';
@@ -59,6 +62,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public const METHOD_INVOICE_SECURED_B2B = 'unzer_invoice_secured_b2b';
     public const METHOD_INVOICE_SECURED = 'unzer_invoice_secured';
     public const METHOD_PAYPAL = 'unzer_paypal';
+    public const METHOD_PAYPAL_VAULT = 'unzer_paypal_vault';
     public const METHOD_SOFORT = 'unzer_sofort';
     public const METHOD_ALIPAY = 'unzer_alipay';
     public const METHOD_WECHATPAY = 'unzer_wechatpay';
@@ -66,33 +70,41 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public const METHOD_BANCONTACT = 'unzer_bancontact';
     public const METHOD_PREPAYMENT = 'unzer_prepayment';
     public const METHOD_APPLEPAY = 'unzer_applepay';
+
     /**
-     * @var DebugHandlerInterface
+     * @var DebugHandler
      */
-    private $_debugHandler;
+    private DebugHandler $_debugHandler;
 
     /**
      * @var Resolver
      */
-    private $_localeResolver;
+    private Resolver $_localeResolver;
 
     /**
      * @var ScopeConfigInterface
      */
-    private $_scopeConfig;
+    private ScopeConfigInterface $_scopeConfig;
+
+    /**
+     * @var CcConfig
+     */
+    private CcConfig $ccConfig;
 
     /**
      * Config constructor.
      * @param Resolver $localeResolver
      * @param ScopeConfigInterface $scopeConfig
      * @param DebugHandler $debugHandler
-     * @param null $methodCode
+     * @param CcConfig $ccConfig
+     * @param string|null $methodCode
      * @param string $pathPattern
      */
     public function __construct(
         Resolver $localeResolver,
         ScopeConfigInterface $scopeConfig,
         DebugHandler $debugHandler,
+        CcConfig $ccConfig,
         $methodCode = null,
         $pathPattern = self::DEFAULT_PATH_PATTERN
     ) {
@@ -101,9 +113,12 @@ class Config extends \Magento\Payment\Gateway\Config\Config
         $this->_debugHandler = $debugHandler;
         $this->_localeResolver = $localeResolver;
         $this->_scopeConfig = $scopeConfig;
+        $this->ccConfig = $ccConfig;
     }
 
     /**
+     * Is debug mode
+     *
      * @param string|null $storeId
      * @return bool
      */
@@ -125,7 +140,9 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      */
     public function getPublicKey(string $storeId = null, MethodInterface $paymentMethodInstance = null): ?string
     {
-        if ($paymentMethodInstance instanceof OverrideApiCredentialInterface && $paymentMethodInstance->hasMethodValidOverrideKeys($storeId)) {
+        if ($paymentMethodInstance instanceof OverrideApiCredentialInterface
+            && $paymentMethodInstance->hasMethodValidOverrideKeys($storeId)
+        ) {
             return $paymentMethodInstance->getMethodOverridePublicKey($storeId);
         }
 
@@ -145,7 +162,9 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      */
     public function getPrivateKey(string $storeId = null, MethodInterface $paymentMethodInstance = null): ?string
     {
-        if ($paymentMethodInstance instanceof OverrideApiCredentialInterface && $paymentMethodInstance->hasMethodValidOverrideKeys($storeId)) {
+        if ($paymentMethodInstance instanceof OverrideApiCredentialInterface
+            && $paymentMethodInstance->hasMethodValidOverrideKeys($storeId)
+        ) {
             return $paymentMethodInstance->getMethodOverridePrivateKey($storeId);
         }
 
@@ -176,6 +195,12 @@ class Config extends \Magento\Payment\Gateway\Config\Config
         return $client;
     }
 
+    /**
+     * Get transmit currency
+     *
+     * @param string|null $storeId
+     * @return string
+     */
     public function getTransmitCurrency(string $storeId = null): string
     {
         return $this->_scopeConfig->getValue(
@@ -183,5 +208,25 @@ class Config extends \Magento\Payment\Gateway\Config\Config
             ScopeInterface::SCOPE_STORE,
             $storeId
         );
+    }
+
+    /**
+     * Get PayPal icon
+     *
+     * @return array
+     */
+    public function getPayPalIcon(): array
+    {
+        if (empty($this->icon)) {
+            $asset = $this->ccConfig->createAsset('Magento_Paypal::images/paypal-logo.png');
+            [$width, $height] = getimagesizefromstring($asset->getSourceFile());
+            $this->icon = [
+                'url' => $asset->getUrl(),
+                'width' => $width,
+                'height' => $height
+            ];
+        }
+
+        return $this->icon;
     }
 }

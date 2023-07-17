@@ -42,6 +42,23 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="UnzerAuthorizeAndCaptureVaultCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="authorize" xsi:type="string">Unzer\PAPI\Model\Command\Authorize</item>
+                <item name="cancel" xsi:type="string">Unzer\PAPI\Model\Command\Cancel</item>
+                <item name="capture" xsi:type="string">Unzer\PAPI\Model\Command\Capture</item>
+                <item name="order" xsi:type="string">Unzer\PAPI\Model\Command\Order</item>
+                <item name="refund" xsi:type="string">Unzer\PAPI\Model\Command\Refund</item>
+                <item name="refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Command\Refund</item>
+                <item name="void" xsi:type="string">Unzer\PAPI\Model\Command\Cancel</item>
+                <item name="vault_authorize" xsi:type="string">Unzer\PAPI\Model\Command\Authorize</item>
+                <item name="vault_sale" xsi:type="string">Unzer\PAPI\Model\Command\Capture</item>
+                <item name="vault_capture" xsi:type="string">Unzer\PAPI\Model\Command\Capture</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="UnzerCaptureCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
@@ -54,6 +71,26 @@
             </argument>
         </arguments>
     </virtualType>
+
+    <!-- Command Manager Pool for vault payments -->
+    <virtualType name="UnzerVaultCommandManagerPool" type="Magento\Payment\Gateway\Command\CommandManagerPool">
+        <arguments>
+            <argument name="executors" xsi:type="array">
+                <item name="unzer_cards" xsi:type="string">UnzerCardsCommandManager</item>
+                <item name="unzer_paypal" xsi:type="string">UnzerPaypalCommandManager</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Handler Pool -->
+    <type name="Unzer\PAPI\Model\Vault\VaultDetailsHandlerManager">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="unzer_cards" xsi:type="object">Unzer\PAPI\Model\Vault\Handlers\CardsVaultDetailsHandler</item>
+                <item name="unzer_paypal" xsi:type="object">Unzer\PAPI\Model\Vault\Handlers\PaypalVaultDetailsHandler</item>
+            </argument>
+        </arguments>
+    </type>
 
     <!-- must be configured to avoid DI compilation errors since Base is interpreted as a normal payment method
          and thus requires a configuration, even though it is not used as payment method -->
@@ -152,9 +189,44 @@
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">UnzerCardsValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">UnzerCardsValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureVaultCommandPool</argument>
         </arguments>
     </type>
+
+    <!-- Configuration for Cards Vault payment -->
+    <virtualType name="UnzerCardsVaultPaymentConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_CARDS_VAULT</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UnzerCardsVaultPaymentValueHandler" type="VaultPaymentDefaultValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerCardsVaultPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UnzerCardsVaultPaymentValueHandlerPool" type="VaultPaymentValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerCardsVaultPaymentValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UnzerCardsVault" type="Unzer\PAPI\Model\Method\Vault">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerCardsVaultPaymentConfig</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerCardsVaultPaymentValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">Unzer\PAPI\Model\Method\Cards</argument>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_CARDS_VAULT</argument>
+            <argument name="commandManagerPool" xsi:type="object">UnzerVaultCommandManagerPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Command manager for Cards Vault -->
+    <virtualType name="UnzerCardsCommandManager" type="Magento\Payment\Gateway\Command\CommandManager">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureVaultCommandPool</argument>
+        </arguments>
+    </virtualType>
 
     <!--    Define types for DirectDebit payment method -->
     <virtualType name="UnzerDirectDebitConfig" type="Unzer\PAPI\Model\Config">
@@ -672,9 +744,44 @@
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">UnzerPaypalValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">UnzerPaypalValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureVaultCommandPool</argument>
         </arguments>
     </type>
+
+    <!-- Configuration for Paypal Vault payment -->
+    <virtualType name="UnzerPaypalVaultPaymentConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_PAYPAL_VAULT</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UnzerPaypalVaultPaymentValueHandler" type="VaultPaymentDefaultValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerPaypalVaultPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UnzerPaypalVaultPaymentValueHandlerPool" type="VaultPaymentValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerPaypalVaultPaymentValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UnzerPaypalVault" type="Unzer\PAPI\Model\Method\Vault">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerPaypalVaultPaymentConfig</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerPaypalVaultPaymentValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">Unzer\PAPI\Model\Method\Paypal</argument>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_PAYPAL_VAULT</argument>
+            <argument name="commandManagerPool" xsi:type="object">UnzerVaultCommandManagerPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Command manager for Cards Vault -->
+    <virtualType name="UnzerPaypalCommandManager" type="Magento\Payment\Gateway\Command\CommandManager">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureVaultCommandPool</argument>
+        </arguments>
+    </virtualType>
 
     <!--    Define types for Sofort payment method-->
     <virtualType name="UnzerSofortConfig" type="Unzer\PAPI\Model\Config">
