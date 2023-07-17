@@ -6,13 +6,18 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Command\ResultInterface;
+use Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Vault\Model\Ui\VaultConfigProvider;
 use Psr\Log\LoggerInterface;
 use Unzer\PAPI\Api\Data\CreateRiskDataInterfaceFactory;
 use Unzer\PAPI\Helper\Order;
 use Unzer\PAPI\Model\Config;
+use Unzer\PAPI\Model\Method\Base;
 use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
+use Unzer\PAPI\Model\Vault\VaultDetailsHandlerManager;
+use UnzerSDK\Constants\RecurrenceTypes;
 use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\TransactionTypes\Authorization;
 use UnzerSDK\Resources\TransactionTypes\AuthorizationFactory;
@@ -43,13 +48,31 @@ class Authorize extends AbstractCommand
     /**
      * @var AuthorizationFactory
      */
-    private $authorizationFactory;
+    private AuthorizationFactory $authorizationFactory;
 
     /**
      * @var CreateRiskDataInterfaceFactory
      */
-    private $createRiskDataFactory;
+    private CreateRiskDataInterfaceFactory $createRiskDataFactory;
 
+    /**
+     * @var VaultDetailsHandlerManager
+     */
+    private VaultDetailsHandlerManager $vaultDetailsHandlerManager;
+
+    /**
+     * Constructor
+     *
+     * @param Session $checkoutSession
+     * @param Config $config
+     * @param LoggerInterface $logger
+     * @param Order $orderHelper
+     * @param UrlInterface $urlBuilder
+     * @param StoreManagerInterface $storeManager
+     * @param AuthorizationFactory $authorizationFactory
+     * @param CreateRiskDataInterfaceFactory $createRiskDataFactory
+     * @param VaultDetailsHandlerManager $vaultDetailsHandlerManager
+     */
     public function __construct(
         Session $checkoutSession,
         Config $config,
@@ -58,11 +81,13 @@ class Authorize extends AbstractCommand
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
         AuthorizationFactory $authorizationFactory,
-        CreateRiskDataInterfaceFactory $createRiskDataFactory
+        CreateRiskDataInterfaceFactory $createRiskDataFactory,
+        VaultDetailsHandlerManager $vaultDetailsHandlerManager
     ) {
         parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder, $storeManager);
         $this->authorizationFactory = $authorizationFactory;
         $this->createRiskDataFactory = $createRiskDataFactory;
+        $this->vaultDetailsHandlerManager = $vaultDetailsHandlerManager;
     }
 
     /**
@@ -80,9 +105,6 @@ class Authorize extends AbstractCommand
 
         $order = $payment->getOrder();
 
-        /** @var string $resourceId */
-        $resourceId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_RESOURCE_ID);
-
         $currency = $order->getBaseCurrencyCode();
         if ($this->_config->getTransmitCurrency($order->getStore()->getCode()) === $this->_config::CURRENCY_CUSTOMER) {
             $currency = $order->getOrderCurrencyCode();
@@ -98,13 +120,35 @@ class Authorize extends AbstractCommand
             ]);
             $authorization->setOrderId($order->getIncrementId());
 
-            if ($payment->getMethodInstance()->hasRiskData()) {
+            $unzerClient = $this->_getClient(
+                $order->getStore()->getCode(),
+                $payment->getMethodInstance()
+            );
+
+            $isSaveToVaultActive = $payment->getAdditionalInformation(
+                VaultConfigProvider::IS_ACTIVE_CODE
+            );
+
+            $vaultPaymentToken = $payment->getExtensionAttributes()->getVaultPaymentToken();
+
+            if ($isSaveToVaultActive || $vaultPaymentToken) {
+                $authorization->setRecurrenceType(RecurrenceTypes::ONE_CLICK);
+            }
+
+            if ($vaultPaymentToken) {
+                $resourceId = $unzerClient->fetchPaymentType($vaultPaymentToken->getGatewayToken());
+            } else {
+                /** @var string $resourceId */
+                $resourceId = $payment->getAdditionalInformation(BaseDataAssignObserver::KEY_RESOURCE_ID);
+            }
+
+            if ($payment->getMethodInstance() instanceof Base && $payment->getMethodInstance()->hasRiskData()) {
                 $authorization->setRiskData(
                     $this->createRiskDataFactory->create(['payment' => $payment])->execute()
                 );
             }
 
-            $authorization = $this->_getClient($order->getStore()->getCode(), $payment->getMethodInstance())->performAuthorization(
+            $authorization = $unzerClient->performAuthorization(
                 $authorization,
                 $resourceId,
                 $this->_getCustomerId($payment, $order),
@@ -122,6 +166,13 @@ class Authorize extends AbstractCommand
 
         if ($authorization->isError()) {
             throw new LocalizedException(__('Failed to authorize payment.'));
+        }
+
+        $methodInstance = $payment->getMethodInstance();
+        if ($this->isVaultSaveAllowed($methodInstance)) {
+            $paymentMethodCode = $payment->getMethodInstance()->getCode();
+            $this->vaultDetailsHandlerManager->getHandlerByCode($paymentMethodCode)
+                ->handle($commandSubject['payment'], $authorization);
         }
 
         $this->_setPaymentTransaction($payment, $authorization);

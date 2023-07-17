@@ -25,6 +25,7 @@
         <policy id="font-src">
             <values>
                 <value id="unzer-fonts-src" type="host">https://static.unzer.com</value>
+                <value id="apple-font-src" type="host">https://applepay.cdn-apple.com</value>
             </values>
         </policy>
         <policy id="img-src">

@@ -1,19 +1,31 @@
 define(
     [
         'ko',
-        'Unzer_PAPI/js/view/payment/method-renderer/base'
+        'Unzer_PAPI/js/view/payment/method-renderer/base',
+        'Magento_Vault/js/view/payment/vault-enabler'
     ],
-    function (ko, Component) {
+    function (ko, Component, VaultEnabler) {
         'use strict';
 
         return Component.extend({
             defaults: {
+                isActivePaymentTokenEnabler: false,
                 fields: {
                     cvc: {valid: null},
                     expiry: {valid: null},
                     number: {valid: null},
                 },
                 template: 'Unzer_PAPI/payment/cards'
+            },
+
+            initialize: function () {
+                this._super();
+
+                this.vaultEnabler = new VaultEnabler();
+                this.vaultEnabler.isActivePaymentTokenEnabler(this.isActivePaymentTokenEnabler);
+                this.vaultEnabler.setPaymentCode(this.getVaultCode());
+
+                return this;
             },
 
             initializeForm: function () {
@@ -57,6 +69,30 @@ define(
             validate: function () {
                 return this.allInputsValid()();
             },
+
+            /**
+             * @returns {Boolean}
+             */
+            isVaultEnabled: function () {
+                return this.vaultEnabler.isVaultEnabled();
+            },
+
+            /**
+             * Returns vault code.
+             *
+             * @returns {String}
+             */
+            getVaultCode: function () {
+                return window.checkoutConfig.payment[this.getCode()].vault_code;
+            },
+
+            getData: function () {
+                var data = this._super();
+
+                this.vaultEnabler.visitAdditionalData(data);
+
+                return data;
+            }
         });
     }
 );

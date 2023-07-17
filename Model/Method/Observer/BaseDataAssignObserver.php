@@ -33,11 +33,11 @@ use Magento\Quote\Api\Data\PaymentInterface;
  */
 class BaseDataAssignObserver extends AbstractDataAssignObserver
 {
-    const KEY_CUSTOMER_ID = 'customer_id';
-    const KEY_RESOURCE_ID = 'resource_id';
-    const KEY_THREAT_METRIX_ID = 'threat_metrix_id';
-    const KEY_BIRTHDATE = 'birthDate';
-    const KEY_SALUTATION = 'salutation';
+    public const KEY_CUSTOMER_ID = 'customer_id';
+    public const KEY_RESOURCE_ID = 'resource_id';
+    public const KEY_THREAT_METRIX_ID = 'threat_metrix_id';
+    public const KEY_BIRTHDATE = 'birthDate';
+    public const KEY_SALUTATION = 'salutation';
 
     /**
      * @var array
@@ -47,7 +47,7 @@ class BaseDataAssignObserver extends AbstractDataAssignObserver
         self::KEY_RESOURCE_ID,
         self::KEY_BIRTHDATE,
         self::KEY_SALUTATION,
-        self::KEY_THREAT_METRIX_ID
+        self::KEY_THREAT_METRIX_ID,
     ];
 
     /**

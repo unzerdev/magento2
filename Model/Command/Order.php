@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use Unzer\PAPI\Helper\Order as OrderHelper;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Method\Base;
+use Unzer\PAPI\Model\Method\Vault;
 use Unzer\PAPI\Model\System\Config\Source\PaymentAction;
 use UnzerSDK\Exceptions\UnzerApiException;
 
@@ -72,7 +73,6 @@ class Order extends AbstractCommand
         AuthorizeOperation $authorizeOperation,
         CaptureOperation $captureOperation,
         StoreManagerInterface $storeManager
-
     ) {
         parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder, $storeManager);
 
@@ -89,13 +89,21 @@ class Order extends AbstractCommand
     public function execute(array $commandSubject): ?ResultInterface
     {
         /** @var OrderPaymentInterface $payment */
-        $payment = $commandSubject['payment']->getPayment();
+        if ($commandSubject['payment'] instanceof OrderPaymentInterface) {
+            $payment = $commandSubject['payment'];
+        } else {
+            $payment = $commandSubject['payment']->getPayment();
+        }
 
         /** @var Base $method */
         $method = $payment->getMethodInstance();
 
         /** @var string|null $action */
-        $action = $method->getConfigData('order_payment_action');
+        if ($method instanceof Vault) {
+            $action = $method->getVaultProvider()->getConfigData('order_payment_action');
+        } else {
+            $action = $method->getConfigData('order_payment_action');
+        }
 
         $order = $payment->getOrder();
         $order->setCanSendNewEmailFlag($method->getConfigData('can_send_new_email'));

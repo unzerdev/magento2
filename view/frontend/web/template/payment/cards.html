@@ -28,6 +28,19 @@
                     <div id="unzer-card-element-id-cvc" class="unzerInput"></div>
                 </div>
             </div>
+            <!-- ko if: (isVaultEnabled())-->
+                <div class="field">
+                    <div class="unzerUI checkbox">
+                       <input type="checkbox"
+                           name="vault[is_enabled]"
+                           class="checkbox"
+                           data-bind="attr: {'id': getCode() + '_enable_vault'}, checked: vaultEnabler.isActivePaymentTokenEnabler"/>
+                       <label class="label" data-bind="attr: {'for': getCode() + '_enable_vault'}">
+                           <span><!-- ko i18n: 'Save for later use.'--><!-- /ko --></span>
+                       </label>
+                    </div>
+                </div>
+            <!-- /ko -->
             <div class="field">
                 <button class="unzerUI primary button fluid"
                         data-bind="
@@ -41,6 +54,7 @@
                 </button>
             </div>
         </form>
+
         <div class="checkout-agreements-block">
             <!-- ko foreach: $parent.getRegion('before-place-order') -->
             <!-- ko template: getTemplate() --><!-- /ko -->

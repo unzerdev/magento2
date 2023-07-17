@@ -71,6 +71,20 @@
                         <label>Sort Order</label>
                         <config_path>payment/unzer_cards/sort_order</config_path>
                     </field>
+                    <field id="unzer_cards_vault_active" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Enable Vault for Card Payments</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/unzer_cards_vault/active</config_path>
+                        <comment>Save card token for registered customers</comment>
+                    </field>
+                    <field id="unzer_cards_vault_instant_purchase_active" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Enable Instant Purchase</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/unzer_cards_vault/instant_purchase_active</config_path>
+                        <depends>
+                            <field id="unzer_cards_vault_active">1</field>
+                        </depends>
+                    </field>
                 </group>
                 <group id="direct_debit" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>UNZER_DIRECT_DEBIT</label>
@@ -381,6 +395,20 @@
                     <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Sort Order</label>
                         <config_path>payment/unzer_paypal/sort_order</config_path>
+                    </field>
+                    <field id="unzer_paypal_vault_active" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Enable Vault for Paypal Payments</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/unzer_paypal_vault/active</config_path>
+                        <comment>Save PayPal token for registered customers</comment>
+                    </field>
+                    <field id="unzer_paypal_vault_instant_purchase_active" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Enable Instant Purchase</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/unzer_paypal_vault/instant_purchase_active</config_path>
+                        <depends>
+                            <field id="unzer_paypal_vault_active">1</field>
+                        </depends>
                     </field>
                 </group>
                 <group id="sofort" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
