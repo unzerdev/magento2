@@ -15,6 +15,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use Unzer\PAPI\Helper\Order;
 use Unzer\PAPI\Model\Config;
+use Unzer\PAPI\Model\Method\Base;
 use Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver;
 use UnzerSDK\Constants\ApiResponseCodes;
 use UnzerSDK\Exceptions\UnzerApiException;
@@ -272,5 +273,18 @@ abstract class AbstractCommand implements CommandInterface
     public function getStoreCode(int $storeId): string
     {
         return $this->storeManager->getStore($storeId)->getCode();
+    }
+
+    /**
+     * Is Vault Save Allowed
+     *
+     * @param MethodInterface $methodInstance
+     * @return bool
+     */
+    public function isVaultSaveAllowed(MethodInterface $methodInstance): bool
+    {
+        return $methodInstance instanceof Base
+            && $methodInstance->getVaultCode() !== null
+            && $methodInstance->isCreateVaultTokenOnSuccess() === false;
     }
 }

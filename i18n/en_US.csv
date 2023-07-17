@@ -42,6 +42,7 @@
 "Please transfer the amount of %1 to the following account after your order has arrived:<br /><br />Holder: %2<br/>IBAN: %3<br/>BIC: %4<br/><br/><i>Please use only this identification number as the descriptor: </i><br/>%5","Please transfer the amount of %1 to the following account after your order has arrived:<br /><br />Holder: %2<br/>IBAN: %3<br/>BIC: %4<br/><br/><i>Please use only this identification number as the descriptor: </i><br/>%5"
 
 "Credit Card / Debit Card","Credit Card / Debit Card"
+"Credit Card / Debit Card, ","Credit Card / Debit Card, "
 "Direct Debit","SEPA Direct Debit"
 "Direct Debit Secured","SEPA Direct Debit secured"
 "Unzer Bank Transfer","Unzer Bank Transfer"
@@ -52,6 +53,7 @@
 "Unzer Paylater Invoice","Paylater Invoice"
 "Unzer Paylater Invoice B2B","Paylater Invoice B2B"
 "PayPal","PayPal"
+"PayPal Account","PayPal Account"
 "Sofort","Sofort"
 "Giropay","Giropay"
 "EPS","EPS"
@@ -88,3 +90,4 @@
 "The current state of your payment could not be determined, we will inform you when the result is present and your order was successful.","The current state of your payment could not be determined, we will inform you when the result is present and your order was successful."
 "There will be no notification if the payment has been aborted. Please contact us for further information.","There will be no notification if the payment has been aborted."
 "Please contact us for further information.","Please contact us for further information."
+"Unknown Email Address","Unknown Email Address"

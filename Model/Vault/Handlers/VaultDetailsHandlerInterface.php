@@ -1,9 +1,14 @@
 <?php
+declare(strict_types=1);
 
-namespace Unzer\PAPI\Model\Method;
+namespace Unzer\PAPI\Model\Vault\Handlers;
+
+use Magento\Payment\Gateway\Data\PaymentDataObject;
+use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
 
 /**
- * Cards payment method
+ * Vault Details Handler Interface
  *
  * Copyright (C) 2021 - today Unzer GmbH
  *
@@ -20,38 +25,17 @@ namespace Unzer\PAPI\Model\Method;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
+ * @api
  */
-class Cards extends Base
+interface VaultDetailsHandlerInterface
 {
-    public const VAULT_CODE = 'unzer_cards_vault';
-
     /**
-     * @inheritDoc
-     */
-    public function hasRedirect(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Get Frontend Config
+     * Handle tokens
      *
-     * @return array
+     * @param PaymentDataObject $payment
+     * @param AbstractTransactionType $transaction
+     * @return void
+     * @throws UnzerApiException
      */
-    public function getFrontendConfig(): array
-    {
-        $parentConfig = parent::getFrontendConfig();
-
-        $parentConfig['vault_code'] = $this->getVaultCode();
-
-        return $parentConfig;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getVaultCode(): ?string
-    {
-        return self::VAULT_CODE;
-    }
+    public function handle(PaymentDataObject $payment, AbstractTransactionType $transaction): void;
 }

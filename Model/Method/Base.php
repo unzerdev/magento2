@@ -35,8 +35,6 @@ use UnzerSDK\Validators\PublicKeyValidator;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 class Base extends Adapter
 {
@@ -102,7 +100,7 @@ class Base extends Adapter
      */
     public function getFrontendConfig(): array
     {
-        if(!$this->hasMethodValidOverrideKeys()) {
+        if (!$this->hasMethodValidOverrideKeys()) {
             return [];
         }
 
@@ -210,9 +208,15 @@ class Base extends Adapter
         return false;
     }
 
+    /**
+     * Has method valid override keys
+     *
+     * @param string|null $storeId
+     * @return bool
+     */
     public function hasMethodValidOverrideKeys(string $storeId = null): bool
     {
-        if(!$this->getConfigData(Config::OVERRIDE_API_KEYS, $storeId)) {
+        if (!$this->getConfigData(Config::OVERRIDE_API_KEYS, $storeId)) {
             return false;
         }
 
@@ -224,13 +228,47 @@ class Base extends Adapter
         return true;
     }
 
+    /**
+     * Get method override public key
+     *
+     * @param string|null $storeId
+     * @return string
+     */
     public function getMethodOverridePublicKey(string $storeId = null): string
     {
         return (string)$this->getConfigData(Config::KEY_PUBLIC_KEY, $storeId);
     }
 
+    /**
+     * Get method override private key
+     *
+     * @param string|null $storeId
+     * @return string
+     */
     public function getMethodOverridePrivateKey(string $storeId = null): string
     {
         return (string)$this->getConfigData(Config::KEY_PRIVATE_KEY, $storeId);
+    }
+
+    /**
+     * Get vault code of payment method, if defined
+     *
+     * @return string|null
+     */
+    public function getVaultCode(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * Check, if we have to create the vault entry on return to success page.
+     *
+     * Otherwise we create the vault entry during authorization/capture.
+     *
+     * @return bool
+     */
+    public function isCreateVaultTokenOnSuccess(): bool
+    {
+        return (bool)$this->getConfigData(Config::CREATE_VAULT_TOKEN_ON_SUCCESS);
     }
 }

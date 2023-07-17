@@ -3,10 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.2.0](https://github.com/unzerdev/magento2/compare/2.1.1..2.2.0)
+
+### Added
+* Magento Vault support to credit card and PayPal payment methods
+### Changed
+* requirement of Unzer PHP SDK to use their new 3-digit versioning
+### Removed
+* support for end-of-life PHP Versions 7.1, 7.2, 7.3
+
 ## [2.1.1](https://github.com/unzerdev/magento2/compare/2.1.0..2.1.1)
 
 ### Fixed
-
 * Checkout Problems with Bundle Products and Discounts
 
 ## [2.1.0](https://github.com/unzerdev/magento2/compare/2.0.0..2.1.0)

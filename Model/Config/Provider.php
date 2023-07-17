@@ -2,6 +2,7 @@
 
 namespace Unzer\PAPI\Model\Config;
 
+use Magento\Vault\Model\VaultPaymentInterface;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Method\Base as MethodBase;
 use Magento\Checkout\Model\ConfigProviderInterface;
@@ -95,6 +96,9 @@ class Provider implements ConfigProviderInterface
         foreach ($this->_methodCodes as $methodCode) {
             /** @var MethodBase $model */
             $model = $this->_paymentHelper->getMethodInstance($methodCode);
+            if ($model instanceof VaultPaymentInterface) {
+                continue;
+            }
 
             if ($model->isAvailable()) {
                 $methodConfigs[$model->getCode()] = $model->getFrontendConfig();
