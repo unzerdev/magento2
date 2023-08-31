@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Unzer\PAPI\Controller\Payment;
 
+use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Response\HttpInterface;
 use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\ResultInterface;
 use Magento\Sales\Model\Order;
 use Unzer\PAPI\Helper\Payment as PaymentHelper;
 use Unzer\PAPI\Model\Config;
@@ -35,26 +35,32 @@ use UnzerSDK\Resources\TransactionTypes\Charge;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 abstract class AbstractPaymentAction extends Action
 {
     /**
      * @var Session
      */
-    protected $_checkoutSession;
+    protected Session $_checkoutSession;
 
     /**
      * @var Config
      */
-    protected $_moduleConfig;
+    protected Config $_moduleConfig;
 
     /**
      * @var PaymentHelper
      */
-    protected $_paymentHelper;
+    protected PaymentHelper $_paymentHelper;
 
+    /**
+     * Constructor
+     *
+     * @param Context $context
+     * @param Session $checkoutSession
+     * @param Config $moduleConfig
+     * @param PaymentHelper $paymentHelper
+     */
     public function __construct(
         Context $context,
         Session $checkoutSession,
@@ -68,7 +74,9 @@ abstract class AbstractPaymentAction extends Action
     }
 
     /**
-     * @return ResultInterface|ResponseInterface
+     * Execute
+     *
+     * @return HttpInterface|ResponseInterface
      */
     public function execute()
     {
@@ -97,7 +105,7 @@ abstract class AbstractPaymentAction extends Action
 
                 $response = $this->abortCheckout($message);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $message = $e->getMessage();
 
             if ($e instanceof UnzerApiException) {
@@ -111,12 +119,21 @@ abstract class AbstractPaymentAction extends Action
     }
 
     /**
-     * @return ResultInterface|ResponseInterface
-     * @throws UnzerApiException
+     * Execute With
+     *
+     * @param Order $order
+     * @param Payment $payment
+     * @return ResponseInterface
      */
-    abstract public function executeWith(Order $order, Payment $payment);
+    abstract public function executeWith(Order $order, Payment $payment): ResponseInterface;
 
-    protected function abortCheckout(?string $message = Null): ResponseInterface
+    /**
+     * Abort Checkout
+     *
+     * @param string|null $message
+     * @return ResponseInterface
+     */
+    protected function abortCheckout(?string $message = null): ResponseInterface
     {
         $this->_checkoutSession->restoreQuote();
 

@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Config;
 
-use Magento\Payment\Gateway\Config\ValueHandlerInterface;
 use Magento\Sales\Model\Order\Payment;
 
 /**
@@ -23,10 +23,6 @@ use Magento\Sales\Model\Order\Payment;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class CanCancelHandler extends CanRefundHandler
 {

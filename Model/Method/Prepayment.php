@@ -5,6 +5,7 @@ namespace Unzer\PAPI\Model\Method;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Payment\Gateway\Command\CommandManagerInterface;
 use Magento\Payment\Gateway\Command\CommandPoolInterface;
@@ -36,16 +37,31 @@ use UnzerSDK\Resources\TransactionTypes\Charge;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 class Prepayment extends Base
 {
     /**
      * @var PriceCurrencyInterface
      */
-    private $priceCurrency;
+    private PriceCurrencyInterface $priceCurrency;
 
+    /**
+     * Constructor
+     *
+     * @param ManagerInterface $eventManager
+     * @param ValueHandlerPoolInterface $valueHandlerPool
+     * @param PaymentDataObjectFactory $paymentDataObjectFactory
+     * @param string $code
+     * @param string $formBlockType
+     * @param string $infoBlockType
+     * @param ScopeConfigInterface $scopeConfig
+     * @param Config $moduleConfig
+     * @param PriceCurrencyInterface $priceCurrency
+     * @param CommandPoolInterface|null $commandPool
+     * @param ValidatorPoolInterface|null $validatorPool
+     * @param CommandManagerInterface|null $commandExecutor
+     * @param LoggerInterface|null $logger
+     */
     public function __construct(
         ManagerInterface $eventManager,
         ValueHandlerPoolInterface $valueHandlerPool,
@@ -61,14 +77,27 @@ class Prepayment extends Base
         CommandManagerInterface $commandExecutor = null,
         LoggerInterface $logger = null
     ) {
-        parent::__construct($eventManager, $valueHandlerPool, $paymentDataObjectFactory, $code, $formBlockType,
-            $infoBlockType, $scopeConfig, $moduleConfig, $commandPool, $validatorPool, $commandExecutor, $logger);
+        parent::__construct(
+            $eventManager,
+            $valueHandlerPool,
+            $paymentDataObjectFactory,
+            $code,
+            $formBlockType,
+            $infoBlockType,
+            $scopeConfig,
+            $moduleConfig,
+            $commandPool,
+            $validatorPool,
+            $commandExecutor,
+            $logger
+        );
         $this->priceCurrency = $priceCurrency;
     }
 
     /**
      * @inheritDoc
-     * @throws UnzerApiException
+     *
+     * @throws UnzerApiException|LocalizedException
      */
     public function getAdditionalPaymentInformation(Order $order): string
     {

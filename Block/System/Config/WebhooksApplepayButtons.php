@@ -1,18 +1,20 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Block\System\Config;
 
-use Unzer\PAPI\Controller\Adminhtml\Webhooks\AbstractAction;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Store\Model\StoreManagerInterface;
-use UnzerSDK\Unzer;
-use Zend_Json;
 use Magento\Framework\HTTP\Client\Curl;
+use Magento\Framework\Serialize\SerializerInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Unzer\PAPI\Controller\Adminhtml\Webhooks\AbstractAction;
+use UnzerSDK\Unzer;
+use Magento\Backend\Block\Widget\Button;
 
 /**
  * Adminhtml Webhook Configuration Buttons Block
@@ -32,12 +34,12 @@ use Magento\Framework\HTTP\Client\Curl;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- *
- * @package  unzerdev/magento2
  */
 class WebhooksApplepayButtons extends Field
 {
+    /**
+     * @var string
+     */
     protected $_template = 'Unzer_PAPI::system/config/webhooksapplepay.phtml';
 
     /**
@@ -53,18 +55,26 @@ class WebhooksApplepayButtons extends Field
     /**
      * @var bool
      */
-    protected bool $_this_certificateIsActive = false;
+    protected bool $_certificateIsActive = false;
+
     /**
      * @var Curl
      */
-    private Curl $curl;
+    protected Curl $curl;
+
+    /**
+     * @var SerializerInterface
+     */
+    protected SerializerInterface $serializer;
 
     /**
      * WebhooksButtons constructor.
+     *
      * @param Context $context
      * @param RequestInterface $request
      * @param StoreManagerInterface $storeManager
      * @param Curl $curl
+     * @param SerializerInterface $serializer
      * @param array $data
      */
     public function __construct(
@@ -72,41 +82,49 @@ class WebhooksApplepayButtons extends Field
         RequestInterface $request,
         StoreManagerInterface $storeManager,
         Curl $curl,
+        SerializerInterface $serializer,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $data);
 
         $this->_request = $request;
         $this->_storeManager = $storeManager;
         $this->curl = $curl;
-        $this->_this_certificateIsActive = $this->isCertificateActive();
+        $this->serializer = $serializer;
+        $this->_certificateIsActive = $this->isCertificateActive();
     }
 
     /**
+     * Is Certificate Active
+     *
      * @return bool
      */
-    public function isCertificateActive(){
+    public function isCertificateActive(): bool
+    {
         $unzerPrivateKey = base64_encode($this->_scopeConfig->getValue('payment/unzer/private_key') . ":");
         $this->curl->addHeader("Content-Type", "application/json");
         $this->curl->addHeader("Authorization", "Basic " . $unzerPrivateKey);
 
         $certificateId = $this->_scopeConfig->getValue("payment/unzer_applepay/csr_certificate_response");
-        $url = $this->getApiUrl($this->_scopeConfig->getValue('payment/unzer/logging'), 'v1/keypair/applepay/certificates/' . $certificateId);
+        $url = $this->getApiUrl(
+            $this->_scopeConfig->isSetFlag('payment/unzer/logging'),
+            'v1/keypair/applepay/certificates/' . $certificateId
+        );
 
         // get method
         $this->curl->get($url);
 
-        // output of curl requestt
+        // output of curl request
         $result = $this->curl->getBody();
 
-        $result = (array)json_decode($result);
+        $result = (array)$this->serializer->unserialize($result);
 
-        if(array_key_exists('active',$result) && $result['active'] == 1){
-            $this->_this_certificateIsActive = true;
+        if (array_key_exists('active', $result) && $result['active'] === 1) {
+            $this->_certificateIsActive = true;
         }
-        return $this->_this_certificateIsActive;
+        return $this->_certificateIsActive;
     }
+
     /**
      * @inheritDoc
      */
@@ -116,6 +134,8 @@ class WebhooksApplepayButtons extends Field
     }
 
     /**
+     * Get Register Private Key Action
+     *
      * @return string
      * @throws NoSuchEntityException
      */
@@ -128,22 +148,27 @@ class WebhooksApplepayButtons extends Field
     }
 
     /**
+     * Get Register Private Key Button HTML
+     *
      * @return string
      * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getRegisterPrivatekeyButtonHtml(): string
     {
-        $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button');
+        $button = $this->getLayout()->createBlock(Button::class);
         $button->setData([
             'id' => 'unzer_webhooks_applepay_privatekey',
             'label' => __('Register privatekey'),
-            'onclick' => 'location.href = ' . Zend_Json::encode($this->getRegisterPrivatekeyAction())
+            'onclick' => 'location.href = ' . $this->serializer->serialize($this->getRegisterPrivatekeyAction())
         ]);
 
         return $button->toHtml();
     }
 
     /**
+     * Get Register Certificates Action
+     *
      * @return string
      * @throws NoSuchEntityException
      */
@@ -156,22 +181,27 @@ class WebhooksApplepayButtons extends Field
     }
 
     /**
+     * Get Register Certificates Button HTML
+     *
      * @return string
      * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getRegisterCertificatesButtonHtml(): string
     {
-        $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button');
+        $button = $this->getLayout()->createBlock(Button::class);
         $button->setData([
             'id' => 'unzer_webhooks_applepay_certificates',
             'label' => __('Register Certificate'),
-            'onclick' => 'location.href = ' . Zend_Json::encode($this->getRegisterCertificatesAction()),
+            'onclick' => 'location.href = ' . $this->serializer->serialize($this->getRegisterCertificatesAction()),
         ]);
 
         return $button->toHtml();
     }
 
     /**
+     * Get Activate Apple Pay Action
+     *
      * @return string
      * @throws NoSuchEntityException
      */
@@ -184,36 +214,60 @@ class WebhooksApplepayButtons extends Field
     }
 
     /**
+     * Get Activate Apple Pay Button HTML
+     *
      * @return string
      * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getActivateApplepayButtonHtml(): string
     {
-        $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button');
+        $button = $this->getLayout()->createBlock(Button::class);
 
-        if($this->_this_certificateIsActive){
+        if ($this->_certificateIsActive) {
             $button->setData([
                 'id' => 'unzer_webhooks_applepay_activate',
                 'label' => __('Active'),
-                'onclick' => 'location.href = ' . Zend_Json::encode($this->getActivateApplepayAction()),
+                'onclick' => 'location.href = ' . $this->serializer->serialize($this->getActivateApplepayAction()),
                 'style' => 'background-color: #ebf5d6;'
             ]);
-        } else{
+        } else {
             $button->setData([
                 'id' => 'unzer_webhooks_applepay_activate',
                 'label' => __('Activate'),
-                'onclick' => 'location.href = ' . Zend_Json::encode($this->getActivateApplepayAction()),
+                'onclick' => 'location.href = ' . $this->serializer->serialize($this->getActivateApplepayAction()),
             ]);
         }
         return $button->toHtml();
     }
 
-    public function getApiUrl($logging, $url)
+    /**
+     * Get Api Url
+     *
+     * @param bool $logging
+     * @param string $url
+     * @return string
+     */
+    public function getApiUrl(bool $logging, string $url): string
     {
         $envPrefix = 'sbx-';
         if (!$logging) {
             $envPrefix = '';
         }
         return "https://" . $envPrefix . Unzer::BASE_URL . "/" . $url;
+    }
+
+    /**
+     * Get Store Identifier
+     *
+     * @return int
+     * @throws NoSuchEntityException
+     */
+    protected function getStoreIdentifier(): int
+    {
+        /** @var int|string $storeIdentifier */
+        $storeIdentifier = $this->getRequest()->getParam(AbstractAction::URL_PARAM_STORE);
+
+        return (int)$this->_storeManager->getStore($storeIdentifier)->getId();
     }
 }

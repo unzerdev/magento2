@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Method;
 
@@ -20,15 +21,11 @@ namespace Unzer\PAPI\Model\Method;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class DirectDebitSecured extends DirectDebit
 {
     /**
-     * @return bool
+     * @inheritDoc
      */
     public function isB2cOnly(): bool
     {
@@ -36,7 +33,7 @@ class DirectDebitSecured extends DirectDebit
     }
 
     /**
-     * @inheridoc
+     * @inheritdoc
      */
     public function isSecured(): bool
     {

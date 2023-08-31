@@ -30,8 +30,6 @@ use UnzerSDK\Exceptions\UnzerApiException;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 class Plugin
 {
@@ -42,13 +40,19 @@ class Plugin
     /**
      * @var Session
      */
-    protected $_checkoutSession;
+    protected Session $_checkoutSession;
 
     /**
      * @var Config
      */
-    protected $_moduleConfig;
+    protected Config $_moduleConfig;
 
+    /**
+     * Constructor
+     *
+     * @param Session $checkoutSession
+     * @param Config $moduleConfig
+     */
     public function __construct(Session $checkoutSession, Config $moduleConfig)
     {
         $this->_checkoutSession = $checkoutSession;
@@ -56,11 +60,15 @@ class Plugin
     }
 
     /**
+     * Before To Html
+     *
+     * @param Success $subject
+     * @return void
      * @throws LocalizedException
      */
     public function beforeToHtml(Success $subject): void
     {
-        // There may me multiple instances of the block in the layout (e.g. checkout.success.print.button) so we
+        // There may be multiple instances of the block in the layout (e.g. checkout.success.print.button) so we
         // must check for the correct one otherwise we may get duplicate output.
         if ($subject->getNameInLayout() !== static::BLOCK_NAME) {
             return;
@@ -69,7 +77,7 @@ class Plugin
         $order = $this->_checkoutSession->getLastRealOrder();
 
         $payment = $order->getPayment();
-        if(!$payment instanceof InfoInterface) {
+        if (!$payment instanceof InfoInterface) {
             return;
         }
 

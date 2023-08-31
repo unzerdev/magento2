@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Config;
 
@@ -27,15 +28,13 @@ use Magento\Payment\Helper\Data as PaymentHelper;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 class Provider implements ConfigProviderInterface
 {
     /**
      * @var array
      */
-    protected $_methodCodes = [
+    protected array $_methodCodes = [
         Config::METHOD_BANK_TRANSFER,
         Config::METHOD_CARDS,
         Config::METHOD_DIRECT_DEBIT,
@@ -61,12 +60,12 @@ class Provider implements ConfigProviderInterface
     /**
      * @var Config
      */
-    private $_moduleConfig;
+    private Config $_moduleConfig;
 
     /**
      * @var PaymentHelper
      */
-    private $_paymentHelper;
+    private PaymentHelper $_paymentHelper;
 
     /**
      * Provider constructor.

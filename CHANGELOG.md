@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.3.0](https://github.com/unzerdev/magento2/compare/2.2.0..2.3.0)
+
+### Added
+* Support for Magento 2.4.6 and PHP 8.2
+* license files and missing licence texts in some php files
+
+### Changed
+* refactoring of old code to take advantage of newer PHP versions and to be compliant with Magento Coding Standards as far as possible
+
+### Fixed
+* "pending" order status with payment methods, which use redirects to external pages, like PayPal. The Status "pending_payment" is now set before the redirect happens, so Magento can cancel abandoned orders automatically
+* problems with bundle products and how discounts are transferred to the Unzer servers. Previously discounts for cart items would have been transferred to the Unzer Servers per item. Now only the sum of all discounts for the whole cart is transferred, otherwise we would end up with rounding errors.
+
 ## [2.2.0](https://github.com/unzerdev/magento2/compare/2.1.1..2.2.0)
 
 ### Added

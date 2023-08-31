@@ -1,21 +1,21 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Helper;
 
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Model\Order as OrderModel;
-use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Sales\Model\Order\Item;
 use Unzer\PAPI\Block\System\Config\Form\Field\BirthDateFactory;
 use Unzer\PAPI\Model\Config;
-use Unzer\PAPI\Model\Resource\CreateThreatMetrixId;
-use Unzer\PAPI\Model\Resource\Customer as CustomerResource;
+use Unzer\PAPI\Model\Source\CreateThreatMetrixId;
+use Unzer\PAPI\Model\Source\Customer as CustomerResource;
 use UnzerSDK\Constants\BasketItemTypes;
 use UnzerSDK\Constants\Salutations;
 use UnzerSDK\Constants\ShippingTypes;
@@ -47,8 +47,6 @@ use UnzerSDK\Resources\PaymentTypes\BasePaymentType;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 class Order
 {
@@ -58,43 +56,54 @@ class Order
     /**
      * @var Config
      */
-    private $_moduleConfig;
+    private Config $_moduleConfig;
 
     /**
      * @var ModuleListInterface
      */
-    private $_moduleList;
+    private ModuleListInterface $_moduleList;
 
     /**
      * @var ProductMetadataInterface
      */
-    private $_productMetadata;
+    private ProductMetadataInterface $_productMetadata;
 
     /**
-     * @var Basket
+     * @var BasketFactory
      */
-    private $basketFactory;
+    private BasketFactory $basketFactory;
 
     /**
      * @var BasketItemFactory
      */
-    private $basketItemFactory;
+    private BasketItemFactory $basketItemFactory;
 
     /**
      * @var BirthDateFactory
      */
-    private $birthDateFactory;
+    private BirthDateFactory $birthDateFactory;
 
     /**
      * @var CreateThreatMetrixId
      */
-    private $createThreatMetrixId;
+    private CreateThreatMetrixId $createThreatMetrixId;
 
     /**
-     * @var CheckoutSession
+     * @var bool
      */
-    private CheckoutSession $checkoutSession;
+    private bool $transmitInCustomerCurrency;
 
+    /**
+     * Constructor
+     *
+     * @param Config $moduleConfig
+     * @param ModuleListInterface $moduleList
+     * @param ProductMetadataInterface $productMetadata
+     * @param BasketFactory $basketFactory
+     * @param BasketItemFactory $basketItemFactory
+     * @param BirthDateFactory $birthDateFactory
+     * @param CreateThreatMetrixId $createThreatMetrixId
+     */
     public function __construct(
         Config $moduleConfig,
         ModuleListInterface $moduleList,
@@ -102,8 +111,7 @@ class Order
         BasketFactory $basketFactory,
         BasketItemFactory $basketItemFactory,
         BirthDateFactory $birthDateFactory,
-        CreateThreatMetrixId $createThreatMetrixId,
-        CheckoutSession $checkoutSession
+        CreateThreatMetrixId $createThreatMetrixId
     ) {
         $this->_moduleConfig = $moduleConfig;
         $this->_moduleList = $moduleList;
@@ -112,7 +120,6 @@ class Order
         $this->basketItemFactory = $basketItemFactory;
         $this->birthDateFactory = $birthDateFactory;
         $this->createThreatMetrixId = $createThreatMetrixId;
-        $this->checkoutSession = $checkoutSession;
     }
 
     /**
@@ -124,11 +131,51 @@ class Order
      */
     public function createBasketForOrder(OrderModel $order): Basket
     {
-        $transmitInCustomerCurrency = $this->_moduleConfig->getTransmitCurrency($order->getStore()->getCode()) === $this->_moduleConfig::CURRENCY_CUSTOMER;
+        $this->transmitInCustomerCurrency = $this->_moduleConfig->getTransmitCurrency(
+            $order->getStore()->getCode()
+        ) === $this->_moduleConfig::CURRENCY_CUSTOMER;
 
-        /** @var Basket $basket */
+        $basket = $this->createBasket($order);
+
+        if ($order->getShippingAmount() > 0) {
+            $basket->addBasketItem(
+                $this->createShippingItem($order)
+            );
+        }
+
+        foreach ($order->getAllVisibleItems() as $orderItem) {
+            /** @var Item $orderItem */
+
+            // getAllVisibleItems() only checks getParentItemId() but it's possible that there is a parent item set
+            // without a parent item id.
+            if ($orderItem->getParentItem() !== null) {
+                continue;
+            }
+
+            $basket->addBasketItem(
+                $this->createBasketItem($orderItem)
+            );
+        }
+
+        if (abs($order->getDiscountAmount()) > 0) {
+            $basket->addBasketItem(
+                $this->createVoucherItem($order)
+            );
+        }
+
+        return $basket;
+    }
+
+    /**
+     * Create Basket
+     *
+     * @param OrderModel $order
+     * @return Basket
+     */
+    protected function createBasket(OrderModel $order): Basket
+    {
         $basket = $this->basketFactory->create();
-        if ($transmitInCustomerCurrency) {
+        if ($this->transmitInCustomerCurrency) {
             $basket->setTotalValueGross($order->getGrandTotal());
             $basket->setCurrencyCode($order->getOrderCurrencyCode());
         } else {
@@ -137,95 +184,71 @@ class Order
         }
         $basket->setOrderId($order->getIncrementId());
 
-        if ($order->getShippingAmount() > 0) {
-            /** @var BasketItem $basketItem */
-            $basketItem = $this->basketItemFactory->create();
-            if ($transmitInCustomerCurrency) {
-                $basketItem->setAmountDiscountPerUnitGross(abs($order->getShippingDiscountAmount()));
-                $basketItem->setAmountPerUnitGross($order->getShippingInclTax());
-            } else {
-                $basketItem->setAmountDiscountPerUnitGross(abs($order->getBaseShippingDiscountAmount()));
-                $basketItem->setAmountPerUnitGross($order->getBaseShippingInclTax());
-            }
-            $basketItem->setTitle('Shipment');
-            $basketItem->setType(BasketItemTypes::SHIPMENT);
-
-            $basket->addBasketItem($basketItem);
-        }
-
-        $sumAmountDiscountPerUnitGross = 0;
-
-        foreach ($order->getAllVisibleItems() as $orderItem) {
-            /** @var OrderModel\Item $orderItem */
-
-            // getAllVisibleItems() only checks getParentItemId() but it's possible that there is a parent item set
-            // without a parent item id.
-            if ($orderItem->getParentItem() !== null) {
-                continue;
-            }
-
-            /** @var BasketItem $basketItem */
-            $basketItem = $this->basketItemFactory->create();
-
-            if ($transmitInCustomerCurrency) {
-                $amountDiscountPerUnitGross = abs($orderItem->getDiscountAmount());
-                $amountPerUnitGross = $orderItem->getPriceInclTax();
-            } else {
-                $amountDiscountPerUnitGross = abs($orderItem->getBaseDiscountAmount());
-                $amountPerUnitGross = $orderItem->getBasePriceInclTax();
-            }
-
-            //add Discount as Voucher for Items qty gt 1 to prevent of 10 / 3 rounding error
-            if ($amountDiscountPerUnitGross > 0 && $orderItem->getQtyOrdered() > 1) {
-                /** @var BasketItem $basketItem */
-                $basketVoucherItem = $this->basketItemFactory->create();
-                $basketVoucherItem->setAmountDiscountPerUnitGross($amountDiscountPerUnitGross);
-                $basketVoucherItem->setAmountPerUnitGross(0);
-                $basketVoucherItem->setQuantity(1);
-                $basketVoucherItem->setTitle($orderItem->getName());
-                $basketVoucherItem->setType(BasketItemTypes::VOUCHER);
-
-                $basket->addBasketItem($basketVoucherItem);
-
-                //remove amountDiscountPerUnitGross
-                $sumAmountDiscountPerUnitGross = $sumAmountDiscountPerUnitGross + $amountDiscountPerUnitGross;
-                $amountDiscountPerUnitGross = 0;
-            }
-
-            $basketItem->setAmountDiscountPerUnitGross($amountDiscountPerUnitGross);
-            $basketItem->setAmountPerUnitGross($amountPerUnitGross);
-            $basketItem->setVat((float) $orderItem->getTaxPercent());
-            $basketItem->setQuantity($orderItem->getQtyOrdered());
-            $basketItem->setTitle($orderItem->getName());
-            $basketItem->setType($orderItem->getIsVirtual() ? BasketItemTypes::DIGITAL : BasketItemTypes::GOODS);
-
-            $basket->addBasketItem($basketItem);
-
-            $sumAmountDiscountPerUnitGross = $sumAmountDiscountPerUnitGross + $amountDiscountPerUnitGross;
-        }
-
-        //add Discount as Voucher if Discount is set in quote_address:
-        $shippingAddressDiscountAmount = 0;
-        try {
-            $getCurrentQuote = $this->checkoutSession->getQuote();
-            $shippingAddressDiscountAmount = $getCurrentQuote->getShippingAddress()->getDiscountAmount();
-        } catch (NoSuchEntityException|LocalizedException $e) {
-
-        }
-        $shippingAddressDiscountAmount = $sumAmountDiscountPerUnitGross + $shippingAddressDiscountAmount;
-
-        if($shippingAddressDiscountAmount < 0){
-            $basketVoucherItemDiscountAmount = $this->basketItemFactory->create();
-            $basketVoucherItemDiscountAmount->setAmountDiscountPerUnitGross($shippingAddressDiscountAmount * -1);
-            $basketVoucherItemDiscountAmount->setAmountPerUnitGross(0);
-            $basketVoucherItemDiscountAmount->setQuantity(1);
-            $basketVoucherItemDiscountAmount->setTitle('Voucher by CartPriceRule');
-            $basketVoucherItemDiscountAmount->setType(BasketItemTypes::VOUCHER);
-
-            $basket->addBasketItem($basketVoucherItemDiscountAmount);
-        }
-
         return $basket;
+    }
+
+    /**
+     * Create Shipping Item
+     *
+     * @param OrderModel $order
+     * @return BasketItem
+     */
+    protected function createShippingItem(OrderModel $order): BasketItem
+    {
+        /** @var BasketItem $basketItem */
+        $basketItem = $this->basketItemFactory->create();
+        if ($this->transmitInCustomerCurrency) {
+            $basketItem->setAmountPerUnitGross($order->getShippingInclTax());
+        } else {
+            $basketItem->setAmountPerUnitGross($order->getBaseShippingInclTax());
+        }
+        $basketItem->setTitle('Shipment');
+        $basketItem->setType(BasketItemTypes::SHIPMENT);
+
+        return $basketItem;
+    }
+
+    /**
+     * Create Basket Item
+     *
+     * @param Item $orderItem
+     * @return BasketItem
+     */
+    protected function createBasketItem(Item $orderItem): BasketItem
+    {
+        $basketItem = $this->basketItemFactory->create();
+
+        if ($this->transmitInCustomerCurrency) {
+            $amountPerUnitGross = $orderItem->getPriceInclTax();
+        } else {
+            $amountPerUnitGross = $orderItem->getBasePriceInclTax();
+        }
+
+        $basketItem->setAmountPerUnitGross($amountPerUnitGross);
+        $basketItem->setVat((float)$orderItem->getTaxPercent());
+        $basketItem->setQuantity((int)$orderItem->getQtyOrdered());
+        $basketItem->setTitle($orderItem->getName());
+        $basketItem->setType($orderItem->getIsVirtual() ? BasketItemTypes::DIGITAL : BasketItemTypes::GOODS);
+
+        return $basketItem;
+    }
+
+    /**
+     * Create Voucher Item
+     *
+     * @param OrderModel $order
+     * @return BasketItem
+     */
+    protected function createVoucherItem(OrderModel $order): BasketItem
+    {
+        $basketVoucherItemDiscountAmount = $this->basketItemFactory->create();
+        $basketVoucherItemDiscountAmount->setAmountDiscountPerUnitGross(abs($order->getDiscountAmount()));
+        $basketVoucherItemDiscountAmount->setAmountPerUnitGross(0);
+        $basketVoucherItemDiscountAmount->setQuantity(1);
+        $basketVoucherItemDiscountAmount->setTitle('Discount');
+        $basketVoucherItemDiscountAmount->setType(BasketItemTypes::VOUCHER);
+
+        return $basketVoucherItemDiscountAmount;
     }
 
     /**
@@ -244,7 +267,7 @@ class Order
             ->addMetadata('customerGroupId', (string)$order->getCustomerGroupId())
             ->addMetadata('pluginType', 'unzerdev/magento2')
             ->addMetadata('pluginVersion', $this->_moduleList->getOne('Unzer_PAPI')['setup_version'])
-            ->addMetadata('storeId', $order->getStoreId());
+            ->addMetadata('storeId', (string)$order->getStoreId());
 
         return $metaData;
     }
@@ -278,7 +301,7 @@ class Order
         $customer->setPhone($billingAddress->getTelephone());
 
         $threatMetrixId = $this->createThreatMetrixId->execute($quote);
-        if (!is_null($threatMetrixId)) {
+        if ($threatMetrixId !== null) {
             $customer->setThreatMetrixId($threatMetrixId);
         }
 
@@ -306,11 +329,14 @@ class Order
      * @param bool $createResource
      *
      * @return Customer|null
-     * @throws UnzerApiException
+     * @throws UnzerApiException|LocalizedException
      */
     public function createCustomerFromOrder(OrderModel $order, string $email, bool $createResource = false): ?Customer
     {
-        $client = $this->_moduleConfig->getUnzerClient($order->getStore()->getCode(), $order->getPayment()->getMethodInstance());
+        $client = $this->_moduleConfig->getUnzerClient(
+            $order->getStore()->getCode(),
+            $order->getPayment()->getMethodInstance()
+        );
 
         $billingAddress = $order->getBillingAddress();
         $customer = new Customer();
@@ -378,6 +404,7 @@ class Order
      *
      * @param Address $gatewayAddress
      * @param Quote\Address|OrderAddressInterface $magentoAddress
+     * @param string $shippingType
      */
     private function updateGatewayAddressFromMagento(
         Address $gatewayAddress,
@@ -396,6 +423,13 @@ class Order
         }
     }
 
+    /**
+     * Get Shipping Type
+     *
+     * @param $billingAddress
+     * @param $shippingAddress
+     * @return string
+     */
     public function getShippingType($billingAddress, $shippingAddress): string
     {
         $billingStreet = $this->convertStreetLinesToString($billingAddress->getStreet());
@@ -421,6 +455,8 @@ class Order
     }
 
     /**
+     * Convert Street Lines To String
+     *
      * @param array $streetLines
      * @return string
      */
@@ -432,9 +468,11 @@ class Order
     }
 
     /**
+     * Update Gateway Customer From Order
+     *
      * @param OrderModel $order
      * @param Customer $gatewayCustomer
-     * @throws UnzerApiException
+     * @throws UnzerApiException|LocalizedException
      */
     public function updateGatewayCustomerFromOrder(OrderModel $order, Customer $gatewayCustomer): void
     {
@@ -461,7 +499,10 @@ class Order
             );
         }
 
-        $client = $this->_moduleConfig->getUnzerClient($order->getStore()->getCode(), $order->getPayment()->getMethodInstance());
+        $client = $this->_moduleConfig->getUnzerClient(
+            $order->getStore()->getCode(),
+            $order->getPayment()->getMethodInstance()
+        );
         $client->updateCustomer($gatewayCustomer);
     }
 
@@ -500,6 +541,8 @@ class Order
     }
 
     /**
+     * Validate Gateway Address Against Order Address
+     *
      * @param Address $gatewayAddress
      * @param OrderAddressInterface $magentoAddress
      * @return bool
@@ -531,8 +574,9 @@ class Order
     }
 
     /**
-     * @param float | int $gender
+     * Get Salutation From Gender
      *
+     * @param float|int $gender
      * @return string
      */
     protected function getSalutationFromGender($gender): string
@@ -550,18 +594,30 @@ class Order
         return $salutation;
     }
 
+    /**
+     * Get Salutation From Payment
+     *
+     * @param InfoInterface $payment
+     * @return string|null
+     */
     protected function getSalutationFromPayment(InfoInterface $payment): ?string
     {
         return $payment->getAdditionalInformation('salutation');
     }
 
+    /**
+     * Get Birthdate from Payment
+     *
+     * @param InfoInterface $payment
+     * @return string|null
+     */
     protected function getBirthdateFromPayment(InfoInterface $payment): ?string
     {
         $birthDate = $this->birthDateFactory->create();
         $birthDate->setDate($payment->getAdditionalInformation('birthDate'));
 
         $date = $birthDate->getDate();
-        if (is_null($date)) {
+        if ($date === null) {
             return null;
         }
         return $date->format('Y-m-d');

@@ -32,23 +32,31 @@ use UnzerSDK\Resources\TransactionTypes\Charge;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 class Invoice extends Info
 {
+    /**
+     * @var string
+     */
     protected $_template = 'Unzer_PAPI::info/invoice.phtml';
 
     /**
      * @var Config
      */
-    protected $_moduleConfig;
+    protected Config $_moduleConfig;
 
     /**
-     * @var Payment
+     * @var Payment|null
      */
-    protected $_payment = null;
+    protected ?Payment $_payment = null;
 
+    /**
+     * Constructor
+     *
+     * @param Template\Context $context
+     * @param Config $moduleConfig
+     * @param array $data
+     */
     public function __construct(
         Template\Context $context,
         Config $moduleConfig,
@@ -69,6 +77,8 @@ class Invoice extends Info
     }
 
     /**
+     * Get Initial Transaction
+     *
      * @return Authorization|Charge|null
      * @throws UnzerApiException
      * @throws LocalizedException
@@ -77,22 +87,26 @@ class Invoice extends Info
     {
         $transaction = $this->_getPayment()->getInitialTransaction();
 
-        if($transaction instanceof Authorization || $transaction instanceof Charge) {
+        if ($transaction instanceof Authorization || $transaction instanceof Charge) {
             return $transaction;
         }
         return null;
     }
 
     /**
+     * Has Account Data
+     *
      * @throws UnzerApiException
      * @throws LocalizedException
      */
     public function hasAccountData(): bool
     {
-        return !is_null($this->getInitialTransaction());
+        return $this->getInitialTransaction() !== null;
     }
 
     /**
+     * Get Payment
+     *
      * @throws UnzerApiException
      * @throws LocalizedException
      */
@@ -112,59 +126,69 @@ class Invoice extends Info
     }
 
     /**
+     * Get Account Holder
+     *
      * @throws UnzerApiException
      * @throws LocalizedException
      */
     public function getAccountHolder(): ?string
     {
-        $initalTransaction = $this->getInitialTransaction();
-        if (is_null($initalTransaction)) {
+        $initialTransaction = $this->getInitialTransaction();
+        if ($initialTransaction === null) {
             return null;
         }
 
-        return $initalTransaction->getHolder();
+        return $initialTransaction->getHolder();
     }
 
     /**
+     * Get Account Iban
+     *
      * @throws UnzerApiException
      * @throws LocalizedException
      */
     public function getAccountIban(): ?string
     {
-        $initalTransaction = $this->getInitialTransaction();
-        if (is_null($initalTransaction)) {
+        $initialTransaction = $this->getInitialTransaction();
+        if ($initialTransaction === null) {
             return null;
         }
-        return $initalTransaction->getIban();
+        return $initialTransaction->getIban();
     }
 
     /**
+     * Get Account Bic
+     *
      * @throws UnzerApiException
      * @throws LocalizedException
      */
     public function getAccountBic(): ?string
     {
-        $initalTransaction = $this->getInitialTransaction();
-        if (is_null($initalTransaction)) {
+        $initialTransaction = $this->getInitialTransaction();
+        if ($initialTransaction === null) {
             return null;
         }
-        return $initalTransaction->getBic();
+        return $initialTransaction->getBic();
     }
 
     /**
+     * Get Reference
+     *
      * @throws UnzerApiException
      * @throws LocalizedException
      */
     public function getReference(): ?string
     {
-        $initalTransaction = $this->getInitialTransaction();
-        if (is_null($initalTransaction)) {
+        $initialTransaction = $this->getInitialTransaction();
+        if ($initialTransaction === null) {
             return null;
         }
-        return $initalTransaction->getDescriptor();
+        return $initialTransaction->getDescriptor();
     }
 
     /**
+     * Get Order
+     *
      * @throws LocalizedException
      */
     public function getOrder(): Order
@@ -177,6 +201,10 @@ class Invoice extends Info
     }
 
     /**
+     * Get Store Code
+     *
+     * @param string|null $storeId
+     * @return string
      * @throws NoSuchEntityException
      */
     public function getStoreCode(string $storeId = null): string

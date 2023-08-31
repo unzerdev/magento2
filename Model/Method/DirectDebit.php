@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Method;
 
@@ -20,14 +21,10 @@ namespace Unzer\PAPI\Model\Method;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class DirectDebit extends Base
 {
-    const CONFIG_PATH_STORE_NAME = 'general/store_information/name';
+    public const CONFIG_PATH_STORE_NAME = 'general/store_information/name';
 
     /**
      * @inheritDoc

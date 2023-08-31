@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Plugin\AdminOrder;
 
+use Exception;
 use Magento\Framework\Exception\MailException;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Model\AdminOrder\EmailSender;
@@ -12,29 +13,48 @@ use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Order\Invoice;
 use Psr\Log\LoggerInterface as Logger;
 
+/**
+ * Copyright (C) 2021 - today Unzer GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @link  https://docs.unzer.com/
+ */
 class EmailSenderPlugin
 {
     /**
      * @var ManagerInterface
      */
-    protected $messageManager;
+    protected ManagerInterface $messageManager;
 
     /**
      * @var Logger
      */
-    protected $logger;
+    protected Logger $logger;
 
     /**
      * @var OrderSender
      */
-    protected $orderSender;
+    protected OrderSender $orderSender;
 
     /**
      * @var InvoiceSender
      */
-    private $invoiceSender;
+    private InvoiceSender $invoiceSender;
 
     /**
+     * Constructor
+     *
      * @param ManagerInterface $messageManager
      * @param Logger $logger
      * @param OrderSender $orderSender
@@ -52,6 +72,15 @@ class EmailSenderPlugin
         $this->invoiceSender = $invoiceSender;
     }
 
+    /**
+     * Around Send
+     *
+     * @param EmailSender $emailSender
+     * @param callable $proceed
+     * @param Order $order
+     * @return bool
+     * @throws Exception
+     */
     public function aroundSend(EmailSender $emailSender, callable $proceed, Order $order): bool
     {
         $return = $proceed($order);
@@ -77,7 +106,7 @@ class EmailSenderPlugin
      * Send email about invoice paying
      *
      * @param Order $order
-     * @throws MailException
+     * @throws MailException|Exception
      */
     private function sendInvoiceEmail(Order $order): void
     {

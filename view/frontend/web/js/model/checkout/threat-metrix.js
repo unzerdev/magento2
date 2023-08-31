@@ -5,13 +5,13 @@ define([
 ], function (Component, checkoutData, quote) {
     'use strict';
 
-    var threatMetrixExists = false;
+    let threatMetrixExists = false;
 
     return {
 
-        init: function(threatMetrixId) {
+        init: function (threatMetrixId) {
 
-            if(!threatMetrixExists) {
+            if (!threatMetrixExists) {
                 if (checkoutData.getSelectedPaymentMethod() === 'unzer_paylater_invoice'
                     || checkoutData.getSelectedPaymentMethod() === 'unzer_paylater_invoice_b2b') {
                     // Is Paylater Invoice already preselected? Append Threat Metrix to page
@@ -19,7 +19,7 @@ define([
 
                 } else {
                     // Paylater Invoice is not preselected? Add subscriber to add Threat Metrix only if Paylater Invoice is selected
-                    var self = this;
+                    let self = this;
                     self.threatMetrixSubscriber = quote.paymentMethod.subscribe(function (method) {
                         self._onChangeAppendThreatMetrix(method, self, threatMetrixId);
                     });
@@ -27,7 +27,7 @@ define([
             }
         },
 
-        _onChangeAppendThreatMetrix: function(method, self, threatMetrixId) {
+        _onChangeAppendThreatMetrix: function (method, self, threatMetrixId) {
             if (!threatMetrixExists &&
                 (method.method === 'unzer_paylater_invoice' ||
                 method.method === 'unzer_paylater_invoice_b2b')
@@ -39,14 +39,14 @@ define([
             }
         },
 
-        _appendThreatMetrix: function(threatMetrixId) {
-            var script = document.createElement('script');
+        _appendThreatMetrix: function (threatMetrixId) {
+            let script = document.createElement('script');
             script.type = 'text/javascript';
             script.src = 'https://h.online-metrix.net/fp/tags.js?org_id=363t8kgq&session_id=' + (threatMetrixId);
             document.getElementsByTagName('head')[0].appendChild(script);
 
-            var noscript = document.createElement('noscript');
-            var iframe = document.createElement('iframe');
+            let noscript = document.createElement('noscript');
+            let iframe = document.createElement('iframe');
             iframe.src = 'https://h.online-metrix.net/fp/tags?org_id=363t8kgq&session_id=' + (threatMetrixId);
             noscript.append(iframe);
             document.getElementsByTagName('body')[0].appendChild(noscript);
@@ -55,4 +55,3 @@ define([
         }
     };
 });
-

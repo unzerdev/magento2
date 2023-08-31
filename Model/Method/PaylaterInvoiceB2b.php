@@ -20,8 +20,6 @@ namespace Unzer\PAPI\Model\Method;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 class PaylaterInvoiceB2b extends Invoice implements OverrideApiCredentialInterface
 {
@@ -34,9 +32,7 @@ class PaylaterInvoiceB2b extends Invoice implements OverrideApiCredentialInterfa
     }
 
     /**
-     * Can be used with risk data
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function hasRiskData(): bool
     {
@@ -44,7 +40,7 @@ class PaylaterInvoiceB2b extends Invoice implements OverrideApiCredentialInterfa
     }
 
     /**
-     * @return bool
+     * @inheritDoc
      */
     public function isB2bOnly(): bool
     {

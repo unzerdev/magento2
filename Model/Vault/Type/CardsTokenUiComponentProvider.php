@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Unzer\PAPI\Model\Vault\Type;
 
 use IntlDateFormatter;
+use JsonException;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Model\Ui\TokenUiComponentInterface;
@@ -70,9 +71,9 @@ class CardsTokenUiComponentProvider implements TokenUiComponentProviderInterface
      *
      * @param PaymentTokenInterface $paymentToken
      * @return TokenUiComponentInterface
-     * @throws \JsonException
+     * @throws JsonException
      */
-    public function getComponentForToken(PaymentTokenInterface $paymentToken)
+    public function getComponentForToken(PaymentTokenInterface $paymentToken): TokenUiComponentInterface
     {
         $jsonDetails = json_decode($paymentToken->getTokenDetails() ?: '{}', true, 512, JSON_THROW_ON_ERROR);
 

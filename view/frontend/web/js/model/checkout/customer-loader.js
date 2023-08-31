@@ -11,24 +11,28 @@ define(
     function ($, ko, storage, errorProcessor, fullScreenLoader, quote, urlBuilder) {
         'use strict';
 
-        var currentRequest = [],
+        let currentRequest = [],
             customerObservableList = [];
 
-        function loadCustomer(index) {
+        function loadCustomer(index)
+        {
             fullScreenLoader.startLoader();
 
             customerObservableList[index] = customerObservableList[index] || ko.observable(null);
 
-            var request = storage.post(
+            let request = storage.post(
                 urlBuilder.createUrl('/unzer/get-external-customer', {}),
                 JSON.stringify({
                     guestEmail: quote.guestEmail
-                })
+                }),
+                true,
+                'application/json',
+                {}
             );
 
             request.always(fullScreenLoader.stopLoader);
             request.fail(errorProcessor.process);
-            request.done(function(customer) {
+            request.done(function (customer) {
                 if (currentRequest[index] !== request ||
                     customer === null ||
                     (customer instanceof Array && customer.length === 0)) {
@@ -59,7 +63,7 @@ define(
             currentRequest[index] = request;
         }
 
-        $(window).on('hashchange', function() {
+        $(window).on('hashchange', function () {
             // if the hash changes the customer has switched between steps and possibly changed
             // his billing and/or shipping address, in which case we can not use the customer
             // that we already loaded.
@@ -71,7 +75,7 @@ define(
         });
 
         return {
-            getCustomerObservable: function(index) {
+            getCustomerObservable: function (index) {
                 if (!(index in customerObservableList)) {
                     loadCustomer(index);
                 }

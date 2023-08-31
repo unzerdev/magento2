@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Config;
 
@@ -23,10 +24,6 @@ use Magento\Sales\Model\Order\Payment;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class InvoiceCaptureHandler implements ValueHandlerInterface
 {

@@ -1,10 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Method\Observer;
 
-use Magento\Framework\DataObject;
 use Magento\Framework\Event\Observer;
-use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Quote\Api\Data\PaymentInterface;
 
@@ -26,10 +25,6 @@ use Magento\Quote\Api\Data\PaymentInterface;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class BaseDataAssignObserver extends AbstractDataAssignObserver
 {
@@ -42,7 +37,7 @@ class BaseDataAssignObserver extends AbstractDataAssignObserver
     /**
      * @var array
      */
-    protected $additionalInformationList = [
+    protected array $additionalInformationList = [
         self::KEY_CUSTOMER_ID,
         self::KEY_RESOURCE_ID,
         self::KEY_BIRTHDATE,
@@ -51,12 +46,13 @@ class BaseDataAssignObserver extends AbstractDataAssignObserver
     ];
 
     /**
+     * Execute
+     *
      * @param Observer $observer
      * @return void
      */
     public function execute(Observer $observer): void
     {
-        /** @var DataObject $data */
         $data = $this->readDataArgument($observer);
 
         /** @var array $additionalData */
@@ -65,7 +61,6 @@ class BaseDataAssignObserver extends AbstractDataAssignObserver
             return;
         }
 
-        /** @var InfoInterface $paymentInfo */
         $paymentInfo = $this->readPaymentModelArgument($observer);
 
         foreach ($this->additionalInformationList as $additionalInformationKey) {
