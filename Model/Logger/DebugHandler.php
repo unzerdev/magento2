@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Logger;
 
@@ -23,17 +24,13 @@ use Psr\Log\LoggerInterface;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class DebugHandler implements DebugHandlerInterface
 {
     /**
      * @var LoggerInterface
      */
-    protected $_logger;
+    protected LoggerInterface $_logger;
 
     /**
      * DebugHandler constructor.
@@ -52,7 +49,7 @@ class DebugHandler implements DebugHandlerInterface
      *
      * @return void
      */
-    public function log(string $message)
+    public function log(string $message): void
     {
         $this->_logger->debug($message);
     }

@@ -494,6 +494,19 @@ class Payment
             return;
         }
 
+        $this->sendEmails($order);
+    }
+
+    /**
+     * Send Emails
+     *
+     * @param OrderInterface $order
+     * @return void
+     * @throws LocalizedException
+     * @throws Exception
+     */
+    protected function sendEmails(OrderInterface $order): void
+    {
         // send order emails now, since we skipped them in Unzer\PAPI\Model\Command\Order
         // which is only used for canOrder methods
         if ($order->getPayment() instanceof OrderPaymentInterface

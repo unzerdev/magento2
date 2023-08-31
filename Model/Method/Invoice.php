@@ -3,13 +3,9 @@ declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Method;
 
-use Unzer\PAPI\Model\Config;
-use UnzerSDK\Exceptions\UnzerApiException;
-use UnzerSDK\Resources\Payment;
-use UnzerSDK\Resources\TransactionTypes\Authorization;
-use UnzerSDK\Resources\TransactionTypes\Charge;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Payment\Gateway\Command\CommandManagerInterface;
 use Magento\Payment\Gateway\Command\CommandPoolInterface;
@@ -18,6 +14,11 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectFactory;
 use Magento\Payment\Gateway\Validator\ValidatorPoolInterface;
 use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface;
+use Unzer\PAPI\Model\Config;
+use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\Payment;
+use UnzerSDK\Resources\TransactionTypes\Authorization;
+use UnzerSDK\Resources\TransactionTypes\Charge;
 
 /**
  * Invoice payment method
@@ -37,17 +38,31 @@ use Psr\Log\LoggerInterface;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 class Invoice extends Base
 {
-
     /**
      * @var PriceCurrencyInterface
      */
-    protected $_priceCurrency;
+    protected PriceCurrencyInterface $_priceCurrency;
 
+    /**
+     * Constructor
+     *
+     * @param ManagerInterface $eventManager
+     * @param ValueHandlerPoolInterface $valueHandlerPool
+     * @param PaymentDataObjectFactory $paymentDataObjectFactory
+     * @param string $code
+     * @param string $formBlockType
+     * @param string $infoBlockType
+     * @param ScopeConfigInterface $scopeConfig
+     * @param Config $moduleConfig
+     * @param PriceCurrencyInterface $priceCurrency
+     * @param CommandPoolInterface|null $commandPool
+     * @param ValidatorPoolInterface|null $validatorPool
+     * @param CommandManagerInterface|null $commandExecutor
+     * @param LoggerInterface|null $logger
+     */
     public function __construct(
         ManagerInterface $eventManager,
         ValueHandlerPoolInterface $valueHandlerPool,
@@ -83,7 +98,8 @@ class Invoice extends Base
 
     /**
      * @inheritDoc
-     * @throws UnzerApiException
+     *
+     * @throws UnzerApiException|LocalizedException
      */
     public function getAdditionalPaymentInformation(Order $order): string
     {
@@ -122,6 +138,10 @@ class Invoice extends Base
     }
 
     /**
+     * Calculate Remaining Amount
+     *
+     * @param Payment $payment
+     * @return float
      * @throws UnzerApiException
      */
     protected function calculateRemainingAmount(Payment $payment): float
@@ -129,8 +149,7 @@ class Invoice extends Base
         $charges = $payment->getCharges();
         $initialTransaction = $payment->getInitialTransaction();
 
-        //TODO WIP! we need a working unzer insights account first, to test all invoice payment methods
-        if($initialTransaction instanceof Authorization && count($charges) === 0) {
+        if ($initialTransaction instanceof Authorization && count($charges) === 0) {
             return $initialTransaction->getAmount();
         }
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Method;
 
@@ -34,9 +35,7 @@ class Paypal extends Base
     }
 
     /**
-     * Get Frontend Config
-     *
-     * @return array
+     * @inheritDoc
      */
     public function getFrontendConfig(): array
     {

@@ -1,6 +1,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/unzerdev/magento2.svg?style=flat-square)](https://packagist.org/packages/unzerdev/magento2)
 [![PHP 7.4](https://img.shields.io/badge/php-7.4-blue.svg)](http://www.php.net)
 [![PHP 8.1](https://img.shields.io/badge/php-8.1-blue.svg)](http://www.php.net)
+[![PHP 8.2](https://img.shields.io/badge/php-8.2-blue.svg)](http://www.php.net)
 
 ![Logo](unzer_logo.svg)
 
@@ -28,7 +29,7 @@ Currently supported payment methods are:
 * Wechat
 
 ## SYSTEM REQUIREMENTS
-This extension requires PHP 7.4 or PHP 8.1.
+This extension requires PHP 7.4, PHP 8.1 or PHP 8.2.
 It also depends on the unzerdev/php-sdk, which will be installed along with the plugin.
 
 Please refer to the additional requirements listed under [System Requirements](https://docs.unzer.com/server-side-integration/php-sdk-integration/php-installation/#system-requirements) (et seq.).

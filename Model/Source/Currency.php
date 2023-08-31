@@ -1,4 +1,12 @@
 <?php
+declare(strict_types=1);
+
+namespace Unzer\PAPI\Model\Source;
+
+use Magento\Framework\Data\OptionSourceInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\View\Element\Template\Context;
+use Unzer\PAPI\Model\Config;
 
 /**
  * Authorize Command for payments
@@ -18,27 +26,20 @@
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author neusta SD GmbH
- *
- * @package  unzerdev/magento2
  */
-
-namespace Unzer\PAPI\Model\Source;
-
-use Magento\Framework\Data\OptionSourceInterface;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\View\Element\Template\Context;
-use Unzer\PAPI\Model\Config;
-
 class Currency implements OptionSourceInterface
 {
 
     /**
      * @var Context
      */
-    private $context;
+    private Context $context;
 
+    /**
+     * Constructor
+     *
+     * @param Context $context
+     */
     public function __construct(Context $context)
     {
         $this->context = $context;

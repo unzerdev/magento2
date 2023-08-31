@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Command;
 
-use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Command\ResultInterface;
@@ -12,13 +12,12 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface;
-use Magento\Sales\Model\Order\Payment\TransactionFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Model\Ui\VaultConfigProvider;
 use Psr\Log\LoggerInterface;
+use Unzer\PAPI\Helper\Order as OrderHelper;
 use Unzer\PAPI\Model\Config;
-use Unzer\PAPI\Model\Method\Base;
 use Unzer\PAPI\Model\Vault\VaultDetailsHandlerManager;
 use UnzerSDK\Constants\RecurrenceTypes;
 use UnzerSDK\Exceptions\UnzerApiException;
@@ -67,17 +66,22 @@ class Capture extends AbstractCommand
      * @inheritDoc
      */
     public function __construct(
-        Session $checkoutSession,
         Config $config,
         LoggerInterface $logger,
-        \Unzer\PAPI\Helper\Order $orderHelper,
+        OrderHelper $orderHelper,
         UrlInterface $urlBuilder,
         BuilderInterface $transactionBuilder,
         StoreManagerInterface $storeManager,
         ChargeFactory $chargeFactory,
         VaultDetailsHandlerManager $vaultDetailsHandlerManager
     ) {
-        parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder, $storeManager);
+        parent::__construct(
+            $config,
+            $logger,
+            $orderHelper,
+            $urlBuilder,
+            $storeManager
+        );
 
         $this->_transactionBuilder = $transactionBuilder;
         $this->chargeFactory = $chargeFactory;
@@ -102,7 +106,7 @@ class Capture extends AbstractCommand
         /** @var string|null $paymentId */
         $paymentId = $payment->getAdditionalInformation(self::KEY_PAYMENT_ID);
 
-        $storeCode = $this->getStoreCode($order->getStoreId());
+        $storeCode = $this->getStoreCode((int)$order->getStoreId());
 
         try {
             if ($paymentId !== null) {
@@ -177,7 +181,7 @@ class Capture extends AbstractCommand
         InfoInterface $payment,
         float $amount
     ): Charge {
-        $storeId = $order->getStoreId();
+        $storeId = (string)$order->getStoreId();
 
         $currency = $order->getBaseCurrencyCode();
         if ($this->_config->getTransmitCurrency($order->getStore()->getCode()) === $this->_config::CURRENCY_CUSTOMER) {
@@ -185,7 +189,6 @@ class Capture extends AbstractCommand
             $amount = (float)$order->getTotalDue();
         }
 
-        /** @var Charge $charge */
         $charge = $this->chargeFactory->create([
             'amount' => $amount,
             'currency' => $currency,
@@ -226,6 +229,7 @@ class Capture extends AbstractCommand
 
     /**
      * @inheritDoc
+     *
      * @throws UnzerApiException
      */
     protected function _setPaymentTransaction(

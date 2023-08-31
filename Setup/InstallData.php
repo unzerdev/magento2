@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Setup;
 
@@ -26,10 +27,6 @@ use Magento\Sales\Model\Order\StatusFactory;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class InstallData implements InstallDataInterface
 {
@@ -38,7 +35,7 @@ class InstallData implements InstallDataInterface
     /**
      * @var StatusFactory
      */
-    private $_orderStatusFactory;
+    private StatusFactory $_orderStatusFactory;
 
     /**
      * InstallData constructor.
@@ -50,6 +47,8 @@ class InstallData implements InstallDataInterface
     }
 
     /**
+     * Install
+     *
      * @param ModuleDataSetupInterface $setup
      * @param ModuleContextInterface $context
      * @throws \Exception

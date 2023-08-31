@@ -1,12 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Helper;
 
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Url;
 use Magento\Store\Api\Data\StoreInterface;
-use Magento\Store\Model\Store;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Helper for webhook handling
@@ -26,10 +24,6 @@ use Magento\Store\Model\StoreManagerInterface;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class Webhooks
 {
@@ -38,7 +32,7 @@ class Webhooks
     /**
      * @var Url
      */
-    protected $_urlBuilder;
+    protected Url $_urlBuilder;
 
     /**
      * Webhooks constructor.
@@ -50,10 +44,12 @@ class Webhooks
     }
 
     /**
-     * @param StoreInterface|null $store
+     * Get Url
+     *
+     * @param StoreInterface $store
      * @return string
      */
-    public function getUrl(?StoreInterface $store): string
+    public function getUrl(StoreInterface $store): string
     {
         return $this->_urlBuilder
             ->setScope($store)

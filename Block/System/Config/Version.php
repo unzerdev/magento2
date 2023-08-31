@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Block\System\Config;
 
@@ -20,17 +21,21 @@ namespace Unzer\PAPI\Block\System\Config;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author David Owusu
- *
- * @package  unzerdev/magento2
  */
 class Version extends AbstractConfigInfo
 {
+    /**
+     * @var string
+     */
     protected $_template = 'Unzer_PAPI::system/config/version_info.phtml';
 
-    public function getInfo() :string
+    /**
+     * Get Info
+     *
+     * @return string
+     */
+    public function getInfo(): string
     {
-        return $this->moduleResource->getDbVersion('Unzer_PAPI')??'';
+        return $this->moduleResource->getDbVersion('Unzer_PAPI') ?? '';
     }
 }

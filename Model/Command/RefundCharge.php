@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Command;
 
-use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
+use Unzer\PAPI\Helper\Order as OrderHelper;
 use Unzer\PAPI\Model\Config;
 use UnzerSDK\Constants\CancelReasonCodes;
 use UnzerSDK\Exceptions\UnzerApiException;
@@ -31,27 +32,39 @@ use UnzerSDK\Resources\TransactionTypes\CancellationFactory;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class RefundCharge extends AbstractCommand
 {
     public const REASON = CancelReasonCodes::REASON_CODE_RETURN;
 
-    private $cancellationFactory;
+    /**
+     * @var CancellationFactory
+     */
+    private CancellationFactory $cancellationFactory;
 
+    /**
+     * @param Config $config
+     * @param LoggerInterface $logger
+     * @param OrderHelper $orderHelper
+     * @param UrlInterface $urlBuilder
+     * @param StoreManagerInterface $storeManager
+     * @param CancellationFactory $cancellationFactory
+     */
     public function __construct(
-        Session $checkoutSession,
         Config $config,
         LoggerInterface $logger,
-        \Unzer\PAPI\Helper\Order $orderHelper,
+        OrderHelper $orderHelper,
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager,
         CancellationFactory $cancellationFactory
     ) {
-        parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder, $storeManager);
+        parent::__construct(
+            $config,
+            $logger,
+            $orderHelper,
+            $urlBuilder,
+            $storeManager
+        );
         $this->cancellationFactory = $cancellationFactory;
     }
 
@@ -60,9 +73,9 @@ class RefundCharge extends AbstractCommand
      * @throws LocalizedException
      * @throws UnzerApiException
      */
-    public function execute(array $commandSubject)
+    public function execute(array $commandSubject): void
     {
-        /** @var Order\Payment $payment */
+        /** @var OrderPayment $payment */
         $payment = $commandSubject['payment']->getPayment();
 
         $order = $payment->getOrder();
@@ -82,7 +95,7 @@ class RefundCharge extends AbstractCommand
         }
 
         $amount = null;
-        if (array_key_exists('amount', $commandSubject) && !is_null($commandSubject['amount'])) {
+        if (array_key_exists('amount', $commandSubject) && $commandSubject['amount'] !== null) {
             $amount = (float)$commandSubject['amount'];
         }
 

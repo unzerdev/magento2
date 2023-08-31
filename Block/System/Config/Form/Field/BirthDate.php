@@ -8,25 +8,50 @@ use Magento\Framework\Intl\DateTimeFactory;
 use Magento\Framework\Locale\Bundle\DataBundle;
 use Magento\Framework\Locale\ResolverInterface;
 
+/**
+ * Customer Account Order Prepayment Information Block
+ *
+ * Copyright (C) 2021 - today Unzer GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @link  https://docs.unzer.com/
+ */
 class BirthDate
 {
     protected const YEARS_RANGE = 120;
 
     /**
-     * @var DateTime
+     * @var DateTime|null
      */
-    private $date;
+    private ?DateTime $date = null;
 
     /**
      * @var ResolverInterface
      */
-    private $localeResolver;
+    private ResolverInterface $localeResolver;
 
     /**
      * @var DateTimeFactory
      */
-    private $dateTimeFactory;
+    private DateTimeFactory $dateTimeFactory;
 
+    /**
+     * Constructor
+     *
+     * @param DateTimeFactory $dateTimeFactory
+     * @param ResolverInterface $localeResolver
+     */
     public function __construct(
         DateTimeFactory $dateTimeFactory,
         ResolverInterface $localeResolver
@@ -35,21 +60,41 @@ class BirthDate
         $this->dateTimeFactory = $dateTimeFactory;
     }
 
+    /**
+     * Get Day
+     *
+     * @return string
+     */
     public function getDay(): string
     {
-        return !is_null($this->date) ? $this->date->format('d') : '';
+        return $this->date !== null ? $this->date->format('d') : '';
     }
 
+    /**
+     * Get Month
+     *
+     * @return string
+     */
     public function getMonth(): string
     {
-        return !is_null($this->date) ? $this->date->format('m') : '';
+        return $this->date !== null ? $this->date->format('m') : '';
     }
 
+    /**
+     * Get Year
+     *
+     * @return string
+     */
     public function getYear(): string
     {
-        return !is_null($this->date) ? $this->date->format('Y') : '';
+        return $this->date !== null ? $this->date->format('Y') : '';
     }
 
+    /**
+     * Get Days
+     *
+     * @return array
+     */
     public function getDays(): array
     {
         $days = [];
@@ -60,6 +105,11 @@ class BirthDate
         return $days;
     }
 
+    /**
+     * Get Months
+     *
+     * @return array
+     */
     public function getMonths(): array
     {
         $data = [];
@@ -73,6 +123,11 @@ class BirthDate
         return $data;
     }
 
+    /**
+     * Get Years
+     *
+     * @return array
+     */
     public function getYears(): array
     {
         $years = [];
@@ -84,14 +139,25 @@ class BirthDate
         return $years;
     }
 
+    /**
+     * Get Date
+     *
+     * @return DateTime|null
+     */
     public function getDate(): ?DateTime
     {
         return $this->date;
     }
 
+    /**
+     * Set Date
+     *
+     * @param mixed $date
+     * @return $this
+     */
     public function setDate($date): self
     {
-        if(is_null($date)) {
+        if ($date === null) {
             $date = '';
         }
 

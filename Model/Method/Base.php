@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Method;
 
@@ -41,11 +42,11 @@ class Base extends Adapter
     /**
      * @var ScopeConfigInterface
      */
-    protected $_scopeConfig;
+    protected ScopeConfigInterface $_scopeConfig;
     /**
      * @var Config
      */
-    protected $_moduleConfig;
+    protected Config $_moduleConfig;
 
     /**
      * Base constructor.
@@ -191,7 +192,7 @@ class Base extends Adapter
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getTitle()
     {
@@ -209,7 +210,7 @@ class Base extends Adapter
     }
 
     /**
-     * Has method valid override keys
+     * Has Method Valid Override Keys
      *
      * @param string|null $storeId
      * @return bool
@@ -222,14 +223,15 @@ class Base extends Adapter
 
         $isPrivateKeyValid = PrivateKeyValidator::validate($this->getConfigData(Config::KEY_PRIVATE_KEY, $storeId));
         $isPublicKeyValid = PublicKeyValidator::validate($this->getConfigData(Config::KEY_PUBLIC_KEY, $storeId));
-        if (!$isPrivateKeyValid || !$isPublicKeyValid) {
+
+        if (!($isPrivateKeyValid && $isPublicKeyValid)) {
             return false;
         }
         return true;
     }
 
     /**
-     * Get method override public key
+     * Get Method Override Public Key
      *
      * @param string|null $storeId
      * @return string
@@ -240,7 +242,7 @@ class Base extends Adapter
     }
 
     /**
-     * Get method override private key
+     * Get Method Override Private Key
      *
      * @param string|null $storeId
      * @return string

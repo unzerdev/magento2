@@ -3,20 +3,32 @@ declare(strict_types=1);
 
 namespace Unzer\PAPI\Controller\Applepay;
 
-use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CsrfAwareActionInterface;
-use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
-
-use Magento\Sales\Model\Order;
-use Unzer\PAPI\Model\Config;
-use Unzer\PAPI\Controller\Payment\AbstractPaymentAction;
-
+use Magento\Framework\App\RequestInterface;
 use UnzerSDK\Exceptions\UnzerApiException;
-use UnzerSDK\Resources\Payment;
-
 use UnzerSDK\Resources\TransactionTypes\AuthorizationFactory;
-class Authorize extends AbstractPaymentAction implements CsrfAwareActionInterface
+
+/**
+ * Apple Pay Authorize Controller
+ *
+ * Copyright (C) 2021 - today Unzer GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @link  https://docs.unzer.com/
+ */
+class Authorize implements CsrfAwareActionInterface
 {
     public function execute()
     {
@@ -30,7 +42,8 @@ class Authorize extends AbstractPaymentAction implements CsrfAwareActionInterfac
 
             $quote = $this->_checkoutSession->getQuote();
 
-            $transaction = $unzer->authorize(number_format((float)$quote->getBaseGrandTotal(),2), $quote->getBaseCurrencyCode(), $paymentTypeId, $returnController);
+            $transaction = $unzer->authorize(number_format((float)$quote->getBaseGrandTotal(), 2),
+                $quote->getBaseCurrencyCode(), $paymentTypeId, $returnController);
 
             if ($transaction->isSuccess()) {
                 echo json_encode(['transactionStatus' => 'success']);
@@ -64,10 +77,5 @@ class Authorize extends AbstractPaymentAction implements CsrfAwareActionInterfac
     public function validateForCsrf(RequestInterface $request): ?bool
     {
         return true;
-    }
-
-    public function executeWith(Order $order, Payment $payment)
-    {
-        // TODO: Implement executeWith() method.
     }
 }

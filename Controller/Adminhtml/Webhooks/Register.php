@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Controller\Adminhtml\Webhooks;
 
@@ -25,10 +26,6 @@ use Magento\Framework\Controller\Result\Redirect;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class Register extends AbstractAction
 {

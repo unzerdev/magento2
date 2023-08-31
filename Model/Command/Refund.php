@@ -23,10 +23,6 @@ use UnzerSDK\Constants\CancelReasonCodes;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class Refund extends Cancel
 {

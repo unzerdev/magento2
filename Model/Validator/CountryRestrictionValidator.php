@@ -1,7 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Validator;
 
+use Exception;
+use Magento\Payment\Gateway\Validator\ResultInterface;
 use Unzer\PAPI\Model\Config;
 use Magento\Payment\Gateway\Validator\CountryValidator;
 use Magento\Payment\Gateway\Validator\ResultInterfaceFactory;
@@ -24,17 +27,13 @@ use Magento\Payment\Gateway\Validator\ResultInterfaceFactory;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class CountryRestrictionValidator extends CountryValidator
 {
     /**
      * @var Config
      */
-    private $config;
+    private Config $config;
 
     /**
      * @param ResultInterfaceFactory $resultFactory
@@ -50,9 +49,11 @@ class CountryRestrictionValidator extends CountryValidator
     }
 
     /**
+     * Validate
+     *
      * @param array $validationSubject
-     * @return bool|\Magento\Payment\Gateway\Validator\ResultInterface
-     * @throws \Exception
+     * @return bool|ResultInterface
+     * @throws Exception
      */
     public function validate(array $validationSubject)
     {
@@ -63,7 +64,7 @@ class CountryRestrictionValidator extends CountryValidator
             /** @var string[] $countries */
             $countries = preg_split('/\s*,\s*/', $countriesString);
 
-            if (!in_array($validationSubject['country'], $countries)) {
+            if (!in_array($validationSubject['country'], $countries, true)) {
                 return $this->createResult(false);
             }
         }

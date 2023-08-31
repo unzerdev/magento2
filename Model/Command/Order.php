@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Command;
 
-use Magento\Checkout\Model\Session;
+use Exception;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Command\ResultInterface;
@@ -36,26 +37,21 @@ use UnzerSDK\Exceptions\UnzerApiException;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class Order extends AbstractCommand
 {
     /**
      * @var AuthorizeOperation
      */
-    protected $_authorizeOperation;
+    protected AuthorizeOperation $_authorizeOperation;
 
     /**
      * @var CaptureOperation
      */
-    protected $_captureOperation;
+    protected CaptureOperation $_captureOperation;
 
     /**
      * Order constructor.
-     * @param Session $checkoutSession
      * @param Config $config
      * @param LoggerInterface $logger
      * @param OrderHelper $orderHelper
@@ -65,7 +61,6 @@ class Order extends AbstractCommand
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
-        Session $checkoutSession,
         Config $config,
         LoggerInterface $logger,
         OrderHelper $orderHelper,
@@ -74,7 +69,13 @@ class Order extends AbstractCommand
         CaptureOperation $captureOperation,
         StoreManagerInterface $storeManager
     ) {
-        parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder, $storeManager);
+        parent::__construct(
+            $config,
+            $logger,
+            $orderHelper,
+            $urlBuilder,
+            $storeManager
+        );
 
         $this->_authorizeOperation = $authorizeOperation;
         $this->_captureOperation = $captureOperation;
@@ -84,7 +85,7 @@ class Order extends AbstractCommand
      * @inheritDoc
      * @throws LocalizedException
      * @throws UnzerApiException
-     * @throws \Exception
+     * @throws Exception
      */
     public function execute(array $commandSubject): ?ResultInterface
     {
@@ -116,7 +117,7 @@ class Order extends AbstractCommand
                 $this->_captureOperation->capture($payment, null);
                 break;
             default:
-                throw new \Exception('Invalid payment action');
+                throw new Exception('Invalid payment action');
         }
 
         // Don't create a transaction for the Order command itself.

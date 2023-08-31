@@ -1,13 +1,32 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\System\Config\Backend;
 
+use Exception;
+use Magento\Config\Model\Config\Backend\File;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\MediaStorage\Model\File\Uploader;
 
-class Upload extends \Magento\Config\Model\Config\Backend\File
+/**
+ * Copyright (C) 2021 - today Unzer GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @link  https://docs.unzer.com/
+ */
+class Upload extends File
 {
     /**
      * Retrieve upload directory path
@@ -22,13 +41,12 @@ class Upload extends \Magento\Config\Model\Config\Backend\File
         return $this->_mediaDirectory->getAbsolutePath($uploadDir);
     }
 
-
     /**
      * Getter for allowed extensions of uploaded files
      *
      * @return array
      */
-    protected function _getAllowedExtensions()
+    protected function _getAllowedExtensions(): array
     {
         return ['pem', 'key'];
     }
@@ -39,7 +57,7 @@ class Upload extends \Magento\Config\Model\Config\Backend\File
      * @return $this
      * @throws LocalizedException
      */
-    public function beforeSave()
+    public function beforeSave(): Upload
     {
         $value = $this->getValue();
         $file = $this->getFileData();
@@ -47,7 +65,6 @@ class Upload extends \Magento\Config\Model\Config\Backend\File
         if (!empty($file)) {
             $uploadDir = $this->_getUploadDir();
             try {
-                /** @var Uploader $uploader */
                 $uploader = $this->_uploaderFactory->create(['fileId' => $file]);
                 $uploader->setAllowedExtensions($this->_getAllowedExtensions());
                 $uploader->setAllowRenameFiles(false);

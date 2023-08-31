@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Command;
 
+use Exception;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
@@ -35,23 +36,31 @@ use UnzerSDK\Exceptions\UnzerApiException;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 class OrderAuthorizeAndCapture extends AbstractCommand
 {
     /**
      * @var AuthorizeOperation
      */
-    protected $_authorizeOperation;
+    protected AuthorizeOperation $_authorizeOperation;
 
     /**
      * @var CaptureOperation
      */
-    protected $_captureOperation;
+    protected CaptureOperation $_captureOperation;
 
+    /**
+     * Constructor
+     *
+     * @param Config $config
+     * @param LoggerInterface $logger
+     * @param OrderHelper $orderHelper
+     * @param UrlInterface $urlBuilder
+     * @param AuthorizeOperation $authorizeOperation
+     * @param CaptureOperation $captureOperation
+     * @param StoreManagerInterface $storeManager
+     */
     public function __construct(
-        Session $checkoutSession,
         Config $config,
         LoggerInterface $logger,
         OrderHelper $orderHelper,
@@ -59,9 +68,14 @@ class OrderAuthorizeAndCapture extends AbstractCommand
         AuthorizeOperation $authorizeOperation,
         CaptureOperation $captureOperation,
         StoreManagerInterface $storeManager
-
     ) {
-        parent::__construct($checkoutSession, $config, $logger, $orderHelper, $urlBuilder, $storeManager);
+        parent::__construct(
+            $config,
+            $logger,
+            $orderHelper,
+            $urlBuilder,
+            $storeManager
+        );
 
         $this->_authorizeOperation = $authorizeOperation;
         $this->_captureOperation = $captureOperation;
@@ -71,7 +85,7 @@ class OrderAuthorizeAndCapture extends AbstractCommand
      * @inheritDoc
      * @throws LocalizedException
      * @throws UnzerApiException
-     * @throws \Exception
+     * @throws Exception
      */
     public function execute(array $commandSubject): ?ResultInterface
     {
@@ -96,7 +110,7 @@ class OrderAuthorizeAndCapture extends AbstractCommand
                 $payment = $this->_captureOperation->capture($payment, null);
                 break;
             default:
-                throw new \Exception('Invalid payment action');
+                throw new Exception('Invalid payment action');
         }
 
         // Don't create a transaction for the Order command itself.

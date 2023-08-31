@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Method;
 
@@ -20,10 +21,6 @@ namespace Unzer\PAPI\Model\Method;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author David Owusu
- *
- * @package  unzerdev/magento2
  */
 class EPS extends Base
 {

@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Method;
 
+use Exception;
 use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Payment\Gateway\Command;
@@ -12,12 +14,14 @@ use Magento\Payment\Gateway\ConfigFactoryInterface;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\MethodInterface;
+use Magento\Sales\Api\Data\OrderPaymentExtensionInterface;
 use Magento\Sales\Api\Data\OrderPaymentExtensionInterfaceFactory;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Api\PaymentTokenManagementInterface;
 use Magento\Vault\Model\Method\Vault as MagentoVault;
 use Unzer\PAPI\Model\Command\Order;
+use UnzerSDK\Exceptions\UnzerApiException;
 
 /**
  * Unzer Vault
@@ -59,6 +63,29 @@ class Vault extends MagentoVault
      * @var Json
      */
     private Json $jsonSerializer;
+
+    /**
+     * @inheritDoc
+     *
+     * We need this, because of the decision to use "payment_action = order", which is not supported by magento vault
+     * @throws LocalizedException
+     * @throws UnzerApiException
+     * @throws Exception
+     */
+    public function order(InfoInterface $payment, $amount): void
+    {
+        if (!$payment instanceof OrderPaymentInterface) {
+            throw new \DomainException('Not implemented');
+        }
+
+        $this->attachTokenExtensionAttribute($payment);
+        $this->attachCreditCardInfo($payment);
+
+        $this->orderCommand->execute([
+            'payment' => $payment,
+            'amount' => $amount
+        ]);
+    }
 
     /**
      * @var MethodInterface
@@ -116,27 +143,6 @@ class Vault extends MagentoVault
     }
 
     /**
-     * We need this, because of the decision to use "payment_action = order", which is not supported by magento vault
-     *
-     * @inheritdoc
-     * @since 100.1.0
-     */
-    public function order(InfoInterface $payment, $amount): void
-    {
-        if (!$payment instanceof OrderPaymentInterface) {
-            throw new \DomainException('Not implemented');
-        }
-
-        $this->attachTokenExtensionAttribute($payment);
-        $this->attachCreditCardInfo($payment);
-
-        $this->orderCommand->execute([
-            'payment' => $payment,
-            'amount' => $amount
-        ]);
-    }
-
-    /**
      * Attaches token extension attribute.
      *
      * @param OrderPaymentInterface $orderPayment
@@ -149,8 +155,7 @@ class Vault extends MagentoVault
             throw new \LogicException('Public hash should be defined');
         }
 
-        $customerId = isset($additionalInformation[PaymentTokenInterface::CUSTOMER_ID]) ?
-            $additionalInformation[PaymentTokenInterface::CUSTOMER_ID] : null;
+        $customerId = $additionalInformation[PaymentTokenInterface::CUSTOMER_ID] ?? null;
 
         $publicHash = $additionalInformation[PaymentTokenInterface::PUBLIC_HASH];
 
@@ -168,9 +173,9 @@ class Vault extends MagentoVault
      * Returns Payment's extension attributes.
      *
      * @param OrderPaymentInterface $payment
-     * @return \Magento\Sales\Api\Data\OrderPaymentExtensionInterface
+     * @return OrderPaymentExtensionInterface
      */
-    private function getPaymentExtensionAttributes(OrderPaymentInterface $payment)
+    private function getPaymentExtensionAttributes(OrderPaymentInterface $payment): OrderPaymentExtensionInterface
     {
         $extensionAttributes = $payment->getExtensionAttributes();
         if ($extensionAttributes === null) {

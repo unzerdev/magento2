@@ -1,12 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Block\System\Config;
 
-use Magento\Framework\Module\ResourceInterface;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Framework\Module\ResourceInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 /**
@@ -27,13 +28,12 @@ use Magento\Store\Model\StoreManagerInterface;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author David Owusu
- *
- * @package  unzerdev/magento2
  */
 class AbstractConfigInfo extends Field
 {
+    /**
+     * @var string
+     */
     protected $_template = '';
 
     /**
@@ -48,25 +48,24 @@ class AbstractConfigInfo extends Field
     /**
      * @var ResourceInterface
      */
-    protected $moduleResource;
+    protected ResourceInterface $moduleResource;
 
     /**
      * WebhooksButtons constructor.
      *
-     * @param Context               $context
-     * @param RequestInterface      $request
+     * @param Context $context
+     * @param RequestInterface $request
      * @param StoreManagerInterface $storeManager
-     * @param ResourceInterface     $moduleResource
-     * @param array                 $data
+     * @param ResourceInterface $moduleResource
+     * @param array $data
      */
     public function __construct(
         Context $context,
         RequestInterface $request,
         StoreManagerInterface $storeManager,
-        ResourceInterface    $moduleResource,
+        ResourceInterface $moduleResource,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $data);
 
         $this->_request = $request;
@@ -82,12 +81,23 @@ class AbstractConfigInfo extends Field
         return $this->_toHtml();
     }
 
+    /**
+     * Get Info
+     *
+     * @return string
+     */
     public function getInfo(): string
     {
         return '';
     }
 
-    protected function _renderScopeLabel(AbstractElement $element)
+    /**
+     * Render Scope Label
+     *
+     * @param AbstractElement $element
+     * @return string
+     */
+    protected function _renderScopeLabel(AbstractElement $element): string
     {
         return '';
     }

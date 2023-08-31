@@ -24,11 +24,12 @@ use UnzerSDK\Exceptions\UnzerApiException;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 class PaylaterInvoice extends Invoice
 {
+    /**
+     * @var string
+     */
     protected $_template = 'Unzer_PAPI::info/paylater_invoice.phtml';
 
     /**
@@ -41,6 +42,8 @@ class PaylaterInvoice extends Invoice
     }
 
     /**
+     * Get Customer Salutation
+     *
      * @return string
      * @throws LocalizedException
      * @throws UnzerApiException
@@ -51,6 +54,8 @@ class PaylaterInvoice extends Invoice
     }
 
     /**
+     * Get Customer BirthDate
+     *
      * @return string|null
      * @throws LocalizedException
      * @throws UnzerApiException
