@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Test\Integration;
 
@@ -24,22 +25,18 @@ use Magento\TestFramework\ObjectManager;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class ModuleConfigTest extends \PHPUnit\Framework\TestCase
 {
-    private $moduleName = 'Unzer_PAPI';
+    private string $moduleName = 'Unzer_PAPI';
 
-    public function testTheModuleIsRegistered()
+    public function testTheModuleIsRegistered(): void
     {
         $registrar = new ComponentRegistrar();
         $this->assertArrayHasKey($this->moduleName, $registrar->getPaths(ComponentRegistrar::MODULE));
     }
 
-    public function testTheModuleIsConfiguredAndEnabled()
+    public function testTheModuleIsConfiguredAndEnabled(): void
     {
         /** @var ObjectManager $objectManager */
         $objectManager = ObjectManager::getInstance();

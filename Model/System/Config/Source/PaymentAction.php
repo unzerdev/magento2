@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\System\Config\Source;
 
@@ -22,15 +23,11 @@ use Magento\Framework\Data\OptionSourceInterface;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class PaymentAction implements OptionSourceInterface
 {
-    const ACTION_AUTHORIZE = 'authorize';
-    const ACTION_AUTHORIZE_CAPTURE = 'authorize_capture';
+    public const ACTION_AUTHORIZE = 'authorize';
+    public const ACTION_AUTHORIZE_CAPTURE = 'authorize_capture';
 
     /**
      * @inheritDoc

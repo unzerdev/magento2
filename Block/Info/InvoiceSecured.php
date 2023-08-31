@@ -1,6 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Block\Info;
+
+use Magento\Framework\Exception\LocalizedException;
+use UnzerSDK\Exceptions\UnzerApiException;
 
 /**
  * Customer Account Order Invoice Information Block
@@ -20,13 +24,12 @@ namespace Unzer\PAPI\Block\Info;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class InvoiceSecured extends Invoice
 {
+    /**
+     * @var string
+     */
     protected $_template = 'Unzer_PAPI::info/invoice_secured.phtml';
 
     /**
@@ -39,9 +42,11 @@ class InvoiceSecured extends Invoice
     }
 
     /**
+     * Get Customer Salutation
+     *
      * @return string
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\UnzerApiException
+     * @throws LocalizedException
+     * @throws UnzerApiException
      */
     public function getCustomerSalutation(): string
     {
@@ -49,9 +54,11 @@ class InvoiceSecured extends Invoice
     }
 
     /**
+     * Get Customer BirthDate
+     *
      * @return string|null
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \UnzerSDK\Exceptions\UnzerApiException
+     * @throws LocalizedException
+     * @throws UnzerApiException
      */
     public function getCustomerBirthdate(): ?string
     {

@@ -26,19 +26,17 @@ use UnzerSDK\Exceptions\UnzerApiException;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 class Cancel extends AbstractCommand
 {
-    const REASON = CancelReasonCodes::REASON_CODE_CANCEL;
+    public const REASON = CancelReasonCodes::REASON_CODE_CANCEL;
 
     /**
      * @inheritDoc
      * @throws LocalizedException
      * @throws UnzerApiException
      */
-    public function execute(array $commandSubject)
+    public function execute(array $commandSubject): void
     {
         /** @var Order\Payment $payment */
         $payment = $commandSubject['payment']->getPayment();
@@ -56,7 +54,7 @@ class Cancel extends AbstractCommand
         }
 
         $amount = null;
-        if(array_key_exists('amount', $commandSubject) && !is_null($commandSubject['amount'])) {
+        if (array_key_exists('amount', $commandSubject) && $commandSubject['amount'] !== null) {
             $amount = (float)$commandSubject['amount'];
         }
 

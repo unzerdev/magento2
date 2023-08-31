@@ -1,12 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Controller\Adminhtml\Webhooks;
 
-use Unzer\PAPI\Helper\Webhooks as WebhooksHelper;
-use Unzer\PAPI\Model\Config;
 use Magento\Backend\App\Action;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\NotFoundException;
 use Magento\Store\Model\StoreManagerInterface;
+use Unzer\PAPI\Helper\Webhooks as WebhooksHelper;
+use Unzer\PAPI\Model\Config;
 
 /**
  * Abstract controller base for webhook processing.
@@ -26,10 +28,6 @@ use Magento\Store\Model\StoreManagerInterface;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 abstract class AbstractAction extends Action
 {
@@ -38,20 +36,21 @@ abstract class AbstractAction extends Action
     /**
      * @var Config Config
      */
-    protected $_moduleConfig;
+    protected Config $_moduleConfig;
 
     /**
      * @var StoreManagerInterface
      */
-    protected $_storeManager;
+    protected StoreManagerInterface $_storeManager;
 
     /**
      * @var WebhooksHelper
      */
-    protected $_webhooksHelper;
+    protected WebhooksHelper $_webhooksHelper;
 
     /**
      * Register constructor.
+     *
      * @param Action\Context $context
      * @param Config $moduleConfig
      * @param StoreManagerInterface $storeManager
@@ -62,8 +61,7 @@ abstract class AbstractAction extends Action
         Config $moduleConfig,
         StoreManagerInterface $storeManager,
         WebhooksHelper $webhooksHelper
-    )
-    {
+    ) {
         parent::__construct($context);
 
         $this->_moduleConfig = $moduleConfig;
@@ -72,6 +70,8 @@ abstract class AbstractAction extends Action
     }
 
     /**
+     * Get Webhook Url
+     *
      * @return string
      * @throws NoSuchEntityException
      */
@@ -82,14 +82,20 @@ abstract class AbstractAction extends Action
 
         $store = $this->_storeManager->getStore($storeIdentifier);
 
+        if ($store === null) {
+            throw new NoSuchEntityException(__('Store not found for given identifier: %1', $storeIdentifier));
+        }
+
         return $this->_webhooksHelper->getUrl($store);
     }
 
     /**
+     * Get Store Code
+     *
      * @return string
      * @throws NoSuchEntityException
      */
-    public function getStoreCode()
+    public function getStoreCode(): string
     {
         $storeId = $this->getRequest()->getParam(self::URL_PARAM_STORE);
         return $this->_storeManager->getStore($storeId)->getCode();

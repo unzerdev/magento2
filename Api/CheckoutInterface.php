@@ -2,7 +2,7 @@
 
 namespace Unzer\PAPI\Api;
 
-use Unzer\PAPI\Api\Data\Customer;
+use Unzer\PAPI\Model\Checkout\Data\Customer;
 
 /**
  * Checkout API Interface.
@@ -22,10 +22,7 @@ use Unzer\PAPI\Api\Data\Customer;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
+ * @api
  */
 interface CheckoutInterface
 {
@@ -34,7 +31,7 @@ interface CheckoutInterface
      *
      * @param string|null $guestEmail Customer E-Mail address.
      *
-     * @return \Unzer\PAPI\Api\Data\Customer|null
+     * @return \Unzer\PAPI\Model\Checkout\Data\Customer|null
      */
     public function getExternalCustomer(?string $guestEmail = null): ?Customer;
 }

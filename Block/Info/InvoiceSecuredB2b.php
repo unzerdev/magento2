@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Block\Info;
 
@@ -20,13 +21,12 @@ namespace Unzer\PAPI\Block\Info;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class InvoiceSecuredB2b extends InvoiceSecured
 {
+    /**
+     * @var string
+     */
     protected $_template = 'Unzer_PAPI::info/invoice_secured_b2b.phtml';
 
     /**

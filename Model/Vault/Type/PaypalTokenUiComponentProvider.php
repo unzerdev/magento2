@@ -53,7 +53,7 @@ class PaypalTokenUiComponentProvider implements TokenUiComponentProviderInterfac
      * @return TokenUiComponentInterface
      * @throws \JsonException
      */
-    public function getComponentForToken(PaymentTokenInterface $paymentToken)
+    public function getComponentForToken(PaymentTokenInterface $paymentToken): TokenUiComponentInterface
     {
         $jsonDetails = json_decode($paymentToken->getTokenDetails() ?: '{}', true, 512, JSON_THROW_ON_ERROR);
         return $this->componentFactory->create(

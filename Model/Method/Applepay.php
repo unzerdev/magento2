@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Method;
 
@@ -20,8 +21,6 @@ namespace Unzer\PAPI\Model\Method;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 class Applepay extends Base
 {
@@ -31,22 +30,13 @@ class Applepay extends Base
     public function getFrontendConfig(): array
     {
         //@todo serialize?
-        $supportedNetworks = $this->_scopeConfig->getValue('payment/unzer/applepay/supported_networks');
-        $supportedNetworks = explode(',',$supportedNetworks);
-        $supportedNetworks = $supportedNetworks;
+        $supportedNetworks = (string) $this->_scopeConfig->getValue('payment/unzer/applepay/supported_networks');
+        $supportedNetworks = explode(',', $supportedNetworks);
 
         return [
             'supportedNetworks' => $supportedNetworks,
             'merchantCapabilities' => ['supports3DS'],
             'label' => $this->_scopeConfig->getValue('payment/unzer_applepay/display_name') //label
         ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function hasRedirect(): bool
-    {
-        return false;
     }
 }

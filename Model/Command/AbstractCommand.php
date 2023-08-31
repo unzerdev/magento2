@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Command;
 
-use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
@@ -46,51 +46,44 @@ use function get_class;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @package  unzerdev/magento2
  */
 abstract class AbstractCommand implements CommandInterface
 {
     public const KEY_PAYMENT_ID = 'payment_id';
 
     /**
-     * @var Session
+     * @var Unzer|null
      */
-    protected $_checkoutSession;
-
-    /**
-     * @var Unzer
-     */
-    protected $_client;
+    protected ?Unzer $_client = null;
 
     /**
      * @var Config
      */
-    protected $_config;
+    protected Config $_config;
 
     /**
      * @var LoggerInterface
      */
-    protected $_logger;
+    protected LoggerInterface $_logger;
 
     /**
      * @var Order
      */
-    protected $_orderHelper;
+    protected Order $_orderHelper;
 
     /**
      * @var UrlInterface
      */
-    protected $_urlBuilder;
+    protected UrlInterface $_urlBuilder;
 
     /**
      * @var StoreManagerInterface
      */
-    private $storeManager;
+    private StoreManagerInterface $storeManager;
 
     /**
      * AbstractCommand constructor.
-     * @param Session $checkoutSession
+     *
      * @param Config $config
      * @param LoggerInterface $logger
      * @param Order $orderHelper
@@ -98,14 +91,12 @@ abstract class AbstractCommand implements CommandInterface
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
-        Session $checkoutSession,
         Config $config,
         LoggerInterface $logger,
         Order $orderHelper,
         UrlInterface $urlBuilder,
         StoreManagerInterface $storeManager
     ) {
-        $this->_checkoutSession = $checkoutSession;
         $this->_config = $config;
         $this->_logger = $logger;
         $this->_orderHelper = $orderHelper;
@@ -124,6 +115,8 @@ abstract class AbstractCommand implements CommandInterface
     }
 
     /**
+     * Get Client
+     *
      * @param string|null $storeCode
      * @param MethodInterface|null $paymentMethodInstance
      * @return Unzer
@@ -138,8 +131,7 @@ abstract class AbstractCommand implements CommandInterface
     }
 
     /**
-     * Returns the customer ID for given current payment or quote. Creates or update customer on Api side if needed.
-     * An UnzerApiException is thrown when customer creation/update fails.
+     * Returns the customer ID for given current payment or quote. Creates or update customer on Api side if needed
      *
      * @param InfoInterface $payment
      * @param SalesOrder $order
@@ -159,7 +151,7 @@ abstract class AbstractCommand implements CommandInterface
         );
 
         //customer not found on this account. create a new one...
-        if (is_null($customer)) {
+        if ($customer === null) {
             $customer = $this->_orderHelper->createCustomerFromOrder($order, $order->getCustomerEmail(), true);
 
             $payment->setAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID, $customer->getId());
@@ -173,6 +165,12 @@ abstract class AbstractCommand implements CommandInterface
     }
 
     /**
+     * Get Customer
+     *
+     * @param string $customerId
+     * @param string $storeCode
+     * @param MethodInterface $paymentMethodInstance
+     * @return Customer|null
      * @throws UnzerApiException
      */
     protected function getCustomer(
@@ -200,11 +198,9 @@ abstract class AbstractCommand implements CommandInterface
 
     /**
      * Returns the resource ID for given current payment or quote. Creates or update customer on Api side if needed.
-     * An UnzerApiException is thrown when customer creation/update fails.
      *
      * @param InfoInterface $payment
      * @param SalesOrder $order
-     *
      * @return string|null
      * @throws UnzerApiException|LocalizedException
      */
@@ -264,10 +260,14 @@ abstract class AbstractCommand implements CommandInterface
      */
     protected function addUnzerErrorToOrderHistory(SalesOrder $order, string $code, string $message): void
     {
-        $order->addCommentToStatusHistory("Unzer Error (${code}): ${message}");
+        $order->addCommentToStatusHistory("Unzer Error ($code): $message");
     }
 
     /**
+     * Get Store Code
+     *
+     * @param int $storeId
+     * @return string
      * @throws NoSuchEntityException
      */
     public function getStoreCode(int $storeId): string

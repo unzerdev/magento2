@@ -1,15 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Controller\Webhooks;
 
 use Exception;
-use Unzer\PAPI\Helper\Payment as PaymentHelper;
-use Unzer\PAPI\Helper\Webhooks;
-use Unzer\PAPI\Model\Config;
-use UnzerSDK\Exceptions\UnzerApiException;
-use UnzerSDK\Resources\AbstractUnzerResource;
-use UnzerSDK\Resources\Payment;
-use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
+use JsonException;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CsrfAwareActionInterface;
@@ -26,6 +21,12 @@ use Magento\Store\Model\App\EmulationFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use stdClass;
+use Unzer\PAPI\Helper\Payment as PaymentHelper;
+use Unzer\PAPI\Helper\Webhooks;
+use Unzer\PAPI\Model\Config;
+use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\Payment;
+use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
 
 /**
  * Controller for processing webhook events
@@ -45,17 +46,13 @@ use stdClass;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class Process extends Action implements CsrfAwareActionInterface
 {
     /**
      * @var EmulationFactory
      */
-    protected $_emulationFactory;
+    protected EmulationFactory $_emulationFactory;
 
     /**
      * @var Manager
@@ -65,22 +62,22 @@ class Process extends Action implements CsrfAwareActionInterface
     /**
      * @var LoggerInterface
      */
-    protected $_logger;
+    protected LoggerInterface $_logger;
 
     /**
      * @var Config
      */
-    protected $_moduleConfig;
+    protected Config $_moduleConfig;
 
     /**
      * @var PaymentHelper
      */
-    protected $_paymentHelper;
+    protected PaymentHelper $_paymentHelper;
 
     /**
      * @var StoreManagerInterface
      */
-    protected $_storeManager;
+    protected StoreManagerInterface $_storeManager;
 
     /**
      * Process constructor.
@@ -100,8 +97,7 @@ class Process extends Action implements CsrfAwareActionInterface
         Config $moduleConfig,
         PaymentHelper $paymentHelper,
         StoreManagerInterface $storeManager
-    )
-    {
+    ) {
         parent::__construct($context);
 
         $this->_emulationFactory = $emulationFactory;
@@ -130,6 +126,8 @@ class Process extends Action implements CsrfAwareActionInterface
 
     /**
      * @inheritDoc
+     *
+     * @throws JsonException
      */
     public function execute(): ResponseInterface
     {
@@ -155,7 +153,7 @@ class Process extends Action implements CsrfAwareActionInterface
         $emulation->startEnvironmentEmulation($store->getId());
 
         /** @var stdClass $event */
-        $event = json_decode($requestBody);
+        $event = json_decode($requestBody, false, 512, JSON_THROW_ON_ERROR);
 
         if (!$event || !$this->isValidEvent($event)) {
             $response->setStatusCode(400);
@@ -194,6 +192,8 @@ class Process extends Action implements CsrfAwareActionInterface
     }
 
     /**
+     * Get Payment From Event
+     *
      * @param string $requestBody
      * @return Payment|null
      * @throws UnzerApiException
@@ -206,14 +206,18 @@ class Process extends Action implements CsrfAwareActionInterface
 
         if ($resource instanceof Payment) {
             return $resource;
-        } elseif ($resource instanceof AbstractTransactionType) {
-            return $resource->getPayment();
-        } else {
-            return null;
         }
+
+        if ($resource instanceof AbstractTransactionType) {
+            return $resource->getPayment();
+        }
+
+        return null;
     }
 
     /**
+     * Get Public Key
+     *
      * @return string
      */
     protected function getPublicKey(): string
@@ -230,12 +234,16 @@ class Process extends Action implements CsrfAwareActionInterface
      */
     protected function isValidEvent(stdClass $event): bool
     {
-        return isset($event->event)
-            && isset($event->publicKey)
-            && isset($event->retrieveUrl)
+        return isset($event->event, $event->publicKey, $event->retrieveUrl)
             && $event->publicKey === $this->getPublicKey();
     }
 
+    /**
+     * Get Store From Request
+     *
+     * @param RequestInterface $request
+     * @return StoreInterface|null
+     */
     protected function getStoreFromRequest(RequestInterface $request): ?StoreInterface
     {
         $storeCode = $request->getParam(Webhooks::URL_PARAM_STORE);

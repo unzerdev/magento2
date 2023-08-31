@@ -12,14 +12,17 @@
             <values>
                 <value id="unzer-payment-1" type="host">https://payment.unzer.com</value>
                 <value id="unzer-payment-2" type="host">https://payment.heidelpay.com</value>
+                <value id="unzer-payment-3" type="host">https://sbx-payment.heidelpay.com</value>
                 <value id="unzer-api-1" type="host">https://api.unzer.com</value>
                 <value id="unzer-api-2" type="host">https://api.heidelpay.com</value>
+                <value id="unzer-api-3" type="host">https://sbx-api.heidelpay.com</value>
             </values>
         </policy>
         <policy id="frame-src">
             <values>
                 <value id="unzer-frame-1" type="host">https://payment.unzer.com/</value>
                 <value id="unzer-frame-2" type="host">https://payment.heidelpay.com/</value>
+                <value id="unzer-frame-3" type="host">https://sbx-payment.heidelpay.com/</value>
             </values>
         </policy>
         <policy id="font-src">

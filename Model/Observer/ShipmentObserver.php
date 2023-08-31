@@ -1,20 +1,25 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Observer;
 
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\InvalidArgumentException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\NotFoundException;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Shipment;
+use Magento\Sales\Model\Order\StatusResolver;
+use Magento\Store\Model\StoreManagerInterface;
 use Unzer\PAPI\Helper\Payment as PaymentHelper;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Method\Base;
 use UnzerSDK\Constants\ApiResponseCodes;
 use UnzerSDK\Exceptions\UnzerApiException;
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Payment\Model\MethodInterface;
-use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Shipment;
-use Magento\Sales\Model\Order\StatusResolver;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Observer for automatically tracking shipments in the Gateway
@@ -34,10 +39,6 @@ use Magento\Store\Model\StoreManagerInterface;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class ShipmentObserver implements ObserverInterface
 {
@@ -52,24 +53,25 @@ class ShipmentObserver implements ObserverInterface
     /**
      * @var Config
      */
-    protected $_moduleConfig;
+    protected Config $_moduleConfig;
 
     /**
      * @var StatusResolver
      */
-    protected $_orderStatusResolver;
+    protected StatusResolver $_orderStatusResolver;
 
     /**
      * @var PaymentHelper
      */
-    protected $_paymentHelper;
+    protected PaymentHelper $_paymentHelper;
     /**
      * @var StoreManagerInterface
      */
-    private $storeManager;
+    private StoreManagerInterface $storeManager;
 
     /**
      * ShipmentObserver constructor.
+     *
      * @param Config $moduleConfig
      * @param StatusResolver $orderStatusResolver
      * @param PaymentHelper $paymentHelper
@@ -88,10 +90,17 @@ class ShipmentObserver implements ObserverInterface
     }
 
     /**
+     * Execute
+     *
      * @param Observer $observer
      * @return void
-     * @throws UnzerApiException
+     * @throws AlreadyExistsException
+     * @throws InputException
+     * @throws InvalidArgumentException
+     * @throws LocalizedException
      * @throws NoSuchEntityException
+     * @throws NotFoundException
+     * @throws UnzerApiException
      */
     public function execute(Observer $observer): void
     {
@@ -104,9 +113,8 @@ class ShipmentObserver implements ObserverInterface
 
         $order = $shipment->getOrder();
 
-        $storeCode = $this->getStoreCode($order->getStoreId());
+        $storeCode = $this->getStoreCode((int)$order->getStoreId());
 
-        /** @var MethodInterface $methodInstance */
         $methodInstance = $order->getPayment()->getMethodInstance();
 
         if (!$methodInstance instanceof Base) {
@@ -119,7 +127,7 @@ class ShipmentObserver implements ObserverInterface
 
         $this->_paymentHelper->processState($order, $payment);
 
-        if (in_array($order->getPayment()->getMethod(), self::SHIPPABLE_PAYMENT_METHODS)) {
+        if (in_array($order->getPayment()->getMethod(), self::SHIPPABLE_PAYMENT_METHODS, true)) {
             /** @var Order\Invoice $invoice */
             $invoice = $order
                 ->getInvoiceCollection()
@@ -137,11 +145,13 @@ class ShipmentObserver implements ObserverInterface
     }
 
     /**
+     * Get Store Code
+     *
      * @param int $storeId
      * @return string
      * @throws NoSuchEntityException
      */
-    public function getStoreCode(int $storeId)
+    public function getStoreCode(int $storeId): string
     {
         return $this->storeManager->getStore($storeId)->getCode();
     }

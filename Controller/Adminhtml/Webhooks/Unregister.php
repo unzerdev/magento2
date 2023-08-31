@@ -1,8 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace Unzer\PAPI\Controller\Adminhtml\Webhooks;
 
 use Exception;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\Webhook;
 use Magento\Framework\Controller\Result\Redirect;
@@ -25,10 +27,6 @@ use Magento\Framework\Controller\Result\Redirect;
  * limitations under the License.
  *
  * @link  https://docs.unzer.com/
- *
- * @author Justin Nuß
- *
- * @package  unzerdev/magento2
  */
 class Unregister extends AbstractAction
 {
