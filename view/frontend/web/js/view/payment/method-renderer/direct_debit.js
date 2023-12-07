@@ -14,7 +14,7 @@ define(
             },
 
             initializeForm: function () {
-                var self = this;
+                const self = this;
 
                 this.resourceProvider = this.sdk.SepaDirectDebit();
                 this.resourceProvider.create('sepa-direct-debit', {
@@ -27,7 +27,7 @@ define(
                     self.field.valid("success" in event && event.success);
                 });
 
-                var sepaMandateElement = document.querySelector('.sepa-direct-debit-mandate'),
+                const sepaMandateElement = document.querySelector('.sepa-direct-debit-mandate'),
                     sepaMandateTexts = [
                         $.mage.__('By signing this mandate form, you authorise %1 to send instructions to '
                             + 'your bank to debit your account and your bank to debit your account in accordance with the '
@@ -41,7 +41,7 @@ define(
                             + 'of birth.'),
                     ];
 
-                sepaMandateTexts.forEach(function(text) {
+                sepaMandateTexts.forEach(function (text) {
                     var p = document.createElement("p");
                     p.innerText = text.replace(/%1/g, window.checkoutConfig.payment.unzer_direct_debit.merchantName);
                     sepaMandateElement.appendChild(p);
@@ -49,11 +49,11 @@ define(
             },
 
             allInputsValid: function () {
-                return this.field.valid;
+                return this.field.valid();
             },
 
             validate: function () {
-                return this.allInputsValid()();
+                return this.allInputsValid();
             }
         });
     }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\Config;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Vault\Model\VaultPaymentInterface;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Method\Base as MethodBase;
@@ -12,20 +13,6 @@ use Magento\Payment\Helper\Data as PaymentHelper;
 
 /**
  * JavaScript configuration provider
- *
- * Copyright (C) 2021 - today Unzer GmbH
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
  *
  * @link  https://docs.unzer.com/
  */
@@ -47,6 +34,7 @@ class Provider implements ConfigProviderInterface
         Config::METHOD_INVOICE_SECURED_B2B,
         Config::METHOD_PAYLATER_INVOICE,
         Config::METHOD_PAYLATER_INVOICE_B2B,
+        Config::METHOD_PAYLATER_INSTALLMENT,
         Config::METHOD_PAYPAL,
         Config::METHOD_SOFORT,
         Config::METHOD_ALIPAY,
@@ -68,14 +56,24 @@ class Provider implements ConfigProviderInterface
     private PaymentHelper $_paymentHelper;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private ScopeConfigInterface $scopeConfig;
+
+    /**
      * Provider constructor.
      * @param Config $moduleConfig
      * @param PaymentHelper $paymentHelper
+     * @param ScopeConfigInterface $scopeConfig
      */
-    public function __construct(Config $moduleConfig, PaymentHelper $paymentHelper)
-    {
+    public function __construct(
+        Config $moduleConfig,
+        PaymentHelper $paymentHelper,
+        ScopeConfigInterface $scopeConfig
+    ) {
         $this->_moduleConfig = $moduleConfig;
         $this->_paymentHelper = $paymentHelper;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -89,6 +87,7 @@ class Provider implements ConfigProviderInterface
         $methodConfigs = [
             Config::METHOD_BASE => [
                 'publicKey' => $this->_moduleConfig->getPublicKey(),
+                'locale' => str_replace('_', '-', $this->scopeConfig->getValue('general/locale/code', 'store'))
             ],
         ];
 
