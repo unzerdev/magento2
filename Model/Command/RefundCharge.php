@@ -17,20 +17,6 @@ use UnzerSDK\Resources\TransactionTypes\CancellationFactory;
 /**
  * Refund Command for payments
  *
- * Copyright (C) 2021 - today Unzer GmbH
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
  * @link  https://docs.unzer.com/
  */
 class RefundCharge extends AbstractCommand
@@ -96,7 +82,7 @@ class RefundCharge extends AbstractCommand
 
         $amount = null;
         if (array_key_exists('amount', $commandSubject) && $commandSubject['amount'] !== null) {
-            $amount = (float)$commandSubject['amount'];
+            $amount = $this->getCreditMemoAmount($payment, (float)$commandSubject['amount']);
         }
 
         $cancellation = $this->cancellationFactory->create(['amount' => $amount]);
@@ -105,5 +91,21 @@ class RefundCharge extends AbstractCommand
         $cancellation = $client->cancelChargedPayment($hpPayment, $cancellation);
 
         $payment->setLastTransId($cancellation->getId());
+    }
+
+    /**
+     * Get Amount
+     *
+     * @param OrderPayment $payment
+     * @param float $amount
+     * @return float|null
+     */
+    protected function getCreditMemoAmount(OrderPayment $payment, float $amount): ?float
+    {
+        if ($this->_config->isCustomerCurrencyUsed()) {
+            $amount = (float)$payment->getCreditmemo()->getGrandTotal();
+        }
+
+        return $amount;
     }
 }

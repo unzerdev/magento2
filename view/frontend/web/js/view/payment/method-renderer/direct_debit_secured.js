@@ -14,7 +14,7 @@ define(
             },
 
             initializeForm: function () {
-                var self = this;
+                const self = this;
 
                 this.initializeCustomerForm(
                     'unzer-sepa-direct-debit-secured-customer',
@@ -32,7 +32,7 @@ define(
                     self.ibanValid("success" in event && event.success);
                 });
 
-                var sepaMandateElement = document.querySelector('.sepa-direct-debit-secured-mandate'),
+                const sepaMandateElement = document.querySelector('.sepa-direct-debit-secured-mandate'),
                     sepaMandateTexts = [
                         $.mage.__('By signing this mandate form, you authorise %1 to send instructions to '
                             + 'your bank to debit your account and your bank to debit your account in accordance with the '
@@ -46,15 +46,15 @@ define(
                             + 'of birth.'),
                     ];
 
-                sepaMandateTexts.forEach(function(text) {
-                    var p = document.createElement("p");
+                sepaMandateTexts.forEach(function (text) {
+                    const p = document.createElement("p");
                     p.innerText = text.replace(/%1/g, window.checkoutConfig.payment.unzer_direct_debit_secured.merchantName);
                     sepaMandateElement.appendChild(p);
                 });
             },
 
             allInputsValid: function () {
-                var self = this;
+                const self = this;
 
                 return ko.computed(function () {
                     return self.customerValid() && self.ibanValid();

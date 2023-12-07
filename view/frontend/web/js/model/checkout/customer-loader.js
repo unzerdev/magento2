@@ -53,6 +53,9 @@ define(
                 customer.companyInfo = customer.company_info;
                 delete customer.company_info;
 
+                customer.birthDate = customer.birth_date;
+                delete customer.birth_date;
+
                 customerObservableList[index](customer);
             });
 
@@ -62,17 +65,6 @@ define(
 
             currentRequest[index] = request;
         }
-
-        $(window).on('hashchange', function () {
-            // if the hash changes the customer has switched between steps and possibly changed
-            // his billing and/or shipping address, in which case we can not use the customer
-            // that we already loaded.
-            if (location.hash === '#payment') {
-                customerObservableList.forEach((customerObservable, index) => {
-                    loadCustomer(index);
-                });
-            }
-        });
 
         return {
             getCustomerObservable: function (index) {

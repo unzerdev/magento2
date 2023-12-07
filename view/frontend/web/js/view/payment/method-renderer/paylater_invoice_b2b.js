@@ -56,11 +56,11 @@ define(
             },
 
             allInputsValid: function () {
-                return this.customerValid;
+                return this.customerValid();
             },
 
             validate: function () {
-                return this.allInputsValid()();
+                return this.allInputsValid();
             }
         });
     }

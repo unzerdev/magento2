@@ -1,7 +1,39 @@
 # Release Notes - Payment extension for Magento2 and Unzer Payment API (PAPI)
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## [2.4.0](https://github.com/unzerdev/magento2/compare/2.3.1..2.4.0)
+### Added
+* Installment payment method
+### Changed
+* the names (and defaults for the title settings) of the following payment methods:
+    * English 
+        * Unzer Invoice → (Deprecated) Unzer Invoice
+        * Unzer Invoice secured (B2C) → (Deprecated) Unzer Invoice Secured (B2C)
+        * Unzer Invoice secured (B2B) → (Deprecated) Unzer Invoice Secured (B2B)
+        * Unzer Paylater Invoice (B2C) → Invoice (B2C)
+        * Unzer Paylater Invoice (B2B) → Invoice (B2B)
+    * German
+        * Unzer Rechnungskauf → (Veraltet) Unzer Rechnungskauf
+        * Unzer Rechnungskauf gesichert (B2C) → (Veraltet) Unzer Rechnungskauf Gesichert (B2C)
+        * Unzer Rechnungskauf gesichert (B2B) → (Veraltet) Unzer Rechnungskauf Gesichert (B2B)
+        * Unzer Paylater Rechnungskauf (B2C) → Rechnungskauf (B2C)
+        * Unzer Paylater Rechnungskauf (B2B) → Rechnungskauf (B2B)
+### Deprecated
+* the following payment methods:
+    * Unzer Invoice
+    * Unzer Invoice secured (B2C)
+    * Unzer Invoice secured (B2B)
+### Fixed
+* refund for orders with different currencies than Magento's configured base currency are refunding the correct amount now
+* some of the Api interfaces and classes caused errors with Magento's Swagger page
+* correction of the return value for the success message in Unzer Prepayment.
+* missing ThreatMetrix CSP Whitelist policies
+* Unzer uiComponents are now initialized using the current store locale
+* Unzer uiComponents containing address data for Invoice and Installment are now updated, if billing or shipping addresses change 
+### Removed
+* license information from all code files. See LICENSE and NOTICE files now.
 
 ## [2.3.1](https://github.com/unzerdev/magento2/compare/2.3.0..2.3.1)
 

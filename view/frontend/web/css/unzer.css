@@ -4119,6 +4119,132 @@ i.h-iconimg-eps-vr-braunau:before {
     background-image: url(https://static.unzer.com/assets/images/eps/logo-vr-braunau-square.png) !important
 }
 
+.unzerUI-installment__choose-rate,.unzerUI-installment__selected-rate {
+    align-items: center;
+    border-bottom: 1px solid #ececec;
+    color: #000;
+    cursor: pointer;
+    display: flex;
+    font-size: 1em;
+    height: 50px;
+    padding: 0 15px
+}
+
+.unzerUI-installment__selected-rate {
+    justify-content: space-between;
+    margin-bottom: 12px
+}
+
+.unzerUI-installment__choose-rate:hover,.unzerUI-installment__selected-rate:hover {
+    color: #6cade4
+}
+
+.unzerUI-installment__row {
+    border-left: 1px solid transparent;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    padding: 0 15px
+}
+
+.unzerUI-installment__row:last-of-type {
+    margin-bottom: 0
+}
+
+.unzerUI-installment__column-item {
+    color: #000;
+    font-size: 1em
+}
+
+.unzerUI-installment__column-item--bold {
+    font-weight: 800;
+    margin: 1em 0
+}
+
+.unzerUI-installment__column-item--with-margin {
+    margin: 1em 0
+}
+
+.unzerUI-installment__form {
+    min-height: 250px
+}
+
+.unzerUI-installment__change-button {
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid rgba(108,173,228,.5);
+    border-radius: 13px;
+    box-sizing: border-box;
+    color: #6cade4;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1em;
+    justify-content: center;
+    line-height: 1.5;
+    min-height: 26px;
+    min-width: 80px
+}
+
+.unzerUI-installment__change-button:hover {
+    background-color: rgba(108,173,228,.08);
+    border: 1px solid #6cade4
+}
+
+.unzerUI-installment__change-button:active,.unzerUI-installment__change-button:focus {
+    outline: none
+}
+
+.unzerUI-installment__form-container .unzerUI.form {
+    margin-bottom: 1em
+}
+
+.unzer-installment__box {
+    align-items: center;
+    background-color: #ececec;
+    box-shadow: 0 1px 0 0 rgba(0,0,0,.12);
+    display: flex;
+    font-size: 1em;
+    font-weight: 600;
+    height: 40px;
+    line-height: 1.25;
+    padding: 0 15px;
+    text-align: left
+}
+
+.unzerUI-installment__margin--top-bottom {
+    margin: 1em 0
+}
+
+.unzerUI-installment__spinner {
+    animation: spinner09 1s ease-in-out infinite;
+    animation-delay: .4s;
+    background: #0052ec;
+    height: 48px;
+    margin: auto;
+    position: relative;
+    top: 50%;
+    width: 10px
+}
+
+.unzerUI-installment__spinner:after,.unzerUI-installment__spinner:before {
+    animation: spinner09 1s ease-in-out infinite;
+    background: #0052ec;
+    content: "";
+    height: 48px;
+    position: absolute;
+    width: 10px
+}
+
+.unzerUI-installment__spinner:before {
+    animation-delay: .2s;
+    right: 18px
+}
+
+.unzerUI-installment__spinner:after {
+    animation-delay: .6s;
+    left: 18px
+}
+
 .unzerUI-installment-secured__choose-rate, .unzerUI-installment-secured__selected-rate {
     display: flex;
     align-items: center;

@@ -50,6 +50,10 @@ define(
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/paylater_invoice_b2b'
             },
             {
+                type: 'unzer_paylater_installment',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/paylater_installment'
+            },
+            {
                 type: 'unzer_paypal',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/paypal'
             },
