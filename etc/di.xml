@@ -702,6 +702,57 @@
         </arguments>
     </type>
 
+    <!--    Define types for Paylater Installment payment method  -->
+    <virtualType name="UnzerPaylaterInstallmentConfig" type="Unzer\PAPI\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_PAYLATER_INSTALLMENT</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerPaylaterInstallmentConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerPaylaterInstallmentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerPaylaterInstallmentValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerPaylaterInstallmentConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
+                <item name="can_capture" xsi:type="string">Unzer\PAPI\Model\Config\InvoiceCaptureHandler</item>
+                <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerPaylaterInstallmentValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerPaylaterInstallmentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerPaylaterInstallmentValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">UnzerPaylaterInstallmentValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Unzer\PAPI\Model\Method\PaylaterInstallment">
+        <arguments>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_PAYLATER_INSTALLMENT</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Unzer\PAPI\Block\Info\PaylaterInstallment</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerPaylaterInstallmentValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerPaylaterInstallmentValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCapturePaylaterInvoiceCommandPool</argument>
+        </arguments>
+    </type>
+
     <!--    Define types for PayPal payment method  -->
     <virtualType name="UnzerPaypalConfig" type="Unzer\PAPI\Model\Config">
         <arguments>

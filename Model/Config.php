@@ -15,20 +15,6 @@ use UnzerSDK\Unzer;
 /**
  * Global Module configuration and SDK provider
  *
- * Copyright (C) 2021 - today Unzer GmbH
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
  * @link  https://docs.unzer.com/
  */
 class Config extends \Magento\Payment\Gateway\Config\Config
@@ -60,6 +46,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public const METHOD_INVOICE = 'unzer_invoice';
     public const METHOD_PAYLATER_INVOICE = 'unzer_paylater_invoice';
     public const METHOD_PAYLATER_INVOICE_B2B = 'unzer_paylater_invoice_b2b';
+    public const METHOD_PAYLATER_INSTALLMENT = 'unzer_paylater_installment';
     public const METHOD_INVOICE_SECURED_B2B = 'unzer_invoice_secured_b2b';
     public const METHOD_INVOICE_SECURED = 'unzer_invoice_secured';
     public const METHOD_PAYPAL = 'unzer_paypal';
@@ -209,6 +196,16 @@ class Config extends \Magento\Payment\Gateway\Config\Config
             ScopeInterface::SCOPE_STORE,
             $storeId
         );
+    }
+
+    /**
+     * Is customer currency used
+     *
+     * @return bool
+     */
+    public function isCustomerCurrencyUsed(): bool
+    {
+        return $this->getTransmitCurrency() === self::CURRENCY_CUSTOMER;
     }
 
     /**

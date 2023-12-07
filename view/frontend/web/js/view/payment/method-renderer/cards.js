@@ -29,7 +29,7 @@ define(
             },
 
             initializeForm: function () {
-                var self = this;
+                const self = this;
 
                 this.resourceProvider = this.sdk.Card();
                 this.resourceProvider.create('number', {
@@ -57,17 +57,17 @@ define(
             },
 
             allInputsValid: function () {
-                var self = this;
+                const self = this;
 
                 return ko.computed(function () {
                     return self.fields.cvc.valid() &&
                         self.fields.expiry.valid() &&
                         self.fields.number.valid();
-                });
+                })();
             },
 
             validate: function () {
-                return this.allInputsValid()();
+                return this.allInputsValid();
             },
 
             /**
@@ -87,7 +87,7 @@ define(
             },
 
             getData: function () {
-                var data = this._super();
+                const data = this._super();
 
                 this.vaultEnabler.visitAdditionalData(data);
 

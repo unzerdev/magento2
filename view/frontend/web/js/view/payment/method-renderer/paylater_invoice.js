@@ -4,28 +4,33 @@ define(
         'ko',
         'Unzer_PAPI/js/view/payment/method-renderer/base',
         'Unzer_PAPI/js/model/checkout/threat-metrix',
+        'Unzer_PAPI/js/model/checkout/address-updater'
     ],
-    function ($, ko, Component, threatMetrix) {
+    function ($, ko, Component, threatMetrix, addressUpdater) {
         'use strict';
 
         return Component.extend({
             defaults: {
-                template: 'Unzer_PAPI/payment/paylater_invoice'
+                template: 'Unzer_PAPI/payment/paylater_invoice',
+                fieldId: 'unzer-paylater-invoice-customer',
+                errorFieldId: 'unzer-paylater-invoice-customer-error'
             },
 
             initializeForm: function () {
                 this.resourceProvider = this.sdk.PaylaterInvoice();
                 this.initializeCustomerForm(
-                    'unzer-paylater-invoice-customer',
-                    'unzer-paylater-invoice-customer-error'
+                    this.fieldId,
+                    this.errorFieldId
                 );
+
+                addressUpdater.registerSubscribers(this);
             },
 
             _initializeCustomerFormForB2cCustomer: function (fieldId, errorFieldId, customer) {
                 threatMetrix.init(customer.threat_metrix_id);
 
                 this.resourceProvider.create({
-                    containerId: fieldId+'-optin',
+                    containerId: fieldId + '-optin',
                     customerType: 'B2C',
                     errorHolderId: errorFieldId,
                 });
@@ -45,7 +50,7 @@ define(
             hideFormFields: function (fieldId) {
                 this._super(fieldId);
 
-                var field = $('#' + fieldId);
+                const field = $('#' + fieldId);
                 field.find('.field').filter('.checkbox-billingAddress, .email').hide();
                 field.find('.field').filter('.billing-name, .billing-street, .billing-zip, .billing-city, :has(.billing-country)').hide();
 
@@ -54,11 +59,11 @@ define(
             },
 
             allInputsValid: function () {
-                return this.customerValid;
+                return this.customerValid();
             },
 
             validate: function () {
-                return this.allInputsValid()();
+                return this.allInputsValid();
             }
         });
     }

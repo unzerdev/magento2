@@ -22,17 +22,17 @@ define(
             },
 
             hideFormFields: function (fieldId) {
-                var field = $('#' + fieldId);
+                const field = $('#' + fieldId);
                 field.find('.field').filter('.city, .company, :has(.country), .street, .zip').hide();
                 field.find('.unzerUI.divider-horizontal:eq(0)').hide();
             },
 
             allInputsValid: function () {
-                return this.customerValid;
+                return this.customerValid();
             },
 
             validate: function () {
-                return this.allInputsValid()();
+                return this.allInputsValid();
             },
         });
     }

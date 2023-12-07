@@ -5,7 +5,7 @@ namespace Unzer\PAPI\Model\Command;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
-use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use Unzer\PAPI\Helper\Order as OrderHelper;
@@ -16,20 +16,6 @@ use UnzerSDK\Resources\TransactionTypes\CancellationFactory;
 
 /**
  * Cancel Command for payments
- *
- * Copyright (C) 2021 - today Unzer GmbH
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
  *
  * @link  https://docs.unzer.com/
  */
@@ -77,7 +63,7 @@ class CancelAuthorization extends AbstractCommand
      */
     public function execute(array $commandSubject): void
     {
-        /** @var Order\Payment $payment */
+        /** @var OrderPayment $payment */
         $payment = $commandSubject['payment']->getPayment();
 
         $order = $payment->getOrder();
@@ -92,10 +78,7 @@ class CancelAuthorization extends AbstractCommand
             return;
         }
 
-        $amount = null;
-        if (array_key_exists('amount', $commandSubject) && $commandSubject['amount'] !== null) {
-            $amount = (float)$commandSubject['amount'];
-        }
+        $amount = $this->getOrderAmount($payment);
 
         $cancellation = $this->cancellationFactory->create(['amount' => $amount]);
         $cancellation->setReasonCode(self::REASON);
@@ -103,5 +86,19 @@ class CancelAuthorization extends AbstractCommand
         $cancellation = $client->cancelAuthorizedPayment($hpPayment, $cancellation);
 
         $payment->setLastTransId($cancellation->getId());
+    }
+
+    /**
+     * Get Amount
+     *
+     * @param OrderPayment $payment
+     * @return float|null
+     */
+    protected function getOrderAmount(OrderPayment $payment): ?float
+    {
+        if ($this->_config->isCustomerCurrencyUsed()) {
+            return (float)$payment->getOrder()->getGrandTotal();
+        }
+        return (float)$payment->getOrder()->getBaseGrandTotal();
     }
 }

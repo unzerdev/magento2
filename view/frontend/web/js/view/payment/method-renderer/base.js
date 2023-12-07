@@ -10,7 +10,7 @@ define(
         'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/view/payment/default',
         'Magento_Ui/js/model/messageList',
-        '//static.unzer.com/v1/unzer.js',
+        '//static.unzer.com/v1/unzer.js'
     ],
     function (
         $,
@@ -30,7 +30,9 @@ define(
         return Component.extend({
             redirectAfterPlaceOrder: false,
             redirectUrl: 'unzer/payment/redirect',
-            sdk: new unzer(window.checkoutConfig.payment.unzer.publicKey),
+            sdk: new unzer(window.checkoutConfig.payment.unzer.publicKey, {
+                locale: window.checkoutConfig.payment.unzer.locale
+            }),
             sdkConfig: window.checkoutConfig.payment.unzer,
 
             defaults: {
@@ -45,51 +47,53 @@ define(
                 template: null
             },
 
-            initialize: function() {
+            initialize: function () {
                 this._super();
                 this.customer = customerLoader.getCustomerObservable('default');
                 this.customerValid = ko.observable(false);
 
                 let overridePublicKey = this._getMethodOverrideApiKey();
-                if(overridePublicKey) {
-                    this.sdk = new unzer(overridePublicKey);
+
+                if (overridePublicKey) {
+                    this.sdk = new unzer(overridePublicKey, {
+                        locale: window.checkoutConfig.payment.unzer.locale
+                    });
                     this.customer = customerLoader.getCustomerObservable(this.item.method);
                 }
 
                 return this;
             },
 
-            _getMethodOverrideApiKey: function(){
-                if(!window.checkoutConfig.payment[this.item.method]) {
+            _getMethodOverrideApiKey: function () {
+                if (!window.checkoutConfig.payment[this.item.method]) {
                     return false;
                 }
-                if(!window.checkoutConfig.payment[this.item.method].publicKey) {
+                if (!window.checkoutConfig.payment[this.item.method].publicKey) {
                     return false;
                 }
                 return window.checkoutConfig.payment[this.item.method].publicKey;
             },
 
             initializeCustomerForm: function (fieldId, errorFieldId) {
-                var self = this;
+                let self = this;
 
                 if (this.customer() !== null) {
                     self._initializeCustomerForm(fieldId, errorFieldId);
                 }
 
-                self.customerSubscription = this.customer.subscribe(function(customer) {
+                // if the customer changes, e.g. the billing address is changed,
+                // we need to reinitialize the Unzer Customer form fields
+                self.customerSubscription = this.customer.subscribe(function (customer) {
                     if (customer === null) {
                         return;
                     }
 
                     self._initializeCustomerForm(fieldId, errorFieldId);
-
-                    self.customerSubscription.dispose();
-                    self.customerSubscription = null;
                 });
             },
 
-            _initializeCustomerForm: function(fieldId, errorFieldId) {
-                var self = this;
+            _initializeCustomerForm: function (fieldId, errorFieldId) {
+                let self = this;
 
                 $('#' + fieldId).empty();
                 $('#' + errorFieldId).empty();
@@ -103,8 +107,10 @@ define(
                 }
 
                 self.customerProvider.addEventListener('validate', function (event) {
-                    self.customerValid("success" in event && event.success);
+                    self.customerValid('success' in event && event.success);
                 });
+
+                self.customerProvider.validateAllFields();
             },
 
             _initializeCustomerFormForB2bCustomer: function (fieldId, errorFieldId, customer) {
@@ -133,8 +139,11 @@ define(
             },
 
             hideFormFields: function (fieldId) {
-                var field = $('#' + fieldId);
-                field.find('.field').filter('.city, .company, :has(.country), .street, .zip, .firstname, .lastname').hide();
+                const field = $('#' + fieldId);
+
+                field.find('.field').filter(
+                    '.city, .company, :has(.country), .street, .zip, .firstname, .lastname'
+                ).hide();
                 field.find('.unzerUI.divider-horizontal:eq(0)').hide();
                 field.find('.unzerUI.message.downArrow').hide();
             },
@@ -154,41 +163,38 @@ define(
                     'additional_data': {
                         'customer_id': this.customer !== null && this.customer() !== null ? this.customer().id : null,
                         'resource_id': this.resourceId,
-                        'threat_metrix_id': this.customer !== null && this.customer() !== null ? this.customer().threat_metrix_id : null,
+                        'threat_metrix_id': this.customer !== null && this.customer() !== null
+                            ? this.customer().threat_metrix_id : null
                     }
                 };
             },
 
             getPlaceOrderDeferredObject: function () {
-                var deferred = $.Deferred(),
+                let deferred = $.Deferred(),
                     promises,
                     self = this;
 
 
                 if (this.customerProvider) {
                     promises = [this.resourceProvider.createResource(), this.customerProvider.createCustomer()];
-                }
-                else {
-                    if(this.paymentData){
-                        promises = [this.resourceProvider.createResource(this.paymentData)];
-                    }
-                    else{
-                        promises = [this.resourceProvider.createResource()];
-                    }
+                } else if (this.paymentData) {
+                    promises = [this.resourceProvider.createResource(this.paymentData)];
+                } else {
+                    promises = [this.resourceProvider.createResource()];
                 }
 
                 // We need to wait for multiple Promises but the jQuery version used by Magento 2 (jQuery 1.x) does not
                 // support non-jQuery Promises in $.when(), so we use the Promise.all method instead.
-                // In case a browser has no native Promise support (IE) we fallback to the Promise implementation
+                // In case a browser has no native Promise support (IE) we fall back to the Promise implementation
                 // shipped with the Unzer SDK, by accessing the Promise constructor from one of the existing
                 // promises, to avoid having to implement or load our own implementation of Promise.all.
-                var Promise = window.Promise || promises[0].constructor;
+                const Promise = window.Promise || promises[0].constructor;
 
                 Promise.all(promises).then(
                     function (values) {
                         self.resourceId = values[0].id;
                         if (self.customer() && values[1]) {
-                            self.customer().id = values[1].id
+                            self.customer().id = values[1].id;
                         }
 
                         placeOrderAction(self.getData(), self.messageContainer)
@@ -200,12 +206,14 @@ define(
                             });
                     },
                     function (error) {
-                        let customerMessage = "";
+                        let customerMessage = '';
+
                         try {
                             customerMessage = error.message;
-                        } catch (e) {}
+                        } catch (e) {
+                        }
 
-                        deferred.reject($t("There was an error placing your order. " + customerMessage));
+                        deferred.reject($t('There was an error placing your order. ' + customerMessage));
                     }
                 );
 
@@ -214,7 +222,7 @@ define(
                         message: error
                     });
                 });
-            },
+            }
         });
     }
 );

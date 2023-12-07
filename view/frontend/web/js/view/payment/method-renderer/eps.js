@@ -13,7 +13,7 @@ define(
             },
 
             initializeForm: function () {
-                var self = this;
+                const self = this;
 
                 this.resourceProvider = this.sdk.EPS();
                 this.resourceProvider.create('eps', {
@@ -28,11 +28,11 @@ define(
             },
 
             allInputsValid: function () {
-                return this.field.valid;
+                return this.field.valid();
             },
 
             validate: function () {
-                return this.allInputsValid()();
+                return this.allInputsValid();
             },
         });
     }
