@@ -1,50 +1,60 @@
 <?php
 namespace Unzer\PAPI\Controller\Applepay;
 
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use UnzerSDK\Adapter\ApplepayAdapter;
 use UnzerSDK\Resources\ExternalResources\ApplepaySession;
-use Magento\Framework\App\CsrfAwareActionInterface;
-use Magento\Framework\App\RequestInterface;
-use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Action\Context;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Apple Pay Merchant Validation Controller
  *
  * @link  https://docs.unzer.com/
  */
-class MerchantValidation extends \Magento\Framework\App\Action\Action implements CsrfAwareActionInterface
+class MerchantValidation extends \Magento\Framework\App\Action\Action
 {
     /**
      * @var ScopeConfigInterface
      */
-    protected $_scopeConfig;
+    protected ScopeConfigInterface $scopeConfig;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    private StoreManagerInterface $storeManager;
 
     public function __construct(
         Context $context,
-        ScopeConfigInterface $scopeConfig
-
+        ScopeConfigInterface $scopeConfig,
+        StoreManagerInterface $storeManager
     ) {
         parent::__construct($context);
-        $this->_scopeConfig = $scopeConfig;
+        $this->scopeConfig = $scopeConfig;
+        $this->storeManager = $storeManager;
     }
 
+    /**
+     * @throws NoSuchEntityException
+     * @throws LocalizedException
+     */
     public function execute()
     {
         header("Content-type: application/json; charset=utf-8");
 
-        //POST from applepay.js jQuery.post()
+        // POST from applepay.js jQuery.post()
         $jsonData = json_decode(file_get_contents('php://input'), true);
-        $postValidationUrl = $jsonData['merchantValidationUrl'];
+        $postValidationUrl = $this->getPostValidationUrl((array)$jsonData);
+        $storeId =  $this->getStoreId((array)$jsonData);
 
-        $merchantIdentifier = $this->_scopeConfig->getValue('payment/unzer_applepay/apple_pay_merchant_id');
-        $displayName = $this->_scopeConfig->getValue('payment/unzer_applepay/display_name');
-        $domainName = $this->_scopeConfig->getValue('payment/unzer_applepay/domain_name');
+        $merchantIdentifier = $this->scopeConfig->getValue('payment/unzer_applepay/apple_pay_merchant_id', 'store', $storeId);
+        $displayName = $this->scopeConfig->getValue('payment/unzer_applepay/display_name', 'store', $storeId);
+        $domainName = $this->scopeConfig->getValue('payment/unzer_applepay/domain_name', 'store', $storeId);
 
-        //@todo need Refactoring
-        $sslCert = '../app/etc/upload/applepay/'.$this->_scopeConfig->getValue('payment/unzer/applepay/certificate_file');
-        $sslKey = '../app/etc/upload/applepay/'.$this->_scopeConfig->getValue('payment/unzer/applepay/private_key_file');
+        $sslCert = '../app/etc/upload/applepay/' . $this->scopeConfig->getValue('payment/unzer/applepay/certificate_file', 'store', $storeId);
+        $sslKey = '../app/etc/upload/applepay/' . $this->scopeConfig->getValue('payment/unzer/applepay/private_key_file', 'store', $storeId);
 
         $applepaySession = new ApplepaySession($merchantIdentifier, $displayName, $domainName);
 
@@ -53,10 +63,7 @@ class MerchantValidation extends \Magento\Framework\App\Action\Action implements
 
         try {
             $validationUrl = $postValidationUrl;
-            $validationResponse = $appleAdapter->validateApplePayMerchant(
-                $validationUrl,
-                $applepaySession
-            );
+            $validationResponse = $appleAdapter->validateApplePayMerchant($validationUrl, $applepaySession);
             echo $validationResponse;
         } catch (\Exception $e) {
             echo $e->getMessage();
@@ -65,20 +72,20 @@ class MerchantValidation extends \Magento\Framework\App\Action\Action implements
     }
 
     /**
-     * @param RequestInterface $request
-     * @return InvalidRequestException|null
+     * @param array $data
+     * @return string
      */
-    public function createCsrfValidationException(RequestInterface $request): ? InvalidRequestException
-    {
-        return null;
+    public function getPostValidationUrl(array $data): string {
+        return $data['merchantValidationUrl'] ?? '';
     }
 
+
     /**
-     * @param RequestInterface $request
-     * @return bool|null
+     * @param array $data
+     * @return string
      */
-    public function validateForCsrf(RequestInterface $request): ?bool
-    {
-        return true;
+    public function getStoreId(array $data): string {
+        return $data['storeId'] ?? '0';
     }
+
 }
