@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.4.1](https://github.com/unzerdev/magento2/compare/2.4.0..2.4.1)
+### Removed
+* Payment Details on success page for Paylater Invoice payment methods. Details are send by Paylater via email.
+### Fixed
+* Order Confirmation Email sending for "pending payment" order status
+* Apple Pay Certificate Upload for Multi Store Shops
+
 ## [2.4.0](https://github.com/unzerdev/magento2/compare/2.3.1..2.4.0)
 ### Added
 * Installment payment method

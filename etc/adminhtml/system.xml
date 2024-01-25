@@ -695,12 +695,12 @@
                     <field id="certificate_file" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" >
                         <label>Merchant Identification Certificate</label>
                         <backend_model>Unzer\PAPI\Model\System\Config\Backend\Upload</backend_model>
-                        <upload_dir config="system">upload/applepay</upload_dir>
+                        <upload_dir config="system" scope_info="1">upload/applepay</upload_dir>
                     </field>
                     <field id="private_key_file" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" >
                         <label>Merchant Identification Certificate Key (Private Key)</label>
                         <backend_model>Unzer\PAPI\Model\System\Config\Backend\Upload</backend_model>
-                        <upload_dir config="system">upload/applepay</upload_dir>
+                        <upload_dir config="system" scope_info="1">upload/applepay</upload_dir>
                     </field>
                     <!--
                     <field id="csr_privat_key" translate="label" type="text" sortOrder="53" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -715,15 +715,15 @@
                     <field id="csr_certificate_upload" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Payment Processing Certificate</label>
                         <backend_model>Unzer\PAPI\Model\System\Config\Backend\Upload</backend_model>
-                        <upload_dir config="system">upload/applepay_csr</upload_dir>
+                        <upload_dir config="system" scope_info="1">upload/applepay_csr</upload_dir>
                     </field>
                     <field id="csr_privat_key_upload" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="56" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Payment Processing Certificate Key (Private Key)</label>
                         <backend_model>Unzer\PAPI\Model\System\Config\Backend\Upload</backend_model>
-                        <upload_dir config="system">upload/applepay_csr</upload_dir>
+                        <upload_dir config="system" scope_info="1">upload/applepay_csr</upload_dir>
                     </field>
 
-                    <field id="webhooks_applepay" translate="label" type="button" sortOrder="57" showInDefault="1" showInWebsite="0" showInStore="1">
+                    <field id="webhooks_applepay" translate="label" type="button" sortOrder="57" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Merchant Identification Certificate</label>
                         <frontend_model>Unzer\PAPI\Block\System\Config\WebhooksApplepayButtons</frontend_model>
                     </field>

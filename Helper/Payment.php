@@ -476,7 +476,7 @@ class Payment
             return;
         }
 
-        if (in_array($state, [Order::STATE_NEW, Order::STATE_CANCELED], true)) {
+        if (in_array($state, [Order::STATE_NEW, Order::STATE_CANCELED, Order::STATE_PENDING_PAYMENT], true)) {
             return;
         }
 

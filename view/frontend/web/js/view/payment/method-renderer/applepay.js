@@ -77,7 +77,7 @@ define(
             },
 
             merchantValidationCallback: function (session, event) {
-                jQuery.post('/unzer/applepay/merchantvalidation', JSON.stringify({"merchantValidationUrl": event.validationURL}), null, 'json')
+                jQuery.post('/unzer/applepay/merchantvalidation', JSON.stringify({"merchantValidationUrl": event.validationURL,"storeId" : window.checkoutConfig.quoteData.store_id}), null, 'json')
                     .done(function (validationResponse) {
                         try {
                             session.completeMerchantValidation(validationResponse);
