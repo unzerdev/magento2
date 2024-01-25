@@ -252,8 +252,7 @@ class WebhooksApplepayButtons extends Field
     protected function getStoreIdentifier(): int
     {
         /** @var int|string $storeIdentifier */
-        $storeIdentifier = $this->getRequest()->getParam(AbstractAction::URL_PARAM_STORE);
-
+        $storeIdentifier = $this->getRequest()->getParam(AbstractAction::URL_PARAM_STORE, 0);
         return (int)$this->_storeManager->getStore($storeIdentifier)->getId();
     }
 }

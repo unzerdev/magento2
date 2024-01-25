@@ -85,47 +85,6 @@ class Invoice extends Base
     }
 
     /**
-     * @inheritDoc
-     *
-     * @throws UnzerApiException|LocalizedException
-     */
-    public function getAdditionalPaymentInformation(Order $order): string
-    {
-        $payment = $this->_moduleConfig
-            ->getUnzerClient($order->getStore()->getCode(), $order->getPayment()->getMethodInstance())
-            ->fetchPaymentByOrderId($order->getIncrementId());
-
-        /** @var Authorization|Charge|null $initialTransaction */
-        $initialTransaction = $payment->getInitialTransaction();
-
-        if ($initialTransaction === null) {
-            return '';
-        }
-
-        $formattedAmount = $this->_priceCurrency->format(
-            $this->calculateRemainingAmount($payment),
-            false,
-            PriceCurrencyInterface::DEFAULT_PRECISION,
-            $order->getStoreId(),
-            $order->getOrderCurrency()
-        );
-
-        return (string)__(
-            'Please transfer the amount of %1 to the following account after your order has arrived:<br /><br />'
-            . 'Holder: %2<br/>'
-            . 'IBAN: %3<br/>'
-            . 'BIC: %4<br/><br/>'
-            . '<i>Please use only this identification number as the descriptor: </i><br/>'
-            . '%5',
-            $formattedAmount,
-            $initialTransaction->getHolder(),
-            $initialTransaction->getIban(),
-            $initialTransaction->getBic(),
-            $initialTransaction->getDescriptor()
-        );
-    }
-
-    /**
      * Calculate Remaining Amount
      *
      * @param Payment $payment

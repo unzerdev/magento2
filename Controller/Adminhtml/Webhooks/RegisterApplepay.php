@@ -64,19 +64,20 @@ class RegisterApplepay extends Action
     {
         $this->getRequest()->getParams();
         $mode = $this->getRequest()->getParam('switch');
-
-        $unzerPrivateKey = base64_encode($this->_scopeConfig->getValue('payment/unzer/private_key') . ":");
+        $storeId = (int) $this->getRequest()->getParam('store', 0);
+        $publicKey = $this->_scopeConfig->getValue('payment/unzer/public_key', 'store', $storeId);
+        $unzerPrivateKey = base64_encode($this->_scopeConfig->getValue('payment/unzer/private_key', 'store', $storeId) . ":");
         $this->curl->addHeader("Content-Type", "application/json");
         $this->curl->addHeader("Authorization", "Basic " . $unzerPrivateKey);
         $result = '';
 
-        $sslCertPath = '../app/etc/upload/applepay_csr/' . $this->_scopeConfig->getValue('payment/unzer/applepay/csr_certificate_upload');
+        $sslCertPath = '../app/etc/upload/applepay_csr/' . $this->_scopeConfig->getValue('payment/unzer/applepay/csr_certificate_upload', 'store', $storeId);
         $sslCert = file_get_contents($sslCertPath);
         $sslCert = str_replace('-----BEGIN CERTIFICATE-----', '', $sslCert);
         $sslCert = str_replace('-----END CERTIFICATE-----', '', $sslCert);
         $sslCert = str_replace("\n", "", $sslCert);
 
-        $sslKeyPath = '../app/etc/upload/applepay_csr/' . $this->_scopeConfig->getValue('payment/unzer/applepay/csr_privat_key_upload');
+        $sslKeyPath = '../app/etc/upload/applepay_csr/' . $this->_scopeConfig->getValue('payment/unzer/applepay/csr_privat_key_upload', 'store', $storeId);
 
         $sslKey = file_get_contents($sslKeyPath);
         $sslKey = str_replace('-----BEGIN PRIVATE KEY-----', '', $sslKey);
@@ -87,7 +88,7 @@ class RegisterApplepay extends Action
 
             case 'registerPrivateKey':
                 $certificate = $sslKey;
-                $url = $this->getApiUrl($this->_scopeConfig->getValue('payment/unzer/logging'), 'v1/keypair/applepay/privatekeys');
+                $url = $this->getApiUrl($this->_scopeConfig->getValue('payment/unzer/logging', 'store', $storeId), 'v1/keypair/applepay/privatekeys');
 
                 $params = [
                     'format' => 'PEM',
@@ -109,7 +110,7 @@ class RegisterApplepay extends Action
                     $this->messageManager->addErrorMessage(__($errorMessage));
                 } else {
                     $this->_configWriter->save('payment/unzer_applepay/csr_private_key_response', $result['id'], $scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT, $scopeId = 0);
-                    $this->messageManager->addSuccessMessage(__('Successfully registered'));
+                    $this->messageManager->addSuccessMessage(__('Successfully registered for public key: '.$publicKey));
                 }
                 break;
 
@@ -118,7 +119,7 @@ class RegisterApplepay extends Action
                 $certificate = $sslCert;
                 //$privateKey = $this->_scopeConfig->getValue('payment/unzer_applepay/csr_private_key_response');
                 $privateKey = $this->getRegistrationResponseValue("payment/unzer_applepay/csr_private_key_response");
-                $url = $this->getApiUrl($this->_scopeConfig->getValue('payment/unzer/logging'), 'v1/keypair/applepay/certificates');
+                $url = $this->getApiUrl($this->_scopeConfig->getValue('payment/unzer/logging', 'store', $storeId), 'v1/keypair/applepay/certificates');
 
                 $params = [
                     'format' => 'PEM',
@@ -141,14 +142,14 @@ class RegisterApplepay extends Action
                     $this->messageManager->addErrorMessage(__($errorMessage));
                 } else {
                     $this->_configWriter->save('payment/unzer_applepay/csr_certificate_response', $result['id'], $scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT, $scopeId = 0);
-                    $this->messageManager->addSuccessMessage(__('Successfully registered'));
+                    $this->messageManager->addSuccessMessage(__('Successfully registered for public key: '.$publicKey));
                 }
                 break;
 
             case 'activate':
                 $certificateId = $this->getRegistrationResponseValue("payment/unzer_applepay/csr_certificate_response");
 
-                $url = $this->getApiUrl($this->_scopeConfig->getValue('payment/unzer/logging'), 'v1/keypair/applepay/certificates/' . $certificateId . '/activate');
+                $url = $this->getApiUrl($this->_scopeConfig->getValue('payment/unzer/logging', 'store', $storeId), 'v1/keypair/applepay/certificates/' . $certificateId . '/activate');
 
                 // post method
                 $this->curl->post($url, []);
@@ -164,7 +165,7 @@ class RegisterApplepay extends Action
                     $this->messageManager->addErrorMessage(__($errorMessage));
                 } else {
                     $this->_configWriter->save('payment/unzer_applepay/csr_certificate_response', $result['id'], $scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT, $scopeId = 0);
-                    $this->messageManager->addSuccessMessage(__('Successfully registered'));
+                    $this->messageManager->addSuccessMessage(__('Successfully registered for public key: '.$publicKey));
                 }
                 break;
         }
