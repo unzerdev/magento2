@@ -35,6 +35,7 @@ class Provider implements ConfigProviderInterface
         Config::METHOD_PAYLATER_INVOICE,
         Config::METHOD_PAYLATER_INVOICE_B2B,
         Config::METHOD_PAYLATER_INSTALLMENT,
+        Config::METHOD_PAYLATER_DIRECT_DEBIT,
         Config::METHOD_PAYPAL,
         Config::METHOD_SOFORT,
         Config::METHOD_ALIPAY,

@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.5.0](https://github.com/unzerdev/magento2/compare/2.4.1..2.5.0)
+### Added 
+* Direct Debit Secured payment method
+### Fixed
+* active logging automatically switched to sandbox urls
+
 ## [2.4.1](https://github.com/unzerdev/magento2/compare/2.4.0..2.4.1)
 ### Removed
 * Payment Details on success page for Paylater Invoice payment methods. Details are send by Paylater via email.

@@ -54,6 +54,10 @@ define(
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/paylater_installment'
             },
             {
+                type: 'unzer_paylater_direct_debit',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/paylater_direct_debit'
+            },
+            {
                 type: 'unzer_paypal',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/paypal'
             },
