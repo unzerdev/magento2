@@ -6,6 +6,8 @@ namespace Unzer\PAPI\Model\Method;
 /**
  * Direct debit (secured) payment method
  *
+ * @deprecated use paylater direct debit
+ *
  * @link  https://docs.unzer.com/
  */
 class DirectDebitSecured extends DirectDebit

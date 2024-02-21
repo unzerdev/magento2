@@ -1,0 +1,30 @@
+<?php
+/**
+ * Order Invoice Information Block
+ *
+ * @link  https://docs.unzer.com/
+ */
+
+/**
+ * @var $block PaylaterDirectDebit
+ */
+
+use Unzer\PAPI\Block\Info\PaylaterDirectDebit;
+
+?>
+<div class="order-payment-method-name">
+    <?php echo $block->escapeHtml($block->getMethod()->getTitle()); ?>
+</div>
+<?php if ($block->hasAccountData()): ?>
+    <table class="data-table admin__table-secondary">
+        <tr>
+            <th colspan="2" style="text-align: center; font-weight: bold;">
+                <?php echo $block->escapeHtml(__('Unzer Payment Information')); ?>
+            </th>
+        </tr>
+        <tr>
+            <th><?php echo $block->escapeHtml(__('Reference')); ?>:</th>
+            <td><?php echo $block->escapeHtml($block->getReference()); ?></td>
+        </tr>
+    </table>
+<?php endif; ?>

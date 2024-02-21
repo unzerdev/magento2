@@ -6,6 +6,8 @@ namespace Unzer\PAPI\Model\Method;
 /**
  * Direct debit payment method
  *
+ * @deprecated use paylater direct debit
+ *
  * @link  https://docs.unzer.com/
  */
 class DirectDebit extends Base
