@@ -1,0 +1,22 @@
+<?php
+/**
+ * Order Invoice PDF Information Block
+ *
+ * @link  https://docs.unzer.com/
+ */
+
+/**
+ * @var $block PaylaterDirectDebit
+ */
+
+use Unzer\PAPI\Block\Info\PaylaterDirectDebit;
+
+?>
+<?php echo $block->escapeHtml($block->getMethod()->getTitle()); ?>
+
+<?php if ($block->hasAccountData()): ?>
+    {{pdf_row_separator}}
+    <?php echo $block->escapeHtml(__('Reference')); ?>
+    <?php echo ': '; ?>
+    <?php echo $block->escapeHtml($block->getReference()) ?>
+<?php endif; ?>

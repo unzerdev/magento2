@@ -47,6 +47,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public const METHOD_PAYLATER_INVOICE = 'unzer_paylater_invoice';
     public const METHOD_PAYLATER_INVOICE_B2B = 'unzer_paylater_invoice_b2b';
     public const METHOD_PAYLATER_INSTALLMENT = 'unzer_paylater_installment';
+    public const METHOD_PAYLATER_DIRECT_DEBIT = 'unzer_paylater_direct_debit';
     public const METHOD_INVOICE_SECURED_B2B = 'unzer_invoice_secured_b2b';
     public const METHOD_INVOICE_SECURED = 'unzer_invoice_secured';
     public const METHOD_PAYPAL = 'unzer_paypal';
