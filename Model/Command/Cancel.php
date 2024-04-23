@@ -29,6 +29,8 @@ class Cancel extends AbstractCommand
 
         $order = $payment->getOrder();
 
+        $amount = (float)$order->getBaseTotalDue();
+
         $storeCode = $order->getStore()->getCode();
 
         $client = $this->_getClient($storeCode, $payment->getMethodInstance());
@@ -39,27 +41,11 @@ class Cancel extends AbstractCommand
             return;
         }
 
-        $amount = $this->getOrderAmount($payment);
-
         $cancellations = $client->cancelPayment($hpPayment, $amount, static::REASON);
 
         if (count($cancellations) > 0) {
             $lastCancellation = end($cancellations);
             $payment->setLastTransId($lastCancellation->getId());
         }
-    }
-
-    /**
-     * Get Amount
-     *
-     * @param OrderPayment $payment
-     * @return float|null
-     */
-    protected function getOrderAmount(OrderPayment $payment): ?float
-    {
-        if ($this->_config->isCustomerCurrencyUsed()) {
-            return (float)$payment->getOrder()->getGrandTotal();
-        }
-        return (float)$payment->getOrder()->getBaseGrandTotal();
     }
 }

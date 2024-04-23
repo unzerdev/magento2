@@ -7,4 +7,9 @@
     <type name="Magento\Sales\Model\AdminOrder\EmailSender">
         <plugin name="unzer_adminorder_emailsender" type="Unzer\PAPI\Model\Plugin\AdminOrder\EmailSenderPlugin" />
     </type>
+
+    <preference for="Magento\Framework\Filesystem\DriverInterface" type="Magento\Framework\Filesystem\Driver\File"/>
+
+    <preference for="Magento\Framework\Serialize\SerializerInterface" type="Magento\Framework\Serialize\Serializer\Json"/>
+
 </config>

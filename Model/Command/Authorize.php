@@ -50,11 +50,6 @@ class Authorize extends AbstractCommand
     private VaultDetailsHandlerManager $vaultDetailsHandlerManager;
 
     /**
-     * @var bool
-     */
-    private bool $transmitInCustomerCurrency;
-
-    /**
      * @var PaymentTokenInterface|null
      */
     private ?PaymentTokenInterface $vaultPaymentToken;
@@ -108,13 +103,9 @@ class Authorize extends AbstractCommand
         /** @var OrderPayment $payment */
         $payment = $commandSubject['payment']->getPayment();
 
-        /** @var float $amount */
-        $amount = $commandSubject['amount'];
+        $amount = (float)$commandSubject['amount'];
 
         $order = $payment->getOrder();
-
-        $transmitCurrency = $this->_config->getTransmitCurrency($order->getStore()->getCode());
-        $this->transmitInCustomerCurrency = $transmitCurrency === $this->_config::CURRENCY_CUSTOMER;
 
         $this->unzerClient = $this->_getClient(
             $order->getStore()->getCode(),
@@ -220,44 +211,12 @@ class Authorize extends AbstractCommand
     protected function createAuthorization(OrderInterface $order, float $amount): Authorization
     {
         $authorization = $this->authorizationFactory->create([
-            'amount' => $this->getAmount($order, $amount),
-            'currency' => $this->getCurrency($order),
+            'amount' => $amount,
+            'currency' => $order->getBaseCurrencyCode(),
             'returnUrl' => $this->_getCallbackUrl()
         ]);
         $authorization->setOrderId($order->getIncrementId());
 
         return $authorization;
-    }
-
-    /**
-     * Get Currency
-     *
-     * @param OrderInterface $order
-     * @return string
-     */
-    protected function getCurrency(OrderInterface $order): string
-    {
-        $currency = $order->getBaseCurrencyCode();
-        if ($this->transmitInCustomerCurrency) {
-            $currency = $order->getOrderCurrencyCode();
-        }
-
-        return $currency;
-    }
-
-    /**
-     * Get Amount
-     *
-     * @param OrderInterface $order
-     * @param float $amount
-     * @return float
-     */
-    protected function getAmount(OrderInterface $order, float $amount): float
-    {
-        if ($this->transmitInCustomerCurrency) {
-            $amount = (float)$order->getTotalDue();
-        }
-
-        return $amount;
     }
 }

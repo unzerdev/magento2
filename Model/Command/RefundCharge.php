@@ -64,6 +64,8 @@ class RefundCharge extends AbstractCommand
         /** @var OrderPayment $payment */
         $payment = $commandSubject['payment']->getPayment();
 
+        $amount = (float)$commandSubject['amount'];
+
         $order = $payment->getOrder();
 
         $storeCode = $order->getStore()->getCode();
@@ -80,32 +82,11 @@ class RefundCharge extends AbstractCommand
             return;
         }
 
-        $amount = null;
-        if (array_key_exists('amount', $commandSubject) && $commandSubject['amount'] !== null) {
-            $amount = $this->getCreditMemoAmount($payment, (float)$commandSubject['amount']);
-        }
-
         $cancellation = $this->cancellationFactory->create(['amount' => $amount]);
         $cancellation->setReasonCode(self::REASON);
 
         $cancellation = $client->cancelChargedPayment($hpPayment, $cancellation);
 
         $payment->setLastTransId($cancellation->getId());
-    }
-
-    /**
-     * Get Amount
-     *
-     * @param OrderPayment $payment
-     * @param float $amount
-     * @return float|null
-     */
-    protected function getCreditMemoAmount(OrderPayment $payment, float $amount): ?float
-    {
-        if ($this->_config->isCustomerCurrencyUsed()) {
-            $amount = (float)$payment->getCreditmemo()->getGrandTotal();
-        }
-
-        return $amount;
     }
 }
