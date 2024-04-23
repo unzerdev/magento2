@@ -25,10 +25,6 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public const KEY_PUBLIC_KEY = 'public_key';
     public const KEY_PRIVATE_KEY = 'private_key';
     public const KEY_LOGGING = 'logging';
-    public const KEY_CURRENCY = 'currency';
-
-    public const CURRENCY_BASE = 'base';
-    public const CURRENCY_CUSTOMER = 'customer';
 
     public const CREATE_VAULT_TOKEN_ON_SUCCESS = 'create_vault_token_on_success';
 
@@ -182,31 +178,6 @@ class Config extends \Magento\Payment\Gateway\Config\Config
         $client->setDebugHandler($this->_debugHandler);
 
         return $client;
-    }
-
-    /**
-     * Get transmit currency
-     *
-     * @param string|null $storeId
-     * @return string
-     */
-    public function getTransmitCurrency(string $storeId = null): string
-    {
-        return $this->_scopeConfig->getValue(
-            self::BASE_CONFIGURATION_PATH . self::KEY_CURRENCY,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
-    }
-
-    /**
-     * Is customer currency used
-     *
-     * @return bool
-     */
-    public function isCustomerCurrencyUsed(): bool
-    {
-        return $this->getTransmitCurrency() === self::CURRENCY_CUSTOMER;
     }
 
     /**

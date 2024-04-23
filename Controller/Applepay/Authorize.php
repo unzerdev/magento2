@@ -7,7 +7,6 @@ use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use UnzerSDK\Exceptions\UnzerApiException;
-use UnzerSDK\Resources\TransactionTypes\AuthorizationFactory;
 
 /**
  * Apple Pay Authorize Controller
@@ -28,8 +27,12 @@ class Authorize implements CsrfAwareActionInterface
 
             $quote = $this->_checkoutSession->getQuote();
 
-            $transaction = $unzer->authorize(number_format((float)$quote->getBaseGrandTotal(), 2),
-                $quote->getBaseCurrencyCode(), $paymentTypeId, $returnController);
+            $transaction = $unzer->authorize(
+                number_format((float)$quote->getBaseGrandTotal(), 2),
+                $quote->getBaseCurrencyCode(),
+                $paymentTypeId,
+                $returnController
+            );
 
             if ($transaction->isSuccess()) {
                 echo json_encode(['transactionStatus' => 'success']);

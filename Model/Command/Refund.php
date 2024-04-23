@@ -15,6 +15,8 @@ use UnzerSDK\Exceptions\UnzerApiException;
  */
 class Refund extends AbstractCommand
 {
+    private const METHOD_PREPAYMENT = 'unzer_prepayment';
+
     public const REASON = CancelReasonCodes::REASON_CODE_RETURN;
 
     /**
@@ -29,6 +31,8 @@ class Refund extends AbstractCommand
 
         $order = $payment->getOrder();
 
+        $amount = array_key_exists('amount', $commandSubject) ? (float)$commandSubject['amount'] : null;
+
         $storeCode = $order->getStore()->getCode();
 
         $client = $this->_getClient($storeCode, $payment->getMethodInstance());
@@ -39,32 +43,23 @@ class Refund extends AbstractCommand
             return;
         }
 
-        $amount = null;
-        if (array_key_exists('amount', $commandSubject) && $commandSubject['amount'] !== null) {
-            $amount = $this->getCreditMemoAmount($payment, (float)$commandSubject['amount']);
+        // because of the nature of Prepayment, we need to refund the whole payment,
+        // otherwise refund is not possible at all for prepayment.
+        if ($payment->getMethodInstance()->getCode() === self::METHOD_PREPAYMENT) {
+            $cancellations = $client->cancelPayment($hpPayment, $amount, static::REASON);
+
+            if (count($cancellations) > 0) {
+                $lastCancellation = end($cancellations);
+                $payment->setLastTransId($lastCancellation->getId());
+            }
+
+        } else {
+
+            $chargeId = $payment->getParentTransactionId();
+
+            $cancellation = $client->cancelChargeById($hpPayment, $chargeId, $amount, self::REASON);
+
+            $payment->setLastTransId($cancellation->getId());
         }
-
-        $cancellations = $client->cancelPayment($hpPayment, $amount, static::REASON);
-
-        if (count($cancellations) > 0) {
-            $lastCancellation = end($cancellations);
-            $payment->setLastTransId($lastCancellation->getId());
-        }
-    }
-
-    /**
-     * Get Amount
-     *
-     * @param OrderPayment $payment
-     * @param float $amount
-     * @return float|null
-     */
-    protected function getCreditMemoAmount(OrderPayment $payment, float $amount): ?float
-    {
-        if ($this->_config->isCustomerCurrencyUsed()) {
-            $amount = (float)$payment->getCreditmemo()->getGrandTotal();
-        }
-
-        return $amount;
     }
 }

@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.0](https://github.com/unzerdev/magento2/compare/2.5.0..3.0.0)
+### Added
+* Partial Charge for Credit Card, Paylater Invoice, Unzer Installment, Direct Debit and PayPal
+* PHP 8.3 and Magento 2.4.7 compatibility
+### Changed
+* **(BIC!)** The module now always uses Magento's base currency for communication with the Unzer servers, otherwise partial charge would not be possible. Please make sure your Magento Installation is configured accordingly.
+
 ## [2.5.0](https://github.com/unzerdev/magento2/compare/2.4.1..2.5.0)
 ### Added 
 * Direct Debit Secured payment method

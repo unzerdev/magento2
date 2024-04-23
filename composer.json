@@ -2,11 +2,11 @@
     "name": "unzerdev/magento2",
     "description": "This extension for Magento 2 provides a direct integration of the Unzer payment types to your Magento 2 shop via the Unzer Payment API (PAPI).",
     "type": "magento2-module",
-    "version": "2.5.0",
+    "version": "3.0.0",
     "license": "Apache-2.0",
     "require": {
-        "php": "~7.4.0|~8.1.0|~8.2.0",
-        "unzerdev/php-sdk": "^3.4.0",
+        "php": "~7.4.0|~8.1.0|~8.2.0|~8.3.0",
+        "unzerdev/php-sdk": "^3.5.0",
         "ext-json": "*",
         "magento/framework": "*",
         "magento/module-backend": "*",
@@ -37,10 +37,10 @@
     },
     "homepage": "https://dev.unzer.com/user-guide-magento-2-unzer_papi-module",
     "keywords": [
-      "magento",
-      "magento2",
-      "payment",
-      "php",
-      "payment-gateway"
+        "magento",
+        "magento2",
+        "payment",
+        "php",
+        "payment-gateway"
     ]
 }

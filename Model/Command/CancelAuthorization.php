@@ -68,6 +68,8 @@ class CancelAuthorization extends AbstractCommand
 
         $order = $payment->getOrder();
 
+        $amount = (float)$order->getBaseTotalDue();
+
         $storeCode = $order->getStore()->getCode();
 
         $client = $this->_getClient($storeCode, $payment->getMethodInstance());
@@ -78,27 +80,11 @@ class CancelAuthorization extends AbstractCommand
             return;
         }
 
-        $amount = $this->getOrderAmount($payment);
-
         $cancellation = $this->cancellationFactory->create(['amount' => $amount]);
         $cancellation->setReasonCode(self::REASON);
 
         $cancellation = $client->cancelAuthorizedPayment($hpPayment, $cancellation);
 
         $payment->setLastTransId($cancellation->getId());
-    }
-
-    /**
-     * Get Amount
-     *
-     * @param OrderPayment $payment
-     * @return float|null
-     */
-    protected function getOrderAmount(OrderPayment $payment): ?float
-    {
-        if ($this->_config->isCustomerCurrencyUsed()) {
-            return (float)$payment->getOrder()->getGrandTotal();
-        }
-        return (float)$payment->getOrder()->getBaseGrandTotal();
     }
 }

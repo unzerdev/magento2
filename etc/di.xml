@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Unzer\PAPI\Api\CheckoutInterface" type="Unzer\PAPI\Model\Checkout\Checkout"/>
     <preference for="Unzer\PAPI\Api\Data\AddressInterface" type="Unzer\PAPI\Model\Checkout\Data\Address"/>
     <preference for="Unzer\PAPI\Api\Data\CompanyInfoInterface" type="Unzer\PAPI\Model\Checkout\Data\CompanyInfo"/>
     <preference for="Unzer\PAPI\Api\Data\CustomerInterface" type="Unzer\PAPI\Model\Checkout\Data\Customer"/>
-    <preference for="Unzer\PAPI\Api\Data\CreateRiskDataInterface" type="Unzer\PAPI\Model\Checkout\Data\CreateRiskData" />
+    <preference for="Unzer\PAPI\Api\Data\CreateRiskDataInterface" type="Unzer\PAPI\Model\Checkout\Data\CreateRiskData"/>
 
     <virtualType name="Unzer\PAPI\Logger\Logger" type="\Magento\Framework\Logger\Monolog">
         <arguments>
@@ -90,8 +91,10 @@
     <type name="Unzer\PAPI\Model\Vault\VaultDetailsHandlerManager">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="unzer_cards" xsi:type="object">Unzer\PAPI\Model\Vault\Handlers\CardsVaultDetailsHandler</item>
-                <item name="unzer_paypal" xsi:type="object">Unzer\PAPI\Model\Vault\Handlers\PaypalVaultDetailsHandler</item>
+                <item name="unzer_cards" xsi:type="object">Unzer\PAPI\Model\Vault\Handlers\CardsVaultDetailsHandler
+                </item>
+                <item name="unzer_paypal" xsi:type="object">Unzer\PAPI\Model\Vault\Handlers\PaypalVaultDetailsHandler
+                </item>
             </argument>
         </arguments>
     </type>
@@ -116,7 +119,8 @@
                 <item name="default" xsi:type="string">UnzerBaseConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -166,7 +170,8 @@
                 <item name="default" xsi:type="string">UnzerCardsConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -251,7 +256,8 @@
                 <item name="default" xsi:type="string">UnzerDirectDebitConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -289,7 +295,8 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerDirectDebitSecuredConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerDirectDebitSecuredConfigValueHandler"
+                 type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
             <argument name="configInterface" xsi:type="object">UnzerDirectDebitSecuredConfig</argument>
         </arguments>
@@ -301,13 +308,15 @@
                 <item name="default" xsi:type="string">UnzerDirectDebitSecuredConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerDirectDebitSecuredValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerDirectDebitSecuredValidatorCountry"
+                 type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
             <argument name="config" xsi:type="object">UnzerDirectDebitSecuredConfig</argument>
         </arguments>
@@ -351,7 +360,8 @@
                 <item name="default" xsi:type="string">UnzerBankTransferConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -401,7 +411,8 @@
                 <item name="default" xsi:type="string">UnzerIdealConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -452,7 +463,8 @@
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_capture" xsi:type="string">Unzer\PAPI\Model\Config\InvoiceCaptureHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -490,7 +502,8 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerInvoiceSecuredB2bConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerInvoiceSecuredB2bConfigValueHandler"
+                 type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
             <argument name="configInterface" xsi:type="object">UnzerInvoiceSecuredB2bConfig</argument>
         </arguments>
@@ -503,13 +516,15 @@
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_capture" xsi:type="string">Unzer\PAPI\Model\Config\InvoiceCaptureHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerInvoiceSecuredB2bValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerInvoiceSecuredB2bValidatorCountry"
+                 type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
             <argument name="config" xsi:type="object">UnzerInvoiceSecuredB2bConfig</argument>
         </arguments>
@@ -554,13 +569,15 @@
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_capture" xsi:type="string">Unzer\PAPI\Model\Config\InvoiceCaptureHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerInvoiceSecuredValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerInvoiceSecuredValidatorCountry"
+                 type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
             <argument name="config" xsi:type="object">UnzerInvoiceSecuredConfig</argument>
         </arguments>
@@ -586,7 +603,8 @@
     </type>
 
     <!--    Define types for Paylater Invoice and Paylater Invoice B2B payment method  -->
-    <virtualType name="UnzerAuthorizeAndCapturePaylaterInvoiceCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+    <virtualType name="UnzerAuthorizeAndCapturePaylaterInvoiceCommandPool"
+                 type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="authorize" xsi:type="string">Unzer\PAPI\Model\Command\Authorize</item>
@@ -618,15 +636,16 @@
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">UnzerPaylaterInvoiceConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
-                <item name="can_capture" xsi:type="string">Unzer\PAPI\Model\Config\InvoiceCaptureHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerPaylaterInvoiceValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerPaylaterInvoiceValidatorCountry"
+                 type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
             <argument name="config" xsi:type="object">UnzerPaylaterInvoiceConfig</argument>
         </arguments>
@@ -658,7 +677,8 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerPaylaterInvoiceB2bConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerPaylaterInvoiceB2bConfigValueHandler"
+                 type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
             <argument name="configInterface" xsi:type="object">UnzerPaylaterInvoiceB2bConfig</argument>
         </arguments>
@@ -669,15 +689,16 @@
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">UnzerPaylaterInvoiceB2bConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
-                <item name="can_capture" xsi:type="string">Unzer\PAPI\Model\Config\InvoiceCaptureHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerPaylaterInvoiceB2bValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerPaylaterInvoiceB2bValidatorCountry"
+                 type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
             <argument name="config" xsi:type="object">UnzerPaylaterInvoiceB2bConfig</argument>
         </arguments>
@@ -709,7 +730,8 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerPaylaterInstallmentConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerPaylaterInstallmentConfigValueHandler"
+                 type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
             <argument name="configInterface" xsi:type="object">UnzerPaylaterInstallmentConfig</argument>
         </arguments>
@@ -720,15 +742,16 @@
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">UnzerPaylaterInstallmentConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
-                <item name="can_capture" xsi:type="string">Unzer\PAPI\Model\Config\InvoiceCaptureHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerPaylaterInstallmentValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerPaylaterInstallmentValidatorCountry"
+                 type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
             <argument name="config" xsi:type="object">UnzerPaylaterInstallmentConfig</argument>
         </arguments>
@@ -756,11 +779,13 @@
     <!--    Define types for Paylater Direct Debit payment method  -->
     <virtualType name="UnzerPaylaterDirectDebitConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_PAYLATER_DIRECT_DEBIT</argument>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_PAYLATER_DIRECT_DEBIT
+            </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerPaylaterDirectDebitConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <virtualType name="UnzerPaylaterDirectDebitConfigValueHandler"
+                 type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
             <argument name="configInterface" xsi:type="object">UnzerPaylaterDirectDebitConfig</argument>
         </arguments>
@@ -771,15 +796,16 @@
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">UnzerPaylaterDirectDebitConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
-                <item name="can_capture" xsi:type="string">Unzer\PAPI\Model\Config\InvoiceCaptureHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="UnzerPaylaterDirectDebitValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+    <virtualType name="UnzerPaylaterDirectDebitValidatorCountry"
+                 type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
         <arguments>
             <argument name="config" xsi:type="object">UnzerPaylaterDirectDebitConfig</argument>
         </arguments>
@@ -823,7 +849,8 @@
                 <item name="default" xsi:type="string">UnzerPaypalConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -908,7 +935,8 @@
                 <item name="default" xsi:type="string">UnzerSofortConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -958,7 +986,8 @@
                 <item name="default" xsi:type="string">UnzerGiropayConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -1008,7 +1037,8 @@
                 <item name="default" xsi:type="string">UnzerEPSConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -1058,7 +1088,8 @@
                 <item name="default" xsi:type="string">UnzerAlipayConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -1108,7 +1139,8 @@
                 <item name="default" xsi:type="string">UnzerWechatpayConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -1158,7 +1190,8 @@
                 <item name="default" xsi:type="string">UnzerPrzelewy24ConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -1208,7 +1241,8 @@
                 <item name="default" xsi:type="string">UnzerBancontactConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -1258,7 +1292,8 @@
                 <item name="default" xsi:type="string">UnzerPrepaymentConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
@@ -1308,7 +1343,8 @@
                 <item name="default" xsi:type="string">UnzerApplepayConfigValueHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
-                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
                 <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
             </argument>
         </arguments>
