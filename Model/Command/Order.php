@@ -97,7 +97,7 @@ class Order extends AbstractCommand
 
         switch ($action) {
             case PaymentAction::ACTION_AUTHORIZE:
-                $this->_authorizeOperation->authorize($payment, true, $commandSubject['amount']);
+                $this->_authorizeOperation->authorize($payment, true, (float)$commandSubject['amount']);
                 break;
             case PaymentAction::ACTION_AUTHORIZE_CAPTURE:
                 $this->_captureOperation->capture($payment, null);

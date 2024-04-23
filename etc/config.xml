@@ -1,4 +1,5 @@
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <payment>
             <unzer>
@@ -7,7 +8,6 @@
                 <private_key></private_key>
                 <model>Unzer\PAPI\Model\Method\Base</model>
                 <logging>0</logging>
-                <currency>customer</currency>
             </unzer>
             <unzer_cards>
                 <active>0</active>
@@ -21,6 +21,7 @@
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_capture_vault>1</can_capture_vault>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_order>1</can_order>
                 <can_void>1</can_void>
                 <can_use_checkout>1</can_use_checkout>
@@ -160,6 +161,7 @@
                 <country_restrictions>AT,DE,CH,NL</country_restrictions>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_order>1</can_order>
                 <can_void>1</can_void>
                 <can_use_checkout>1</can_use_checkout>
@@ -178,6 +180,7 @@
                 <country_restrictions>AT,DE,CH,NL</country_restrictions>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_order>1</can_order>
                 <can_void>1</can_void>
                 <can_use_checkout>1</can_use_checkout>
@@ -196,6 +199,7 @@
                 <country_restrictions>AT,DE,CH</country_restrictions>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_order>1</can_order>
                 <can_void>1</can_void>
                 <can_use_checkout>1</can_use_checkout>
@@ -214,6 +218,7 @@
                 <country_restrictions>AT,DE</country_restrictions>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_order>1</can_order>
                 <can_void>1</can_void>
                 <can_use_checkout>1</can_use_checkout>
@@ -233,6 +238,7 @@
                 <can_authorize_vault>1</can_authorize_vault>
                 <can_capture_vault>1</can_capture_vault>
                 <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
                 <can_order>1</can_order>
                 <can_void>1</can_void>
                 <can_use_checkout>1</can_use_checkout>

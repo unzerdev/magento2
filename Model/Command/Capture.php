@@ -84,8 +84,7 @@ class Capture extends AbstractCommand
         /** @var OrderPayment $payment */
         $payment = $commandSubject['payment']->getPayment();
 
-        /** @var float $amount */
-        $amount = $commandSubject['amount'];
+        $amount = (float)$commandSubject['amount'];
 
         $order = $payment->getOrder();
 
@@ -138,10 +137,6 @@ class Capture extends AbstractCommand
         $payment = $this->_getClient($storeId, $order->getPayment()->getMethodInstance())
             ->fetchPayment($paymentId);
 
-        if ($this->_config->getTransmitCurrency($order->getStore()->getCode()) === $this->_config::CURRENCY_CUSTOMER) {
-            $amount = (float)$order->getTotalDue();
-        }
-
         /** @var Authorization|null $authorization */
         $authorization = $payment->getAuthorization();
 
@@ -169,15 +164,9 @@ class Capture extends AbstractCommand
     ): Charge {
         $storeId = (string)$order->getStoreId();
 
-        $currency = $order->getBaseCurrencyCode();
-        if ($this->_config->getTransmitCurrency($order->getStore()->getCode()) === $this->_config::CURRENCY_CUSTOMER) {
-            $currency = $order->getOrderCurrencyCode();
-            $amount = (float)$order->getTotalDue();
-        }
-
         $charge = $this->chargeFactory->create([
             'amount' => $amount,
-            'currency' => $currency,
+            'currency' => $order->getBaseCurrencyCode(),
             'returnUrl' => $this->_getCallbackUrl()
         ]);
         $charge->setOrderId($order->getIncrementId());

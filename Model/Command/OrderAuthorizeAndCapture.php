@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Unzer\PAPI\Model\Command;
 
 use Exception;
-use Magento\Checkout\Model\Session;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
 use Magento\Payment\Gateway\Command\ResultInterface;
@@ -78,6 +77,8 @@ class OrderAuthorizeAndCapture extends AbstractCommand
         /** @var OrderPaymentInterface $payment */
         $payment = $commandSubject['payment']->getPayment();
 
+        $amount = (float)$commandSubject['amount'];
+
         $order = $payment->getOrder();
         $order->setCanSendNewEmailFlag(false);
 
@@ -89,10 +90,10 @@ class OrderAuthorizeAndCapture extends AbstractCommand
 
         switch ($action) {
             case PaymentAction::ACTION_AUTHORIZE:
-                $this->_authorizeOperation->authorize($payment, true, $commandSubject['amount']);
+                $this->_authorizeOperation->authorize($payment, true, $amount);
                 break;
             case PaymentAction::ACTION_AUTHORIZE_CAPTURE:
-                $payment = $this->_authorizeOperation->authorize($payment, true, $commandSubject['amount']);
+                $payment = $this->_authorizeOperation->authorize($payment, true, $amount);
                 $payment = $this->_captureOperation->capture($payment, null);
                 break;
             default:

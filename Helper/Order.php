@@ -75,11 +75,6 @@ class Order
     private CreateThreatMetrixId $createThreatMetrixId;
 
     /**
-     * @var bool
-     */
-    private bool $transmitInCustomerCurrency;
-
-    /**
      * Constructor
      *
      * @param Config $moduleConfig
@@ -117,10 +112,6 @@ class Order
      */
     public function createBasketForOrder(OrderModel $order): Basket
     {
-        $this->transmitInCustomerCurrency = $this->_moduleConfig->getTransmitCurrency(
-            $order->getStore()->getCode()
-        ) === $this->_moduleConfig::CURRENCY_CUSTOMER;
-
         $basket = $this->createBasket($order);
 
         if ($order->getShippingAmount() > 0) {
@@ -143,7 +134,7 @@ class Order
             );
         }
 
-        if (abs($order->getDiscountAmount()) > 0) {
+        if (abs($order->getBaseDiscountAmount()) > 0) {
             $basket->addBasketItem(
                 $this->createVoucherItem($order)
             );
@@ -161,13 +152,8 @@ class Order
     protected function createBasket(OrderModel $order): Basket
     {
         $basket = $this->basketFactory->create();
-        if ($this->transmitInCustomerCurrency) {
-            $basket->setTotalValueGross($order->getGrandTotal());
-            $basket->setCurrencyCode($order->getOrderCurrencyCode());
-        } else {
-            $basket->setTotalValueGross($order->getBaseGrandTotal());
-            $basket->setCurrencyCode($order->getBaseCurrencyCode());
-        }
+        $basket->setTotalValueGross($order->getBaseGrandTotal());
+        $basket->setCurrencyCode($order->getBaseCurrencyCode());
         $basket->setOrderId($order->getIncrementId());
 
         return $basket;
@@ -183,11 +169,7 @@ class Order
     {
         /** @var BasketItem $basketItem */
         $basketItem = $this->basketItemFactory->create();
-        if ($this->transmitInCustomerCurrency) {
-            $basketItem->setAmountPerUnitGross($order->getShippingInclTax());
-        } else {
-            $basketItem->setAmountPerUnitGross($order->getBaseShippingInclTax());
-        }
+        $basketItem->setAmountPerUnitGross($order->getBaseShippingInclTax());
         $basketItem->setTitle('Shipment');
         $basketItem->setType(BasketItemTypes::SHIPMENT);
 
@@ -203,14 +185,7 @@ class Order
     protected function createBasketItem(Item $orderItem): BasketItem
     {
         $basketItem = $this->basketItemFactory->create();
-
-        if ($this->transmitInCustomerCurrency) {
-            $amountPerUnitGross = $orderItem->getPriceInclTax();
-        } else {
-            $amountPerUnitGross = $orderItem->getBasePriceInclTax();
-        }
-
-        $basketItem->setAmountPerUnitGross($amountPerUnitGross);
+        $basketItem->setAmountPerUnitGross($orderItem->getBasePriceInclTax());
         $basketItem->setVat((float)$orderItem->getTaxPercent());
         $basketItem->setQuantity((int)$orderItem->getQtyOrdered());
         $basketItem->setTitle($orderItem->getName());
@@ -228,7 +203,7 @@ class Order
     protected function createVoucherItem(OrderModel $order): BasketItem
     {
         $basketVoucherItemDiscountAmount = $this->basketItemFactory->create();
-        $basketVoucherItemDiscountAmount->setAmountDiscountPerUnitGross(abs($order->getDiscountAmount()));
+        $basketVoucherItemDiscountAmount->setAmountDiscountPerUnitGross(abs($order->getBaseDiscountAmount()));
         $basketVoucherItemDiscountAmount->setAmountPerUnitGross(0);
         $basketVoucherItemDiscountAmount->setQuantity(1);
         $basketVoucherItemDiscountAmount->setTitle('Discount');
