@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Unzer\PAPI\Model\Source;
+namespace Unzer\PAPI\Model\Source\Googlepay;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
 /**
  * @link  https://docs.unzer.com/
  */
-class SupportedNetworks implements ArrayInterface
+class SupportedNetworks implements OptionSourceInterface
 {
     /**
      * Supported Networks
@@ -16,26 +16,10 @@ class SupportedNetworks implements ArrayInterface
      * @var array
      */
     protected static array $networks = [
-        //'amex',
-        //'bancomat',
-        //'bancontact',
-        //'cartesBancaires',
-        //'chinaUnionPay',
-        //'dankort',
-        //'discover',
-        //'eftpos',
-        //'electron',
-        //'elo',
-        //'girocard',
-        //'interac',
-        //'jcb',
-        //'mada',
-        'maestro',
-        'masterCard',
-        //'mir',
-        //'privateLabel',
-        'visa',
-        //'vPay'
+        "DISCOVER",
+        "JCB",
+        "MASTERCARD",
+        "VISA"
     ];
 
     /**

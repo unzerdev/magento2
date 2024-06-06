@@ -11,6 +11,8 @@ define(
         'use strict';
 
         return Component.extend({
+            isThreatMetrixNeeded: true,
+
             defaults: {
                 template: 'Unzer_PAPI/payment/paylater_installment',
                 quote: quote,
@@ -39,7 +41,7 @@ define(
             },
 
             _initializeCustomerFormForB2cCustomer: function (fieldId, errorFieldId, customer) {
-                threatMetrix.init(customer.threat_metrix_id);
+                threatMetrix.init(customer.threat_metrix_id, this);
 
                 this.resourceProvider.create({
                     country: this.quote.billingAddress().countryId,

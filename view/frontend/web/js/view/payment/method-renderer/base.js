@@ -6,10 +6,12 @@ define(
         'mage/translate',
         'mage/url',
         'Unzer_PAPI/js/model/checkout/customer-loader',
+        'Unzer_PAPI/js/model/checkout/terms-checked',
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/view/payment/default',
         'Magento_Ui/js/model/messageList',
+        'Magento_Ui/js/lib/view/utils/dom-observer',
         '//static.unzer.com/v1/unzer.js'
     ],
     function (
@@ -19,10 +21,12 @@ define(
         $t,
         url,
         customerLoader,
+        termsChecked,
         placeOrderAction,
         fullScreenLoader,
         Component,
         globalMessageList,
+        domObserver,
         unzer
     ) {
         'use strict';
@@ -34,6 +38,8 @@ define(
                 locale: window.checkoutConfig.payment.unzer.locale
             }),
             sdkConfig: window.checkoutConfig.payment.unzer,
+            allTermsChecked: termsChecked.allTermsChecked,
+            isThreatMetrixNeeded: false,
 
             defaults: {
                 config: null,
@@ -52,6 +58,10 @@ define(
                 this.customer = customerLoader.getCustomerObservable('default');
                 this.customerValid = ko.observable(false);
 
+                if (this.isChecked() === this.item.method) {
+                    termsChecked.init(this);
+                }
+
                 let overridePublicKey = this._getMethodOverrideApiKey();
 
                 if (overridePublicKey) {
@@ -64,14 +74,18 @@ define(
                 return this;
             },
 
-            _getMethodOverrideApiKey: function () {
+            _getMethodConfig: function (configFieldName) {
                 if (!window.checkoutConfig.payment[this.item.method]) {
                     return false;
                 }
-                if (!window.checkoutConfig.payment[this.item.method].publicKey) {
+                if (!window.checkoutConfig.payment[this.item.method].hasOwnProperty(configFieldName)) {
                     return false;
                 }
-                return window.checkoutConfig.payment[this.item.method].publicKey;
+                return window.checkoutConfig.payment[this.item.method][configFieldName];
+            },
+
+            _getMethodOverrideApiKey: function () {
+                return this._getMethodConfig('publicKey');
             },
 
             initializeCustomerForm: function (fieldId, errorFieldId) {
@@ -148,6 +162,14 @@ define(
                 field.find('.unzerUI.message.downArrow').hide();
             },
 
+            selectPaymentMethod: function () {
+                let retVal = this._super();
+
+                termsChecked.init(this);
+
+                return retVal;
+            },
+
             initializeForm: function () {
             },
 
@@ -157,16 +179,21 @@ define(
             },
 
             getData: function () {
-                return {
+                let data = {
                     'method': this.item.method,
                     'po_number': null,
                     'additional_data': {
                         'customer_id': this.customer !== null && this.customer() !== null ? this.customer().id : null,
-                        'resource_id': this.resourceId,
-                        'threat_metrix_id': this.customer !== null && this.customer() !== null
-                            ? this.customer().threat_metrix_id : null
+                        'resource_id': this.resourceId
                     }
                 };
+
+                if (this.isThreatMetrixNeeded) {
+                    data['additional_data']['threat_metrix_id'] = this.customer !== null && this.customer() !== null
+                        ? this.customer().threat_metrix_id : null
+                }
+
+                return data;
             },
 
             getPlaceOrderDeferredObject: function () {

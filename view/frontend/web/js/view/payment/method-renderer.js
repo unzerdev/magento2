@@ -96,6 +96,10 @@ define(
             {
                 type: 'unzer_applepay',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/applepay'
+            },
+            {
+                type: 'unzer_googlepay',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/googlepay'
             }
         );
         return Component.extend({});

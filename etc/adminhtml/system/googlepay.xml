@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="googlepay" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="1"
+           showInStore="1">
+        <label>UNZER_GOOGLEPAY</label>
+        <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/unzer_googlepay/active</config_path>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Title</label>
+            <config_path>payment/unzer_googlepay/title</config_path>
+        </field>
+        <field id="order_payment_action" translate="label" type="select" sortOrder="25" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Booking Mode</label>
+            <config_path>payment/unzer_googlepay/order_payment_action</config_path>
+            <source_model>Unzer\PAPI\Model\System\Config\Source\PaymentAction</source_model>
+        </field>
+        <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Minimum Order Total</label>
+            <config_path>payment/unzer_googlepay/min_order_total</config_path>
+        </field>
+        <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Maximum Order Total</label>
+            <config_path>payment/unzer_googlepay/max_order_total</config_path>
+            <comment>Insert 0 to disable limit.</comment>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Sort Order</label>
+            <config_path>payment/unzer_googlepay/sort_order</config_path>
+        </field>
+        <field id="unzer_channel_id" translate="label" type="text" sortOrder="80" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Gateway Merchant ID</label>
+            <config_path>payment/unzer_googlepay/unzer_channel_id</config_path>
+            <frontend_model>Unzer\PAPI\Block\System\Config\GooglePayChannelId</frontend_model>
+            <comment><![CDATA[The Gateway Merchant ID will be fetched automatically on page load. If you have changed the Public/Private Keys, please save again. If the field stays empty, please contact the Unzer Support.]]></comment>
+        </field>
+        <field id="merchant_id" translate="label" type="text" sortOrder="100" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Merchant ID</label>
+            <config_path>payment/unzer_googlepay/merchant_id</config_path>
+            <comment><![CDATA[A Google merchant identifier issued after registration with the Google Pay & Wallet Console.]]></comment>
+        </field>
+        <field id="merchant_name" translate="label" type="text" sortOrder="110" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Merchant Name</label>
+            <config_path>payment/unzer_googlepay/merchant_name</config_path>
+            <comment><![CDATA[Merchant name encoded as UTF-8. Merchant name is rendered in the payment sheet.]]></comment>
+        </field>
+        <field id="allowed_card_networks" translate="label" type="multiselect" sortOrder="120" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Supported Networks</label>
+            <source_model>Unzer\PAPI\Model\Source\Googlepay\SupportedNetworks</source_model>
+            <config_path>payment/unzer_googlepay/allowed_card_networks</config_path>
+        </field>
+        <field id="allow_credit_cards" translate="label" type="select" sortOrder="130" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Allow Credit Cards</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/unzer_googlepay/allow_credit_cards</config_path>
+        </field>
+        <field id="allow_prepaid_cards" translate="label" type="select" sortOrder="140" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Allow Prepaid Cards</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/unzer_googlepay/allow_prepaid_cards</config_path>
+        </field>
+        <field id="button_color" translate="label" type="select" sortOrder="150" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Button Color</label>
+            <source_model>Unzer\PAPI\Model\Source\Googlepay\ButtonColor</source_model>
+            <config_path>payment/unzer_googlepay/button_color</config_path>
+        </field>
+        <field id="button_size_mode" translate="label" type="select" sortOrder="160" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Button Size Mode</label>
+            <source_model>Unzer\PAPI\Model\Source\Googlepay\ButtonSizeMode</source_model>
+            <config_path>payment/unzer_googlepay/button_size_mode</config_path>
+        </field>
+        <!-- Button Border Radius is not possible at the moment, because Unzer Javascript library does not support this button option, yet. -->
+<!--        <field id="button_border_radius" translate="label" type="text" sortOrder="170" showInDefault="1"-->
+<!--               showInWebsite="1" showInStore="1">-->
+<!--            <label>Button Border Radius</label>-->
+<!--            <config_path>payment/unzer_googlepay/button_border_radius</config_path>-->
+<!--        </field>-->
+    </group>
+</include>

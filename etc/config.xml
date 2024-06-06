@@ -401,6 +401,28 @@
                 <can_use_internal>0</can_use_internal>
                 <model>Unzer\PAPI\Model\Method\Applepay</model>
             </unzer_applepay>
+            <unzer_googlepay>
+                <active>0</active>
+                <payment_action>order</payment_action>
+                <order_payment_action>authorize_capture</order_payment_action>
+                <title><![CDATA[Google Pay]]></title>
+                <allowspecific>0</allowspecific>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
+                <can_order>1</can_order>
+                <can_void>1</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <model>Unzer\PAPI\Model\Method\Googlepay</model>
+                <merchant_id>12345678901234567890</merchant_id>
+                <merchant_name>Example Merchant</merchant_name>
+                <button_color>default</button_color>
+                <button_size_mode>fill</button_size_mode>
+                <button_border_radius>2</button_border_radius>
+            </unzer_googlepay>
         </payment>
     </default>
 </config>

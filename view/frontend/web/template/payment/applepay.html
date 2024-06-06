@@ -22,7 +22,7 @@
                         data-bind="
                         click: setupApplePaySession,
                         attr: {title: $t('Place Order')},
-                        css: {disabled: !isPlaceOrderActionAllowed()},
+                        css: {disabled: !isPlaceOrderActionAllowed() || !allTermsChecked()},
                         enable: (getCode() == isChecked())
                         "
                         type="submit">
@@ -70,7 +70,7 @@
                         data-bind="
                         click: placeOrder,
                         attr: {title: $t('Place Order')},
-                        css: {disabled: !isPlaceOrderActionAllowed()},
+                        css: {disabled: !isPlaceOrderActionAllowed() || !allTermsChecked()},
                         enable: (getCode() == isChecked())
                         "
                         type="submit">

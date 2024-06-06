@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.0](https://github.com/unzerdev/magento2/compare/3.0.0..3.1.0)
+### Added
+* Google Pay
+### Changed
+* Terms and Conditions are now included in the input check for the "Place Order" button to get activated. Additionally to all required input fields, all terms need to be checked, too. See the [terms-checked.js file]( view/frontend/web/js/model/checkout/terms-checked.js)
+* system.xml to include separate files for each payment method instead of keeping everything in one file
+* refactored Apple Pay "supported networks" to allow "supported networks" for Google Pay, too 
+### Fixed
+* Threat Metrix data was not correctly handled for some payment methods
+
 ## [3.0.0](https://github.com/unzerdev/magento2/compare/2.5.0..3.0.0)
 ### Added
 * Partial Charge for Credit Card, Paylater Invoice, Unzer Installment, Direct Debit and PayPal
