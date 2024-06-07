@@ -46,7 +46,7 @@ define(
                         merchantName: this._getMethodConfig('merchant_name')
                     },
                     transactionInfo: {
-                        countryCode: this.quote.billingAddress()['countryId'],
+                        countryCode: this._getMethodConfig('country_code'),
                         totalPrice: String((this.quote.totals() ? this.quote.totals() : this.quote)['grand_total']),
                         currencyCode: (this.quote.totals() ? this.quote.totals() : this.quote)['quote_currency_code'],
                     },
@@ -57,40 +57,19 @@ define(
                         buttonSizeMode: this._getMethodConfig('button_size_mode'),
                     },
                     allowedCardNetworks: this._getMethodConfig('allowed_card_networks'),
-                    allowCreditCards: this._getMethodConfig('allow_credit_cards'),
-                    allowPrepaidCards: this._getMethodConfig('allow_prepaid_cards'),
+                    allowCreditCards: this._getMethodConfig('allow_credit_cards') === "1",
+                    allowPrepaidCards: this._getMethodConfig('allow_prepaid_cards') === "1",
                     onPaymentAuthorizedCallback: (paymentData) => {
-                        //return this._onPaymentAuthorizedCallback(paymentData, this);
-
                         this.paymentData = paymentData;
-                        console.log(paymentData);
-                        return this.placeOrder();
+                        const result = this.placeOrder();
+                        if (result) {
+                            return { status: 'success' };
+                        } else {
+                            return { status: 'error', message: 'Unexpected error' }
+                        }
                     },
                 };
             },
-
-            // _onPaymentAuthorizedCallback: function (paymentData, self) {
-            //
-            //     return self.resourceProvider.createResource(paymentData)
-            //         .then(result => {
-            //             this.paymentData = paymentData;
-            //             this.placeOrder();
-            //             return { status: 'success' }
-            //         })
-            //         .catch(function (error) {
-            //             let errorMessage = error.customerMessage || error.message || 'Error';
-            //             if (error.data && Array.isArray(error.data.errors) && error.data.errors[0]) {
-            //                 errorMessage = error.data.errors[0].customerMessage || 'Error'
-            //             }
-            //
-            //             document.getElementById(self.errorFieldId).innerHTML = errorMessage;
-            //
-            //             return {
-            //                 status: 'error',
-            //                 message: errorMessage || 'Unexpected error'
-            //             }
-            //         });
-            // },
 
             allInputsValid: function () {
                 return true;

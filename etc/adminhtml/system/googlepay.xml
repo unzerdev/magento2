@@ -55,6 +55,13 @@
             <config_path>payment/unzer_googlepay/merchant_name</config_path>
             <comment><![CDATA[Merchant name encoded as UTF-8. Merchant name is rendered in the payment sheet.]]></comment>
         </field>
+        <field id="country_code" translate="label" type="select" sortOrder="115" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Country Code</label>
+            <source_model>Unzer\PAPI\Model\Source\Googlepay\CountryCode</source_model>
+            <config_path>payment/unzer_googlepay/country_code</config_path>
+            <comment><![CDATA[The country code must be set to the one submitted to Merchant upfront in the contract or in a separated email. Currently supported values are CH and DK. Default is DK.]]></comment>
+        </field>
         <field id="allowed_card_networks" translate="label" type="multiselect" sortOrder="120" showInDefault="1"
                showInWebsite="1" showInStore="1">
             <label>Supported Networks</label>
