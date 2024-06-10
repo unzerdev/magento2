@@ -9,6 +9,8 @@ define(
         'use strict';
 
         return Component.extend({
+            isThreatMetrixNeeded: true,
+
             defaults: {
                 customerType: 'b2b',
                 template: 'Unzer_PAPI/payment/paylater_invoice_b2b'
@@ -23,7 +25,7 @@ define(
             },
 
             _initializeCustomerFormForB2bCustomer: function (fieldId, errorFieldId, customer) {
-                threatMetrix.init(customer.threat_metrix_id);
+                threatMetrix.init(customer.threat_metrix_id, this);
 
                 this.resourceProvider.create({
                     containerId: fieldId+'-optin',

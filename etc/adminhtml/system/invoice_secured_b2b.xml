@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="invoice_secured_b2b" translate="label" type="text" sortOrder="62" showInDefault="1"
+           showInWebsite="1" showInStore="1">
+        <label>UNZER_INVOICE_SECURED_B2B</label>
+        <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/unzer_invoice_secured_b2b/active</config_path>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Title</label>
+            <config_path>payment/unzer_invoice_secured_b2b/title</config_path>
+        </field>
+        <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Minimum Order Total</label>
+            <config_path>payment/unzer_invoice_secured_b2b/min_order_total</config_path>
+        </field>
+        <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Maximum Order Total</label>
+            <config_path>payment/unzer_invoice_secured_b2b/max_order_total</config_path>
+            <comment>Insert 0 to disable limit.</comment>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Sort Order</label>
+            <config_path>payment/unzer_invoice_secured_b2b/sort_order</config_path>
+        </field>
+    </group>
+</include>

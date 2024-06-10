@@ -25,7 +25,7 @@
                         data-bind="
                         click: placeOrder,
                         attr: {title: $t('Place Order')},
-                        css: {disabled: !isPlaceOrderActionAllowed()},
+                        css: {disabled: !isPlaceOrderActionAllowed() || !allTermsChecked()},
                         enable: (getCode() == isChecked() && allInputsValid())
                         "
                         type="submit">

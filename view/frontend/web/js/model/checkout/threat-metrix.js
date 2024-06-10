@@ -9,11 +9,10 @@ define([
 
     return {
 
-        init: function (threatMetrixId) {
+        init: function (threatMetrixId, method) {
 
             if (!threatMetrixExists) {
-                if (checkoutData.getSelectedPaymentMethod() === 'unzer_paylater_invoice'
-                    || checkoutData.getSelectedPaymentMethod() === 'unzer_paylater_invoice_b2b') {
+                if (method.isThreatMetrixNeeded) {
                     // Is Paylater Invoice already preselected? Append Threat Metrix to page
                     this._appendThreatMetrix(threatMetrixId);
 
@@ -28,10 +27,7 @@ define([
         },
 
         _onChangeAppendThreatMetrix: function (method, self, threatMetrixId) {
-            if (!threatMetrixExists &&
-                (method.method === 'unzer_paylater_invoice' ||
-                method.method === 'unzer_paylater_invoice_b2b')
-            ) {
+            if (!threatMetrixExists && method.isThreatMetrixNeeded) {
                 self._appendThreatMetrix(threatMetrixId);
 
                 self.threatMetrixSubscriber.dispose();

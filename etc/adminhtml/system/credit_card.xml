@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="cards" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+           showInStore="1">
+        <label>UNZER_CARDS</label>
+        <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/unzer_cards/active</config_path>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Title</label>
+            <config_path>payment/unzer_cards/title</config_path>
+        </field>
+        <field id="order_payment_action" translate="label" type="select" sortOrder="25" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Booking Mode</label>
+            <config_path>payment/unzer_cards/order_payment_action</config_path>
+            <source_model>Unzer\PAPI\Model\System\Config\Source\PaymentAction</source_model>
+        </field>
+        <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Minimum Order Total</label>
+            <config_path>payment/unzer_cards/min_order_total</config_path>
+        </field>
+        <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Maximum Order Total</label>
+            <config_path>payment/unzer_cards/max_order_total</config_path>
+            <comment>Insert 0 to disable limit.</comment>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Sort Order</label>
+            <config_path>payment/unzer_cards/sort_order</config_path>
+        </field>
+        <field id="unzer_cards_vault_active" translate="label" type="select" sortOrder="80"
+               showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Enable Vault for Card Payments</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/unzer_cards_vault/active</config_path>
+            <comment>Save card token for registered customers</comment>
+        </field>
+        <field id="unzer_cards_vault_instant_purchase_active" translate="label" type="select"
+               sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Enable Instant Purchase</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/unzer_cards_vault/instant_purchase_active</config_path>
+            <depends>
+                <field id="unzer_cards_vault_active">1</field>
+            </depends>
+        </field>
+    </group>
+</include>

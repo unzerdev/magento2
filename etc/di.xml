@@ -1374,4 +1374,55 @@
             <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </type>
+
+    <!--    Define types for Google Pay payment method-->
+    <virtualType name="UnzerGooglepayConfig" type="Unzer\PAPI\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_GOOGLEPAY</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerGooglepayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerGooglepayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerGooglepayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerGooglepayConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
+                <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerGooglepayValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerGooglepayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerGooglepayValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">UnzerGooglepayValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Unzer\PAPI\Model\Method\Googlepay">
+        <arguments>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_GOOGLEPAY</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerGooglepayValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerGooglepayValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
+        </arguments>
+    </type>
 </config>

@@ -1,0 +1,25 @@
+& when (@media-common = true) {
+    // Fix for Magento's hover behaviour with Google Pay button
+    .gpay-button {
+        &:hover {
+            &:not(:active),
+            &:active {
+                background: unset;
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: contain;
+                background-origin: content-box;
+                border: 0;
+            }
+        }
+        &:focus,
+        &:active {
+            background: unset;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: contain;
+            background-origin: content-box;
+            border: 0;
+        }
+    }
+}
