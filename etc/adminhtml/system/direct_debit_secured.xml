@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="direct_debit_secured" translate="label" type="text" sortOrder="35" showInDefault="1"
+           showInWebsite="1" showInStore="1">
+        <label>UNZER_DIRECT_DEBIT_SECURED</label>
+        <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/unzer_direct_debit_secured/active</config_path>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Title</label>
+            <config_path>payment/unzer_direct_debit_secured/title</config_path>
+        </field>
+        <field id="merchant_name" translate="label comment" type="text" sortOrder="25" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Merchant Name</label>
+            <comment>Name of merchant for SEPA mandate.</comment>
+            <config_path>payment/unzer_direct_debit_secured/merchant_name</config_path>
+            <validate>required-entry</validate>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Minimum Order Total</label>
+            <config_path>payment/unzer_direct_debit_secured/min_order_total</config_path>
+        </field>
+        <field id="max_order_total" translate="label" type="text" sortOrder="60" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Maximum Order Total</label>
+            <config_path>payment/unzer_direct_debit_secured/max_order_total</config_path>
+            <comment>Insert 0 to disable limit.</comment>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="70" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Sort Order</label>
+            <config_path>payment/unzer_direct_debit_secured/sort_order</config_path>
+        </field>
+    </group>
+</include>
