@@ -1203,10 +1203,17 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="UnzerPrzelewy24ValidatorCurrency" type="Unzer\PAPI\Model\Validator\CurrencyRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerPrzelewy24Config</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="UnzerPrzelewy24ValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="country" xsi:type="string">UnzerPrzelewy24ValidatorCountry</item>
+                <item name="currency" xsi:type="string">UnzerPrzelewy24ValidatorCurrency</item>
             </argument>
         </arguments>
     </virtualType>
@@ -1422,6 +1429,63 @@
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">UnzerGooglepayValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">UnzerGooglepayValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
+        </arguments>
+    </type>
+
+    <!--    Define types for TWINT payment method  -->
+    <virtualType name="UnzerTwintConfig" type="Unzer\PAPI\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_TWINT</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerTwintConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerTwintConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerTwintValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerTwintConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerTwintValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerTwintConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerTwintValidatorCurrency" type="Unzer\PAPI\Model\Validator\CurrencyRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerTwintConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerTwintValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">UnzerTwintValidatorCountry</item>
+                <item name="currency" xsi:type="string">UnzerTwintValidatorCurrency</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Unzer\PAPI\Model\Method\Twint">
+        <arguments>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_TWINT</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerTwintValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerTwintValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </type>

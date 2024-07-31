@@ -71,6 +71,7 @@
                 <include path="Unzer_PAPI::system/prepayment.xml"/>
                 <include path="Unzer_PAPI::system/applepay.xml"/>
                 <include path="Unzer_PAPI::system/googlepay.xml"/>
+                <include path="Unzer_PAPI::system/twint.xml"/>
             </group>
         </section>
     </system>

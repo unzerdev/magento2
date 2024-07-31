@@ -56,6 +56,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public const METHOD_PREPAYMENT = 'unzer_prepayment';
     public const METHOD_APPLEPAY = 'unzer_applepay';
     public const METHOD_GOOGLEPAY = 'unzer_googlepay';
+    public const METHOD_TWINT = 'unzer_twint';
 
     /**
      * @var DebugHandler
