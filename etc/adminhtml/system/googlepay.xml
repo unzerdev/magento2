@@ -41,7 +41,7 @@
             <label>Gateway Merchant ID</label>
             <config_path>payment/unzer_googlepay/unzer_channel_id</config_path>
             <frontend_model>Unzer\PAPI\Block\System\Config\GooglePayChannelId</frontend_model>
-            <comment><![CDATA[The Gateway Merchant ID will be fetched automatically on page load. If you have changed the Public/Private Keys, please save again. If the field stays empty, please contact the Unzer Support.]]></comment>
+            <comment><![CDATA[Fetch the Gateway Merchant ID from Unzer API. If the field stays empty, please contact the Unzer Support.]]></comment>
         </field>
         <field id="merchant_id" translate="label" type="text" sortOrder="100" showInDefault="1"
                showInWebsite="1" showInStore="1">

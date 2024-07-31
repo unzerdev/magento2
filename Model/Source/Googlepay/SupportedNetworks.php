@@ -16,8 +16,6 @@ class SupportedNetworks implements OptionSourceInterface
      * @var array
      */
     protected static array $networks = [
-        "DISCOVER",
-        "JCB",
         "MASTERCARD",
         "VISA"
     ];

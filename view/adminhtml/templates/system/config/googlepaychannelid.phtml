@@ -1,0 +1,40 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Adminhtml Google Pay Channel ID Button Block
+ *
+ * @link  https://docs.unzer.com/
+ */
+
+/** @var GooglePayChannelId $block */
+/** @var SecureHtmlRenderer $secureRenderer*/
+
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
+use Unzer\PAPI\Block\System\Config\GooglePayChannelId;
+
+?>
+<?= $block->getChildHtml('button') ?>
+
+<?php
+$channelIdUrl = $block->getChannelIdAction();
+$scriptString = <<<script
+    require([
+        'jquery',
+        'mage/translate'
+    ], function (jQuery) {
+        jQuery('#unzer_googlepay_channelid').click(function () {
+
+            jQuery.getJSON('$channelIdUrl', function(result){
+                let input = document.querySelector('input[id$="_unzer_googlepay_unzer_channel_id"]');
+
+                input.setAttribute('value', result.channel_id);
+
+            }).fail(function(){
+                alert(jQuery.mage.__("An unexpected error occurred. Please contact us to get further information."))
+            });
+        })
+    });
+script;
+
+echo $secureRenderer->renderTag('script', [], $scriptString, false);

@@ -4,10 +4,14 @@ declare(strict_types=1);
 namespace Unzer\PAPI\Block\System\Config;
 
 use Magento\Backend\Block\Template\Context;
+use Magento\Backend\Block\Widget\Button;
+
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
-use Unzer\PAPI\Model\Config;
-use UnzerSDK\Exceptions\UnzerApiException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Serialize\SerializerInterface;
+use Unzer\PAPI\Controller\Adminhtml\Webhooks\AbstractAction;
 
 /**
  * Adminhtml Webhook Configuration Buttons Block
@@ -16,70 +20,79 @@ use UnzerSDK\Exceptions\UnzerApiException;
  */
 class GooglePayChannelId extends Field
 {
-    /**
-     * @var Config
-     */
-    private Config $configHelper;
+    /** @var string */
+    protected $_template = 'Unzer_PAPI::system/config/googlepaychannelid.phtml';
 
     /**
      * Constructor
      *
      * @param Context $context
-     * @param Config $configHelper
+     * @param SerializerInterface $serializer
      * @param array $data
      */
     public function __construct(
         Context $context,
-        Config $configHelper,
+        SerializerInterface $serializer,
         array $data = []
     ) {
         parent::__construct($context, $data);
-        $this->configHelper = $configHelper;
+        $this->serializer = $serializer;
     }
 
     /**
      * @inheritDoc
      *
-     * @throws UnzerApiException
+     * @throws LocalizedException
      */
     protected function _getElementHtml(AbstractElement $element): string
     {
-        if ($element->getValue() === '' || $element->getValue() === null) {
-            $element->setValue($this->fetchChannelId());
-        }
+        $button = $this->getGooglePayChannelIdButton();
 
-        return $element->getElementHtml();
+        $block = $this->_layout->createBlock(self::class);
+        $block->setTemplate('Unzer_PAPI::system/config/googlepaychannelid.phtml')
+            ->setChild('button', $button);
+        return parent::_getElementHtml($element) . $block->toHtml();
     }
 
     /**
-     * Fetch Channel ID
+     * Get Google Pay Channel ID Button
+     *
+     * @return Button
+     * @throws LocalizedException
+     */
+    public function getGooglePayChannelIdButton(): Button
+    {
+        $button = $this->getLayout()->createBlock(Button::class);
+        $button->setData([
+            'id' => 'unzer_googlepay_channelid',
+            'label' => __('Fetch Gateway Merchant ID'),
+        ]);
+        return $button;
+    }
+
+    /**
+     * Get Channel ID Action
      *
      * @return string
-     * @throws UnzerApiException
+     * @throws NoSuchEntityException
      */
-    private function fetchChannelId(): string
+    public function getChannelIdAction(): string
     {
-        $keyPair = $this->configHelper->getUnzerClient()->getResourceService()->fetchKeypair(true);
+        return $this->getUrl('unzer/googlepay/channelid', [
+            AbstractAction::URL_PARAM_STORE => $this->getStoreIdentifier()
+        ]);
+    }
 
-        foreach ($keyPair->getPaymentTypes() as $paymentType) {
-            if (!property_exists($paymentType, 'type')) {
-                continue;
-            }
-            if ($paymentType->type === 'googlepay') {
-                if (!property_exists($paymentType, 'supports')) {
-                    return '';
-                }
-                if (!is_array($paymentType->supports) || !array_key_exists(0, $paymentType->supports)) {
-                    return '';
-                }
-                if (!property_exists($paymentType->supports[0], 'channel')) {
-                    return '';
-                }
-
-                return $paymentType->supports[0]->channel;
-            }
-        }
-
-        return '';
+    /**
+     * Get Store Identifier
+     *
+     * @return int
+     * @throws NoSuchEntityException
+     */
+    protected function getStoreIdentifier(): int
+    {
+        /** @var int|string $storeIdentifier */
+        $storeIdentifier = $this->getRequest()->getParam(AbstractAction::URL_PARAM_STORE, 0);
+        return (int)$this->_storeManager->getStore($storeIdentifier)->getId();
     }
 }
