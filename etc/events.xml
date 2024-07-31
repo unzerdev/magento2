@@ -69,4 +69,7 @@
     <event name="payment_method_assign_data_unzer_googlepay">
         <observer name="unzer_googlepay_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
+    <event name="payment_method_assign_data_unzer_twint">
+        <observer name="unzer_twint_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    </event>
 </config>

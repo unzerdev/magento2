@@ -100,6 +100,10 @@ define(
             {
                 type: 'unzer_googlepay',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/googlepay'
+            },
+            {
+                type: 'unzer_twint',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/twint'
             }
         );
         return Component.extend({});
