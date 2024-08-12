@@ -14,6 +14,7 @@ define(
                     cvc: {valid: null},
                     expiry: {valid: null},
                     number: {valid: null},
+                    holder: {valid: null},
                 },
                 template: 'Unzer_PAPI/payment/cards'
             },
@@ -44,10 +45,15 @@ define(
                     containerId: 'unzer-card-element-id-cvc',
                     onlyIframe: false
                 });
+                this.resourceProvider.create('holder', {
+                    containerId: 'unzer-card-element-id-holder',
+                    onlyIframe: false
+                });
 
                 this.fields.cvc.valid = ko.observable(false);
                 this.fields.expiry.valid = ko.observable(false);
                 this.fields.number.valid = ko.observable(false);
+                this.fields.holder.valid = ko.observable(false);
 
                 this.resourceProvider.addEventListener('change', function (event) {
                     if ("type" in event) {
@@ -62,7 +68,8 @@ define(
                 return ko.computed(function () {
                     return self.fields.cvc.valid() &&
                         self.fields.expiry.valid() &&
-                        self.fields.number.valid();
+                        self.fields.number.valid() &&
+                        self.fields.holder.valid();
                 })();
             },
 
