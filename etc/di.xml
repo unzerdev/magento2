@@ -1330,7 +1330,6 @@
             <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>
-
     <!--    Define types for Apple Pay payment method  -->
     <virtualType name="UnzerApplepayConfig" type="Unzer\PAPI\Model\Config">
         <arguments>
@@ -1378,6 +1377,57 @@
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">UnzerApplepayValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">UnzerApplepayValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
+        </arguments>
+    </type>
+
+    <!--    Define types for Apple Pay  V2payment method-->
+    <virtualType name="UnzerApplepayV2Config" type="Unzer\PAPI\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_APPLEPAYV2</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerApplepayV2ConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerApplepayV2Config</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerApplepayV2ValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerApplepayV2ConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler
+                </item>
+                <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerApplepayV2ValidatorCountry" type="Unzer\PAPI\Model\Validator\CountryRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerApplepayV2Config</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerApplepayV2ValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">UnzerApplepayV2ValidatorCountry</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Unzer\PAPI\Model\Method\ApplepayV2">
+        <arguments>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_APPLEPAYV2</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerApplepayV2ValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">UnzerApplepayV2ValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </type>

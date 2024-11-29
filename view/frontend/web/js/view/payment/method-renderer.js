@@ -98,6 +98,10 @@ define(
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/applepay'
             },
             {
+                type: 'unzer_applepayv2',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/applepayv2'
+            },
+            {
                 type: 'unzer_googlepay',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/googlepay'
             },

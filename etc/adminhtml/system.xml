@@ -70,6 +70,7 @@
                 <include path="Unzer_PAPI::system/bancontact.xml"/>
                 <include path="Unzer_PAPI::system/prepayment.xml"/>
                 <include path="Unzer_PAPI::system/applepay.xml"/>
+                <include path="Unzer_PAPI::system/applepayv2.xml"/>
                 <include path="Unzer_PAPI::system/googlepay.xml"/>
                 <include path="Unzer_PAPI::system/twint.xml"/>
             </group>
