@@ -3,6 +3,22 @@
     <group id="applepay" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1"
            showInStore="1">
         <label>UNZER_APPLEPAY</label>
+        <field id="applepay_info_text" type="note" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+			<comment>
+                <![CDATA[
+                <div style="background-color: #d4edda; padding: 15px; border-radius: 4px;">
+                <span style="content: `\e60e`;"></span>
+                <h3><strong>Existing merchants:</strong></h3>
+                <p>We have updated our integration with Apple Pay, but since you already have it set up, you don't need to do anything just now.</p>
+                <p>However, when your Apple Pay certificates are about to expire, you can change to the new integration.</p>
+                <p>You can of course change to the new integration now, if you want, and then you don't have to worry about expiring certificates, changing integration, etc. in the future.</p>
+                </br>
+                <h3><strong>Existing and new both:</strong></h3>
+                <p>Before you activate Apple Pay, please make sure you have read our <a href="https://docs.unzer.com/payment-methods/applepay/applepay-prerequisites/#prerequisites-for-accepting-apple-pay-transactions" target="_blank">checklist</a>.</p>
+                </div>
+                ]]>
+            </comment>
+        </field>
         <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1"
                showInWebsite="1" showInStore="1">
             <label>Enabled</label>
