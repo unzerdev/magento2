@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="applepayv2" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1"
+           showInStore="1">
+        <label>UNZER_APPLEPAYV2</label>
+        <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/unzer_applepayv2/active</config_path>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Title</label>
+            <config_path>payment/unzer_applepayv2/title</config_path>
+        </field>
+        <field id="order_payment_action" translate="label" type="select" sortOrder="25" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Booking Mode</label>
+            <config_path>payment/unzer_applepayv2/order_payment_action</config_path>
+            <source_model>Unzer\PAPI\Model\System\Config\Source\PaymentAction</source_model>
+        </field>
+        <field id="min_order_total" translate="label" type="text" sortOrder="27" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Minimum Order Total</label>
+            <config_path>payment/unzer_applepayv2/min_order_total</config_path>
+        </field>
+        <field id="max_order_total" translate="label" type="text" sortOrder="28" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Maximum Order Total</label>
+            <config_path>payment/unzer_applepayv2/max_order_total</config_path>
+            <comment>Insert 0 to disable limit.</comment>
+        </field>
+        <field id="supported_networks" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Supported Networks</label>
+            <source_model>Unzer\PAPI\Model\Source\ApplepayV2\SupportedNetworks</source_model>
+        </field>
+        <field id="apple_merchantid_association_upload" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="56" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Apple Merchant ID Domain Association</label>
+            <backend_model>Unzer\PAPI\Model\System\Config\Backend\ApplepayV2\Upload</backend_model>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="100" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Sort Order</label>
+            <config_path>payment/unzer_applepayv2/sort_order</config_path>
+        </field>
+    </group>
+</include>
