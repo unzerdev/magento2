@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
     <policies>
+        <!-- SCRIPT-SRC -->
         <policy id="script-src">
             <values>
                 <value id="unzer-ui-js" type="host">https://static.unzer.com</value>
@@ -8,38 +9,67 @@
                 <value id="google-pay" type="host">https://pay.google.com</value>
                 <value id="jquery-js" type="host">https://code.jquery.com</value>
                 <value id="threatmetrix" type="host">https://h.online-metrix.net</value>
+                <value id="threatmetrix-64" type="host">https://h64.online-metrix.net</value>
             </values>
         </policy>
+
+        <!-- CONNECT-SRC -->
         <policy id="connect-src">
             <values>
-                <value id="unzer-payment-1" type="host">https://payment.unzer.com</value>
-                <value id="unzer-payment-2" type="host">https://payment.heidelpay.com</value>
-                <value id="unzer-payment-3" type="host">https://sbx-payment.heidelpay.com</value>
+                <!-- Unzer Payment APIs -->
                 <value id="unzer-api-1" type="host">https://api.unzer.com</value>
-                <value id="unzer-api-2" type="host">https://api.heidelpay.com</value>
-                <value id="unzer-api-3" type="host">https://sbx-api.heidelpay.com</value>
+                <value id="unzer-api-heidelpay-deprecated" type="host">https://api.heidelpay.com</value>
+                <value id="unzer-api-sbx-heidelpay-deprecated" type="host">https://sbx-api.heidelpay.com</value>
+                <value id="unzer-api-4" type="host">https://sbx-api.unzer.com</value>
+                
+                <!-- Payment Frames -->
+                <value id="unzer-payment-1" type="host">https://payment.unzer.com</value>
+                <value id="unzer-payment-heidelpay-deprecated" type="host">https://payment.heidelpay.com</value>
+                <value id="unzer-payment-sbx-heidelpay-deprecated" type="host">https://sbx-payment.heidelpay.com</value>
+                <value id="unzer-payment-4" type="host">https://sbx-payment.unzer.com</value>
+
+                <!-- ThreatMetrix -->
                 <value id="threatmetrix" type="host">https://h.online-metrix.net</value>
+                <value id="threatmetrix-64" type="host">https://h64.online-metrix.net</value>
+
+                <!-- Google Pay -->
                 <value id="google-pay-1" type="host">https://google.com/pay</value>
                 <value id="google-pay-2" type="host">https://www.google.com/pay</value>
                 <value id="google-pay-3" type="host">https://pay.google.com</value>
+                <value id="hpcgw" type="host">https://test-heidelpay.hpcgw.net/</value>
+                <value id="sbx" type="host">https://sbx-api.heidelpay.com/</value>
             </values>
         </policy>
+
+        <!-- FRAME-SRC -->
         <policy id="frame-src">
             <values>
-                <value id="unzer-frame-1" type="host">https://payment.unzer.com/</value>
-                <value id="unzer-frame-2" type="host">https://payment.heidelpay.com/</value>
-                <value id="unzer-frame-3" type="host">https://sbx-payment.heidelpay.com/</value>
+                <!-- Payment Frames -->
+                <value id="unzer-frame-1" type="host">https://payment.unzer.com</value>
+                <value id="unzer-frame-heidelpay-deprecated" type="host">https://payment.heidelpay.com</value>
+                <value id="unzer-frame-sbx-heidelpay-deprecated" type="host">https://sbx-payment.heidelpay.com</value>
+                <value id="unzer-frame-4" type="host">https://sbx-payment.unzer.com</value>
+
+                <!-- ThreatMetrix -->
                 <value id="threatmetrix" type="host">https://h.online-metrix.net</value>
+
+                <!-- Google Pay -->
                 <value id="google-pay-1" type="host">https://google.com/pay</value>
                 <value id="google-pay-2" type="host">https://pay.google.com/</value>
+                <value id="hpcgw" type="host">https://test-heidelpay.hpcgw.net/</value>
+                <value id="sbx" type="host">https://sbx-api.heidelpay.com/</value>
             </values>
         </policy>
+
+        <!-- FONT-SRC -->
         <policy id="font-src">
             <values>
                 <value id="unzer-fonts-src" type="host">https://static.unzer.com</value>
                 <value id="apple-font-src" type="host">https://applepay.cdn-apple.com</value>
             </values>
         </policy>
+
+        <!-- IMG-SRC -->
         <policy id="img-src">
             <values>
                 <value id="unzer-img-src" type="host">https://static.unzer.com</value>
