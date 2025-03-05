@@ -47,6 +47,7 @@ class Provider implements ConfigProviderInterface
         Config::METHOD_APPLEPAYV2,
         Config::METHOD_GOOGLEPAY,
         Config::METHOD_TWINT,
+        Config::METHOD_OPEN_BANKING,
     ];
 
     /**

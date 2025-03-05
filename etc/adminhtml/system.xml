@@ -73,6 +73,7 @@
                 <include path="Unzer_PAPI::system/applepayv2.xml"/>
                 <include path="Unzer_PAPI::system/googlepay.xml"/>
                 <include path="Unzer_PAPI::system/twint.xml"/>
+                <include path="Unzer_PAPI::system/open_banking.xml"/>
             </group>
         </section>
     </system>
