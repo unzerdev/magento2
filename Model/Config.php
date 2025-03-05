@@ -58,6 +58,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public const METHOD_APPLEPAYV2 = 'unzer_applepayv2';
     public const METHOD_GOOGLEPAY = 'unzer_googlepay';
     public const METHOD_TWINT = 'unzer_twint';
+    public const METHOD_OPEN_BANKING = 'unzer_open_banking';
 
     /**
      * @var DebugHandler

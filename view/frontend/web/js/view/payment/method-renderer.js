@@ -108,6 +108,10 @@ define(
             {
                 type: 'unzer_twint',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/twint'
+            },
+            {
+                type: 'unzer_open_banking',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/open_banking'
             }
         );
         return Component.extend({});
