@@ -3,30 +3,53 @@
 [![PHP 8.1](https://img.shields.io/badge/php-8.1-blue.svg)](http://www.php.net)
 [![PHP 8.2](https://img.shields.io/badge/php-8.2-blue.svg)](http://www.php.net)
 
-![Logo](unzer_logo.svg)
+# Unzer Payment plugin for Magento 2
 
-# Payment extension for Magento2 and Unzer Payment API (PAPI)
+Use Unzer Payment plugin for Magento 2 to provide an easy-to-install payment gateway integration for all your online payments.
 
-This extension for Magento2 provides a direct integration of the Unzer payment methods to your Magento2 shop.
+## Description
 
-Currently supported payment methods are:
-* Cards (Credit Card / Debit Card)
+Accept payments with cards, bank transfers, wallets, and other global and local payment methods. Unzer Payment plugin helps you with quick and easy integration, full support, and flexible solutions that grow with your business. We are your payment partner for every situation.
+
+## Features
+
+* Seamless integration into the Shop-system
+* Merchant-friendly order management with up-to-date payment details, real-time billing and refunds made easy.
+* Payment processing via the Unzer Payment API
+* 3D-Secure authentication
+* PCI-DSS Level 1 certified
+
+## Content security policy (CSP)
+
+If you are using a Content Security Policy (CSP) you must include different Unzer URL's to your policy, which are required by the UI components to work. For more information, please go to [Unzer Documentation CSP Information](https://docs.unzer.com/online-payments/ui-component-v2/#content-security-policy-csp).
+
+## Supported payment methods
+
+Unzer payment plugin includes the following payment methods:
+* Alipay
+* Apple Pay
+* Bancontact
+* Credit Card
+* Unzer Direct Bank Transfer
 * EPS
-* Giropay
+* Google Pay
 * iDEAL
 * PayPal
-* Sofort
-* Unzer (SEPA) Direct Debit
-* Unzer (SEPA) Direct Debit secured B2C
-* Unzer Bank Transfer
-* Unzer Invoice
-* Unzer Invoice secured B2B
-* Unzer Invoice secured B2C
-* Unzer Prepayment
-* Bancontact
-* Przelewy
-* Alipay
-* Wechat
+* Prepayment
+* SEPA Direct Debit
+* SOFORT
+* TWINT
+* Unzer Direct Debit
+* Unzer direct Debit (secured)
+* Unzer Invoice B2C / B2B (secured)
+* Unzer Installment (secured)
+* WeChat Pay
+
+Regarding plugin compatibility, please take a look at the release notes for more information.
+
+## Installation
+
+Please see our documentation for [how to install the plugin](https://docs.unzer.com/plugins/magento-2/magento2-install-plugin/).
 
 ## SYSTEM REQUIREMENTS
 This extension requires PHP 7.4, PHP 8.1 or PHP 8.2.
@@ -50,20 +73,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ## User Guide
-Please find information on installation, configuration and usage within the [manual](https://docs.unzer.com/plugins/magento-2).
+
+Please find information on installation, configuration, usage etc on our [documentation pages](https://docs.unzer.com/plugins/magento-2).
 
 ## Support
+
 For any issues or questions please get in touch with our support.
 
-#### Web pages
-* https://unzer.com/
-* https://docs.unzer.com/
+**Email**: support@unzer.com
 
-#### Email
-support@unzer.com
+**Phone**: +49 (0)6221/6471-100
 
-#### Phone
-+49 (0)6221/6471-100
+**Twitter**: [@UnzerTech](https://twitter.com/UnzerTech)
 
-#### Twitter
-[@UnzerTech](https://twitter.com/UnzerTech)
+**Webpage**: https://unzer.com/
