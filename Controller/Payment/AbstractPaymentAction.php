@@ -10,6 +10,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Response\HttpInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Sales\Model\Order;
+use Magento\Framework\View\Element\Template;
 use Unzer\PAPI\Helper\Payment as PaymentHelper;
 use Unzer\PAPI\Model\Config;
 use UnzerSDK\Exceptions\UnzerApiException;
@@ -38,6 +39,7 @@ abstract class AbstractPaymentAction extends Action
      * @var PaymentHelper
      */
     protected PaymentHelper $_paymentHelper;
+    protected $_view;
 
     /**
      * Constructor
@@ -67,9 +69,29 @@ abstract class AbstractPaymentAction extends Action
     public function execute()
     {
         $order = $this->_checkoutSession->getLastRealOrder();
-
         /** @var HttpInterface $response */
         $response = $this->getResponse();
+
+        //iFrame Response:
+        if ((!$order || !$order->getId()) && strtolower($this->getRequest()->getServer('HTTP_SEC_FETCH_DEST')) == 'iframe') {
+            $block = $this->_view->getLayout()->createBlock(Template::class);
+            $block->setTemplate('Unzer_PAPI::success/3ds_success.phtml');
+
+            // No-Cache
+            $response->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0', true);
+            $response->setHeader('Pragma', 'no-cache', true);
+            $response->setHeader('Expires', '0', true);
+
+            //No-Varnish
+            $response->setHeader('X-Magento-Tags', '', true); // Entfernt Tags für Varnish-Cache
+            $response->setHeader('X-Magento-Cache-Control', 'no-store', true);
+            $response->setHeader('X-Cache', 'MISS', true); // Signalisiert, dass der Cache nicht verwendet wurde
+
+
+            $response->setBody($block->toHtml());
+            $response->setHttpResponseCode(200);
+            return $response;
+        }
 
         if (!$order || !$order->getId()) {
             $response->setHttpResponseCode(400);

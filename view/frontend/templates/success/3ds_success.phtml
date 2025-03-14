@@ -1,0 +1,15 @@
+<div class="custom-payment-message">
+    <h2><?php echo __('Payment Check Successful!'); ?></h2>
+    <p><?php echo __('The payment was successfully processed. If you are not redirected automatically, please click the following link:'); ?></p>
+    <a href="/unzer/payment/callback/"><?php echo __('Complete Payment'); ?></a>
+</div>
+<script>
+
+function sendMessageToParent() {
+window.parent.postMessage({ action: 'redirect', url: '/unzer/payment/callback/' }, '*')
+}
+
+window.onload = function() {
+sendMessageToParent();
+};
+</script>

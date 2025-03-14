@@ -43,6 +43,13 @@
             <config_path>payment/unzer_cards_vault/active</config_path>
             <comment>Save card token for registered customers</comment>
         </field>
+        <field id="unzer_cards_3ds_iframe_active" translate="label" type="select" sortOrder="80"
+               showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>3D Secure authentication iFrame</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/unzer_cards_3ds_iframe/active</config_path>
+            <comment>Enable 3D Secure authentication iFrame</comment>
+        </field>
         <field id="unzer_cards_vault_instant_purchase_active" translate="label" type="select"
                sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
             <label>Enable Instant Purchase</label>

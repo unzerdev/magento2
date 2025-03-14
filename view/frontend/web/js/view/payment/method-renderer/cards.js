@@ -2,9 +2,11 @@ define(
     [
         'ko',
         'Unzer_PAPI/js/view/payment/method-renderer/base',
-        'Magento_Vault/js/view/payment/vault-enabler'
+        'Magento_Vault/js/view/payment/vault-enabler',
+        'mage/url',
+        'Magento_Checkout/js/model/full-screen-loader'
     ],
-    function (ko, Component, VaultEnabler) {
+    function (ko, Component, VaultEnabler, url, fullScreenLoader) {
         'use strict';
 
         return Component.extend({
@@ -16,7 +18,7 @@ define(
                     number: {valid: null},
                     holder: {valid: null},
                 },
-                template: 'Unzer_PAPI/payment/cards'
+                template: 'Unzer_PAPI/payment/cards',
             },
 
             initialize: function () {
@@ -26,8 +28,65 @@ define(
                 this.vaultEnabler.isActivePaymentTokenEnabler(this.isActivePaymentTokenEnabler);
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
 
+                // Check if the message is sent from the shop URL with the specific route and Redirect.
+                window.addEventListener('message', function (event) {
+                    // Check if the message is sent from the shop URL with the specific route
+                    if (!event.origin.startsWith(window.location.origin) || !event.data.url.endsWith('/unzer/payment/callback/')) return;
+
+                    //Process Reload:
+                    if (event.data && event.data.action === 'redirect') {
+                        if (event.data.url.endsWith('/unzer/payment/callback/')) {
+                            window.location.href = event.data.url;
+                        }
+                    }
+                })
+
                 return this;
             },
+
+            afterPlaceOrder: function () {
+                if(this.is3dsiFrameEnabled() === true){
+
+                    // iFrame Placeholder
+                    let placeholderIframe = document.getElementById('3dsIframe');
+                    let buttons = document.querySelectorAll('button.unzerUI.primary.button.fluid');
+
+                    if (placeholderIframe) {
+                        // Create new iFrame
+                        const newIframe = document.createElement('iframe');
+                        newIframe.src = window.location.origin+'/'+ this.redirectUrl;
+                        newIframe.id = '3dsIframe';
+                        newIframe.width = '100%';
+                        newIframe.height = '200';
+                        newIframe.title = '3DS Check';
+                        newIframe.style.visibility = 'visible';
+                        newIframe.style.border = '1px solid black';
+
+                        //Change current iFrame with the new one
+                        placeholderIframe.parentNode.replaceChild(newIframe, placeholderIframe);
+
+                        //Debug if necessary:
+                        newIframe.onload = function () {
+                        };
+
+                        //deactivate order now Buttons.
+                        buttons.forEach(button => {
+                            button.disabled = true;
+                        });
+
+                    } else {
+                        //Fallback:
+                        fullScreenLoader.startLoader();
+                        window.location.replace(url.build(this.redirectUrl));
+                    }
+                }
+                else{
+                    fullScreenLoader.startLoader();
+                    window.location.replace(url.build(this.redirectUrl));
+                }
+            },
+
+
 
             initializeForm: function () {
                 const self = this;
@@ -82,6 +141,13 @@ define(
              */
             isVaultEnabled: function () {
                 return this.vaultEnabler.isVaultEnabled();
+            },
+
+            /**
+             * @returns {Boolean}
+             */
+            is3dsiFrameEnabled: function () {
+                return window.checkoutConfig.payment.unzer_cards.three_ds_iframe_enabled;
             },
 
             /**

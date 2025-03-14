@@ -30,7 +30,7 @@ class Cards extends Base
         $parentConfig = parent::getFrontendConfig();
 
         $parentConfig['vault_code'] = $this->getVaultCode();
-
+        $parentConfig['three_ds_iframe_enabled']  = (bool) $this->_scopeConfig->getValue('payment/unzer_cards_3ds_iframe/active');
         return $parentConfig;
     }
 
@@ -41,4 +41,5 @@ class Cards extends Base
     {
         return self::VAULT_CODE;
     }
+
 }
