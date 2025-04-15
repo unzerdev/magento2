@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Unzer\PAPI\Helper;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Module\ModuleListInterface;
@@ -12,6 +13,8 @@ use Magento\Quote\Model\Quote;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Model\Order as OrderModel;
 use Magento\Sales\Model\Order\Item;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Tax\Model\Config as MagentoTaxConfig;
 use Unzer\PAPI\Block\System\Config\Form\Field\BirthDateFactory;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Source\CreateThreatMetrixId;
@@ -55,6 +58,11 @@ class Order
     private ProductMetadataInterface $_productMetadata;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
      * @var BasketFactory
      */
     private BasketFactory $basketFactory;
@@ -80,6 +88,7 @@ class Order
      * @param Config $moduleConfig
      * @param ModuleListInterface $moduleList
      * @param ProductMetadataInterface $productMetadata
+     * @param ScopeConfigInterface $scopeConfig
      * @param BasketFactory $basketFactory
      * @param BasketItemFactory $basketItemFactory
      * @param BirthDateFactory $birthDateFactory
@@ -89,6 +98,7 @@ class Order
         Config $moduleConfig,
         ModuleListInterface $moduleList,
         ProductMetadataInterface $productMetadata,
+        ScopeConfigInterface $scopeConfig,
         BasketFactory $basketFactory,
         BasketItemFactory $basketItemFactory,
         BirthDateFactory $birthDateFactory,
@@ -97,6 +107,7 @@ class Order
         $this->_moduleConfig = $moduleConfig;
         $this->_moduleList = $moduleList;
         $this->_productMetadata = $productMetadata;
+        $this->scopeConfig = $scopeConfig;
         $this->basketFactory = $basketFactory;
         $this->basketItemFactory = $basketItemFactory;
         $this->birthDateFactory = $birthDateFactory;
@@ -113,6 +124,7 @@ class Order
     public function createBasketForOrder(OrderModel $order): Basket
     {
         $basket = $this->createBasket($order);
+        $vatRate = 0;
 
         if ($order->getShippingAmount() > 0) {
             $basket->addBasketItem(
@@ -132,11 +144,15 @@ class Order
             $basket->addBasketItem(
                 $this->createBasketItem($orderItem)
             );
+
+            if($orderItem->getTaxPercent() !== null){
+                $vatRate = (float)$orderItem->getTaxPercent();
+            }
         }
 
         if (abs($order->getBaseDiscountAmount()) > 0) {
             $basket->addBasketItem(
-                $this->createVoucherItem($order)
+                $this->createVoucherItem($order, $vatRate)
             );
         }
 
@@ -198,12 +214,36 @@ class Order
      * Create Voucher Item
      *
      * @param OrderModel $order
+     * @param float $vatRate
      * @return BasketItem
      */
-    protected function createVoucherItem(OrderModel $order): BasketItem
+    protected function createVoucherItem(OrderModel $order, float $vatRate): BasketItem
     {
+        $discount = $order->getBaseDiscountAmount();
+        $storeId = $order->getStoreId();
+
+        $taxAfterDiscount = $this->scopeConfig->getValue(
+            MagentoTaxConfig::CONFIG_XML_PATH_APPLY_AFTER_DISCOUNT,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+
+        $pricesIncludeTax = $this->scopeConfig->getValue(
+            MagentoTaxConfig::CONFIG_XML_PATH_PRICE_INCLUDES_TAX,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+
+        if ($taxAfterDiscount && !$pricesIncludeTax) {
+            $discount *= (1 + $vatRate/100);
+        }
+
         $basketVoucherItemDiscountAmount = $this->basketItemFactory->create();
-        $basketVoucherItemDiscountAmount->setAmountDiscountPerUnitGross(abs($order->getBaseDiscountAmount()));
+        $basketVoucherItemDiscountAmount->setAmountDiscountPerUnitGross(
+            abs(round($discount, 2, PHP_ROUND_HALF_DOWN)
+            )
+        );
+        $basketVoucherItemDiscountAmount->setVat($vatRate);
         $basketVoucherItemDiscountAmount->setAmountPerUnitGross(0);
         $basketVoucherItemDiscountAmount->setQuantity(1);
         $basketVoucherItemDiscountAmount->setTitle('Discount');
