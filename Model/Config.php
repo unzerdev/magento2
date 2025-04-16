@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Unzer\PAPI\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Framework\Locale\Resolver;
 use Magento\Payment\Model\CcConfig;
 use Magento\Payment\Model\MethodInterface;
@@ -76,6 +77,11 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     private ScopeConfigInterface $_scopeConfig;
 
     /**
+     * @var RemoteAddress
+     */
+    private RemoteAddress $_remoteAddress;
+
+    /**
      * @var CcConfig
      */
     private CcConfig $ccConfig;
@@ -94,6 +100,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
         ScopeConfigInterface $scopeConfig,
         DebugHandler $debugHandler,
         CcConfig $ccConfig,
+        RemoteAddress $remoteAddress,
         $methodCode = null,
         $pathPattern = self::DEFAULT_PATH_PATTERN
     ) {
@@ -103,6 +110,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
         $this->_localeResolver = $localeResolver;
         $this->_scopeConfig = $scopeConfig;
         $this->ccConfig = $ccConfig;
+        $this->_remoteAddress = $remoteAddress;
     }
 
     /**
@@ -178,6 +186,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
             $this->_localeResolver->getLocale()
         );
 
+        $client->setClientIp($this->_remoteAddress->getRemoteAddress());
         $client->setDebugMode($this->isDebugMode($storeId));
         $client->setDebugHandler($this->_debugHandler);
 
