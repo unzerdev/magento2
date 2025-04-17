@@ -186,7 +186,10 @@ class Config extends \Magento\Payment\Gateway\Config\Config
             $this->_localeResolver->getLocale()
         );
 
-        $client->setClientIp($this->_remoteAddress->getRemoteAddress());
+        $remoteAddress = $this->_remoteAddress->getRemoteAddress();
+        if (is_string($remoteAddress)) {
+            $client->setClientIp($remoteAddress);
+        }
         $client->setDebugMode($this->isDebugMode($storeId));
         $client->setDebugHandler($this->_debugHandler);
 
