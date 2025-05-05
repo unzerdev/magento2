@@ -88,10 +88,12 @@ class Config extends \Magento\Payment\Gateway\Config\Config
 
     /**
      * Config constructor.
+     *
      * @param Resolver $localeResolver
      * @param ScopeConfigInterface $scopeConfig
      * @param DebugHandler $debugHandler
      * @param CcConfig $ccConfig
+     * @param Request $request
      * @param string|null $methodCode
      * @param string $pathPattern
      */
@@ -101,8 +103,8 @@ class Config extends \Magento\Payment\Gateway\Config\Config
         DebugHandler $debugHandler,
         CcConfig $ccConfig,
         Request $request,
-        $methodCode = null,
-        $pathPattern = self::DEFAULT_PATH_PATTERN
+        ?string $methodCode = null,
+        string $pathPattern = self::DEFAULT_PATH_PATTERN
     ) {
         parent::__construct($scopeConfig, $methodCode, $pathPattern);
 
@@ -186,10 +188,10 @@ class Config extends \Magento\Payment\Gateway\Config\Config
             $this->_localeResolver->getLocale()
         );
 
-        $remoteAddress = $this->_request->getClientIp();
+        $clientsIpAddress = $this->_request->getClientIp();
 
-        if (filter_var($remoteAddress, FILTER_VALIDATE_IP)) {
-            $client->setClientIp($remoteAddress);
+        if (filter_var($clientsIpAddress, FILTER_VALIDATE_IP)) {
+            $client->setClientIp($clientsIpAddress);
         }
 
         $client->setDebugMode($this->isDebugMode($storeId));
