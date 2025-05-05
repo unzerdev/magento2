@@ -186,9 +186,9 @@ class Config extends \Magento\Payment\Gateway\Config\Config
             $this->_localeResolver->getLocale()
         );
 
-        $remoteAddress = $this->_request->getClientIp(true);
+        $remoteAddress = $this->_request->getClientIp();
 
-        if (is_string($remoteAddress) && filter_var($remoteAddress, FILTER_VALIDATE_IP)) {
+        if (filter_var($remoteAddress, FILTER_VALIDATE_IP)) {
             $client->setClientIp($remoteAddress);
         }
 
