@@ -8,6 +8,7 @@ use Magento\Framework\Locale\Resolver;
 use Magento\Payment\Model\CcConfig;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\HTTP\PhpEnvironment\Request;
 use Unzer\PAPI\Model\Logger\DebugHandler;
 use Unzer\PAPI\Model\Method\OverrideApiCredentialInterface;
 use UnzerSDK\Unzer;
@@ -76,16 +77,23 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     private ScopeConfigInterface $_scopeConfig;
 
     /**
+     * @var Request
+     */
+    private Request $_request;
+
+    /**
      * @var CcConfig
      */
     private CcConfig $ccConfig;
 
     /**
      * Config constructor.
+     *
      * @param Resolver $localeResolver
      * @param ScopeConfigInterface $scopeConfig
      * @param DebugHandler $debugHandler
      * @param CcConfig $ccConfig
+     * @param Request $request
      * @param string|null $methodCode
      * @param string $pathPattern
      */
@@ -94,8 +102,9 @@ class Config extends \Magento\Payment\Gateway\Config\Config
         ScopeConfigInterface $scopeConfig,
         DebugHandler $debugHandler,
         CcConfig $ccConfig,
-        $methodCode = null,
-        $pathPattern = self::DEFAULT_PATH_PATTERN
+        Request $request,
+        ?string $methodCode = null,
+        string $pathPattern = self::DEFAULT_PATH_PATTERN
     ) {
         parent::__construct($scopeConfig, $methodCode, $pathPattern);
 
@@ -103,6 +112,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
         $this->_localeResolver = $localeResolver;
         $this->_scopeConfig = $scopeConfig;
         $this->ccConfig = $ccConfig;
+        $this->_request = $request;
     }
 
     /**
@@ -177,6 +187,12 @@ class Config extends \Magento\Payment\Gateway\Config\Config
             $this->getPrivateKey($storeId, $paymentMethodInstance),
             $this->_localeResolver->getLocale()
         );
+
+        $clientsIpAddress = $this->_request->getClientIp();
+
+        if (filter_var($clientsIpAddress, FILTER_VALIDATE_IP)) {
+            $client->setClientIp($clientsIpAddress);
+        }
 
         $client->setDebugMode($this->isDebugMode($storeId));
         $client->setDebugHandler($this->_debugHandler);

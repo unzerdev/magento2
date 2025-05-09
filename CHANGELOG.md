@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.2.7](https://github.com/unzerdev/magento2/compare/3.2.6..3.2.7)
+### Added
+* Client's IP address in every request sent to Unzer API
+
 ## [3.2.6](https://github.com/unzerdev/magento2/compare/3.2.5..3.2.6)
 ### Fixed
 * Discount amount when taxes are applied
