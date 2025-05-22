@@ -44,6 +44,39 @@ define(
                 });
 
                 this.hideFormFields(fieldId);
+                this.observeCompanyType(fieldId);
+
+            },
+
+            observeCompanyType: function (fieldId) {
+                var self = this;
+                var container = document.getElementById(fieldId);
+                if (!container) {
+                    return;
+                }
+
+                var observer = new MutationObserver(function () {
+                    var selectElem = container.querySelector('.unzerCombobox.companyType');
+                    if (selectElem) {
+                        selectElem.addEventListener('change', function () {
+                            self.hidePrivateFields(fieldId);
+                        });
+                        observer.disconnect();
+                    }
+                });
+
+                observer.observe(container, {
+                    childList: true,
+                    subtree: true
+                });
+            },
+
+            hidePrivateFields: function (fieldId) {
+                var field = $('#' + fieldId);
+                field.find('.field.firstname, .field.lastname, .field.email').hide();
+                field.find('.unzerUI.form>.checkboxLabel').hide();
+                field.find('.unzerUI.form>.salutation-unzer-paylater-invoice-b2b-customer').hide();
+                console.log('Private fields hidden for:', fieldId);
             },
 
             hideFormFields: function (fieldId) {
