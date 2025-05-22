@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Unzer\PAPI\Helper;
@@ -125,11 +126,12 @@ class Order
     {
         $basket = $this->createBasket($order);
         $vatRate = 0;
+        $basketTotal = 0;
 
         if ($order->getShippingAmount() > 0) {
-            $basket->addBasketItem(
-                $this->createShippingItem($order)
-            );
+            $shippingItem = $this->createShippingItem($order);
+            $basket->addBasketItem($shippingItem);
+            $basketTotal += $shippingItem->getAmountPerUnitGross();
         }
 
         foreach ($order->getAllVisibleItems() as $orderItem) {
@@ -141,18 +143,28 @@ class Order
                 continue;
             }
 
-            $basket->addBasketItem(
-                $this->createBasketItem($orderItem)
-            );
+            $item = $this->createBasketItem($orderItem);
+            $basket->addBasketItem($item);
 
-            if($orderItem->getTaxPercent() !== null){
+            if ($orderItem->getTaxPercent() !== null) {
                 $vatRate = (float)$orderItem->getTaxPercent();
             }
+
+            $basketTotal += $item->getAmountPerUnitGross() * $item->getQuantity();
         }
 
         if (abs($order->getBaseDiscountAmount()) > 0) {
+            $vaucherItem = $this->createVoucherItem($order, $vatRate);
+            $basket->addBasketItem($vaucherItem);
+            $basketTotal -= abs($vaucherItem->getAmountDiscountPerUnitGross());
+        }
+
+        $totalOrder = $order->getBaseGrandTotal();
+        $difference = round($totalOrder - $basketTotal, 2);
+
+        if (abs($difference) > 0) {
             $basket->addBasketItem(
-                $this->createVoucherItem($order, $vatRate)
+                $this->createRoundingItem($difference)
             );
         }
 
@@ -208,6 +220,25 @@ class Order
         $basketItem->setType($orderItem->getIsVirtual() ? BasketItemTypes::DIGITAL : BasketItemTypes::GOODS);
 
         return $basketItem;
+    }
+
+
+    private function createRoundingItem(float $amount): BasketItem
+    {
+        $item = new BasketItem();
+        $item->setType(BasketItemTypes::VOUCHER);
+        $item->setTitle('Rounding Adjustment');
+        $item->setQuantity(1);
+        $item->setVat(0.0);
+
+        if ($amount < 0) {
+            $item->setAmountDiscountPerUnitGross(abs($amount));
+        }
+        if ($amount > 0) {
+            $item->setAmountPerUnitGross($amount);
+        }
+
+        return $item;
     }
 
     /**
