@@ -16,52 +16,20 @@
             <!--/ko-->
         </div>
 
-        <form class="unzerUI form" novalidate>
-            <div class="field">
-                <div id="unzer-card-element-id-number" class="unzerInput"></div>
-            </div>
-            <div class="two fields">
-                <div class="field eight wide">
-                    <div id="unzer-card-element-id-expiry" class="unzerInput"></div>
-                </div>
-                <div class="field eight wide">
-                    <div id="unzer-card-element-id-cvc" class="unzerInput"></div>
-                </div>
-            </div>
-            <div class="field">
-                <div id="unzer-card-element-id-holder" class="unzerInput"></div>
-            </div>
-            <!-- ko if: (isVaultEnabled())-->
-                <div class="field">
-                    <div class="unzerUI checkbox">
-                       <input type="checkbox"
-                           name="vault[is_enabled]"
-                           class="checkbox"
-                           data-bind="attr: {'id': getCode() + '_enable_vault'}, checked: vaultEnabler.isActivePaymentTokenEnabler"/>
-                       <label class="label" data-bind="attr: {'for': getCode() + '_enable_vault'}">
-                           <span><!-- ko i18n: 'Save for later use.'--><!-- /ko --></span>
-                       </label>
-                    </div>
-                </div>
-            <!-- /ko -->
-            <div class="field">
-                <button class="unzerUI primary button fluid"
-                        data-bind="
+        <unzer-payment disableCTP>
+            <unzer-card></unzer-card>
+        </unzer-payment>
+        <unzer-checkout id="unzer-checkout">
+            <button id="unzer-pay-button" class="button action primary checkout"
+                    data-bind="
                         click: placeOrder,
                         attr: {title: $t('Place Order')},
                         css: {disabled: !isPlaceOrderActionAllowed() || !allTermsChecked()},
-                        enable: (getCode() == isChecked() && allInputsValid())
+                        enable: (getCode() == isChecked())
                         "
-                        type="submit">
-                    <span data-bind="i18n: 'Place Order'"></span>
-                </button>
-            </div>
-        </form>
-
-        <div class="checkout-agreements-block">
-            <!-- ko foreach: $parent.getRegion('before-place-order') -->
-            <!-- ko template: getTemplate() --><!-- /ko -->
-            <!--/ko-->
-        </div>
+                    type="submit">
+                <span data-bind="i18n: 'Place Order'"></span>
+            </button>
+        </unzer-checkout>
     </div>
 </div>

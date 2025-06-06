@@ -21,7 +21,7 @@
                 <value id="unzer-api-heidelpay-deprecated" type="host">https://api.heidelpay.com</value>
                 <value id="unzer-api-sbx-heidelpay-deprecated" type="host">https://sbx-api.heidelpay.com</value>
                 <value id="unzer-api-4" type="host">https://sbx-api.unzer.com</value>
-                
+
                 <!-- Payment Frames -->
                 <value id="unzer-payment-1" type="host">https://payment.unzer.com</value>
                 <value id="unzer-payment-heidelpay-deprecated" type="host">https://payment.heidelpay.com</value>

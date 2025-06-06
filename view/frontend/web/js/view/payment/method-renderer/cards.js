@@ -1,7 +1,7 @@
 define(
     [
         'ko',
-        'Unzer_PAPI/js/view/payment/method-renderer/base',
+        'Unzer_PAPI/js/view/payment/method-renderer/basev2',
         'Magento_Vault/js/view/payment/vault-enabler'
     ],
     function (ko, Component, VaultEnabler) {
@@ -10,12 +10,6 @@ define(
         return Component.extend({
             defaults: {
                 isActivePaymentTokenEnabler: false,
-                fields: {
-                    cvc: {valid: null},
-                    expiry: {valid: null},
-                    number: {valid: null},
-                    holder: {valid: null},
-                },
                 template: 'Unzer_PAPI/payment/cards'
             },
 
@@ -27,54 +21,6 @@ define(
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
 
                 return this;
-            },
-
-            initializeForm: function () {
-                const self = this;
-
-                this.resourceProvider = this.sdk.Card();
-                this.resourceProvider.create('number', {
-                    containerId: 'unzer-card-element-id-number',
-                    onlyIframe: false
-                });
-                this.resourceProvider.create('expiry', {
-                    containerId: 'unzer-card-element-id-expiry',
-                    onlyIframe: false
-                });
-                this.resourceProvider.create('cvc', {
-                    containerId: 'unzer-card-element-id-cvc',
-                    onlyIframe: false
-                });
-                this.resourceProvider.create('holder', {
-                    containerId: 'unzer-card-element-id-holder',
-                    onlyIframe: false
-                });
-
-                this.fields.cvc.valid = ko.observable(false);
-                this.fields.expiry.valid = ko.observable(false);
-                this.fields.number.valid = ko.observable(false);
-                this.fields.holder.valid = ko.observable(false);
-
-                this.resourceProvider.addEventListener('change', function (event) {
-                    if ("type" in event) {
-                        self.fields[event.type].valid("success" in event && event.success);
-                    }
-                });
-            },
-
-            allInputsValid: function () {
-                const self = this;
-
-                return ko.computed(function () {
-                    return self.fields.cvc.valid() &&
-                        self.fields.expiry.valid() &&
-                        self.fields.number.valid() &&
-                        self.fields.holder.valid();
-                })();
-            },
-
-            validate: function () {
-                return this.allInputsValid();
             },
 
             /**
