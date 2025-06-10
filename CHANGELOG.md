@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.2.9](https://github.com/unzerdev/magento2/compare/3.2.8..3.2.9)
+### Changed
+*  Hide first name, last name and email fields for Invoice B2B payment method
+
 ## [3.2.8](https://github.com/unzerdev/magento2/compare/3.2.7..3.2.8)
 ### Fixed
 * Rounding issue in case of total amount mismatch
