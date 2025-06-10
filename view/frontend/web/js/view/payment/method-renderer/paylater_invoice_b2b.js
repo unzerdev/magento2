@@ -44,6 +44,36 @@ define(
                 });
 
                 this.hideFormFields(fieldId);
+                this.observeCompanyType(fieldId);
+
+            },
+
+            observeCompanyType: function (fieldId) {
+                var self = this;
+                var container = document.getElementById(fieldId);
+                if (!container) {
+                    return;
+                }
+
+                var observer = new MutationObserver(function () {
+                    var selectElem = container.querySelector('.unzerCombobox.companyType');
+                    if (selectElem) {
+                        selectElem.addEventListener('change', function () {
+                            self.hidePrivateFields(fieldId);
+                        });
+                        observer.disconnect();
+                    }
+                });
+
+                observer.observe(container, {
+                    childList: true,
+                    subtree: true
+                });
+            },
+
+            hidePrivateFields: function (fieldId) {
+                var field = $('#' + fieldId);
+                field.find('.field.firstname, .field.lastname, .field.email').hide();
             },
 
             hideFormFields: function (fieldId) {
