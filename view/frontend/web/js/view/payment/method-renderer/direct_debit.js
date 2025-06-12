@@ -7,12 +7,13 @@ define(
         'Magento_Ui/js/model/messageList',
         'Unzer_PAPI/js/view/payment/method-renderer/basev2'
     ],
-    function ($,
-              ko,
-              $t,
-              placeOrderAction,
-              globalMessageList,
-              Component
+    function (
+        $,
+        ko,
+        $t,
+        placeOrderAction,
+        globalMessageList,
+        Component
     ) {
         'use strict';
 
@@ -34,7 +35,7 @@ define(
                 ]).then(() => {
                     const unzerCheckout = document.getElementById('unzer-checkout-unzer_direct_debit');
                     unzerCheckout.onPaymentSubmit = response => {
-                        if (response.submitResponse) {
+                        if (response.submitResponse && response.submitResponse.success) {
                             this.resourceId = response.submitResponse.data.id;
                             placeOrderAction(self.getData(), self.messageContainer)
                                 .done(function () {
