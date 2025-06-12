@@ -2,58 +2,69 @@ define(
     [
         'jquery',
         'ko',
-        'Unzer_PAPI/js/view/payment/method-renderer/base'
+        'mage/translate',
+        'Magento_Checkout/js/action/place-order',
+        'Magento_Ui/js/model/messageList',
+        'Unzer_PAPI/js/view/payment/method-renderer/basev2'
     ],
-    function ($, ko, Component) {
+    function ($,
+              ko,
+              $t,
+              placeOrderAction,
+              globalMessageList,
+              Component
+    ) {
         'use strict';
 
         return Component.extend({
             defaults: {
-                field: {valid: false},
                 template: 'Unzer_PAPI/payment/direct_debit'
             },
 
-            initializeForm: function () {
-                const self = this;
-
-                this.resourceProvider = this.sdk.SepaDirectDebit();
-                this.resourceProvider.create('sepa-direct-debit', {
-                    containerId: 'unzer-sepa-direct-debit-iban-field'
-                });
-
-                this.field.valid = ko.observable(false);
-
-                this.resourceProvider.addEventListener('change', function (event) {
-                    self.field.valid("success" in event && event.success);
-                });
-
-                const sepaMandateElement = document.querySelector('.sepa-direct-debit-mandate'),
-                    sepaMandateTexts = [
-                        $.mage.__('By signing this mandate form, you authorise %1 to send instructions to '
-                            + 'your bank to debit your account and your bank to debit your account in accordance with the '
-                            + 'instructions from %1.'),
-                        $.mage.__('Note: As part of your rights, you are entitled to a refund from your '
-                            + 'bank under the terms and conditions of your agreement with your bank. A refund must be claimed '
-                            + 'within 8 weeks starting from the date on which your account was debited. Your rights regarding '
-                            + 'this SEPA mandate are explained in a statement that you can obtain from your bank.'),
-                        $.mage.__('In case of refusal or rejection of direct debit payment I instruct my '
-                            + 'bank irrevocably to inform %1 or any third party upon request about my name, address and date '
-                            + 'of birth.'),
-                    ];
-
-                sepaMandateTexts.forEach(function (text) {
-                    var p = document.createElement("p");
-                    p.innerText = text.replace(/%1/g, window.checkoutConfig.payment.unzer_direct_debit.merchantName);
-                    sepaMandateElement.appendChild(p);
-                });
+            createSpecificPaymentElement: function () {
+                return $('<unzer-sepa-direct-debit>');
             },
 
-            allInputsValid: function () {
-                return this.field.valid();
-            },
+            getPlaceOrderDeferredObject: function () {
+                let deferred = $.Deferred(),
+                    self = this;
 
-            validate: function () {
-                return this.allInputsValid();
+                Promise.all([
+                    customElements.whenDefined('unzer-sepa-direct-debit')
+                ]).then(() => {
+                    const unzerCheckout = document.getElementById('unzer-checkout-unzer_direct_debit');
+                    unzerCheckout.onPaymentSubmit = response => {
+                        if (response.submitResponse) {
+                            this.resourceId = response.submitResponse.data.id;
+                            placeOrderAction(self.getData(), self.messageContainer)
+                                .done(function () {
+                                    deferred.resolve.apply(deferred, arguments);
+                                })
+                                .fail(function (request) {
+                                    globalMessageList.addErrorMessage({
+                                        message: request.responseJSON.message
+                                    });
+                                    deferred.reject(request.responseJSON.message);
+                                });
+                        } else {
+                            globalMessageList.addErrorMessage({
+                                message: 'There was an error placing your order. ' + response.submitResponse.message
+                            });
+                            deferred.reject($t('There was an error placing your order. ' + response.submitResponse.message));
+                        }
+                    };
+                }).catch(error => {
+                    globalMessageList.addErrorMessage({
+                        message: 'There was an error placing your order. ' + error
+                    });
+                    deferred.reject($t('There was an error placing your order. ' + error));
+                });
+
+                return deferred.fail(function (error) {
+                    globalMessageList.addErrorMessage({
+                        message: error
+                    });
+                });
             }
         });
     }

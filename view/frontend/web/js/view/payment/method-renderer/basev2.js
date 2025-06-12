@@ -11,7 +11,7 @@ define(
         'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/view/payment/default',
         'Magento_Ui/js/model/messageList',
-        'Magento_Ui/js/lib/view/utils/dom-observer'
+        'Magento_Checkout/js/model/quote'
     ],
     function (
         $,
@@ -24,7 +24,8 @@ define(
         placeOrderAction,
         fullScreenLoader,
         Component,
-        globalMessageList
+        globalMessageList,
+        quote
     ) {
         'use strict';
 
@@ -55,7 +56,82 @@ define(
                         console.error('Failed to load Unzer scripts: ' + error)
                     });
 
+                let self = this;
+                // Subscribe to the selected payment method observable
+                quote.paymentMethod.subscribe(function (newPaymentMethod) {
+                    if (!newPaymentMethod || newPaymentMethod.method !== self.getCode()) {
+                        self.onUnselected();
+                    }
+                });
+
                 return this;
+            },
+
+            selectPaymentMethod: function () {
+                let retVal = this._super();
+
+                termsChecked.init(this);
+
+                const componentContainer = $('#unzer-component-' + this.getCode());
+                componentContainer.empty();
+                const unzerPayment = this.createUnzerPaymentElement();
+                const specificPaymentElement = this.createSpecificPaymentElement();
+                unzerPayment.append(specificPaymentElement);
+                const unzerCheckout = this.createUnzerCheckoutPaymentElement();
+
+                componentContainer.append(unzerPayment);
+                componentContainer.append(unzerCheckout);
+
+                return retVal;
+            },
+
+            createUnzerPaymentElement: function () {
+                const unzerPaymentElementId = 'unzer-payment-' + this.getCode();
+
+                return $('<unzer-payment>')
+                    .attr('id', unzerPaymentElementId)
+                    .attr('publicKey', window.checkoutConfig.payment.unzer.publicKey)
+                    .attr('locale', window.checkoutConfig.payment.unzer.locale)
+                    .attr('disableCTP', true);
+            },
+
+            createSpecificPaymentElement: function () {
+                return '';
+            },
+
+            createUnzerCheckoutPaymentElement: function () {
+                const unzerCheckoutId = 'unzer-checkout-' + this.getCode();
+                const unzerCheckout = $('<unzer-checkout>')
+                    .attr('id', unzerCheckoutId);
+
+                const unzerPayButtonId = 'unzer-pay-button-' + this.getCode();
+                const payButton = $('<button>')
+                    .attr('id', unzerPayButtonId)
+                    .addClass('button action primary checkout')
+                    .attr('type', 'submit')
+                    .attr('data-bind', `
+                        click: placeOrder,
+                        attr: {title: 'Place Order'}, // Reverting to $t directly (Magento's scope)
+                        css: {disabled: !isPlaceOrderActionAllowed() || !allTermsChecked()}
+                    `);
+
+                const buttonTextSpan = $('<span>').html($t('Place Order'));
+                payButton.append(buttonTextSpan);
+                unzerCheckout.append(payButton);
+
+                ko.applyBindings(this, payButton[0]);
+
+                return unzerCheckout;
+            },
+
+            /**
+             * Triggered when this payment method is unselected
+             */
+            onUnselected: function () {
+                const componentContainer = $('#unzer-component-' + this.getCode());
+
+                // Clear the container div for any previous components
+                componentContainer.empty();
             },
 
             _getMethodConfig: function (configFieldName) {
@@ -90,33 +166,6 @@ define(
                 });
             },
 
-            selectPaymentMethod: function () {
-                let retVal = this._super();
-
-                termsChecked.init(this);
-
-                return retVal;
-            },
-
-            initializeForm: function () {
-                const unzerPaymentElement = document.querySelector('unzer-payment');
-
-                if (unzerPaymentElement) {
-                    // Inject or update the publicKey and locale attributes
-                    unzerPaymentElement.setAttribute('publicKey', window.checkoutConfig.payment.unzer.publicKey);
-                    unzerPaymentElement.setAttribute('locale', window.checkoutConfig.payment.unzer.locale);
-                } else {
-                    console.error('Unzer payment element not found in the DOM.');
-                }
-
-                const unzerPayButton = document.getElementById('unzer-pay-button');
-
-                if (unzerPayButton) {
-                    unzerPayButton.classList.add('disabled');
-                }
-
-            },
-
             afterPlaceOrder: function () {
                 fullScreenLoader.startLoader();
                 window.location.replace(url.build(this.redirectUrl));
@@ -127,7 +176,7 @@ define(
                     'method': this.item.method,
                     'po_number': null,
                     'additional_data': {
-                        'customer_id': this.customer !== null && this.customer() !== null ? this.customer().id : null,
+                        'customer_id': this.customer,
                         'resource_id': this.resourceId
                     }
                 };
@@ -140,39 +189,12 @@ define(
                 return data;
             },
 
-
-            getPlaceOrderDeferredObject: function () {
-                let deferred = $.Deferred(),
-                    promises,
-                    self = this;
-
-                Promise.all([customElements.whenDefined('unzer-payment'), customElements.whenDefined('unzer-card')]).then(() => {
-                    const unzerPaymentElement = document.getElementById('unzer-payment');
-                    const unzerCheckout = document.getElementById('unzer-checkout');
-                    unzerCheckout.onPaymentSubmit = response => {
-                        if (response.submitResponse && response.submitResponse.status === 'SUCCESS') {
-                            this.resourceId = response.submitResponse.data.id;
-                            placeOrderAction(self.getData(), self.messageContainer)
-                                .done(function () {
-                                    deferred.resolve.apply(deferred, arguments);
-                                })
-                                .fail(function (request) {
-                                    deferred.reject(request.responseJSON.message);
-                                });
-                        } else {
-                            deferred.reject($t('There was an error placing your order. ' + response.submitResponse.message));
-                        }
-                    };
-                }).catch(error => {
-                    deferred.reject($t('There was an error placing your order. ' + error));
-                });
-
-                return deferred.fail(function (error) {
-                    globalMessageList.addErrorMessage({
-                        message: error
-                    });
-                });
-            }
+            initializeForm: function () {
+                // if payment method is initially selected
+                if (quote.paymentMethod() && quote.paymentMethod().method === this.getCode()) {
+                    this.selectPaymentMethod();
+                }
+            },
         });
     }
 );

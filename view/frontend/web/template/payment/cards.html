@@ -16,20 +16,12 @@
             <!--/ko-->
         </div>
 
-        <unzer-payment disableCTP>
-            <unzer-card></unzer-card>
-        </unzer-payment>
-        <unzer-checkout id="unzer-checkout">
-            <button id="unzer-pay-button" class="button action primary checkout"
-                    data-bind="
-                        click: placeOrder,
-                        attr: {title: $t('Place Order')},
-                        css: {disabled: !isPlaceOrderActionAllowed() || !allTermsChecked()},
-                        enable: (getCode() == isChecked())
-                        "
-                    type="submit">
-                <span data-bind="i18n: 'Place Order'"></span>
-            </button>
-        </unzer-checkout>
+        <div id="unzer-component-unzer_cards"></div>
+
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
     </div>
 </div>
