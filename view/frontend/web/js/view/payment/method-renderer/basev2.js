@@ -44,7 +44,8 @@ define(
                 customerValid: null,
                 resourceId: null,
                 resourceProvider: null,
-                template: null
+                template: null,
+                customersBirthDay: null,
             },
 
             initialize: function () {
@@ -90,7 +91,7 @@ define(
 
                 return $('<unzer-payment>')
                     .attr('id', unzerPaymentElementId)
-                    .attr('publicKey', window.checkoutConfig.payment.unzer.publicKey)
+                    .attr('publicKey', this.getPublicKey())
                     .attr('locale', window.checkoutConfig.payment.unzer.locale)
                     .attr('disableCTP', true);
             },
@@ -122,6 +123,16 @@ define(
                 ko.applyBindings(this, payButton[0]);
 
                 return unzerCheckout;
+            },
+
+            getPublicKey: function () {
+                let overridePublicKey = this._getMethodOverrideApiKey();
+
+                if (overridePublicKey) {
+                    return overridePublicKey;
+                }
+
+                return window.checkoutConfig.payment.unzer.publicKey;
             },
 
             /**
@@ -177,7 +188,8 @@ define(
                     'po_number': null,
                     'additional_data': {
                         'customer_id': this.customer,
-                        'resource_id': this.resourceId
+                        'resource_id': this.resourceId,
+                        'birthDate': this.customersBirthDay
                     }
                 };
 
