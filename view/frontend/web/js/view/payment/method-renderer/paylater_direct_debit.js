@@ -2,81 +2,72 @@ define(
     [
         'jquery',
         'ko',
-        'Unzer_PAPI/js/view/payment/method-renderer/base',
-        'Unzer_PAPI/js/model/checkout/threat-metrix',
-        'Unzer_PAPI/js/model/checkout/address-updater',
+        'mage/translate',
+        'Magento_Checkout/js/action/place-order',
+        'Magento_Ui/js/model/messageList',
+        'Unzer_PAPI/js/view/payment/method-renderer/basev2'
     ],
-    function ($, ko, Component, threatMetrix, addressUpdater) {
+    function (
+        $,
+        ko,
+        $t,
+        placeOrderAction,
+        globalMessageList,
+        Component
+    ) {
         'use strict';
 
         return Component.extend({
-            isThreatMetrixNeeded: true,
-
             defaults: {
-                isIbanHolderValid: ko.observable(false),
-                template: 'Unzer_PAPI/payment/paylater_direct_debit',
-                fieldId: 'unzer-paylater-direct-debit-customer',
-                errorFieldId: 'unzer-paylater-direct-debit-customer-error'
+                template: 'Unzer_PAPI/payment/paylater_direct_debit'
             },
 
-            initializeForm: function () {
-                let self = this;
+            createSpecificPaymentElement: function () {
+                return $('<unzer-paylater-direct-debit>');
+            },
 
-                this.resourceProvider = this.sdk.PaylaterDirectDebit();
-                this.initializeCustomerForm(
-                    this.fieldId,
-                    this.errorFieldId
-                );
+            getPlaceOrderDeferredObject: function () {
+                let deferred = $.Deferred(),
+                    self = this;
 
-                addressUpdater.registerSubscribers(this);
-
-                self.isIbanHolderValid = ko.observable(false);
-
-                this.resourceProvider.addEventListener('change', function (event) {
-                    self.isIbanHolderValid("success" in event && event.success);
+                Promise.all([
+                    customElements.whenDefined('unzer-paylater-direct-debit')
+                ]).then(() => {
+                    const unzerCheckoutElementId = 'unzer-checkout-' + this.getCode();
+                    const unzerCheckout = document.getElementById(unzerCheckoutElementId);
+                    unzerCheckout.onPaymentSubmit = response => {
+                        if (response.submitResponse && response.submitResponse.success) {
+                            this.resourceId = response.submitResponse.data.id;
+                            this.customersBirthDay = document.querySelector('unzer-paylater-direct-debit').shadowRoot?.querySelector('uds-input-date[name="birthDate"]').value;
+                            placeOrderAction(self.getData(), self.messageContainer)
+                                .done(function () {
+                                    deferred.resolve.apply(deferred, arguments);
+                                })
+                                .fail(function (request) {
+                                    globalMessageList.addErrorMessage({
+                                        message: request.responseJSON.message
+                                    });
+                                    deferred.reject(request.responseJSON.message);
+                                });
+                        } else {
+                            globalMessageList.addErrorMessage({
+                                message: 'There was an error placing your order. ' + response.submitResponse.message
+                            });
+                            deferred.reject($t('There was an error placing your order. ' + response.submitResponse.message));
+                        }
+                    };
+                }).catch(error => {
+                    globalMessageList.addErrorMessage({
+                        message: 'There was an error placing your order. ' + error
+                    });
+                    deferred.reject($t('There was an error placing your order. ' + error));
                 });
-            },
 
-            _initializeCustomerFormForB2cCustomer: function (fieldId, errorFieldId, customer) {
-                threatMetrix.init(customer.threat_metrix_id, this);
-
-                this.resourceProvider.create('paylater-direct-debit', {
-                    containerId: fieldId + '-ibanholder',
-                    resourceId: ''
+                return deferred.fail(function (error) {
+                    globalMessageList.addErrorMessage({
+                        message: error
+                    });
                 });
-
-                this.customerProvider = this.sdk.Customer();
-                this.customerProvider.initFormFields(customer);
-                this.customerProvider.create({
-                    containerId: fieldId,
-                    errorHolderId: errorFieldId,
-                    showHeader: false,
-                    paymentTypeName: 'paylater-direct-debit'
-                });
-
-                this.hideFormFields(fieldId);
-            },
-
-            hideFormFields: function (fieldId) {
-                this._super(fieldId);
-
-                let field = $('#' + fieldId);
-
-                field.find('.field').filter('.checkbox-billingAddress, .email').hide();
-                field.find('.field').filter(
-                    '.billing-name, .billing-street, .billing-zip, .billing-city, :has(.billing-country)'
-                ).hide();
-
-                field.find('.unzerUI.form>.checkboxLabel').hide();
-                field.find('.unzerUI.form>.salutation-unzer-paylater-direct-debit-customer').hide();
-            },
-
-            allInputsValid: function () {
-                return this.customerValid() && this.isIbanHolderValid();
-            },
-
-            validate: function () {
-                return this.allInputsValid();
             }
         });
     }
