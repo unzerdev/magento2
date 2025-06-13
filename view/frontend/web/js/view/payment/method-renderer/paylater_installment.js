@@ -2,101 +2,73 @@ define(
     [
         'jquery',
         'ko',
-        'Unzer_PAPI/js/view/payment/method-renderer/base',
-        'Unzer_PAPI/js/model/checkout/threat-metrix',
-        'Unzer_PAPI/js/model/checkout/address-updater',
-        'Magento_Checkout/js/model/quote'
+        'mage/translate',
+        'Magento_Checkout/js/action/place-order',
+        'Magento_Ui/js/model/messageList',
+        'Unzer_PAPI/js/view/payment/method-renderer/basev2'
     ],
-    function ($, ko, Component, threatMetrix, addressUpdater, quote) {
+    function (
+        $,
+        ko,
+        $t,
+        placeOrderAction,
+        globalMessageList,
+        Component
+    ) {
         'use strict';
 
         return Component.extend({
             isThreatMetrixNeeded: true,
 
             defaults: {
-                template: 'Unzer_PAPI/payment/paylater_installment',
-                quote: quote,
-                paymentDataValid: ko.observable(false),
-                fieldId: 'unzer-paylater-installment-customer',
-                errorFieldId: 'unzer-paylater-installment-customer-error'
+                template: 'Unzer_PAPI/payment/paylater_installment'
             },
 
-            initializeForm: function () {
-
-                let self = this;
-
-                this.resourceProvider = this.sdk.PaylaterInstallment();
-                this.initializeCustomerForm(this.fieldId, this.errorFieldId);
-
-                addressUpdater.registerSubscribers(this);
-
-                this.quote.totals.subscribe(this._updatePlans.bind(this));
-
-                this.resourceProvider.addEventListener('paylaterInstallmentEvent', function (event) {
-                    self.paymentDataValid(false);
-                    if (event.action === 'validate') {
-                        self.paymentDataValid('success' in event && event.success);
-                    }
-                });
+            createSpecificPaymentElement: function () {
+                return $('<unzer-paylater-installment>');
             },
 
-            _initializeCustomerFormForB2cCustomer: function (fieldId, errorFieldId, customer) {
-                threatMetrix.init(customer.threat_metrix_id, this);
+            getPlaceOrderDeferredObject: function () {
+                let deferred = $.Deferred(),
+                    self = this;
 
-                this.resourceProvider.create({
-                    country: this.quote.billingAddress().countryId,
-                    containerId: fieldId + '-plan',
-                    customerType: 'B2C',
-                    amount: (this.quote.totals() ? this.quote.totals() : this.quote)['grand_total'],
-                    currency: (this.quote.totals() ? this.quote.totals() : this.quote)['quote_currency_code'],
-                    errorHolderId: errorFieldId
-                });
-
-                this.customerProvider = this.sdk.Customer();
-                this.customerProvider.initFormFields(customer);
-                this.customerProvider.create({
-                    containerId: fieldId,
-                    errorHolderId: errorFieldId,
-                    showHeader: false,
-                    paymentTypeName: 'paylater-installment'
-                });
-
-                this.hideFormFields(fieldId);
-            },
-
-            _updatePlans: function () {
-                if (document.getElementById(this.fieldId + '-plan') && document.getElementById(this.fieldId + '-plan').hasChildNodes()) {
-                    let params = {
-                        country: this.quote.billingAddress()['countryId'],
-                        customerType: 'B2C',
-                        amount: this.quote.totals()['grand_total'],
-                        currency: this.quote.totals()['quote_currency_code']
+                Promise.all([
+                    customElements.whenDefined('unzer-paylater-installment')
+                ]).then(() => {
+                    const unzerCheckoutElementId = 'unzer-checkout-' + this.getCode();
+                    const unzerCheckout = document.getElementById(unzerCheckoutElementId);
+                    unzerCheckout.onPaymentSubmit = response => {
+                        if (response.submitResponse && response.submitResponse.success)  {
+                            this.resourceId = response.submitResponse.data.id;
+                            placeOrderAction(self.getData(), self.messageContainer)
+                                .done(function () {
+                                    deferred.resolve.apply(deferred, arguments);
+                                })
+                                .fail(function (request) {
+                                    globalMessageList.addErrorMessage({
+                                        message: request.responseJSON.message
+                                    });
+                                    deferred.reject(request.responseJSON.message);
+                                });
+                        } else {
+                            globalMessageList.addErrorMessage({
+                                message: 'There was an error placing your order. ' + response.submitResponse.message
+                            });
+                            deferred.reject($t('There was an error placing your order. ' + response.submitResponse.message));
+                        }
                     };
+                }).catch(error => {
+                    globalMessageList.addErrorMessage({
+                        message: 'There was an error placing your order. ' + error
+                    });
+                    deferred.reject($t('There was an error placing your order. ' + error));
+                });
 
-                    this.resourceProvider.fetchPlans(params);
-                }
-            },
-
-            hideFormFields: function (fieldId) {
-                this._super(fieldId);
-
-                let field = $('#' + fieldId);
-
-                field.find('.field').filter('.checkbox-billingAddress, .email').hide();
-                field.find('.field').filter(
-                    '.billing-name, .billing-street, .billing-zip, .billing-city, :has(.billing-country)'
-                ).hide();
-
-                field.find('.unzerUI.form>.checkboxLabel').hide();
-                field.find('.unzerUI.form>.salutation-unzer-paylater-installment-customer').hide();
-            },
-
-            allInputsValid: function () {
-                return this.customerValid() && this.paymentDataValid();
-            },
-
-            validate: function () {
-                return this.allInputsValid();
+                return deferred.fail(function (error) {
+                    globalMessageList.addErrorMessage({
+                        message: error
+                    });
+                });
             }
         });
     }
