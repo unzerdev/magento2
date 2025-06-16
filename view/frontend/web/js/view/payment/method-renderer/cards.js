@@ -21,7 +21,8 @@ define(
         return Component.extend({
             defaults: {
                 isActivePaymentTokenEnabler: false,
-                template: 'Unzer_PAPI/payment/cards'
+                template: 'Unzer_PAPI/payment/cards',
+                paymentCode: 'unzer-card',
             },
 
             initialize: function () {
@@ -32,10 +33,6 @@ define(
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
 
                 return this;
-            },
-
-            createSpecificPaymentElement: function () {
-                return $('<unzer-card>');
             },
 
             /**

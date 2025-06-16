@@ -35,6 +35,8 @@ define(
             allTermsChecked: termsChecked.allTermsChecked,
             isThreatMetrixNeeded: false,
             buttonNeeded: true,
+            paymentCode: null,
+            customersBirthDayNeeded: false,
 
             defaults: {
                 config: null,
@@ -98,7 +100,13 @@ define(
             },
 
             createSpecificPaymentElement: function () {
-                return '';
+                if (!this.paymentCode) {
+                    console.error("Payment code is null or undefined");
+
+                    return null;
+                }
+
+                return $(`<${this.paymentCode}>`);
             },
 
             createUnzerCheckoutPaymentElement: function () {
@@ -106,22 +114,22 @@ define(
                 const unzerCheckout = $('<unzer-checkout>')
                     .attr('id', unzerCheckoutId);
 
-                if(this.buttonNeeded) {
-                const unzerPayButtonId = 'unzer-pay-button-' + this.getCode();
-                const payButton = $('<button>')
-                    .attr('id', unzerPayButtonId)
-                    .addClass('button action primary checkout')
-                    .attr('type', 'submit')
-                    .attr('data-bind', `
+                if (this.buttonNeeded) {
+                    const unzerPayButtonId = 'unzer-pay-button-' + this.getCode();
+                    const payButton = $('<button>')
+                        .attr('id', unzerPayButtonId)
+                        .addClass('button action primary checkout')
+                        .attr('type', 'submit')
+                        .attr('data-bind', `
                         click: placeOrder,
                         attr: {title: 'Place Order'}, // Reverting to $t directly (Magento's scope)
                         css: {disabled: !isPlaceOrderActionAllowed() || !allTermsChecked()}
                     `);
 
-                const buttonTextSpan = $('<span>').html($t('Place Order'));
-                payButton.append(buttonTextSpan);
-                unzerCheckout.append(payButton);
-                ko.applyBindings(this, payButton[0]);
+                    const buttonTextSpan = $('<span>').html($t('Place Order'));
+                    payButton.append(buttonTextSpan);
+                    unzerCheckout.append(payButton);
+                    ko.applyBindings(this, payButton[0]);
                 }
 
                 return unzerCheckout;
@@ -209,6 +217,54 @@ define(
                     this.selectPaymentMethod();
                 }
             },
+
+            getPlaceOrderDeferredObject: function () {
+                let deferred = $.Deferred(),
+                    self = this;
+
+                Promise.all([
+                    customElements.whenDefined(this.paymentCode)
+                ]).then(() => {
+                    const unzerCheckoutElementId = 'unzer-checkout-' + this.getCode();
+                    const unzerCheckout = document.getElementById(unzerCheckoutElementId);
+                    unzerCheckout.onPaymentSubmit = response => {
+                        if (response.submitResponse && response.submitResponse.success) {
+                            this.resourceId = response.submitResponse.data.id;
+
+                            if (this.customersBirthDayNeeded) {
+                                this.customersBirthDay = document.querySelector(this.paymentCode).shadowRoot?.querySelector('uds-input-date[name="birthDate"]').value;
+                            }
+
+                            placeOrderAction(self.getData(), self.messageContainer)
+                                .done(function () {
+                                    deferred.resolve.apply(deferred, arguments);
+                                })
+                                .fail(function (request) {
+                                    globalMessageList.addErrorMessage({
+                                        message: request.responseJSON.message
+                                    });
+                                    deferred.reject(request.responseJSON.message);
+                                });
+                        } else {
+                            globalMessageList.addErrorMessage({
+                                message: 'There was an error placing your order. ' + response.submitResponse.message
+                            });
+                            deferred.reject($t('There was an error placing your order. ' + response.submitResponse.message));
+                        }
+                    };
+                }).catch(error => {
+                    globalMessageList.addErrorMessage({
+                        message: 'There was an error placing your order. ' + error
+                    });
+                    deferred.reject($t('There was an error placing your order. ' + error));
+                });
+
+                return deferred.fail(function (error) {
+                    globalMessageList.addErrorMessage({
+                        message: error
+                    });
+                });
+            }
         });
     }
 );
