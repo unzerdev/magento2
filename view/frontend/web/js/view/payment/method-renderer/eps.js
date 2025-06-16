@@ -21,6 +21,7 @@ define(
             defaults: {
                 template: 'Unzer_PAPI/payment/eps'
             },
+
             createSpecificPaymentElement: function () {
                 return $('<unzer-eps>');
             },
