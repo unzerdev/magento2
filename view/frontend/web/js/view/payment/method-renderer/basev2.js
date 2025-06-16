@@ -34,6 +34,7 @@ define(
             redirectUrl: 'unzer/payment/redirect',
             allTermsChecked: termsChecked.allTermsChecked,
             isThreatMetrixNeeded: false,
+            buttonNeeded: true,
 
             defaults: {
                 config: null,
@@ -105,6 +106,7 @@ define(
                 const unzerCheckout = $('<unzer-checkout>')
                     .attr('id', unzerCheckoutId);
 
+                if(this.buttonNeeded) {
                 const unzerPayButtonId = 'unzer-pay-button-' + this.getCode();
                 const payButton = $('<button>')
                     .attr('id', unzerPayButtonId)
@@ -119,8 +121,8 @@ define(
                 const buttonTextSpan = $('<span>').html($t('Place Order'));
                 payButton.append(buttonTextSpan);
                 unzerCheckout.append(payButton);
-
                 ko.applyBindings(this, payButton[0]);
+                }
 
                 return unzerCheckout;
             },

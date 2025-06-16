@@ -1,45 +1,35 @@
 define(
     [
         'jquery',
-        'Unzer_PAPI/js/view/payment/method-renderer/base',
-        'Magento_Checkout/js/model/quote',
-        '//pay.google.com/gp/p/js/pay.js'
+        'ko',
+        'mage/translate',
+        'Magento_Checkout/js/action/place-order',
+        'Magento_Ui/js/model/messageList',
+        'Unzer_PAPI/js/view/payment/method-renderer/basev2',
+        'Magento_Checkout/js/model/quote'
     ],
-    function ($, Component, quote) {
+    function (
+        $,
+        ko,
+        $t,
+        placeOrderAction,
+        globalMessageList,
+        Component,
+        quote
+    ) {
         'use strict';
 
         return Component.extend({
             defaults: {
                 template: 'Unzer_PAPI/payment/googlepay',
-                fieldId: 'unzer-googlepay-container',
-                errorFieldId: 'unzer-googlepay-error-holder',
-                quote: quote
+                buttonNeeded: false,
             },
 
-            initializeForm: function () {
-                this.resourceProvider = this.sdk.Googlepay();
-                this._initializeGooglePay();
+            selectPaymentMethod: function () {
+                let retVal = this._super();
 
-                this.allTermsChecked.subscribe((allTermsChecked) => {
-                    $('#gpay-button-online-api-id').prop('disabled', !allTermsChecked);
-                });
-            },
-
-            _initializeGooglePay: function () {
-                let self = this;
-
-                const paymentData = this.resourceProvider.initPaymentDataRequestObject(this._buildPaymentData());
-
-                this.resourceProvider.create(
-                    {
-                        containerId: self.fieldId,
-                    },
-                    paymentData
-                );
-            },
-
-            _buildPaymentData: function () {
-                return {
+                const unzerPaymentElement = document.getElementById('unzer-payment-unzer_googlepay');
+                unzerPaymentElement.setGooglePayData({
                     gatewayMerchantId: this._getMethodConfig('unzer_channel_id'),
                     merchantInfo: {
                         merchantId: this._getMethodConfig('merchant_id'),
@@ -47,36 +37,77 @@ define(
                     },
                     transactionInfo: {
                         countryCode: this._getMethodConfig('country_code'),
-                        totalPrice: String((this.quote.totals() ? this.quote.totals() : this.quote)['grand_total']),
-                        currencyCode: (this.quote.totals() ? this.quote.totals() : this.quote)['quote_currency_code'],
+                        currencyCode: (quote.totals() ? quote.totals() : quote)['quote_currency_code'],
+                        totalPrice: String((quote.totals() ? quote.totals() : quote)['grand_total'])
                     },
                     buttonOptions: {
                         buttonColor: this._getMethodConfig('button_color'),
-                        // border radius is not possible to set at the moment with unzer.js
                         buttonRadius: this._getMethodConfig('button_border_radius'),
                         buttonSizeMode: this._getMethodConfig('button_size_mode'),
                     },
                     allowedCardNetworks: this._getMethodConfig('allowed_card_networks'),
                     allowCreditCards: this._getMethodConfig('allow_credit_cards') === "1",
-                    allowPrepaidCards: this._getMethodConfig('allow_prepaid_cards') === "1",
-                    onPaymentAuthorizedCallback: (paymentData) => {
-                        this.paymentData = paymentData;
-                        const result = this.placeOrder();
-                        if (result) {
-                            return { status: 'success' };
+                    allowPrepaidCards: this._getMethodConfig('allow_prepaid_cards') === "1"
+                });
+
+                const unzerCheckoutElementId = 'unzer-checkout-' + this.getCode();
+                const unzerCheckout = document.getElementById(unzerCheckoutElementId);
+                unzerCheckout.onPaymentSubmit = response => {
+                    const result = this.placeOrder();
+                    if (result) {
+                        return {status: 'success'};
+                    } else {
+                        return {status: 'error', message: 'Unexpected error'}
+                    }
+                }
+                return retVal;
+            },
+
+            createSpecificPaymentElement: function () {
+                return $('<unzer-google-pay>');
+            },
+
+            getPlaceOrderDeferredObject: function () {
+                let deferred = $.Deferred(),
+                    self = this;
+
+                Promise.all([
+                    customElements.whenDefined('unzer-google-pay')
+                ]).then(() => {
+                    const unzerCheckoutElementId = 'unzer-checkout-' + this.getCode();
+                    const unzerCheckout = document.getElementById(unzerCheckoutElementId);
+                    unzerCheckout.onPaymentSubmit = response => {
+                        if (response.submitResponse && response.submitResponse.success) {
+                            this.resourceId = response.submitResponse.data.id;
+                            placeOrderAction(self.getData(), self.messageContainer)
+                                .done(function () {
+                                    deferred.resolve.apply(deferred, arguments);
+                                })
+                                .fail(function (request) {
+                                    globalMessageList.addErrorMessage({
+                                        message: request.responseJSON.message
+                                    });
+                                    deferred.reject(request.responseJSON.message);
+                                });
                         } else {
-                            return { status: 'error', message: 'Unexpected error' }
+                            globalMessageList.addErrorMessage({
+                                message: 'There was an error placing your order. ' + response.submitResponse.message
+                            });
+                            deferred.reject($t('There was an error placing your order. ' + response.submitResponse.message));
                         }
-                    },
-                };
-            },
+                    };
+                }).catch(error => {
+                    globalMessageList.addErrorMessage({
+                        message: 'There was an error placing your order. ' + error
+                    });
+                    deferred.reject($t('There was an error placing your order. ' + error));
+                });
 
-            allInputsValid: function () {
-                return true;
-            },
-
-            validate: function () {
-                return this.allInputsValid();
+                return deferred.fail(function (error) {
+                    globalMessageList.addErrorMessage({
+                        message: error
+                    });
+                });
             }
         });
     }
