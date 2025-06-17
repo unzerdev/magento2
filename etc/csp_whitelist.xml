@@ -9,6 +9,8 @@
                 <value id="jquery-js" type="host">https://code.jquery.com</value>
                 <value id="threatmetrix" type="host">https://h.online-metrix.net</value>
                 <value id="threatmetrix-64" type="host">https://h64.online-metrix.net</value>
+                <value id="unzer-ui-components" type="host">https://static-v2.unzer.com/v2/ui-components/</value>
+
             </values>
         </policy>
 
@@ -34,12 +36,17 @@
                 <value id="sbx" type="host">https://sbx-api.heidelpay.com/</value>
 
                 <value id="unzer-test-frame" type="host">https://static-cc.test.unzer.com</value>
+                <value id="unzer-ui-components" type="host">https://static-v2.unzer.com/v2/ui-components/</value>
+
             </values>
         </policy>
 
         <policy id="style-src">
             <values>
                 <value id="mastercard-src-ui-kit" type="host">https://sandbox.src.mastercard.com</value>
+                <value id="unzer-ui-components" type="host">https://static-v2.unzer.com/v2/ui-components/</value>
+
+
             </values>
         </policy>
 

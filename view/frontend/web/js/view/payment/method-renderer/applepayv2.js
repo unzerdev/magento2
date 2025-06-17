@@ -1,84 +1,108 @@
 define(
     [
         'jquery',
-        'Unzer_PAPI/js/view/payment/method-renderer/base',
-        'Magento_Checkout/js/model/quote',
-        '//applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js'
+        'ko',
+        'mage/translate',
+        'Magento_Ui/js/model/messageList',
+        'Magento_Checkout/js/action/place-order',
+        'Unzer_PAPI/js/view/payment/method-renderer/basev2',
+        'Magento_Checkout/js/model/quote'
     ],
-    function ($, Component, quote) {
+    function ($,
+              ko,
+              $t,
+              globalMessageList,
+              placeOrderAction,
+              Component,
+              quote) {
+
         'use strict';
 
         return Component.extend({
             defaults: {
-                template: 'Unzer_PAPI/payment/applepayv2'
+                template: 'Unzer_PAPI/payment/applepayv2',
+                buttonNeeded: false,
+                paymentCode: 'unzer-apple-pay'
             },
 
-            initialize: function () {
-                this._super();
+            selectPaymentMethod: function () {
+                let retVal = this._super();
 
-                return this;
-            },
-
-            initializeForm: function () {
-                const self = this;
-                if (!this.isApplePayAvailable()) {
-                    this.handleError("This device does not support Apple Pay!");
-                }
-                self.resourceProvider = this.sdk.ApplePay();
-            },
-
-            isApplePayAvailable: function () {
-                return window.ApplePaySession && ApplePaySession.canMakePayments();
-            },
-
-            startApplePaySession: function () {
-                let self = this;
-                window.checkoutConfig.quoteData.trigger_reload = new Date().getTime();
-
-                const supportedNetworks = window.checkoutConfig.payment.unzer_applepayv2.supportedNetworks.map((network) => network.toLowerCase())
-
-                const applePayPaymentRequest = {
-                    countryCode: quote.billingAddress().countryId,
-                    currencyCode: window.checkoutConfig.quoteData.quote_currency_code,
-                    totalLabel: window.checkoutConfig.payment.unzer_applepayv2.label, //display_name
-                    totalAmount: Number(window.checkoutConfig.quoteData.base_grand_total).toFixed(2),
-                    supportedNetworks: supportedNetworks,
-                    merchantCapabilities: window.checkoutConfig.payment.unzer_applepayv2.merchantCapabilities,
-                    requiredShippingContactFields: [],
-                    requiredBillingContactFields: [],
-                    total: {
-                        label: window.checkoutConfig.payment.unzer_applepayv2.label,
-                        amount: Number(window.checkoutConfig.quoteData.base_grand_total).toFixed(2)
-                    },
-                };
-
-                const session = this.resourceProvider.initApplePaySession(applePayPaymentRequest, 6);
-
-                session.onpaymentauthorized = function(event) {
-                    const paymentData = event.payment.token.paymentData;
-                    session.completePayment({status: window.ApplePaySession.STATUS_SUCCESS});
-                    self.paymentData = paymentData;
-
-                    self.placeOrder();
-                };
-
-                session.onpaymentmethodselected = function(event) {
-                    let update = {
-                        newTotal: {
-                            label: window.checkoutConfig.payment.unzer_applepayv2.label,
-                            type: "final",
-                            amount: Number(window.checkoutConfig.quoteData.base_grand_total).toFixed(2)
+                this.waitForSetApplePayData();
+                const unzerCheckoutElementId = 'unzer-checkout-' + this.getCode();
+                const unzerCheckout = document.getElementById(unzerCheckoutElementId);
+                unzerCheckout.onPaymentSubmit = response => {
+                    if (response.submitResponse && response.submitResponse.success) {
+                        this.resourceId = response.submitResponse.data.id;
+                        const result = this.placeOrder();
+                        if (result) {
+                            return {status: 'success'};
                         }
-                    };
+                    }
 
-                    session.completePaymentMethodSelection(update);
-                };
+                    return {status: 'error', message: 'Unexpected error'}
 
-                session.begin();
+                }
+                return retVal;
             },
 
-            handleError: function (message) {
-                $('#unzer-applepay-error').html(message);
+            waitForSetApplePayData: function (maxRetries = 10, interval = 500) {
+                const unzerPaymentElement = document.getElementById('unzer-payment-' + this.getCode());
+
+                if (unzerPaymentElement && typeof unzerPaymentElement.setApplePayData === 'function') {
+                    const supportedNetworks = window.checkoutConfig.payment.unzer_applepayv2.supportedNetworks.map((network) => network.toLowerCase());
+
+                    unzerPaymentElement.setApplePayData({
+                        countryCode: quote.billingAddress().countryId,
+                        currencyCode: window.checkoutConfig.quoteData.quote_currency_code,
+                        totalLabel: window.checkoutConfig.payment.unzer_applepayv2.label,
+                        totalAmount: Number(window.checkoutConfig.quoteData.base_grand_total).toFixed(2),
+                        supportedNetworks: supportedNetworks,
+                        merchantCapabilities: window.checkoutConfig.payment.unzer_applepayv2.merchantCapabilities,
+                        requiredShippingContactFields: [],
+                        requiredBillingContactFields: [],
+                        total: {
+                            label: window.checkoutConfig.payment.unzer_applepayv2.label,
+                            amount: Number(window.checkoutConfig.quoteData.base_grand_total).toFixed(2)
+                        },
+                    });
+                } else if (maxRetries > 0) {
+                    console.log('Waiting for setApplePayData function to be available...');
+                    setTimeout(() => this.waitForSetApplePayData(maxRetries - 1, interval), interval);
+                } else {
+                    console.error('setApplePayData is not available after multiple retries.');
+                }
+            },
+
+            getPlaceOrderDeferredObject: function () {
+                let deferred = $.Deferred(),
+                    self = this;
+
+                Promise.all([
+                    customElements.whenDefined(this.paymentCode)
+                ]).then(() => {
+                    placeOrderAction(self.getData(), self.messageContainer)
+                        .done(function () {
+                            deferred.resolve.apply(deferred, arguments);
+                        })
+                        .fail(function (request) {
+                            globalMessageList.addErrorMessage({
+                                message: request.responseJSON.message
+                            });
+                            deferred.reject(request.responseJSON.message);
+                        });
+                }).catch(error => {
+                    globalMessageList.addErrorMessage({
+                        message: 'There was an error placing your order. ' + error
+                    });
+                    deferred.reject($t('There was an error placing your order. ' + error));
+                });
+
+                return deferred.fail(function (error) {
+                    globalMessageList.addErrorMessage({
+                        message: error
+                    });
+                });
             },
         });
     },
