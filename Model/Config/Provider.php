@@ -48,6 +48,7 @@ class Provider implements ConfigProviderInterface
         Config::METHOD_GOOGLEPAY,
         Config::METHOD_TWINT,
         Config::METHOD_OPEN_BANKING,
+        Config::METHOD_KLARNA
     ];
 
     /**

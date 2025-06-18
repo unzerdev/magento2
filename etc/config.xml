@@ -475,6 +475,22 @@
                 <can_use_internal>0</can_use_internal>
                 <model>Unzer\PAPI\Model\Method\OpenBanking</model>
             </unzer_open_banking>
+            <unzer_klarna>
+                <active>0</active>
+                <payment_action>order</payment_action>
+                <order_payment_action>authorize</order_payment_action>
+                <title><![CDATA[Klarna]]></title>
+                <allowspecific>0</allowspecific>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_order>1</can_order>
+                <can_void>1</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <model>Unzer\PAPI\Model\Method\Klarna</model>
+            </unzer_klarna>
         </payment>
     </default>
 </config>

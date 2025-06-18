@@ -78,4 +78,7 @@
     <event name="payment_method_assign_data_unzer_open_banking">
         <observer name="unzer_open_banking_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
+    <event name="payment_method_assign_data_unzer_klarna">
+        <observer name="unzer_klarna_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    </event>
 </config>
