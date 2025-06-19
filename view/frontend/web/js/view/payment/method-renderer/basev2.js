@@ -122,7 +122,7 @@ define(
                         .attr('type', 'submit')
                         .attr('data-bind', `
                         click: placeOrder,
-                        attr: {title: 'Place Order'}, // Reverting to $t directly (Magento's scope)
+                        attr: {title: 'Place Order'},
                         css: {disabled: !isPlaceOrderActionAllowed() || !allTermsChecked()}
                     `);
 

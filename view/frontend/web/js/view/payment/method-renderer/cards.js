@@ -35,6 +35,32 @@ define(
                 return this;
             },
 
+            selectPaymentMethod: function () {
+                let retVal = this._super();
+
+                if (this.isVaultEnabled()) {
+                    const checkbox = document.getElementById('unzer-card-save-card-checkbox');
+                    const checkboxLabel = document.getElementById('unzer-card-save-card-typography');
+                    if (checkbox && checkboxLabel) {
+                        checkbox.removeAttribute('hidden');
+                        checkbox.addEventListener('click', () => {
+                            if (!this.isActivePaymentTokenEnabler) {
+                                this.isActivePaymentTokenEnabler = true;
+                                this.vaultEnabler.isActivePaymentTokenEnabler(true);
+
+                                return;
+                            }
+                            this.isActivePaymentTokenEnabler = false;
+                            this.vaultEnabler.isActivePaymentTokenEnabler(false);
+                        })
+
+                        checkboxLabel.textContent = $t('Save for later use.');
+                    }
+                }
+
+                return retVal;
+            },
+
             /**
              * @returns {Boolean}
              */
