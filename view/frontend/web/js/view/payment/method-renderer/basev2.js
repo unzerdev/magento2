@@ -240,10 +240,17 @@ define(
                                     deferred.resolve.apply(deferred, arguments);
                                 })
                                 .fail(function (request) {
-                                    globalMessageList.addErrorMessage({
-                                        message: request.responseJSON.message
-                                    });
-                                    deferred.reject(request.responseJSON.message);
+                                    if (request.responseJSON && request.responseJSON.message) {
+                                        globalMessageList.addErrorMessage({
+                                            message: request.responseJSON.message
+                                        });
+                                        deferred.reject(request.responseJSON.message);
+                                    } else {
+                                        globalMessageList.addErrorMessage({
+                                            message: 'An unknown error occurred. Please try again.'
+                                        });
+                                        deferred.reject('An unknown error occurred.');
+                                    }
                                 });
                         } else {
                             globalMessageList.addErrorMessage({
