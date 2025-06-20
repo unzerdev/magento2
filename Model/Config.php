@@ -121,7 +121,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * @param string|null $storeId
      * @return bool
      */
-    private function isDebugMode(string $storeId = null): bool
+    private function isDebugMode(?string $storeId = null): bool
     {
         return $this->_scopeConfig->isSetFlag(
             self::BASE_CONFIGURATION_PATH . self::KEY_LOGGING,
@@ -137,7 +137,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * @param MethodInterface|null $paymentMethodInstance
      * @return string|null
      */
-    public function getPublicKey(string $storeId = null, MethodInterface $paymentMethodInstance = null): ?string
+    public function getPublicKey(?string $storeId = null, ?MethodInterface $paymentMethodInstance = null): ?string
     {
         if ($paymentMethodInstance instanceof OverrideApiCredentialInterface
             && $paymentMethodInstance->hasMethodValidOverrideKeys($storeId)
@@ -159,7 +159,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * @param MethodInterface|null $paymentMethodInstance
      * @return string|null
      */
-    public function getPrivateKey(string $storeId = null, MethodInterface $paymentMethodInstance = null): ?string
+    public function getPrivateKey(?string $storeId = null, ?MethodInterface $paymentMethodInstance = null): ?string
     {
         if ($paymentMethodInstance instanceof OverrideApiCredentialInterface
             && $paymentMethodInstance->hasMethodValidOverrideKeys($storeId)
@@ -181,7 +181,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * @param MethodInterface|null $paymentMethodInstance
      * @return Unzer
      */
-    public function getUnzerClient(string $storeId = null, MethodInterface $paymentMethodInstance = null): Unzer
+    public function getUnzerClient(?string $storeId = null, ?MethodInterface $paymentMethodInstance = null): Unzer
     {
         $client = new Unzer(
             $this->getPrivateKey($storeId, $paymentMethodInstance),

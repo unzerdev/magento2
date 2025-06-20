@@ -49,19 +49,19 @@ class Prepayment extends Base
      * @param LoggerInterface|null $logger
      */
     public function __construct(
-        ManagerInterface $eventManager,
+        ManagerInterface          $eventManager,
         ValueHandlerPoolInterface $valueHandlerPool,
-        PaymentDataObjectFactory $paymentDataObjectFactory,
+        PaymentDataObjectFactory  $paymentDataObjectFactory,
         $code,
         $formBlockType,
         $infoBlockType,
-        ScopeConfigInterface $scopeConfig,
-        Config $moduleConfig,
-        PriceCurrencyInterface $priceCurrency,
-        CommandPoolInterface $commandPool = null,
-        ValidatorPoolInterface $validatorPool = null,
-        CommandManagerInterface $commandExecutor = null,
-        LoggerInterface $logger = null
+        ScopeConfigInterface      $scopeConfig,
+        Config                    $moduleConfig,
+        PriceCurrencyInterface    $priceCurrency,
+        ?CommandPoolInterface     $commandPool = null,
+        ?ValidatorPoolInterface   $validatorPool = null,
+        ?CommandManagerInterface  $commandExecutor = null,
+        ?LoggerInterface $logger = null
     ) {
         parent::__construct(
             $eventManager,

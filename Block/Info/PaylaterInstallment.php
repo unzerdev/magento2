@@ -98,7 +98,7 @@ class PaylaterInstallment extends Info
      * @return string
      * @throws NoSuchEntityException
      */
-    public function getStoreCode(string $storeId = null): string
+    public function getStoreCode(?string $storeId = null): string
     {
         return $this->_storeManager->getStore($storeId)->getCode();
     }

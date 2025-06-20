@@ -107,7 +107,7 @@ abstract class AbstractCommand implements CommandInterface
      * @param MethodInterface|null $paymentMethodInstance
      * @return Unzer
      */
-    protected function _getClient(string $storeCode = null, MethodInterface $paymentMethodInstance = null): Unzer
+    protected function _getClient(?string $storeCode = null, ?MethodInterface $paymentMethodInstance = null): Unzer
     {
         if ($this->_client === null) {
             $this->_client = $this->_config->getUnzerClient($storeCode, $paymentMethodInstance);
