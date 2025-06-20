@@ -1631,6 +1631,24 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="UnzerAuthorizeAndCaptureKlarnaCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="authorize" xsi:type="string">Unzer\PAPI\Model\Command\Authorize</item>
+                <item name="cancel" xsi:type="string">Unzer\PAPI\Model\Command\CancelAuthorization</item>
+                <item name="capture" xsi:type="string">Unzer\PAPI\Model\Command\Capture</item>
+                <item name="order" xsi:type="string">Unzer\PAPI\Model\Command\Order</item>
+                <item name="refund" xsi:type="string">Unzer\PAPI\Model\Command\RefundCharge</item>
+                <item name="refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Command\RefundCharge</item>
+                <item name="void" xsi:type="string">Unzer\PAPI\Model\Command\CancelAuthorization</item>
+                <item name="vault_authorize" xsi:type="string">Unzer\PAPI\Model\Command\Authorize</item>
+                <item name="vault_sale" xsi:type="string">Unzer\PAPI\Model\Command\Capture</item>
+                <item name="vault_capture" xsi:type="string">Unzer\PAPI\Model\Command\Capture</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+
     <type name="Unzer\PAPI\Model\Method\Klarna">
         <arguments>
             <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_KLARNA</argument>
@@ -1638,7 +1656,7 @@
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
             <argument name="valueHandlerPool" xsi:type="object">UnzerKlarnaValueHandlerPool</argument>
             <argument name="validatorPool" xsi:type="object">UnzerKlarnaValidatorPool</argument>
-            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureVaultCommandPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureKlarnaCommandPool</argument>
         </arguments>
     </type>
 </config>

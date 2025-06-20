@@ -7,6 +7,7 @@ namespace Unzer\PAPI\Helper;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\Module\ModuleListInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\MethodInterface;
@@ -84,6 +85,11 @@ class Order
     private CreateThreatMetrixId $createThreatMetrixId;
 
     /**
+     * @var ResolverInterface
+     */
+    private ResolverInterface $localeResolver;
+
+    /**
      * Constructor
      *
      * @param Config $moduleConfig
@@ -94,6 +100,7 @@ class Order
      * @param BasketItemFactory $basketItemFactory
      * @param BirthDateFactory $birthDateFactory
      * @param CreateThreatMetrixId $createThreatMetrixId
+     * @param ResolverInterface $localeResolver
      */
     public function __construct(
         Config $moduleConfig,
@@ -103,7 +110,8 @@ class Order
         BasketFactory $basketFactory,
         BasketItemFactory $basketItemFactory,
         BirthDateFactory $birthDateFactory,
-        CreateThreatMetrixId $createThreatMetrixId
+        CreateThreatMetrixId $createThreatMetrixId,
+        ResolverInterface $localeResolver
     ) {
         $this->_moduleConfig = $moduleConfig;
         $this->_moduleList = $moduleList;
@@ -113,6 +121,7 @@ class Order
         $this->basketItemFactory = $basketItemFactory;
         $this->birthDateFactory = $birthDateFactory;
         $this->createThreatMetrixId = $createThreatMetrixId;
+        $this->localeResolver = $localeResolver;
     }
 
     /**
@@ -175,6 +184,7 @@ class Order
      * Create Basket
      *
      * @param OrderModel $order
+     *
      * @return Basket
      */
     protected function createBasket(OrderModel $order): Basket
@@ -191,6 +201,7 @@ class Order
      * Create Shipping Item
      *
      * @param OrderModel $order
+     *
      * @return BasketItem
      */
     protected function createShippingItem(OrderModel $order): BasketItem
@@ -208,6 +219,7 @@ class Order
      * Create Basket Item
      *
      * @param Item $orderItem
+     *
      * @return BasketItem
      */
     protected function createBasketItem(Item $orderItem): BasketItem
@@ -246,6 +258,7 @@ class Order
      *
      * @param OrderModel $order
      * @param float $vatRate
+     *
      * @return BasketItem
      */
     protected function createVoucherItem(OrderModel $order, float $vatRate): BasketItem
@@ -266,7 +279,7 @@ class Order
         );
 
         if ($taxAfterDiscount && !$pricesIncludeTax) {
-            $discount *= (1 + $vatRate/100);
+            $discount *= (1 + $vatRate / 100);
         }
 
         $basketVoucherItemDiscountAmount = $this->basketItemFactory->create();
@@ -287,6 +300,7 @@ class Order
      * Returns metadata for the given order.
      *
      * @param OrderModel $order
+     *
      * @return Metadata
      */
     public function createMetadataForOrder(OrderModel $order): Metadata
@@ -370,6 +384,11 @@ class Order
 
         $billingAddress = $order->getBillingAddress();
         $customer = new Customer();
+        $currentLocale = $this->localeResolver->getLocale();
+        $languageCode = strtok($currentLocale, '_-');
+        if($languageCode) {
+            $customer->setLanguage($languageCode);
+        }
 
         if ($billingAddress !== null) {
             $customer->setFirstname($billingAddress->getFirstname())
@@ -458,6 +477,7 @@ class Order
      *
      * @param $billingAddress
      * @param $shippingAddress
+     *
      * @return string
      */
     public function getShippingType($billingAddress, $shippingAddress): string
@@ -488,6 +508,7 @@ class Order
      * Convert Street Lines To String
      *
      * @param array $streetLines
+     *
      * @return string
      */
     private function convertStreetLinesToString(array $streetLines): string
@@ -502,6 +523,7 @@ class Order
      *
      * @param OrderModel $order
      * @param Customer $gatewayCustomer
+     *
      * @throws UnzerApiException|LocalizedException
      */
     public function updateGatewayCustomerFromOrder(OrderModel $order, Customer $gatewayCustomer): void
@@ -541,6 +563,7 @@ class Order
      *
      * @param OrderModel $order
      * @param Customer $gatewayCustomer
+     *
      * @return bool
      */
     public function validateGatewayCustomerAgainstOrder(OrderModel $order, Customer $gatewayCustomer): bool
@@ -575,6 +598,7 @@ class Order
      *
      * @param Address $gatewayAddress
      * @param OrderAddressInterface $magentoAddress
+     *
      * @return bool
      */
     private function validateGatewayAddressAgainstOrderAddress(
@@ -596,6 +620,7 @@ class Order
      * Default -> unknown
      *
      * @param Quote $quote
+     *
      * @return string
      */
     protected function getSalutationFromQuote(Quote $quote): string
@@ -607,6 +632,7 @@ class Order
      * Get Salutation From Gender
      *
      * @param float|int $gender
+     *
      * @return string
      */
     protected function getSalutationFromGender($gender): string
@@ -628,6 +654,7 @@ class Order
      * Get Salutation From Payment
      *
      * @param InfoInterface $payment
+     *
      * @return string|null
      */
     protected function getSalutationFromPayment(InfoInterface $payment): ?string
@@ -639,6 +666,7 @@ class Order
      * Get Birthdate from Payment
      *
      * @param InfoInterface $payment
+     *
      * @return string|null
      */
     protected function getBirthdateFromPayment(InfoInterface $payment): ?string

@@ -14,12 +14,6 @@
             <label>Title</label>
             <config_path>payment/unzer_klarna/title</config_path>
         </field>
-        <field id="order_payment_action" translate="label" type="select" sortOrder="25" showInDefault="1"
-               showInWebsite="1" showInStore="1">
-            <label>Booking Mode</label>
-            <config_path>payment/unzer_klarna/order_payment_action</config_path>
-            <source_model>Unzer\PAPI\Model\System\Config\Source\PaymentAction</source_model>
-        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="50" showInDefault="1"
                showInWebsite="1" showInStore="1">
             <label>Minimum Order Total</label>
