@@ -2,10 +2,19 @@ define(
     [
         'jquery',
         'ko',
-        'Unzer_PAPI/js/view/payment/method-renderer/base',
-        'Unzer_PAPI/js/model/checkout/threat-metrix'
+        'mage/translate',
+        'Magento_Ui/js/model/messageList',
+        'Magento_Checkout/js/action/place-order',
+        'Unzer_PAPI/js/view/payment/method-renderer/basev2'
     ],
-    function ($, ko, Component, threatMetrix) {
+    function (
+        $,
+        ko,
+        $t,
+        globalMessageList,
+        placeOrderAction,
+        Component
+    ) {
         'use strict';
 
         return Component.extend({
@@ -13,56 +22,67 @@ define(
 
             defaults: {
                 customerType: 'b2b',
-                template: 'Unzer_PAPI/payment/paylater_invoice_b2b'
+                template: 'Unzer_PAPI/payment/paylater_invoice_b2b',
+                paymentCode: 'unzer-paylater-invoice',
+                customersBirthDayNeeded: true,
             },
 
-            initializeForm: function () {
-                this.resourceProvider = this.sdk.PaylaterInvoice();
-                this.initializeCustomerForm(
-                    'unzer-paylater-invoice-b2b-customer',
-                    'unzer-paylater-invoice-b2b-customer-error'
-                );
-            },
+            getPlaceOrderDeferredObject: function () {
+                let deferred = $.Deferred(),
+                    self = this;
 
-            _initializeCustomerFormForB2bCustomer: function (fieldId, errorFieldId, customer) {
-                threatMetrix.init(customer.threat_metrix_id, this);
+                Promise.all([
+                    customElements.whenDefined(this.paymentCode)
+                ]).then(() => {
+                    const unzerCheckoutElementId = 'unzer-checkout-' + this.getCode();
+                    const unzerCheckout = document.getElementById(unzerCheckoutElementId);
 
-                this.resourceProvider.create({
-                    containerId: fieldId+'-optin',
-                    customerType: 'B2B',
-                    errorHolderId: errorFieldId,
+                    unzerCheckout.onPaymentSubmit = response => {
+                        if (response.submitResponse && response.submitResponse.success) {
+                            this.resourceId = response.submitResponse.data.id;
+                            const dropdown = document.getElementById('unzer-dropdown-field');
+                            this.customerType = dropdown.value;
+
+                            if (this.customersBirthDayNeeded) {
+                                this.customersBirthDay = document.querySelector(this.paymentCode).shadowRoot?.querySelector('uds-input-date[name="birthDate"]').value;
+                            }
+
+                            placeOrderAction(self.getData(), self.messageContainer)
+                                .done(function () {
+                                    deferred.resolve.apply(deferred, arguments);
+                                })
+                                .fail(function (request) {
+                                    if (request.responseJSON && request.responseJSON.message) {
+                                        globalMessageList.addErrorMessage({
+                                            message: request.responseJSON.message
+                                        });
+                                        deferred.reject(request.responseJSON.message);
+                                    } else {
+                                        globalMessageList.addErrorMessage({
+                                            message: 'An unknown error occurred. Please try again.'
+                                        });
+                                        deferred.reject('An unknown error occurred.');
+                                    }
+                                });
+                        } else {
+                            globalMessageList.addErrorMessage({
+                                message: 'There was an error placing your order. ' + response.submitResponse.message
+                            });
+                            deferred.reject($t('There was an error placing your order. ' + response.submitResponse.message));
+                        }
+                    };
+                }).catch(error => {
+                    globalMessageList.addErrorMessage({
+                        message: 'There was an error placing your order. ' + error
+                    });
+                    deferred.reject($t('There was an error placing your order. ' + error));
                 });
 
-                this.customerProvider = this.sdk.B2BCustomer();
-                this.customerProvider.initFormFields(customer);
-                this.customerProvider.create({
-                    containerId: fieldId,
-                    errorHolderId: errorFieldId,
-                    fields: ['companyInfo'],
-                    showHeader: false,
-                    paymentTypeName: 'paylater-invoice'
+                return deferred.fail(function (error) {
+                    globalMessageList.addErrorMessage({
+                        message: error
+                    });
                 });
-
-                this.hideFormFields(fieldId);
-            },
-
-            hideFormFields: function (fieldId) {
-                this._super(fieldId);
-
-                var field = $('#' + fieldId);
-                field.find('.field').filter('.checkbox-billingAddress, .email').hide();
-                field.find('.field').filter('.billing-name, .billing-street, .billing-zip, .billing-city, :has(.billing-country)').hide();
-
-                field.find('.unzerUI.form>.checkboxLabel').hide();
-                field.find('.unzerUI.form>.salutation-unzer-paylater-invoice-b2b-customer').hide();
-            },
-
-            allInputsValid: function () {
-                return this.customerValid();
-            },
-
-            validate: function () {
-                return this.allInputsValid();
             }
         });
     }

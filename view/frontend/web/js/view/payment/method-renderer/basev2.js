@@ -37,6 +37,7 @@ define(
             buttonNeeded: true,
             paymentCode: null,
             customersBirthDayNeeded: false,
+            customerType: null,
 
             defaults: {
                 config: null,
@@ -199,7 +200,8 @@ define(
                     'additional_data': {
                         'customer_id': this.customer,
                         'resource_id': this.resourceId,
-                        'birthDate': this.customersBirthDay
+                        'birthDate': this.customersBirthDay,
+                        'customer_type': this.customerType,
                     }
                 };
 

@@ -105,6 +105,7 @@ abstract class AbstractCommand implements CommandInterface
      *
      * @param string|null $storeCode
      * @param MethodInterface|null $paymentMethodInstance
+     *
      * @return Unzer
      */
     protected function _getClient(string $storeCode = null, MethodInterface $paymentMethodInstance = null): Unzer
@@ -129,6 +130,8 @@ abstract class AbstractCommand implements CommandInterface
     {
         /** @var string|null $customerId */
         $customerId = (string)$payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID);
+        /** @var string|null $customerId */
+        $customerType = (string)$payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_TYPE);
 
         $customer = $this->getCustomer(
             $customerId,
@@ -138,7 +141,12 @@ abstract class AbstractCommand implements CommandInterface
 
         //customer not found on this account. create a new one...
         if ($customer === null) {
-            $customer = $this->_orderHelper->createCustomerFromOrder($order, $order->getCustomerEmail(), true);
+            $customer = $this->_orderHelper->createCustomerFromOrder(
+                $order,
+                $order->getCustomerEmail(),
+                true,
+                $customerType
+            );
 
             $payment->setAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_ID, $customer->getId());
         }
@@ -156,6 +164,7 @@ abstract class AbstractCommand implements CommandInterface
      * @param string $customerId
      * @param string $storeCode
      * @param MethodInterface $paymentMethodInstance
+     *
      * @return Customer|null
      * @throws UnzerApiException
      */
@@ -187,6 +196,7 @@ abstract class AbstractCommand implements CommandInterface
      *
      * @param InfoInterface $payment
      * @param SalesOrder $order
+     *
      * @return string|null
      * @throws UnzerApiException|LocalizedException
      */
@@ -253,6 +263,7 @@ abstract class AbstractCommand implements CommandInterface
      * Get Store Code
      *
      * @param int $storeId
+     *
      * @return string
      * @throws NoSuchEntityException
      */
@@ -265,6 +276,7 @@ abstract class AbstractCommand implements CommandInterface
      * Is Vault Save Allowed
      *
      * @param MethodInterface $methodInstance
+     *
      * @return bool
      */
     public function isVaultSaveAllowed(MethodInterface $methodInstance): bool

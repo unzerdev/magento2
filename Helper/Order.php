@@ -31,6 +31,8 @@ use UnzerSDK\Resources\Customer;
 use UnzerSDK\Resources\EmbeddedResources\Address;
 use UnzerSDK\Resources\EmbeddedResources\BasketItem;
 use UnzerSDK\Resources\EmbeddedResources\BasketItemFactory;
+use UnzerSDK\Resources\EmbeddedResources\CompanyInfo;
+use UnzerSDK\Resources\EmbeddedResources\CompanyOwner;
 use UnzerSDK\Resources\Metadata;
 use UnzerSDK\Resources\PaymentTypes\BasePaymentType;
 
@@ -371,12 +373,20 @@ class Order
      * @param OrderModel $order
      * @param string $email
      * @param bool $createResource
+     * @param string|null $customerType
      *
      * @return Customer|null
-     * @throws UnzerApiException|LocalizedException
+     *
+     * @throws LocalizedException
+     * @throws UnzerApiException
      */
-    public function createCustomerFromOrder(OrderModel $order, string $email, bool $createResource = false): ?Customer
-    {
+    public function createCustomerFromOrder(
+        OrderModel $order,
+        string $email,
+        bool $createResource = false,
+        ?string $customerType = null
+    ):
+    ?Customer {
         $client = $this->_moduleConfig->getUnzerClient(
             $order->getStore()->getCode(),
             $order->getPayment()->getMethodInstance()
@@ -384,9 +394,11 @@ class Order
 
         $billingAddress = $order->getBillingAddress();
         $customer = new Customer();
+        $birthDate = null;
+
         $currentLocale = $this->localeResolver->getLocale();
         $languageCode = strtok($currentLocale, '_-');
-        if($languageCode) {
+        if ($languageCode) {
             $customer->setLanguage($languageCode);
         }
 
@@ -420,6 +432,20 @@ class Order
         if ($shippingAddress) {
             $shippingType = $this->getShippingType($billingAddress, $shippingAddress);
             $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $shippingAddress, $shippingType);
+        }
+
+        if ($customerType) {
+            $companyInfo = new CompanyInfo();
+            $companyInfo->setCompanyType($customerType);
+            $companyInfo->setRegistrationType('not_registered');
+            $companyInfo->setFunction('OWNER');
+            $owner = new CompanyOwner();
+            $owner->setFirstname($customer->getFirstname());
+            $owner->setLastname($customer->getLastname());
+            $birthDate && $owner->setBirthdate($birthDate);
+            $companyInfo->setOwner($owner);
+
+            $customer->setCompanyInfo($companyInfo);
         }
 
         return $createResource ? $client->createCustomer($customer) : $customer;
