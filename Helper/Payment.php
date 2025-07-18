@@ -283,7 +283,7 @@ class Payment
             $this->_transactionRepository->save($paymentTransaction);
 
             $parentPaymentTransaction = $paymentTransaction->getParentTransaction();
-            if ($parentPaymentTransaction !== null &&
+            if (!empty($parentPaymentTransaction) &&
                 !$parentPaymentTransaction->getIsClosed()
             ) {
                 $parentPaymentTransaction->setIsClosed(true);
