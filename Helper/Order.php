@@ -434,7 +434,7 @@ class Order
             $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $shippingAddress, $shippingType);
         }
 
-        if ($customerType) {
+        if ($customerType && $customerType !== 'b2c') {
             $companyInfo = new CompanyInfo();
             $companyInfo->setCompanyType($customerType);
             $companyInfo->setRegistrationType('not_registered');
