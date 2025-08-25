@@ -385,6 +385,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <can_send_new_email>1</can_send_new_email>
+                <currency_restrictions>EUR</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\Prepayment</model>
             </unzer_prepayment>
             <unzer_applepay>
