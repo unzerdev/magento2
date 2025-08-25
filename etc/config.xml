@@ -302,6 +302,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>AT</country_restrictions>
+                <currency_restrictions>EUR</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\EPS</model>
             </unzer_eps>
             <unzer_alipay>
