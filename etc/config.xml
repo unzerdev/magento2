@@ -335,6 +335,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>AT,BE,DK,FI,FR,DE,ES,GB,GR,HU,IE,IS,IT,LI,LU,MT,NL,NO,PT,SE</country_restrictions>
+                <currency_restrictions>CHF,CNY,EUR,GBP,USD</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\Wechatpay</model>
             </unzer_wechatpay>
             <unzer_przelewy24>
