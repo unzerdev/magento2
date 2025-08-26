@@ -52,6 +52,7 @@
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
+                <currency_restrictions>EUR</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\DirectDebit</model>
             </unzer_direct_debit>
             <unzer_direct_debit_secured>
@@ -217,6 +218,7 @@
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
                 <country_restrictions>AT,DE</country_restrictions>
+                <currency_restrictions>EUR</currency_restrictions>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
                 <can_capture_partial>1</can_capture_partial>
