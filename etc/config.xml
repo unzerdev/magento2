@@ -369,6 +369,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>BE</country_restrictions>
+                <currency_restrictions>EUR</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\Bancontact</model>
             </unzer_bancontact>
             <unzer_prepayment>
