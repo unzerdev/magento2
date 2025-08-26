@@ -320,6 +320,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>DE,AT,BE,IT,ES,NL</country_restrictions>
+                <currency_restrictions>AUD,CAD,CHF,CNY,EUR,GBP,HKD,NZD,SGD,USD</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\Alipay</model>
             </unzer_alipay>
             <unzer_wechatpay>
