@@ -120,6 +120,7 @@ define(
                     const payButton = $('<button>')
                         .attr('id', unzerPayButtonId)
                         .addClass('button action primary checkout')
+                        .addClass('unzerPlaceOrderPadding')
                         .attr('type', 'submit')
                         .attr('data-bind', `
                         click: placeOrder,
