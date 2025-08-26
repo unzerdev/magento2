@@ -469,7 +469,7 @@
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
-                <country_restrictions>AT,DE</country_restrictions>
+                <country_restrictions>DE</country_restrictions>
                 <currency_restrictions>EUR</currency_restrictions>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
