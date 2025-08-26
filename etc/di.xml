@@ -424,10 +424,17 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="UnzerIdealValidatorCurrency" type="Unzer\PAPI\Model\Validator\CurrencyRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerIdealConfig</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="UnzerIdealValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="country" xsi:type="string">UnzerIdealValidatorCountry</item>
+                <item name="currency" xsi:type="string">UnzerIdealValidatorCurrency</item>
             </argument>
         </arguments>
     </virtualType>
