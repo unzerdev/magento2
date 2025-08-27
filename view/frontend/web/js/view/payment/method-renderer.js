@@ -112,6 +112,10 @@ define(
             {
                 type: 'unzer_open_banking',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/open_banking'
+            },
+            {
+                type: 'unzer_klarna',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/klarna'
             }
         );
         return Component.extend({});

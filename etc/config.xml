@@ -52,6 +52,7 @@
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
+                <currency_restrictions>EUR</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\DirectDebit</model>
             </unzer_direct_debit>
             <unzer_direct_debit_secured>
@@ -96,6 +97,7 @@
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
                 <country_restrictions>NL</country_restrictions>
+                <currency_restrictions>EUR</currency_restrictions>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
                 <can_order>1</can_order>
@@ -159,6 +161,7 @@
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
                 <country_restrictions>AT,DE,CH,NL</country_restrictions>
+                <currency_restrictions>EUR, CHF</currency_restrictions>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
                 <can_capture_partial>1</can_capture_partial>
@@ -177,7 +180,8 @@
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
-                <country_restrictions>AT,DE,CH,NL</country_restrictions>
+                <country_restrictions>AT,DE,CH</country_restrictions>
+                <currency_restrictions>EUR, CHF</currency_restrictions>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
                 <can_capture_partial>1</can_capture_partial>
@@ -197,6 +201,7 @@
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
                 <country_restrictions>AT,DE,CH</country_restrictions>
+                <currency_restrictions>EUR, CHF</currency_restrictions>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
                 <can_capture_partial>1</can_capture_partial>
@@ -216,6 +221,7 @@
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
                 <country_restrictions>AT,DE</country_restrictions>
+                <currency_restrictions>EUR</currency_restrictions>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
                 <can_capture_partial>1</can_capture_partial>
@@ -302,6 +308,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>AT</country_restrictions>
+                <currency_restrictions>EUR</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\EPS</model>
             </unzer_eps>
             <unzer_alipay>
@@ -318,6 +325,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>DE,AT,BE,IT,ES,NL</country_restrictions>
+                <currency_restrictions>AUD,CAD,CHF,CNY,EUR,GBP,HKD,NZD,SGD,USD</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\Alipay</model>
             </unzer_alipay>
             <unzer_wechatpay>
@@ -334,6 +342,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>AT,BE,DK,FI,FR,DE,ES,GB,GR,HU,IE,IS,IT,LI,LU,MT,NL,NO,PT,SE</country_restrictions>
+                <currency_restrictions>CHF,CNY,EUR,GBP,USD</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\Wechatpay</model>
             </unzer_wechatpay>
             <unzer_przelewy24>
@@ -367,6 +376,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>BE</country_restrictions>
+                <currency_restrictions>EUR</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\Bancontact</model>
             </unzer_bancontact>
             <unzer_prepayment>
@@ -384,6 +394,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <can_send_new_email>1</can_send_new_email>
+                <currency_restrictions>EUR</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\Prepayment</model>
             </unzer_prepayment>
             <unzer_applepay>
@@ -466,7 +477,8 @@
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
-                <country_restrictions>AT,DE</country_restrictions>
+                <country_restrictions>DE</country_restrictions>
+                <currency_restrictions>EUR</currency_restrictions>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
                 <can_order>1</can_order>
@@ -475,6 +487,23 @@
                 <can_use_internal>0</can_use_internal>
                 <model>Unzer\PAPI\Model\Method\OpenBanking</model>
             </unzer_open_banking>
+            <unzer_klarna>
+                <active>0</active>
+                <payment_action>order</payment_action>
+                <order_payment_action>authorize</order_payment_action>
+                <title><![CDATA[Klarna]]></title>
+                <allowspecific>0</allowspecific>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
+                <can_order>1</can_order>
+                <can_void>1</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <model>Unzer\PAPI\Model\Method\Klarna</model>
+            </unzer_klarna>
         </payment>
     </default>
 </config>

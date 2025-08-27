@@ -20,6 +20,8 @@ class BaseDataAssignObserver extends AbstractDataAssignObserver
     public const KEY_BIRTHDATE = 'birthDate';
     public const KEY_SALUTATION = 'salutation';
 
+    public const KEY_CUSTOMER_TYPE = 'customer_type';
+
     /**
      * @var array
      */
@@ -29,12 +31,14 @@ class BaseDataAssignObserver extends AbstractDataAssignObserver
         self::KEY_BIRTHDATE,
         self::KEY_SALUTATION,
         self::KEY_THREAT_METRIX_ID,
+        self::KEY_CUSTOMER_TYPE
     ];
 
     /**
      * Execute
      *
      * @param Observer $observer
+     *
      * @return void
      */
     public function execute(Observer $observer): void
