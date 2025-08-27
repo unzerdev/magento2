@@ -269,10 +269,18 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="UnzerDirectDebitValidatorCurrency"
+                 type="Unzer\PAPI\Model\Validator\CurrencyRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerDirectDebitConfig</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="UnzerDirectDebitValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="country" xsi:type="string">UnzerDirectDebitValidatorCountry</item>
+                <item name="currency" xsi:type="string">UnzerDirectDebitValidatorCurrency</item>
             </argument>
         </arguments>
     </virtualType>
@@ -658,10 +666,18 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="UnzerPaylaterInvoiceValidatorCurrency"
+                 type="Unzer\PAPI\Model\Validator\CurrencyRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerPaylaterInvoiceConfig</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="UnzerPaylaterInvoiceValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="country" xsi:type="string">UnzerPaylaterInvoiceValidatorCountry</item>
+                <item name="currency" xsi:type="string">UnzerPaylaterInvoiceValidatorCurrency</item>
             </argument>
         </arguments>
     </virtualType>
@@ -711,10 +727,18 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="UnzerPaylaterInvoiceB2bValidatorCurrency"
+                 type="Unzer\PAPI\Model\Validator\CurrencyRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerPaylaterInvoiceB2bConfig</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="UnzerPaylaterInvoiceB2bValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="country" xsi:type="string">UnzerPaylaterInvoiceB2bValidatorCountry</item>
+                <item name="currency" xsi:type="string">UnzerPaylaterInvoiceB2bValidatorCurrency</item>
             </argument>
         </arguments>
     </virtualType>
@@ -764,10 +788,18 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="UnzerPaylaterInstallmentValidatorCurrency"
+                 type="Unzer\PAPI\Model\Validator\CurrencyRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerPaylaterInstallmentConfig</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="UnzerPaylaterInstallmentValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="country" xsi:type="string">UnzerPaylaterInstallmentValidatorCountry</item>
+                <item name="currency" xsi:type="string">UnzerPaylaterInstallmentValidatorCurrency</item>
             </argument>
         </arguments>
     </virtualType>
@@ -818,10 +850,18 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="UnzerPaylaterDirectDebitValidatorCurrency"
+                 type="Unzer\PAPI\Model\Validator\CurrencyRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerPaylaterDirectDebitConfig</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="UnzerPaylaterDirectDebitValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="country" xsi:type="string">UnzerPaylaterDirectDebitValidatorCountry</item>
+                <item name="currency" xsi:type="string">UnzerPaylaterDirectDebitValidatorCurrency</item>
             </argument>
         </arguments>
     </virtualType>
