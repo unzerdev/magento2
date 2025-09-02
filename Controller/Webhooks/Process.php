@@ -8,6 +8,7 @@ use JsonException;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CsrfAwareActionInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
@@ -23,10 +24,13 @@ use Psr\Log\LoggerInterface;
 use stdClass;
 use Unzer\PAPI\Helper\Payment as PaymentHelper;
 use Unzer\PAPI\Helper\Webhooks;
+use Unzer\PAPI\Model\Command\TransactionSynchronizer;
 use Unzer\PAPI\Model\Config;
 use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\Payment;
 use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
+use UnzerSDK\Resources\TransactionTypes\Cancellation;
+use UnzerSDK\Resources\TransactionTypes\Charge;
 
 /**
  * Controller for processing webhook events
@@ -66,6 +70,11 @@ class Process extends Action implements CsrfAwareActionInterface
     protected StoreManagerInterface $_storeManager;
 
     /**
+     * @var TransactionSynchronizer
+     */
+    protected TransactionSynchronizer $_transactionSynchronizer;
+
+    /**
      * Process constructor.
      * @param Context $context
      * @param EmulationFactory $emulationFactory
@@ -74,16 +83,19 @@ class Process extends Action implements CsrfAwareActionInterface
      * @param Config $moduleConfig
      * @param PaymentHelper $paymentHelper
      * @param StoreManagerInterface $storeManager
+     * @param TransactionSynchronizer|null $transactionSynchronizer
      */
     public function __construct(
-        Context $context,
-        EmulationFactory $emulationFactory,
-        Manager $eventManager,
-        LoggerInterface $logger,
-        Config $moduleConfig,
-        PaymentHelper $paymentHelper,
-        StoreManagerInterface $storeManager
-    ) {
+        Context                 $context,
+        EmulationFactory        $emulationFactory,
+        Manager                 $eventManager,
+        LoggerInterface         $logger,
+        Config                  $moduleConfig,
+        PaymentHelper           $paymentHelper,
+        StoreManagerInterface   $storeManager,
+        TransactionSynchronizer $transactionSynchronizer = null
+    )
+    {
         parent::__construct($context);
 
         $this->_emulationFactory = $emulationFactory;
@@ -92,6 +104,9 @@ class Process extends Action implements CsrfAwareActionInterface
         $this->_moduleConfig = $moduleConfig;
         $this->_paymentHelper = $paymentHelper;
         $this->_storeManager = $storeManager;
+        $this->_transactionSynchronizer = $transactionSynchronizer ?:
+            ObjectManager::getInstance()->get(TransactionSynchronizer::class);
+
     }
 
     /**
@@ -144,10 +159,12 @@ class Process extends Action implements CsrfAwareActionInterface
         if (!$event || !$this->isValidEvent($event)) {
             $response->setStatusCode(400);
             $response->setBody('Bad request');
+
             return $response;
         }
 
         try {
+            $resource = $this->_moduleConfig->getUnzerClient()->fetchResourceFromEvent($requestBody);
             $payment = $this->getPaymentFromEvent($requestBody);
 
             if ($payment !== null && $payment->getOrderId() !== null) {
@@ -155,12 +172,54 @@ class Process extends Action implements CsrfAwareActionInterface
                 $order = $this->_objectManager->create(Order::class);
                 $order->loadByIncrementId($payment->getOrderId());
 
-                if ($order->getId()) {
-                    $this->_paymentHelper->processState($order, $payment);
-                } else {
+                if (!$order->getId()) {
                     $response->setStatusCode(404);
                     $response->setBody('Not found');
+
+                    return $response;
                 }
+
+                if ($resource instanceof Charge) {
+                    $this->_transactionSynchronizer->applyCaptureById(
+                        $order,
+                        $payment,
+                        (string)$resource->getId(),
+                        true
+                    );
+
+                    $response->setStatusCode(200);
+                    $response->setBody('OK');
+                    return $response;
+                }
+
+                if ($resource instanceof Cancellation) {
+                    $this->_transactionSynchronizer->applyRefundById(
+                        $order,
+                        $payment,
+                        (string)$resource->getId(),
+                        true
+                    );
+
+                    $response->setStatusCode(200);
+                    $response->setBody('OK');
+                    return $response;
+                }
+
+                $hasSuccessfulCharge = false;
+                foreach ((array)($payment->getCharges() ?? []) as $chg) {
+                    if ($chg && $chg->isSuccess()) {
+                        $hasSuccessfulCharge = true;
+                        break;
+                    }
+                }
+
+                if (!$hasSuccessfulCharge) {
+                    $this->_paymentHelper->processState($order, $payment);
+                }
+
+                $response->setStatusCode(200);
+                $response->setBody('OK');
+                return $response;
             }
         } catch (UnzerApiException $e) {
             $response->setStatusCode(500);
