@@ -50,26 +50,18 @@
                 </group>
                 <include path="Unzer_PAPI::system/credit_card.xml"/>
                 <include path="Unzer_PAPI::system/direct_debit.xml"/>
-                <include path="Unzer_PAPI::system/direct_debit_secured.xml"/>
-                <include path="Unzer_PAPI::system/bank_transfer.xml"/>
                 <include path="Unzer_PAPI::system/ideal.xml"/>
-                <include path="Unzer_PAPI::system/invoice.xml"/>
-                <include path="Unzer_PAPI::system/invoice_secured.xml"/>
-                <include path="Unzer_PAPI::system/invoice_secured_b2b.xml"/>
                 <include path="Unzer_PAPI::system/paylater_invoice.xml"/>
                 <include path="Unzer_PAPI::system/paylater_invoice_b2b.xml"/>
                 <include path="Unzer_PAPI::system/paylater_installment.xml"/>
                 <include path="Unzer_PAPI::system/paylater_direct_debit.xml"/>
                 <include path="Unzer_PAPI::system/paypal.xml"/>
-                <include path="Unzer_PAPI::system/sofort.xml"/>
-                <include path="Unzer_PAPI::system/giropay.xml"/>
                 <include path="Unzer_PAPI::system/eps.xml"/>
                 <include path="Unzer_PAPI::system/alipay.xml"/>
                 <include path="Unzer_PAPI::system/wechatpay.xml"/>
                 <include path="Unzer_PAPI::system/przelewy24.xml"/>
                 <include path="Unzer_PAPI::system/bancontact.xml"/>
                 <include path="Unzer_PAPI::system/prepayment.xml"/>
-                <include path="Unzer_PAPI::system/applepay.xml"/>
                 <include path="Unzer_PAPI::system/applepayv2.xml"/>
                 <include path="Unzer_PAPI::system/googlepay.xml"/>
                 <include path="Unzer_PAPI::system/twint.xml"/>
