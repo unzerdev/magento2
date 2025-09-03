@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Unzer\PAPI\Model\System\Config\Backend\ApplepayV2;
@@ -14,10 +15,16 @@ use Magento\Framework\Exception\LocalizedException;
  */
 class Upload extends File
 {
+
+    private const DOMAIN_ASSOCIATION_FILE_NAME = 'apple-developer-merchantid-domain-association';
+
+    private const UPLOAD_DIR = '.well-known/';
+
     /**
      * Retrieve upload directory path
      *
      * @param string $uploadDir
+     *
      * @return string
      * @throws FileSystemException
      */
@@ -46,14 +53,14 @@ class Upload extends File
         $file = $this->getFileData();
 
         if (!empty($file)) {
-            $uploadDir = $this->getUploadDirPath('.well-known/');
+            $uploadDir = $this->getUploadDirPath(self::UPLOAD_DIR);
             try {
                 $uploader = $this->_uploaderFactory->create(['fileId' => $file]);
                 $uploader->setAllowRenameFiles(false);
                 $uploader->addValidateCallback('size', $this, 'validateMaxSize');
                 $uploader->setFilesDispersion(false);
 
-                $domainAssocFileName = 'apple-developer-merchantid-domain-association';
+                $domainAssocFileName = self::DOMAIN_ASSOCIATION_FILE_NAME;
 
                 $result = $uploader->save($uploadDir, $domainAssocFileName);
             } catch (Exception $e) {
@@ -67,7 +74,7 @@ class Upload extends File
             }
         } else {
             if (is_array($value) && !empty($value['delete'])) {
-                $this->setValue('');
+                $this->deleteDomainAssocFile();
             } elseif (is_array($value) && !empty($value['value'])) {
                 $this->setValue($value['value']);
             } else {
@@ -76,5 +83,27 @@ class Upload extends File
         }
 
         return $this;
+    }
+
+    /**
+     * @return void
+     *
+     * @throws FileSystemException
+     * @throws LocalizedException
+     */
+    private function deleteDomainAssocFile(): void
+    {
+        $uploadDir = $this->getUploadDirPath(self::UPLOAD_DIR);
+        $filePath = $uploadDir . DIRECTORY_SEPARATOR . self::DOMAIN_ASSOCIATION_FILE_NAME;
+
+        if ($this->_mediaDirectory->isExist($filePath)) {
+            try {
+                $this->_mediaDirectory->delete($filePath);
+            } catch (Exception $e) {
+                throw new LocalizedException(__('Unable to delete file: %1', $e->getMessage()));
+            }
+        }
+
+        $this->setValue('');
     }
 }
