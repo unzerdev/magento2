@@ -172,7 +172,7 @@ class Payment
 
             switch ($payment->getState()) {
                 case PaymentState::STATE_CANCELED:
-                    $this->processCanceledState($order);
+                    $this->processCanceledState($order, $payment);
                     break;
                 case PaymentState::STATE_COMPLETED:
                     $this->processCompletedState($order, $payment);
@@ -340,7 +340,9 @@ class Payment
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
+     *
      * @return void
+     *
      * @throws AlreadyExistsException
      * @throws InputException
      * @throws LocalizedException
