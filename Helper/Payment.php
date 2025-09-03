@@ -22,6 +22,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
+use Unzer\PAPI\Model\Command\TransactionSynchronizer;
 use Unzer\PAPI\Model\Method\Base;
 use Unzer\PAPI\Model\Vault\VaultDetailsHandlerManager;
 use UnzerSDK\Constants\PaymentState;
@@ -95,6 +96,11 @@ class Payment
     private PaymentDataObjectFactoryInterface $paymentDataObjectFactory;
 
     /**
+     * @var TransactionSynchronizer
+     */
+    private TransactionSynchronizer $transactionSynchronizer;
+
+    /**
      * Constructor
      *
      * @param InvoiceRepositoryInterface $invoiceRepository
@@ -108,6 +114,7 @@ class Payment
      * @param TransactionRepositoryInterface $transactionRepository
      * @param VaultDetailsHandlerManager $vaultDetailsHandlerManager
      * @param PaymentDataObjectFactoryInterface $paymentDataObjectFactory
+     * @param TransactionSynchronizer $transactionSynchronizer
      */
     public function __construct(
         InvoiceRepositoryInterface $invoiceRepository,
@@ -120,7 +127,8 @@ class Payment
         OrderPaymentRepositoryInterface $paymentRepository,
         TransactionRepositoryInterface $transactionRepository,
         VaultDetailsHandlerManager $vaultDetailsHandlerManager,
-        PaymentDataObjectFactoryInterface $paymentDataObjectFactory
+        PaymentDataObjectFactoryInterface $paymentDataObjectFactory,
+        TransactionSynchronizer $transactionSynchronizer
     ) {
         $this->_invoiceRepository = $invoiceRepository;
         $this->_invoiceSender = $invoiceSender;
@@ -133,6 +141,7 @@ class Payment
         $this->_transactionRepository = $transactionRepository;
         $this->vaultDetailsHandlerManager = $vaultDetailsHandlerManager;
         $this->paymentDataObjectFactory = $paymentDataObjectFactory;
+        $this->transactionSynchronizer = $transactionSynchronizer;
     }
 
     /**
@@ -190,13 +199,19 @@ class Payment
      * Process canceled state
      *
      * @param OrderInterface $order
+     * @param PaymentResource $payment
+     *
      * @return void
+     *
      * @throws AlreadyExistsException
      * @throws InputException
      * @throws NoSuchEntityException
+     * @throws UnzerApiException
      */
-    private function processCanceledState(OrderInterface $order): void
+    private function processCanceledState(OrderInterface $order, PaymentResource $payment): void
     {
+        $this->transactionSynchronizer->applyRefundOnMagento($order, $payment);
+
         // Orders in payment_review can't be cancelled so we must manually
         // change the status so that we can cancel the Order.
         if ($order->isPaymentReview()) {
@@ -243,7 +258,9 @@ class Payment
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
+     *
      * @return void
+     *
      * @throws AlreadyExistsException
      * @throws InputException
      * @throws LocalizedException
@@ -252,9 +269,11 @@ class Payment
      */
     private function processCompletedState(OrderInterface $order, PaymentResource $payment): void
     {
+        $this->transactionSynchronizer->applyCaptureOnMagento($order, $payment);
+
         $orderPayment = $order->getPayment();
 
-        $transactionId = $payment->getChargeByIndex(0)->getId();
+        $transactionId = $order->getPayment()->getLastTransId();
 
         /** @var Order\Invoice $invoice */
         $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
@@ -277,7 +296,7 @@ class Payment
             $order->getId()
         );
 
-        if (!$paymentTransaction->getIsClosed()) {
+        if ($paymentTransaction && !$paymentTransaction->getIsClosed()) {
             $paymentTransaction->setIsClosed(true);
 
             $this->_transactionRepository->save($paymentTransaction);
@@ -330,6 +349,9 @@ class Payment
      */
     private function processPartlyState(OrderInterface $order, PaymentResource $payment): void
     {
+        $this->transactionSynchronizer->applyRefundOnMagento($order, $payment);
+        $this->transactionSynchronizer->applyCaptureOnMagento($order, $payment);
+
         $this->processPendingState($order, $payment);
     }
 
