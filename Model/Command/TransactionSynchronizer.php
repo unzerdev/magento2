@@ -76,37 +76,56 @@ class TransactionSynchronizer
      *
      * @throws UnzerApiException
      */
-    public function applyRefundOnMagento(OrderInterface $order, UnzerPayment $unzer): void
+    public function applyCancellationOnMagento(OrderInterface $order, UnzerPayment $unzer): void
     {
         $payment = $this->getOrderPayment($order);
-        $refund = array_last($unzer->getCancellations());
+        $cancellation = array_last($unzer->getCancellations());
 
-        if (!$payment || !$refund) {
+        if (!$payment || !$cancellation) {
             return;
         }
 
-        $refundId = $refund->getId() ?? '';
+        $cancelId = $cancellation->getId() ?? '';
 
-        if ($refundId === '') {
+        if ($cancelId === '') {
             return;
         }
 
-        if ($this->hasTransaction($payment, $order, $refundId)) {
+        if ($this->hasTransaction($payment, $order, $cancelId)) {
             return;
         }
 
-        $parent = $refund->getParentResource();
+        $parent = $cancellation->getParentResource();
+
         if ($parent instanceof UnzerCharge && $parent->getId()) {
             $parentTxnId = $parent->getId();
+            $refundTxnId = $parentTxnId . '-refund';
+
+            $payment->setParentTransactionId($parentTxnId);
+            $payment->setTransactionId($refundTxnId);
+
+            $payment->registerRefundNotification($cancellation->getAmount());
+
+            $this->paymentRepository->save($payment);
+
+            return;
         }
-        $refundTxnId = $parentTxnId . '-refund';
 
-        $payment->setParentTransactionId($parentTxnId);
-        $payment->setTransactionId($refundTxnId);
+        if ($parent instanceof UnzerAuthorization && $parent->getId()) {
+            $parentTxnId = $parent->getId();
+            $cancelTxnId = $parentTxnId . '-void';
 
-        $payment->registerRefundNotification($refund->getAmount());
+            $payment->setParentTransactionId($parentTxnId);
+            $payment->setTransactionId($cancelTxnId);
 
-        $this->paymentRepository->save($payment);
+            $payment->registerVoidNotification($cancellation->getAmount());
+
+            $this->paymentRepository->save($payment);
+
+            return;
+        }
+
+        return;
     }
 
     /**

@@ -210,7 +210,7 @@ class Payment
      */
     private function processCanceledState(OrderInterface $order, PaymentResource $payment): void
     {
-        $this->transactionSynchronizer->applyRefundOnMagento($order, $payment);
+        $this->transactionSynchronizer->applyCancellationOnMagento($order, $payment);
 
         // Orders in payment_review can't be cancelled so we must manually
         // change the status so that we can cancel the Order.
@@ -340,9 +340,7 @@ class Payment
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
-     *
      * @return void
-     *
      * @throws AlreadyExistsException
      * @throws InputException
      * @throws LocalizedException
@@ -351,7 +349,7 @@ class Payment
      */
     private function processPartlyState(OrderInterface $order, PaymentResource $payment): void
     {
-        $this->transactionSynchronizer->applyRefundOnMagento($order, $payment);
+        $this->transactionSynchronizer->applyCancellationOnMagento($order, $payment);
         $this->transactionSynchronizer->applyCaptureOnMagento($order, $payment);
 
         $this->processPendingState($order, $payment);
