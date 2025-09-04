@@ -234,6 +234,12 @@ class Payment
                 $this->_orderRepository->save($order);
             }
         }
+
+        if ($payment->getAmount()->getTotal() === $payment->getAmount()->getCanceled()) {
+            $order->setState(Order::STATE_CLOSED);
+            $order->setStatus($order->getConfig()->getStateDefaultStatus(Order::STATE_CLOSED));
+            $this->_orderRepository->save($order);
+        }
     }
 
     /**
@@ -278,7 +284,7 @@ class Payment
         /** @var Order\Invoice $invoice */
         $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
 
-        if ((int)$invoice->getState() === Order\Invoice::STATE_OPEN) {
+        if ($invoice !== null && (int)$invoice->getState() === Order\Invoice::STATE_OPEN) {
             $invoice->pay();
 
             $order = $invoice->getOrder();
