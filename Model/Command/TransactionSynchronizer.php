@@ -121,11 +121,7 @@ class TransactionSynchronizer
             $payment->registerVoidNotification($cancellation->getAmount());
 
             $this->paymentRepository->save($payment);
-
-            return;
         }
-
-        return;
     }
 
     /**

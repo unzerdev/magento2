@@ -205,6 +205,7 @@ class Payment
      *
      * @throws AlreadyExistsException
      * @throws InputException
+     * @throws LocalizedException
      * @throws NoSuchEntityException
      * @throws UnzerApiException
      */
@@ -235,11 +236,13 @@ class Payment
             }
         }
 
-        if ($payment->getAmount()->getTotal() === $payment->getAmount()->getCanceled()) {
-            $order->setState(Order::STATE_CLOSED);
-            $order->setStatus($order->getConfig()->getStateDefaultStatus(Order::STATE_CLOSED));
-            $this->_orderRepository->save($order);
+        if ($payment->getAmount()->getTotal() && $payment->getAmount()->getTotal() === $payment->getAmount()->getCanceled()) {
+            $this->setOrderState($order, Order::STATE_CLOSED, Order::STATE_CLOSED);
+        } else {
+            $this->setOrderState($order, Order::STATE_CANCELED, Order::STATE_CANCELED);
         }
+
+        $this->_orderRepository->save($order);
     }
 
     /**
