@@ -238,11 +238,8 @@ class Payment
 
         if ($payment->getAmount()->getTotal() && $payment->getAmount()->getTotal() === $payment->getAmount()->getCanceled()) {
             $this->setOrderState($order, Order::STATE_CLOSED, Order::STATE_CLOSED);
-        } else {
-            $this->setOrderState($order, Order::STATE_CANCELED, Order::STATE_CANCELED);
+            $this->_orderRepository->save($order);
         }
-
-        $this->_orderRepository->save($order);
     }
 
     /**
