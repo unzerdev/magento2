@@ -25,6 +25,10 @@ define(
                 paymentCode: 'unzer-apple-pay'
             },
 
+            isApplePayAvailable: function () {
+                return window.ApplePaySession && ApplePaySession.canMakePayments();
+            },
+
             selectPaymentMethod: function () {
                 let retVal = this._super();
 
@@ -52,18 +56,20 @@ define(
                 if (unzerPaymentElement && typeof unzerPaymentElement.setApplePayData === 'function') {
                     const supportedNetworks = window.checkoutConfig.payment.unzer_applepayv2.supportedNetworks.map((network) => network.toLowerCase());
 
+                    const totals = quote.totals() ? quote.totals() : window.checkoutConfig.quoteData;
+
                     unzerPaymentElement.setApplePayData({
                         countryCode: quote.billingAddress().countryId,
                         currencyCode: window.checkoutConfig.quoteData.quote_currency_code,
                         totalLabel: window.checkoutConfig.payment.unzer_applepayv2.label,
-                        totalAmount: Number(window.checkoutConfig.quoteData.base_grand_total).toFixed(2),
+                        totalAmount:  Number(totals['grand_total']).toFixed(2),
                         supportedNetworks: supportedNetworks,
                         merchantCapabilities: window.checkoutConfig.payment.unzer_applepayv2.merchantCapabilities,
                         requiredShippingContactFields: [],
                         requiredBillingContactFields: [],
                         total: {
                             label: window.checkoutConfig.payment.unzer_applepayv2.label,
-                            amount: Number(window.checkoutConfig.quoteData.base_grand_total).toFixed(2)
+                            amount: Number(totals['grand_total']).toFixed(2),
                         },
                     });
                 } else if (maxRetries > 0) {
