@@ -87,6 +87,10 @@ define(
                 componentContainer.append(unzerPayment);
                 componentContainer.append(unzerCheckout);
 
+                if (this.customersBirthDayNeeded && customerData.dob) {
+                    this.observeBirthDateInput();
+                }
+
                 return retVal;
             },
 
@@ -109,6 +113,58 @@ define(
 
                 return $(`<${this.paymentCode}>`);
             },
+
+            observeBirthDateInput: function (maxRetries = 20, interval = 300) {
+                const containerId = 'unzer-payment-' + this.getCode();
+                const container = document.getElementById(containerId);
+
+                if (!container) {
+                    console.warn('Container for payment not found yet.');
+                    return;
+                }
+
+                const attempt = () => {
+                    const input = this.findInShadow(container, 'uds-input-date[name="birthDate"]');
+
+                    if (input && customerData.dob) {
+                        const parts = customerData.dob.split('-');
+                        if (parts.length === 3) {
+                            const year = parts[0];
+                            const month = parts[1].padStart(2, '0');
+                            const day = parts[2].padStart(2, '0');
+
+                            const formattedDob = `${month}/${day}/${year}`;
+                            input.value = formattedDob;
+                        }
+                    } else if (maxRetries > 0) {
+                        maxRetries--;
+                        setTimeout(attempt, interval);
+                    } else {
+                        console.error('Birth date input not found after retries.');
+                    }
+                };
+
+                attempt();
+            },
+
+            findInShadow(root, selector) {
+                if (!root) return null;
+
+                let el = root.querySelector(selector);
+                if (el) return el;
+
+                const children = root.children;
+                for (let i = 0; i < children.length; i++) {
+                    const child = children[i];
+                    if (child.shadowRoot) {
+                        el = this.findInShadow(child.shadowRoot, selector);
+                        if (el) return el;
+                    }
+                }
+
+                return null;
+            },
+
 
             createUnzerCheckoutPaymentElement: function () {
                 const unzerCheckoutId = 'unzer-checkout-' + this.getCode();
