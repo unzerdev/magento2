@@ -52,5 +52,11 @@
                 <field id="unzer_cards_vault_active">1</field>
             </depends>
         </field>
+        <field id="enable_click_to_pay" translate="label" type="select" sortOrder="130" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Enable Click to Pay</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/unzer_cards/enable_click_to_pay</config_path>
+        </field>
     </group>
 </include>

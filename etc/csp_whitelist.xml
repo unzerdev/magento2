@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
     <policies>
         <policy id="script-src">
             <values>
@@ -10,7 +11,6 @@
                 <value id="threatmetrix" type="host">https://h.online-metrix.net</value>
                 <value id="threatmetrix-64" type="host">https://h64.online-metrix.net</value>
                 <value id="unzer-ui-components" type="host">https://static-v2.unzer.com/v2/ui-components/</value>
-
             </values>
         </policy>
 
@@ -37,7 +37,6 @@
 
                 <value id="unzer-test-frame" type="host">https://static-cc.test.unzer.com</value>
                 <value id="unzer-ui-components" type="host">https://static-v2.unzer.com/v2/ui-components/</value>
-
             </values>
         </policy>
 
@@ -45,8 +44,6 @@
             <values>
                 <value id="mastercard-src-ui-kit" type="host">https://sandbox.src.mastercard.com</value>
                 <value id="unzer-ui-components" type="host">https://static-v2.unzer.com/v2/ui-components/</value>
-
-
             </values>
         </policy>
 
@@ -65,6 +62,12 @@
                 <value id="google-pay-2" type="host">https://pay.google.com/</value>
                 <value id="hpcgw" type="host">https://test-heidelpay.hpcgw.net/</value>
                 <value id="sbx" type="host">https://sbx-api.heidelpay.com/</value>
+
+                <!-- Visa Click to Pay Sandbox + Production -->
+                <value id="visa-clicktopay-sandbox" type="host">https://sandbox.clicktopay.auth.visa.com</value>
+                <value id="visa-clicktopay-prod" type="host">https://clicktopay.visa.com</value>
+                <value id="visa-secure-checkout-sandbox" type="host">https://sandbox.secure.checkout.visa.com</value>
+                <value id="visa-secure-checkout-prod" type="host">https://secure.checkout.visa.com</value>
             </values>
         </policy>
 

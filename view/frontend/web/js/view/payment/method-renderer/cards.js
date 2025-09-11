@@ -35,6 +35,21 @@ define(
                 return this;
             },
 
+            createUnzerPaymentElement: function () {
+                const unzerPaymentElementId = 'unzer-payment-' + this.getCode();
+
+                const element = $('<unzer-payment>')
+                    .attr('id', unzerPaymentElementId)
+                    .attr('publicKey', this.getPublicKey())
+                    .attr('locale', window.checkoutConfig.payment.unzer.locale);
+
+                if (!this.isClickToPayEnabled()) {
+                    element.attr('disableCTP', true);
+                }
+
+                return element;
+            },
+
             selectPaymentMethod: function () {
                 let retVal = this._super();
 
@@ -126,7 +141,11 @@ define(
                         message: error
                     });
                 });
-            }
+            },
+
+            isClickToPayEnabled: function () {
+                return this._getMethodConfig('enable_click_to_pay') === '1';
+            },
         });
     }
 );

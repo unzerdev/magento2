@@ -100,8 +100,7 @@ define(
                 return $('<unzer-payment>')
                     .attr('id', unzerPaymentElementId)
                     .attr('publicKey', this.getPublicKey())
-                    .attr('locale', window.checkoutConfig.payment.unzer.locale)
-                    .attr('disableCTP', true);
+                    .attr('locale', window.checkoutConfig.payment.unzer.locale);
             },
 
             createSpecificPaymentElement: function () {
