@@ -139,6 +139,44 @@ class TransactionSynchronizer
 
     /**
      * @param OrderInterface $order
+     * @param UnzerPayment $unzer
+     *
+     * @return void
+     */
+    public function applyChargebackOnMagento(OrderInterface $order, UnzerPayment $unzer): void
+    {
+        $payment = $this->getOrderPayment($order);
+        $chargeback = array_last($unzer->getChargebacks());
+
+        if (!$payment || !$chargeback) {
+            return;
+        }
+
+        $chargebackId = $chargeback->getId() ?? '';
+
+        if ($chargebackId === '') {
+            return;
+        }
+
+        if ($this->hasTransaction($payment, $order, $chargebackId)) {
+            return;
+        }
+
+        $parent = $chargeback->getParentResource();
+
+        $parentTxnId = $parent->getId();
+        $chargebackTxnId = $parentTxnId . '-' . $chargebackId;
+
+        $payment->setParentTransactionId($parentTxnId);
+        $payment->setTransactionId($chargebackTxnId);
+
+        $payment->registerRefundNotification($chargeback->getAmount());
+
+        $this->paymentRepository->save($payment);
+    }
+
+    /**
+     * @param OrderInterface $order
      *
      * @return OrderPayment|null
      */

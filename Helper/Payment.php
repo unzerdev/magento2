@@ -178,7 +178,7 @@ class Payment
                     $this->processCompletedState($order, $payment);
                     break;
                 case PaymentState::STATE_CHARGEBACK:
-                    $this->processChargebackState($order);
+                    $this->processChargebackState($order, $payment);
                     break;
                 case PaymentState::STATE_PARTLY:
                     $this->processPartlyState($order, $payment);
@@ -327,14 +327,13 @@ class Payment
      * Process chargeback state
      *
      * @param OrderInterface $order
+     * @param PaymentResource $payment
      * @return void
-     * @throws AlreadyExistsException
-     * @throws InputException
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
+     * @throws Exception
      */
-    private function processChargebackState(OrderInterface $order): void
+    private function processChargebackState(OrderInterface $order, PaymentResource $payment): void
     {
+        $this->transactionSynchronizer->applyChargebackOnMagento($order, $payment);
         if ($order->getState() !== Order::STATE_CANCELED &&
             $order->getState() !== Order::STATE_CLOSED) {
             $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW, Order::STATUS_FRAUD);
