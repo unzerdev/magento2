@@ -63,8 +63,10 @@ class TransactionSynchronizer
 
         $payment->setTransactionId($captureId);
 
-        $payment->registerCaptureNotification($capture->getAmount(), true);
-
+        if ($capture->isSuccess()) {
+            $payment->registerCaptureNotification($capture->getAmount(), true);
+            $this->paymentRepository->save($payment);
+        }
         $this->paymentRepository->save($payment);
     }
 
@@ -99,6 +101,17 @@ class TransactionSynchronizer
 
         if ($parent instanceof UnzerCharge && $parent->getId()) {
             $parentTxnId = $parent->getId();
+
+            // prepayment
+            if ($unzer->getAmount()->getTotal() == 0) {
+                $cancelTxnId = $parentTxnId . '-void';
+                $payment->setParentTransactionId($parentTxnId);
+                $payment->setTransactionId($cancelTxnId);
+                $payment->registerVoidNotification($cancellation->getAmount());
+
+                return;
+            }
+
             $refundTxnId = $parentTxnId . '-refund';
 
             $payment->setParentTransactionId($parentTxnId);
