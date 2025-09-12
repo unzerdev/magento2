@@ -2,7 +2,7 @@ define(
     [
         'Unzer_PAPI/js/view/payment/method-renderer/basev2',
         'Magento_Checkout/js/model/quote',
-        'Magento_Customer/js/model/customer'
+        'Magento_Customer/js/model/customer',
     ],
     function (
         Component,
@@ -39,10 +39,12 @@ define(
 
                     const billing = quote.billingAddress();
                     const shipping = quote.shippingAddress();
-                    const customerData = {
+
+                    const customer = {
                         firstname: billing ? billing.firstname : '',
                         lastname: billing ? billing.lastname : '',
                         email: quote.guestEmail ? quote.guestEmail : (window.customerData ? window.customerData.email : ''),
+                        birthDate: customerData.dob.split('T')[0],
 
                         billingAddress: billing ? {
                             name: (billing.firstname || '') + ' ' + (billing.lastname || ''),
@@ -61,14 +63,16 @@ define(
                         } : {}
                     };
 
-                    unzerPayment.setCustomerData(customerData);
+                    unzerPayment.setCustomerData(customer);
                 } else if (maxRetries > 0) {
                     console.log('Waiting for setBasketData function to be available...');
                     setTimeout(() => this.waitForSetBasketData(maxRetries - 1, interval), interval);
                 } else {
                     console.error('setBasketData is not available after multiple retries.');
                 }
-            },
+            }
+            ,
         });
     }
-);
+)
+;
