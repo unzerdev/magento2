@@ -1,11 +1,13 @@
 define(
     [
         'Unzer_PAPI/js/view/payment/method-renderer/basev2',
-        'Magento_Checkout/js/model/quote'
+        'Magento_Checkout/js/model/quote',
+        'Magento_Customer/js/model/customer'
     ],
     function (
         Component,
-        quote
+        quote,
+        customer
     ) {
         'use strict';
 
@@ -31,10 +33,35 @@ define(
 
                 if (unzerPayment && typeof unzerPayment.setBasketData === 'function') {
                     unzerPayment.setBasketData({
-                        country: quote.billingAddress().countryId,
                         amount: (quote.totals() ? quote.totals() : quote)['grand_total'],
                         currencyType: (quote.totals() ? quote.totals() : quote)['quote_currency_code']
                     })
+
+                    const billing = quote.billingAddress();
+                    const shipping = quote.shippingAddress();
+                    const customerData = {
+                        firstname: billing ? billing.firstname : '',
+                        lastname: billing ? billing.lastname : '',
+                        email: quote.guestEmail ? quote.guestEmail : (window.customerData ? window.customerData.email : ''),
+
+                        billingAddress: billing ? {
+                            name: (billing.firstname || '') + ' ' + (billing.lastname || ''),
+                            street: Array.isArray(billing.street) ? billing.street.join(' ') : billing.street,
+                            zip: billing.postcode,
+                            city: billing.city,
+                            country: billing.countryId
+                        } : {},
+
+                        shippingAddress: shipping ? {
+                            name: (shipping.firstname || '') + ' ' + (shipping.lastname || ''),
+                            street: Array.isArray(shipping.street) ? shipping.street.join(' ') : shipping.street,
+                            zip: shipping.postcode,
+                            city: shipping.city,
+                            country: shipping.countryId
+                        } : {}
+                    };
+
+                    unzerPayment.setCustomerData(customerData);
                 } else if (maxRetries > 0) {
                     console.log('Waiting for setBasketData function to be available...');
                     setTimeout(() => this.waitForSetBasketData(maxRetries - 1, interval), interval);
