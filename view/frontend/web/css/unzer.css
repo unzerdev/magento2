@@ -5338,3 +5338,8 @@ i.h-iconideal-van-lanschot:before {
 .unzerCompanyTypeSelect {
     margin-bottom: 15px;
 }
+
+.apple-pay-button {
+    width: 240px;
+    height: 40px;
+}

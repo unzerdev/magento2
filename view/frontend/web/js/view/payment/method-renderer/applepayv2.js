@@ -32,8 +32,12 @@ define(
             selectPaymentMethod: function () {
                 let retVal = this._super();
 
+                const componentContainer = $('#unzer-component-' + this.getCode());
+                componentContainer.addClass('apple-pay-button');
+
                 this.waitForSetApplePayData();
                 const unzerCheckoutElementId = 'unzer-checkout-' + this.getCode();
+
                 const unzerCheckout = document.getElementById(unzerCheckoutElementId);
                 unzerCheckout.onPaymentSubmit = response => {
                     if (response.submitResponse && response.submitResponse.success) {
