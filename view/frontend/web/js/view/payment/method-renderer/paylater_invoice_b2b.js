@@ -47,6 +47,10 @@ define(
                                 this.customersBirthDay = document.querySelector(this.paymentCode).shadowRoot?.querySelector('uds-input-date[name="birthDate"]').value;
                             }
 
+                            if (response.threatMetrixId) {
+                                this.threatMetrixId = response.threatMetrixId;
+                            }
+
                             placeOrderAction(self.getData(), self.messageContainer)
                                 .done(function () {
                                     deferred.resolve.apply(deferred, arguments);

@@ -159,6 +159,7 @@ class Authorize extends AbstractCommand
      *
      * @param Authorization $authorization
      * @param OrderPayment $payment
+     *
      * @return Authorization
      * @throws LocalizedException
      * @throws UnzerApiException
@@ -186,6 +187,7 @@ class Authorize extends AbstractCommand
      *
      * @param PaymentDataObjectInterface $paymentDataObject
      * @param Authorization $authorization
+     *
      * @return void
      * @throws LocalizedException
      * @throws UnzerApiException
@@ -206,6 +208,7 @@ class Authorize extends AbstractCommand
      *
      * @param OrderInterface $order
      * @param float $amount
+     *
      * @return Authorization
      */
     protected function createAuthorization(OrderInterface $order, float $amount): Authorization

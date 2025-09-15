@@ -8,6 +8,7 @@ define(
         'use strict';
 
         return Component.extend({
+            isThreatMetrixNeeded: true,
             defaults: {
                 template: 'Unzer_PAPI/payment/paylater_direct_debit',
                 paymentCode: 'unzer-paylater-direct-debit',

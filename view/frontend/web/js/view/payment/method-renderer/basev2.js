@@ -38,6 +38,7 @@ define(
             paymentCode: null,
             customersBirthDayNeeded: false,
             customerType: null,
+            threatMetrixId: null,
 
             defaults: {
                 config: null,
@@ -50,6 +51,7 @@ define(
                 resourceProvider: null,
                 template: null,
                 customersBirthDay: null,
+                threatMetrixId: null
             },
 
             initialize: function () {
@@ -257,13 +259,12 @@ define(
                         'customer_id': this.customer,
                         'resource_id': this.resourceId,
                         'birthDate': this.customersBirthDay,
-                        'customer_type': this.customerType,
+                        'customer_type': this.customerType
                     }
                 };
 
                 if (this.isThreatMetrixNeeded) {
-                    data['additional_data']['threat_metrix_id'] = this.customer !== null && this.customer() !== null
-                        ? this.customer().threat_metrix_id : null
+                    data['additional_data']['threat_metrix_id'] = this.threatMetrixId;
                 }
 
                 return data;
@@ -291,6 +292,10 @@ define(
 
                             if (this.customersBirthDayNeeded) {
                                 this.customersBirthDay = document.querySelector(this.paymentCode).shadowRoot?.querySelector('uds-input-date[name="birthDate"]').value;
+                            }
+
+                            if (response.threatMetrixId) {
+                                this.threatMetrixId = response.threatMetrixId;
                             }
 
                             placeOrderAction(self.getData(), self.messageContainer)

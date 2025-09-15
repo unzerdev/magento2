@@ -1,13 +1,11 @@
 define(
     [
         'Unzer_PAPI/js/view/payment/method-renderer/basev2',
-        'Magento_Checkout/js/model/quote',
-        'Magento_Customer/js/model/customer',
+        'Magento_Checkout/js/model/quote'
     ],
     function (
         Component,
-        quote,
-        customer
+        quote
     ) {
         'use strict';
 
