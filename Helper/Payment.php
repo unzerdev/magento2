@@ -149,6 +149,7 @@ class Payment
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
+     *
      * @return void
      * @throws AlreadyExistsException
      * @throws InputException
@@ -246,6 +247,7 @@ class Payment
      * Is order voided
      *
      * @param OrderInterface $order
+     *
      * @return bool
      * @throws InputException
      */
@@ -328,6 +330,7 @@ class Payment
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
+     *
      * @return void
      * @throws Exception
      */
@@ -345,6 +348,7 @@ class Payment
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
+     *
      * @return void
      * @throws AlreadyExistsException
      * @throws InputException
@@ -357,13 +361,14 @@ class Payment
         $this->transactionSynchronizer->applyCancellationOnMagento($order, $payment);
         $this->transactionSynchronizer->applyCaptureOnMagento($order, $payment);
 
-        $this->processPendingState($order, $payment);
+        $this->setOrderState($order, Order::STATE_PROCESSING);
     }
 
     /**
      * Process payment review state
      *
      * @param OrderInterface $order
+     *
      * @return void
      * @throws AlreadyExistsException
      * @throws InputException
@@ -380,6 +385,7 @@ class Payment
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
+     *
      * @return void
      * @throws AlreadyExistsException
      * @throws InputException
@@ -404,6 +410,7 @@ class Payment
      * Set Invoice Type State
      *
      * @param OrderInterface $order
+     *
      * @return void
      * @throws AlreadyExistsException
      * @throws InputException
@@ -429,6 +436,7 @@ class Payment
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
+     *
      * @return void
      * @throws InvalidArgumentException
      * @throws LocalizedException
@@ -472,6 +480,7 @@ class Payment
      * @param OrderInterface $order
      * @param string|null $state
      * @param string|null $status
+     *
      * @return void
      * @throws AlreadyExistsException
      * @throws InputException
@@ -514,6 +523,7 @@ class Payment
      * Send Emails
      *
      * @param OrderInterface $order
+     *
      * @return void
      * @throws LocalizedException
      * @throws Exception
