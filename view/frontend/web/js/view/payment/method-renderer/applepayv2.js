@@ -33,7 +33,9 @@ define(
                 let retVal = this._super();
 
                 const componentContainer = $('#unzer-component-' + this.getCode());
-                componentContainer.addClass('apple-pay-button');
+                if(this.isApplePayAvailable()){
+                    componentContainer.addClass('apple-pay-button');
+                }
 
                 this.waitForSetApplePayData();
                 const unzerCheckoutElementId = 'unzer-checkout-' + this.getCode();
