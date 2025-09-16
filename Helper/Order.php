@@ -9,7 +9,6 @@ use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\Module\ModuleListInterface;
-use Magento\Framework\UrlInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Quote\Model\Quote;
@@ -93,11 +92,6 @@ class Order
     private ResolverInterface $localeResolver;
 
     /**
-     * @var UrlInterface
-     */
-    private UrlInterface $urlBuilder;
-
-    /**
      * Constructor
      *
      * @param Config $moduleConfig
@@ -109,7 +103,6 @@ class Order
      * @param BirthDateFactory $birthDateFactory
      * @param CreateThreatMetrixId $createThreatMetrixId
      * @param ResolverInterface $localeResolver
-     * @param UrlInterface $urlBuilder
      */
     public function __construct(
         Config $moduleConfig,
@@ -120,8 +113,7 @@ class Order
         BasketItemFactory $basketItemFactory,
         BirthDateFactory $birthDateFactory,
         CreateThreatMetrixId $createThreatMetrixId,
-        ResolverInterface $localeResolver,
-        UrlInterface $urlBuilder
+        ResolverInterface $localeResolver
     ) {
         $this->_moduleConfig = $moduleConfig;
         $this->_moduleList = $moduleList;
@@ -132,7 +124,6 @@ class Order
         $this->birthDateFactory = $birthDateFactory;
         $this->createThreatMetrixId = $createThreatMetrixId;
         $this->localeResolver = $localeResolver;
-        $this->urlBuilder = $urlBuilder;
     }
 
     /**
@@ -355,10 +346,7 @@ class Order
         $customer->setPhone($billingAddress->getTelephone());
         $customer->setBirthDate($quote->getCustomer()->getDob());
 
-        $domain = str_replace(['http://', 'https://'], '', $this->urlBuilder->getBaseUrl());
-        $domain = rtrim($domain, '/');
-
-        $customerId = (string) $quote->getCustomerId() . '_' . $email . '_' . $domain ?? null;
+        $customerId = (string) $quote->getCustomerId() . '_' . $email;
 
         if(!$quote->getCustomerIsGuest()) {
             $customer->setCustomerId($customerId);
@@ -443,10 +431,7 @@ class Order
             }
             $customer->setEmail($email);
 
-            $domain = str_replace(['http://', 'https://'], '', $this->urlBuilder->getBaseUrl());
-            $domain = rtrim($domain, '/');
-
-            $customerId = (string) $order->getCustomerId() . '_' . $email . '_' . $domain ?? null;
+            $customerId = (string) $order->getCustomerId() . '_' . $email;
 
             if(!$order->getCustomerIsGuest()) {
                 $customer->setCustomerId($customerId);
