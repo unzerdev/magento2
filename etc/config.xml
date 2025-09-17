@@ -247,7 +247,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>PL</country_restrictions>
-                <currency_restrictions>PLN</currency_restrictions>
+                <currency_restrictions>PLN,EUR</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\Przelewy24</model>
             </unzer_przelewy24>
             <unzer_bancontact>
