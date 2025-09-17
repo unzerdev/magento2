@@ -144,6 +144,10 @@ class Base extends Adapter
             return false;
         }
 
+        if ($hasCompany && $this->isB2cOnly()) {
+            return false;
+        }
+
         return parent::isAvailable($quote);
     }
 
