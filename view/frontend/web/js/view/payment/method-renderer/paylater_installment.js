@@ -32,7 +32,7 @@ define(
                 if (unzerPayment && typeof unzerPayment.setBasketData === 'function') {
                     unzerPayment.setBasketData({
                         amount: (quote.totals() ? quote.totals() : quote)['grand_total'],
-                        currencyType: (quote.totals() ? quote.totals() : quote)['quote_currency_code']
+                        currencyType: (quote.totals() ? quote.totals() : quote)['base_currency_code']
                     })
 
                     const billing = quote.billingAddress();
