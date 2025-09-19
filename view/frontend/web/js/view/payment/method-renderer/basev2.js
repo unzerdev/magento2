@@ -39,6 +39,7 @@ define(
             customersBirthDayNeeded: false,
             customerType: null,
             threatMetrixId: null,
+            lastGrandTotal: null,
 
             defaults: {
                 config: null,
@@ -68,6 +69,23 @@ define(
                 quote.paymentMethod.subscribe(function (newPaymentMethod) {
                     if (!newPaymentMethod || newPaymentMethod.method !== self.getCode()) {
                         self.onUnselected();
+                    }
+                });
+
+                this.lastGrandTotal = quote.totals() && typeof quote.totals()['grand_total'] !== 'undefined'
+                    ? quote.totals()['grand_total']
+                    : null;
+
+                quote.totals.subscribe((newTotals) => {
+                    if (quote.paymentMethod() && quote.paymentMethod().method === this.getCode()) {
+                        let currentTotal = newTotals['grand_total'];
+
+                        if (this.lastGrandTotal !== currentTotal) {
+                            this.lastGrandTotal = currentTotal;
+
+                            self.onUnselected();
+                            this.selectPaymentMethod();
+                        }
                     }
                 });
 
