@@ -42,8 +42,7 @@ define(
                         firstname: billing ? billing.firstname : '',
                         lastname: billing ? billing.lastname : '',
                         email: quote.guestEmail ? quote.guestEmail : (window.customerData ? window.customerData.email : ''),
-                        birthDate: customerData.dob.split('T')[0],
-
+                        ...(customerData?.dob ? { birthDate: customerData.dob.split('T')[0] } : {}),
                         billingAddress: billing ? {
                             name: (billing.firstname || '') + ' ' + (billing.lastname || ''),
                             street: Array.isArray(billing.street) ? billing.street.join(' ') : billing.street,
