@@ -107,7 +107,7 @@ define(
                 componentContainer.append(unzerPayment);
                 componentContainer.append(unzerCheckout);
 
-                if (this.customersBirthDayNeeded && customerData.dob) {
+                if (this.customersBirthDayNeeded) {
                     this.waitForSetBasketData();
                 }
 
