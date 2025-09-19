@@ -108,7 +108,7 @@ define(
                 componentContainer.append(unzerCheckout);
 
                 if (this.customersBirthDayNeeded && customerData.dob) {
-                    this.observeBirthDateInput();
+                    this.waitForSetBasketData();
                 }
 
                 return retVal;
@@ -132,58 +132,6 @@ define(
 
                 return $(`<${this.paymentCode}>`);
             },
-
-            observeBirthDateInput: function (maxRetries = 20, interval = 300) {
-                const containerId = 'unzer-payment-' + this.getCode();
-                const container = document.getElementById(containerId);
-
-                if (!container) {
-                    console.warn('Container for payment not found yet.');
-                    return;
-                }
-
-                const attempt = () => {
-                    const input = this.findInShadow(container, 'uds-input-date[name="birthDate"]');
-
-                    if (input && customerData.dob) {
-                        const parts = customerData.dob.split('-');
-                        if (parts.length === 3) {
-                            const year = parts[0];
-                            const month = parts[1].padStart(2, '0');
-                            const day = parts[2].padStart(2, '0');
-
-                            const formattedDob = `${month}/${day}/${year}`;
-                            input.value = formattedDob;
-                        }
-                    } else if (maxRetries > 0) {
-                        maxRetries--;
-                        setTimeout(attempt, interval);
-                    } else {
-                        console.error('Birth date input not found after retries.');
-                    }
-                };
-
-                attempt();
-            },
-
-            findInShadow(root, selector) {
-                if (!root) return null;
-
-                let el = root.querySelector(selector);
-                if (el) return el;
-
-                const children = root.children;
-                for (let i = 0; i < children.length; i++) {
-                    const child = children[i];
-                    if (child.shadowRoot) {
-                        el = this.findInShadow(child.shadowRoot, selector);
-                        if (el) return el;
-                    }
-                }
-
-                return null;
-            },
-
 
             createUnzerCheckoutPaymentElement: function () {
                 const unzerCheckoutId = 'unzer-checkout-' + this.getCode();
@@ -292,6 +240,50 @@ define(
                 // if payment method is initially selected
                 if (quote.paymentMethod() && quote.paymentMethod().method === this.getCode()) {
                     this.selectPaymentMethod();
+                }
+            },
+
+            waitForSetBasketData: function (maxRetries = 10, interval = 500) {
+                const unzerCheckoutElementId = 'unzer-payment-' + this.getCode();
+                const unzerPayment = document.getElementById(unzerCheckoutElementId);
+
+                if (unzerPayment && typeof unzerPayment.setBasketData === 'function') {
+                    unzerPayment.setBasketData({
+                        amount: (quote.totals() ? quote.totals() : quote)['grand_total'],
+                        currencyType: (quote.totals() ? quote.totals() : quote)['base_currency_code']
+                    })
+
+                    const billing = quote.billingAddress();
+                    const shipping = quote.shippingAddress();
+
+                    const customer = {
+                        firstname: billing ? billing.firstname : '',
+                        lastname: billing ? billing.lastname : '',
+                        email: quote.guestEmail ? quote.guestEmail : (window.customerData ? window.customerData.email : ''),
+                        ...(customerData?.dob ? { birthDate: customerData.dob.split('T')[0] } : {}),
+                        billingAddress: billing ? {
+                            name: (billing.firstname || '') + ' ' + (billing.lastname || ''),
+                            street: Array.isArray(billing.street) ? billing.street.join(' ') : billing.street,
+                            zip: billing.postcode,
+                            city: billing.city,
+                            country: billing.countryId
+                        } : {},
+
+                        shippingAddress: shipping ? {
+                            name: (shipping.firstname || '') + ' ' + (shipping.lastname || ''),
+                            street: Array.isArray(shipping.street) ? shipping.street.join(' ') : shipping.street,
+                            zip: shipping.postcode,
+                            city: shipping.city,
+                            country: shipping.countryId
+                        } : {}
+                    };
+
+                    unzerPayment.setCustomerData(customer);
+                } else if (maxRetries > 0) {
+                    console.log('Waiting for setBasketData function to be available...');
+                    setTimeout(() => this.waitForSetBasketData(maxRetries - 1, interval), interval);
+                } else {
+                    console.error('setBasketData is not available after multiple retries.');
                 }
             },
 
