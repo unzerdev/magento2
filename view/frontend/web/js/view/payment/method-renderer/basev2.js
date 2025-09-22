@@ -72,13 +72,13 @@ define(
                     }
                 });
 
-                this.lastGrandTotal = quote.totals() && typeof quote.totals()['grand_total'] !== 'undefined'
-                    ? quote.totals()['grand_total']
+                this.lastGrandTotal = quote.totals() && typeof quote.totals()['base_grand_total'] !== 'undefined'
+                    ? quote.totals()['base_grand_total']
                     : null;
 
                 quote.totals.subscribe((newTotals) => {
                     if (quote.paymentMethod() && quote.paymentMethod().method === this.getCode()) {
-                        let currentTotal = newTotals['grand_total'];
+                        let currentTotal = newTotals['base_grand_total'];
 
                         if (this.lastGrandTotal !== currentTotal) {
                             this.lastGrandTotal = currentTotal;
@@ -249,7 +249,7 @@ define(
 
                 if (unzerPayment && typeof unzerPayment.setBasketData === 'function') {
                     unzerPayment.setBasketData({
-                        amount: (quote.totals() ? quote.totals() : quote)['grand_total'],
+                        amount: (quote.totals() ? quote.totals() : quote)['base_grand_total'],
                         currencyType: (quote.totals() ? quote.totals() : quote)['base_currency_code']
                     })
 

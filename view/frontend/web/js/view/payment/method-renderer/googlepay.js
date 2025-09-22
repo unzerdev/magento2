@@ -59,8 +59,8 @@ define(
                         },
                         transactionInfo: {
                             countryCode: this._getMethodConfig('country_code'),
-                            currencyCode: (quote.totals() ? quote.totals() : quote)['quote_currency_code'],
-                            totalPrice: String((quote.totals() ? quote.totals() : quote)['grand_total'])
+                            currencyCode: (quote.totals() ? quote.totals() : quote)['base_currency_code'],
+                            totalPrice: String((quote.totals() ? quote.totals() : quote)['base_grand_total'])
                         },
                         buttonOptions: {
                             buttonColor: this._getMethodConfig('button_color'),
