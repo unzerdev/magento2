@@ -42,7 +42,8 @@ class Googlepay extends Base
         $parentConfig['merchant_id'] = $this->getConfigData(self::CONFIG_MERCHANT_ID);
         $parentConfig['merchant_name'] = $this->getConfigData(self::CONFIG_MERCHANT_NAME);
         $parentConfig['country_code'] = $this->getConfigData(self::CONFIG_COUNTRY_CODE);
-        $parentConfig['allowed_card_networks'] = explode(',', $this->getConfigData(self::CONFIG_ALLOWED_CARD_NETWORKS));
+        $parentConfig['allowed_card_networks'] = $this->getConfigData(self::CONFIG_ALLOWED_CARD_NETWORKS) ?
+            explode(',', $this->getConfigData(self::CONFIG_ALLOWED_CARD_NETWORKS)) : [];
         $parentConfig['allow_credit_cards'] = $this->getConfigData(self::CONFIG_ALLOW_CREDIT_CARDS);
         $parentConfig['allow_prepaid_cards'] = $this->getConfigData(self::CONFIG_ALLOW_PREPAID_CARDS);
         $parentConfig['button_color'] = $this->getConfigData(self::CONFIG_BUTTON_COLOR);

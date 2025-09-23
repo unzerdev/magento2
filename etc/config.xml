@@ -52,41 +52,9 @@
                 <can_order>0</can_order>
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
+                <currency_restrictions>EUR</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\DirectDebit</model>
             </unzer_direct_debit>
-            <unzer_direct_debit_secured>
-                <active>0</active>
-                <payment_action>authorize_capture</payment_action>
-                <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[(Deprecated) SEPA Direct Debit Secured]]></title>
-                <allowspecific>0</allowspecific>
-                <min_order_total>0</min_order_total>
-                <max_order_total>0</max_order_total>
-                <country_restrictions>AT,CH,DE</country_restrictions>
-                <can_authorize>0</can_authorize>
-                <can_capture>1</can_capture>
-                <can_order>0</can_order>
-                <can_use_checkout>1</can_use_checkout>
-                <can_use_internal>0</can_use_internal>
-                <model>Unzer\PAPI\Model\Method\DirectDebitSecured</model>
-            </unzer_direct_debit_secured>
-            <unzer_bank_transfer>
-                <active>0</active>
-                <payment_action>order</payment_action>
-                <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[Unzer Bank Transfer]]></title>
-                <allowspecific>0</allowspecific>
-                <min_order_total>0</min_order_total>
-                <max_order_total>0</max_order_total>
-                <country_restrictions>AT,DE</country_restrictions>
-                <can_authorize>0</can_authorize>
-                <can_capture>1</can_capture>
-                <can_order>1</can_order>
-                <can_void>1</can_void>
-                <can_use_checkout>1</can_use_checkout>
-                <can_use_internal>0</can_use_internal>
-                <model>Unzer\PAPI\Model\Method\BankTransfer</model>
-            </unzer_bank_transfer>
             <unzer_ideal>
                 <active>0</active>
                 <payment_action>order</payment_action>
@@ -96,6 +64,7 @@
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
                 <country_restrictions>NL</country_restrictions>
+                <currency_restrictions>EUR</currency_restrictions>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
                 <can_order>1</can_order>
@@ -103,53 +72,6 @@
                 <can_use_internal>0</can_use_internal>
                 <model>Unzer\PAPI\Model\Method\Ideal</model>
             </unzer_ideal>
-            <unzer_invoice>
-                <active>0</active>
-                <payment_action>authorize_capture</payment_action>
-                <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[(Deprecated) Unzer Invoice]]></title>
-                <allowspecific>0</allowspecific>
-                <min_order_total>0</min_order_total>
-                <max_order_total>0</max_order_total>
-                <can_authorize>0</can_authorize>
-                <can_order>0</can_order>
-                <can_use_checkout>1</can_use_checkout>
-                <can_use_internal>0</can_use_internal>
-                <pending_payment_state>processing</pending_payment_state>
-                <model>Unzer\PAPI\Model\Method\Invoice</model>
-            </unzer_invoice>
-            <unzer_invoice_secured>
-                <active>0</active>
-                <payment_action>authorize_capture</payment_action>
-                <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[(Deprecated) Unzer Invoice Secured]]></title>
-                <allowspecific>0</allowspecific>
-                <min_order_total>0</min_order_total>
-                <max_order_total>0</max_order_total>
-                <country_restrictions>AT,DE</country_restrictions>
-                <can_authorize>0</can_authorize>
-                <can_order>0</can_order>
-                <can_use_checkout>1</can_use_checkout>
-                <can_use_internal>1</can_use_internal>
-                <pending_payment_state>processing</pending_payment_state>
-                <model>Unzer\PAPI\Model\Method\InvoiceSecured</model>
-            </unzer_invoice_secured>
-            <unzer_invoice_secured_b2b>
-                <active>0</active>
-                <payment_action>authorize_capture</payment_action>
-                <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[(Deprecated) Unzer Invoice Secured B2B]]></title>
-                <allowspecific>0</allowspecific>
-                <min_order_total>0</min_order_total>
-                <max_order_total>0</max_order_total>
-                <country_restrictions>AT,DE</country_restrictions>
-                <can_authorize>0</can_authorize>
-                <can_order>0</can_order>
-                <can_use_checkout>1</can_use_checkout>
-                <can_use_internal>0</can_use_internal>
-                <pending_payment_state>processing</pending_payment_state>
-                <model>Unzer\PAPI\Model\Method\InvoiceSecuredB2b</model>
-            </unzer_invoice_secured_b2b>
             <unzer_paylater_invoice>
                 <active>0</active>
                 <payment_action>order</payment_action>
@@ -159,6 +81,7 @@
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
                 <country_restrictions>AT,DE,CH,NL</country_restrictions>
+                <currency_restrictions>EUR, CHF</currency_restrictions>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
                 <can_capture_partial>1</can_capture_partial>
@@ -177,7 +100,8 @@
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
-                <country_restrictions>AT,DE,CH,NL</country_restrictions>
+                <country_restrictions>AT,DE,CH</country_restrictions>
+                <currency_restrictions>EUR, CHF</currency_restrictions>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
                 <can_capture_partial>1</can_capture_partial>
@@ -197,6 +121,7 @@
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
                 <country_restrictions>AT,DE,CH</country_restrictions>
+                <currency_restrictions>EUR, CHF</currency_restrictions>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
                 <can_capture_partial>1</can_capture_partial>
@@ -216,6 +141,7 @@
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
                 <country_restrictions>AT,DE</country_restrictions>
+                <currency_restrictions>EUR</currency_restrictions>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
                 <can_capture_partial>1</can_capture_partial>
@@ -256,38 +182,6 @@
                 <model>UnzerPaypalVault</model>
                 <title><![CDATA[Stored Paypal Account]]></title>
             </unzer_paypal_vault>
-            <unzer_sofort>
-                <active>0</active>
-                <payment_action>order</payment_action>
-                <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[Sofort]]></title>
-                <allowspecific>0</allowspecific>
-                <min_order_total>0</min_order_total>
-                <max_order_total>0</max_order_total>
-                <can_authorize>0</can_authorize>
-                <can_capture>1</can_capture>
-                <can_order>1</can_order>
-                <can_use_checkout>1</can_use_checkout>
-                <can_use_internal>0</can_use_internal>
-                <country_restrictions>AT,BE,CH,DE,ES,GB,IT,NL,PL</country_restrictions>
-                <model>Unzer\PAPI\Model\Method\Sofort</model>
-            </unzer_sofort>
-            <unzer_giropay>
-                <active>0</active>
-                <payment_action>order</payment_action>
-                <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[(Deprecated) Giropay]]></title>
-                <allowspecific>0</allowspecific>
-                <min_order_total>0</min_order_total>
-                <max_order_total>0</max_order_total>
-                <can_authorize>0</can_authorize>
-                <can_capture>1</can_capture>
-                <can_order>1</can_order>
-                <can_use_checkout>0</can_use_checkout>
-                <can_use_internal>0</can_use_internal>
-                <country_restrictions>DE</country_restrictions>
-                <model>Unzer\PAPI\Model\Method\Giropay</model>
-            </unzer_giropay>
             <unzer_eps>
                 <active>0</active>
                 <payment_action>order</payment_action>
@@ -302,6 +196,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>AT</country_restrictions>
+                <currency_restrictions>EUR</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\EPS</model>
             </unzer_eps>
             <unzer_alipay>
@@ -318,6 +213,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>DE,AT,BE,IT,ES,NL</country_restrictions>
+                <currency_restrictions>AUD,CAD,CHF,CNY,EUR,GBP,HKD,NZD,SGD,USD</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\Alipay</model>
             </unzer_alipay>
             <unzer_wechatpay>
@@ -334,6 +230,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>AT,BE,DK,FI,FR,DE,ES,GB,GR,HU,IE,IS,IT,LI,LU,MT,NL,NO,PT,SE</country_restrictions>
+                <currency_restrictions>CHF,CNY,EUR,GBP,USD</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\Wechatpay</model>
             </unzer_wechatpay>
             <unzer_przelewy24>
@@ -350,7 +247,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>PL</country_restrictions>
-                <currency_restrictions>PLN</currency_restrictions>
+                <currency_restrictions>PLN,EUR</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\Przelewy24</model>
             </unzer_przelewy24>
             <unzer_bancontact>
@@ -367,6 +264,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <country_restrictions>BE</country_restrictions>
+                <currency_restrictions>EUR</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\Bancontact</model>
             </unzer_bancontact>
             <unzer_prepayment>
@@ -384,24 +282,9 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_use_internal>0</can_use_internal>
                 <can_send_new_email>1</can_send_new_email>
+                <currency_restrictions>EUR</currency_restrictions>
                 <model>Unzer\PAPI\Model\Method\Prepayment</model>
             </unzer_prepayment>
-            <unzer_applepay>
-                <active>0</active>
-                <payment_action>order</payment_action>
-                <order_payment_action>authorize_capture</order_payment_action>
-                <title><![CDATA[Apple Pay]]></title>
-                <allowspecific>0</allowspecific>
-                <min_order_total>0</min_order_total>
-                <max_order_total>0</max_order_total>
-                <can_authorize>1</can_authorize>
-                <can_capture>1</can_capture>
-                <can_order>1</can_order>
-                <can_void>1</can_void>
-                <can_use_checkout>1</can_use_checkout>
-                <can_use_internal>0</can_use_internal>
-                <model>Unzer\PAPI\Model\Method\Applepay</model>
-            </unzer_applepay>
             <unzer_applepayv2>
                 <active>0</active>
                 <payment_action>order</payment_action>
@@ -466,7 +349,8 @@
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
-                <country_restrictions>AT,DE</country_restrictions>
+                <country_restrictions>DE</country_restrictions>
+                <currency_restrictions>EUR</currency_restrictions>
                 <can_authorize>0</can_authorize>
                 <can_capture>1</can_capture>
                 <can_order>1</can_order>
@@ -475,6 +359,23 @@
                 <can_use_internal>0</can_use_internal>
                 <model>Unzer\PAPI\Model\Method\OpenBanking</model>
             </unzer_open_banking>
+            <unzer_klarna>
+                <active>0</active>
+                <payment_action>order</payment_action>
+                <order_payment_action>authorize</order_payment_action>
+                <title><![CDATA[Klarna]]></title>
+                <allowspecific>0</allowspecific>
+                <min_order_total>0</min_order_total>
+                <max_order_total>0</max_order_total>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
+                <can_order>1</can_order>
+                <can_void>1</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <model>Unzer\PAPI\Model\Method\Klarna</model>
+            </unzer_klarna>
         </payment>
     </default>
 </config>

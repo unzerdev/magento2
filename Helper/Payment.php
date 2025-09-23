@@ -22,6 +22,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
+use Unzer\PAPI\Model\Command\TransactionSynchronizer;
 use Unzer\PAPI\Model\Method\Base;
 use Unzer\PAPI\Model\Vault\VaultDetailsHandlerManager;
 use UnzerSDK\Constants\PaymentState;
@@ -95,6 +96,11 @@ class Payment
     private PaymentDataObjectFactoryInterface $paymentDataObjectFactory;
 
     /**
+     * @var TransactionSynchronizer
+     */
+    private TransactionSynchronizer $transactionSynchronizer;
+
+    /**
      * Constructor
      *
      * @param InvoiceRepositoryInterface $invoiceRepository
@@ -108,6 +114,7 @@ class Payment
      * @param TransactionRepositoryInterface $transactionRepository
      * @param VaultDetailsHandlerManager $vaultDetailsHandlerManager
      * @param PaymentDataObjectFactoryInterface $paymentDataObjectFactory
+     * @param TransactionSynchronizer $transactionSynchronizer
      */
     public function __construct(
         InvoiceRepositoryInterface $invoiceRepository,
@@ -120,7 +127,8 @@ class Payment
         OrderPaymentRepositoryInterface $paymentRepository,
         TransactionRepositoryInterface $transactionRepository,
         VaultDetailsHandlerManager $vaultDetailsHandlerManager,
-        PaymentDataObjectFactoryInterface $paymentDataObjectFactory
+        PaymentDataObjectFactoryInterface $paymentDataObjectFactory,
+        TransactionSynchronizer $transactionSynchronizer
     ) {
         $this->_invoiceRepository = $invoiceRepository;
         $this->_invoiceSender = $invoiceSender;
@@ -133,6 +141,7 @@ class Payment
         $this->_transactionRepository = $transactionRepository;
         $this->vaultDetailsHandlerManager = $vaultDetailsHandlerManager;
         $this->paymentDataObjectFactory = $paymentDataObjectFactory;
+        $this->transactionSynchronizer = $transactionSynchronizer;
     }
 
     /**
@@ -140,6 +149,7 @@ class Payment
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
+     *
      * @return void
      * @throws AlreadyExistsException
      * @throws InputException
@@ -163,13 +173,13 @@ class Payment
 
             switch ($payment->getState()) {
                 case PaymentState::STATE_CANCELED:
-                    $this->processCanceledState($order);
+                    $this->processCanceledState($order, $payment);
                     break;
                 case PaymentState::STATE_COMPLETED:
                     $this->processCompletedState($order, $payment);
                     break;
                 case PaymentState::STATE_CHARGEBACK:
-                    $this->processChargebackState($order);
+                    $this->processChargebackState($order, $payment);
                     break;
                 case PaymentState::STATE_PARTLY:
                     $this->processPartlyState($order, $payment);
@@ -190,13 +200,20 @@ class Payment
      * Process canceled state
      *
      * @param OrderInterface $order
+     * @param PaymentResource $payment
+     *
      * @return void
+     *
      * @throws AlreadyExistsException
      * @throws InputException
+     * @throws LocalizedException
      * @throws NoSuchEntityException
+     * @throws UnzerApiException
      */
-    private function processCanceledState(OrderInterface $order): void
+    private function processCanceledState(OrderInterface $order, PaymentResource $payment): void
     {
+        $this->transactionSynchronizer->applyCancellationOnMagento($order, $payment);
+
         // Orders in payment_review can't be cancelled so we must manually
         // change the status so that we can cancel the Order.
         if ($order->isPaymentReview()) {
@@ -219,12 +236,18 @@ class Payment
                 $this->_orderRepository->save($order);
             }
         }
+
+        if ($payment->getAmount()->getTotal() && $payment->getAmount()->getTotal() === $payment->getAmount()->getCanceled()) {
+            $this->setOrderState($order, Order::STATE_CLOSED, Order::STATE_CLOSED);
+            $this->_orderRepository->save($order);
+        }
     }
 
     /**
      * Is order voided
      *
      * @param OrderInterface $order
+     *
      * @return bool
      * @throws InputException
      */
@@ -243,7 +266,9 @@ class Payment
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
+     *
      * @return void
+     *
      * @throws AlreadyExistsException
      * @throws InputException
      * @throws LocalizedException
@@ -252,14 +277,16 @@ class Payment
      */
     private function processCompletedState(OrderInterface $order, PaymentResource $payment): void
     {
+        $this->transactionSynchronizer->applyCaptureOnMagento($order, $payment);
+
         $orderPayment = $order->getPayment();
 
-        $transactionId = $payment->getChargeByIndex(0)->getId();
+        $transactionId = $order->getPayment()->getLastTransId();
 
         /** @var Order\Invoice $invoice */
         $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
 
-        if ((int)$invoice->getState() === Order\Invoice::STATE_OPEN) {
+        if ($invoice !== null && (int)$invoice->getState() === Order\Invoice::STATE_OPEN) {
             $invoice->pay();
 
             $order = $invoice->getOrder();
@@ -277,13 +304,13 @@ class Payment
             $order->getId()
         );
 
-        if (!$paymentTransaction->getIsClosed()) {
+        if ($paymentTransaction && !$paymentTransaction->getIsClosed()) {
             $paymentTransaction->setIsClosed(true);
 
             $this->_transactionRepository->save($paymentTransaction);
 
             $parentPaymentTransaction = $paymentTransaction->getParentTransaction();
-            if ($parentPaymentTransaction !== null &&
+            if (!empty($parentPaymentTransaction) &&
                 !$parentPaymentTransaction->getIsClosed()
             ) {
                 $parentPaymentTransaction->setIsClosed(true);
@@ -302,14 +329,14 @@ class Payment
      * Process chargeback state
      *
      * @param OrderInterface $order
+     * @param PaymentResource $payment
+     *
      * @return void
-     * @throws AlreadyExistsException
-     * @throws InputException
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
+     * @throws Exception
      */
-    private function processChargebackState(OrderInterface $order): void
+    private function processChargebackState(OrderInterface $order, PaymentResource $payment): void
     {
+        $this->transactionSynchronizer->applyChargebackOnMagento($order, $payment);
         if ($order->getState() !== Order::STATE_CANCELED &&
             $order->getState() !== Order::STATE_CLOSED) {
             $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW, Order::STATUS_FRAUD);
@@ -321,6 +348,7 @@ class Payment
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
+     *
      * @return void
      * @throws AlreadyExistsException
      * @throws InputException
@@ -330,13 +358,17 @@ class Payment
      */
     private function processPartlyState(OrderInterface $order, PaymentResource $payment): void
     {
-        $this->processPendingState($order, $payment);
+        $this->transactionSynchronizer->applyCancellationOnMagento($order, $payment);
+        $this->transactionSynchronizer->applyCaptureOnMagento($order, $payment);
+
+        $this->setOrderState($order, Order::STATE_PROCESSING);
     }
 
     /**
      * Process payment review state
      *
      * @param OrderInterface $order
+     *
      * @return void
      * @throws AlreadyExistsException
      * @throws InputException
@@ -353,6 +385,7 @@ class Payment
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
+     *
      * @return void
      * @throws AlreadyExistsException
      * @throws InputException
@@ -377,6 +410,7 @@ class Payment
      * Set Invoice Type State
      *
      * @param OrderInterface $order
+     *
      * @return void
      * @throws AlreadyExistsException
      * @throws InputException
@@ -402,6 +436,7 @@ class Payment
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
+     *
      * @return void
      * @throws InvalidArgumentException
      * @throws LocalizedException
@@ -445,6 +480,7 @@ class Payment
      * @param OrderInterface $order
      * @param string|null $state
      * @param string|null $status
+     *
      * @return void
      * @throws AlreadyExistsException
      * @throws InputException
@@ -487,6 +523,7 @@ class Payment
      * Send Emails
      *
      * @param OrderInterface $order
+     *
      * @return void
      * @throws LocalizedException
      * @throws Exception

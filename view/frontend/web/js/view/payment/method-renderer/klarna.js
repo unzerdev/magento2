@@ -9,8 +9,8 @@ define(
 
         return Component.extend({
             defaults: {
-                template: 'Unzer_PAPI/payment/open_banking',
-                paymentCode: 'unzer-open-banking',
+                template: 'Unzer_PAPI/payment/klarna',
+                paymentCode: 'unzer-klarna',
             }
         });
     }

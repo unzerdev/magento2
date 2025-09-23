@@ -15,7 +15,7 @@ interface OverrideApiCredentialInterface
      * @param string|null $storeId
      * @return bool
      */
-    public function hasMethodValidOverrideKeys(string $storeId = null): bool;
+    public function hasMethodValidOverrideKeys(?string $storeId = null): bool;
 
     /**
      * Get Method Override Public Key
@@ -23,7 +23,7 @@ interface OverrideApiCredentialInterface
      * @param string|null $storeId
      * @return string
      */
-    public function getMethodOverridePublicKey(string $storeId = null): string;
+    public function getMethodOverridePublicKey(?string $storeId = null): string;
 
     /**
      * Get Method Override Private Key
@@ -31,5 +31,5 @@ interface OverrideApiCredentialInterface
      * @param string|null $storeId
      * @return string
      */
-    public function getMethodOverridePrivateKey(string $storeId = null): string;
+    public function getMethodOverridePrivateKey(?string $storeId = null): string;
 }

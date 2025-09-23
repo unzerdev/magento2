@@ -16,23 +16,7 @@
             <!--/ko-->
         </div>
 
-        <form class="unzerUI form" novalidate>
-            <div id="unzer-paylater-direct-debit-customer-ibanholder" class="field"></div>
-            <div id="unzer-paylater-direct-debit-customer" class="field"></div>
-            <div id="unzer-paylater-direct-debit-customer-error" class="field" style="color: #9f3a38"></div>
-            <div class="field">
-                <button class="unzerUI primary button fluid"
-                        data-bind="
-                        click: placeOrder,
-                        attr: {title: $t('Place Order')},
-                        css: {disabled: !isPlaceOrderActionAllowed() || !allTermsChecked()},
-                        enable: (getCode() == isChecked() && allInputsValid())
-                        "
-                        type="submit">
-                    <span data-bind="i18n: 'Place Order'"></span>
-                </button>
-            </div>
-        </form>
+        <div id="unzer-component-unzer_paylater_direct_debit"></div>
         <div class="checkout-agreements-block">
             <!-- ko foreach: $parent.getRegion('before-place-order') -->
             <!-- ko template: getTemplate() --><!-- /ko -->

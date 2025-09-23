@@ -132,7 +132,7 @@ class Capture extends AbstractCommand
      * @return Charge
      * @throws UnzerApiException|LocalizedException
      */
-    protected function _chargeExisting(Order $order, string $paymentId, float $amount, string $storeId = null): Charge
+    protected function _chargeExisting(Order $order, string $paymentId, float $amount, ?string $storeId = null): Charge
     {
         $payment = $this->_getClient($storeId, $order->getPayment()->getMethodInstance())
             ->fetchPayment($paymentId);

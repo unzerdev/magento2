@@ -1,22 +1,28 @@
 define(
     [
+        'jquery',
         'ko',
-        'Unzer_PAPI/js/view/payment/method-renderer/base',
-        'Magento_Vault/js/view/payment/vault-enabler'
+        'mage/translate',
+        'Magento_Checkout/js/action/place-order',
+        'Magento_Ui/js/model/messageList',
+        'Unzer_PAPI/js/view/payment/method-renderer/basev2',
+        'Magento_Vault/js/view/payment/vault-enabler',
     ],
-    function (ko, Component, VaultEnabler) {
+    function ($,
+              ko,
+              $t,
+              placeOrderAction,
+              globalMessageList,
+              Component,
+              VaultEnabler
+    ) {
         'use strict';
 
         return Component.extend({
             defaults: {
                 isActivePaymentTokenEnabler: false,
-                fields: {
-                    cvc: {valid: null},
-                    expiry: {valid: null},
-                    number: {valid: null},
-                    holder: {valid: null},
-                },
-                template: 'Unzer_PAPI/payment/cards'
+                template: 'Unzer_PAPI/payment/cards',
+                paymentCode: 'unzer-card',
             },
 
             initialize: function () {
@@ -29,52 +35,45 @@ define(
                 return this;
             },
 
-            initializeForm: function () {
-                const self = this;
+            createUnzerPaymentElement: function () {
+                const unzerPaymentElementId = 'unzer-payment-' + this.getCode();
 
-                this.resourceProvider = this.sdk.Card();
-                this.resourceProvider.create('number', {
-                    containerId: 'unzer-card-element-id-number',
-                    onlyIframe: false
-                });
-                this.resourceProvider.create('expiry', {
-                    containerId: 'unzer-card-element-id-expiry',
-                    onlyIframe: false
-                });
-                this.resourceProvider.create('cvc', {
-                    containerId: 'unzer-card-element-id-cvc',
-                    onlyIframe: false
-                });
-                this.resourceProvider.create('holder', {
-                    containerId: 'unzer-card-element-id-holder',
-                    onlyIframe: false
-                });
+                const element = $('<unzer-payment>')
+                    .attr('id', unzerPaymentElementId)
+                    .attr('publicKey', this.getPublicKey())
+                    .attr('locale', window.checkoutConfig.payment.unzer.locale);
 
-                this.fields.cvc.valid = ko.observable(false);
-                this.fields.expiry.valid = ko.observable(false);
-                this.fields.number.valid = ko.observable(false);
-                this.fields.holder.valid = ko.observable(false);
+                if (!this.isClickToPayEnabled()) {
+                    element.attr('disableCTP', true);
+                }
 
-                this.resourceProvider.addEventListener('change', function (event) {
-                    if ("type" in event) {
-                        self.fields[event.type].valid("success" in event && event.success);
+                return element;
+            },
+
+            selectPaymentMethod: function () {
+                let retVal = this._super();
+
+                if (this.isVaultEnabled()) {
+                    const checkbox = document.getElementById('unzer-card-save-card-checkbox');
+                    const checkboxLabel = document.getElementById('unzer-card-save-card-typography');
+                    if (checkbox && checkboxLabel) {
+                        checkbox.removeAttribute('hidden');
+                        checkbox.addEventListener('click', () => {
+                            if (!this.isActivePaymentTokenEnabler) {
+                                this.isActivePaymentTokenEnabler = true;
+                                this.vaultEnabler.isActivePaymentTokenEnabler(true);
+
+                                return;
+                            }
+                            this.isActivePaymentTokenEnabler = false;
+                            this.vaultEnabler.isActivePaymentTokenEnabler(false);
+                        })
+
+                        checkboxLabel.textContent = $t('Save for later use.');
                     }
-                });
-            },
+                }
 
-            allInputsValid: function () {
-                const self = this;
-
-                return ko.computed(function () {
-                    return self.fields.cvc.valid() &&
-                        self.fields.expiry.valid() &&
-                        self.fields.number.valid() &&
-                        self.fields.holder.valid();
-                })();
-            },
-
-            validate: function () {
-                return this.allInputsValid();
+                return retVal;
             },
 
             /**
@@ -99,7 +98,54 @@ define(
                 this.vaultEnabler.visitAdditionalData(data);
 
                 return data;
-            }
+            },
+
+            getPlaceOrderDeferredObject: function () {
+                let deferred = $.Deferred(),
+                    self = this;
+
+                Promise.all([
+                    customElements.whenDefined('unzer-card')
+                ]).then(() => {
+                    const unzerCheckout = document.getElementById('unzer-checkout-unzer_cards');
+                    unzerCheckout.onPaymentSubmit = response => {
+                        if (response.submitResponse && response.submitResponse.status === 'SUCCESS') {
+                            this.resourceId = response.submitResponse.data.id;
+                            placeOrderAction(self.getData(), self.messageContainer)
+                                .done(function () {
+                                    deferred.resolve.apply(deferred, arguments);
+                                })
+                                .fail(function (request) {
+                                    if (request.responseJSON && request.responseJSON.message) {
+                                        globalMessageList.addErrorMessage({
+                                            message: request.responseJSON.message
+                                        });
+                                        deferred.reject(request.responseJSON.message);
+                                    } else {
+                                        globalMessageList.addErrorMessage({
+                                            message: 'An unknown error occurred. Please try again.'
+                                        });
+                                        deferred.reject('An unknown error occurred.');
+                                    }
+                                });
+                        } else {
+                            deferred.reject($t('There was an error placing your order. ' + response.submitResponse.message));
+                        }
+                    };
+                }).catch(error => {
+                    deferred.reject($t('There was an error placing your order. ' + error));
+                });
+
+                return deferred.fail(function (error) {
+                    globalMessageList.addErrorMessage({
+                        message: error
+                    });
+                });
+            },
+
+            isClickToPayEnabled: function () {
+                return this._getMethodConfig('enable_click_to_pay') === '1';
+            },
         });
     }
 );
