@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.0](https://github.com/unzerdev/magento2/compare/3.2.9..4.0.0)
+### Changed
+*  Migration from Unzer UI Component V1 to Unzer UI Component V2
+*  Deprecated payment methods have been replaced with new ones, removed or renamed. For full list see https://docs.unzer.com/plugins/magento-2/magento2-migrate-v1-v2/#payment-methods-changes
+### Added
+*  EAA Support
+
+For more information go to https://docs.unzer.com/plugins/magento-2/magento2-migrate-v1-v2/#page-title
+
+
 ## [3.2.9](https://github.com/unzerdev/magento2/compare/3.2.8..3.2.9)
 ### Changed
 *  Hide first name, last name and email fields for Invoice B2B payment method

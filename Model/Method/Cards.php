@@ -12,6 +12,8 @@ class Cards extends Base
 {
     public const VAULT_CODE = 'unzer_cards_vault';
 
+    public const ENABLE_CLICK_TO_PAY = 'enable_click_to_pay';
+
     /**
      * @inheritDoc
      */
@@ -30,6 +32,7 @@ class Cards extends Base
         $parentConfig = parent::getFrontendConfig();
 
         $parentConfig['vault_code'] = $this->getVaultCode();
+        $parentConfig['enable_click_to_pay'] = $this->getConfigData(self::ENABLE_CLICK_TO_PAY);
 
         return $parentConfig;
     }

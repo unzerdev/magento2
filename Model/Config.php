@@ -35,31 +35,24 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public const METHOD_CARDS_VAULT = 'unzer_cards_vault';
 
     public const METHOD_DIRECT_DEBIT = 'unzer_direct_debit';
-    public const METHOD_DIRECT_DEBIT_SECURED = 'unzer_direct_debit_secured';
     public const METHOD_EPS = 'unzer_eps';
-    public const METHOD_GIROPAY = 'unzer_giropay';
-    public const METHOD_BANK_TRANSFER = 'unzer_bank_transfer';
     public const METHOD_IDEAL = 'unzer_ideal';
-    public const METHOD_INVOICE = 'unzer_invoice';
     public const METHOD_PAYLATER_INVOICE = 'unzer_paylater_invoice';
     public const METHOD_PAYLATER_INVOICE_B2B = 'unzer_paylater_invoice_b2b';
     public const METHOD_PAYLATER_INSTALLMENT = 'unzer_paylater_installment';
     public const METHOD_PAYLATER_DIRECT_DEBIT = 'unzer_paylater_direct_debit';
-    public const METHOD_INVOICE_SECURED_B2B = 'unzer_invoice_secured_b2b';
-    public const METHOD_INVOICE_SECURED = 'unzer_invoice_secured';
     public const METHOD_PAYPAL = 'unzer_paypal';
     public const METHOD_PAYPAL_VAULT = 'unzer_paypal_vault';
-    public const METHOD_SOFORT = 'unzer_sofort';
     public const METHOD_ALIPAY = 'unzer_alipay';
     public const METHOD_WECHATPAY = 'unzer_wechatpay';
     public const METHOD_PRZELEWY24 = 'unzer_przelewy24';
     public const METHOD_BANCONTACT = 'unzer_bancontact';
     public const METHOD_PREPAYMENT = 'unzer_prepayment';
-    public const METHOD_APPLEPAY = 'unzer_applepay';
     public const METHOD_APPLEPAYV2 = 'unzer_applepayv2';
     public const METHOD_GOOGLEPAY = 'unzer_googlepay';
     public const METHOD_TWINT = 'unzer_twint';
     public const METHOD_OPEN_BANKING = 'unzer_open_banking';
+    public const METHOD_KLARNA = 'unzer_klarna';
 
     /**
      * @var DebugHandler
@@ -121,7 +114,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * @param string|null $storeId
      * @return bool
      */
-    private function isDebugMode(string $storeId = null): bool
+    private function isDebugMode(?string $storeId = null): bool
     {
         return $this->_scopeConfig->isSetFlag(
             self::BASE_CONFIGURATION_PATH . self::KEY_LOGGING,
@@ -137,7 +130,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * @param MethodInterface|null $paymentMethodInstance
      * @return string|null
      */
-    public function getPublicKey(string $storeId = null, MethodInterface $paymentMethodInstance = null): ?string
+    public function getPublicKey(?string $storeId = null, ?MethodInterface $paymentMethodInstance = null): ?string
     {
         if ($paymentMethodInstance instanceof OverrideApiCredentialInterface
             && $paymentMethodInstance->hasMethodValidOverrideKeys($storeId)
@@ -159,7 +152,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * @param MethodInterface|null $paymentMethodInstance
      * @return string|null
      */
-    public function getPrivateKey(string $storeId = null, MethodInterface $paymentMethodInstance = null): ?string
+    public function getPrivateKey(?string $storeId = null, ?MethodInterface $paymentMethodInstance = null): ?string
     {
         if ($paymentMethodInstance instanceof OverrideApiCredentialInterface
             && $paymentMethodInstance->hasMethodValidOverrideKeys($storeId)
@@ -181,7 +174,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * @param MethodInterface|null $paymentMethodInstance
      * @return Unzer
      */
-    public function getUnzerClient(string $storeId = null, MethodInterface $paymentMethodInstance = null): Unzer
+    public function getUnzerClient(?string $storeId = null, ?MethodInterface $paymentMethodInstance = null): Unzer
     {
         $client = new Unzer(
             $this->getPrivateKey($storeId, $paymentMethodInstance),

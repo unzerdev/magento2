@@ -22,32 +22,25 @@ class Provider implements ConfigProviderInterface
      * @var array
      */
     protected array $_methodCodes = [
-        Config::METHOD_BANK_TRANSFER,
         Config::METHOD_CARDS,
         Config::METHOD_DIRECT_DEBIT,
-        Config::METHOD_DIRECT_DEBIT_SECURED,
         Config::METHOD_EPS,
-        Config::METHOD_GIROPAY,
         Config::METHOD_IDEAL,
-        Config::METHOD_INVOICE,
-        Config::METHOD_INVOICE_SECURED,
-        Config::METHOD_INVOICE_SECURED_B2B,
         Config::METHOD_PAYLATER_INVOICE,
         Config::METHOD_PAYLATER_INVOICE_B2B,
         Config::METHOD_PAYLATER_INSTALLMENT,
         Config::METHOD_PAYLATER_DIRECT_DEBIT,
         Config::METHOD_PAYPAL,
-        Config::METHOD_SOFORT,
         Config::METHOD_ALIPAY,
         Config::METHOD_WECHATPAY,
         Config::METHOD_PRZELEWY24,
         Config::METHOD_BANCONTACT,
         Config::METHOD_PREPAYMENT,
-        Config::METHOD_APPLEPAY,
         Config::METHOD_APPLEPAYV2,
         Config::METHOD_GOOGLEPAY,
         Config::METHOD_TWINT,
         Config::METHOD_OPEN_BANKING,
+        Config::METHOD_KLARNA
     ];
 
     /**

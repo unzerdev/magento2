@@ -50,18 +50,18 @@ class Base extends Adapter
      * @param LoggerInterface|null $logger
      */
     public function __construct(
-        ManagerInterface $eventManager,
+        ManagerInterface          $eventManager,
         ValueHandlerPoolInterface $valueHandlerPool,
-        PaymentDataObjectFactory $paymentDataObjectFactory,
+        PaymentDataObjectFactory  $paymentDataObjectFactory,
         $code,
         $formBlockType,
         $infoBlockType,
-        ScopeConfigInterface $scopeConfig,
-        Config $moduleConfig,
-        CommandPoolInterface $commandPool = null,
-        ValidatorPoolInterface $validatorPool = null,
-        CommandManagerInterface $commandExecutor = null,
-        LoggerInterface $logger = null
+        ScopeConfigInterface      $scopeConfig,
+        Config                    $moduleConfig,
+        ?CommandPoolInterface     $commandPool = null,
+        ?ValidatorPoolInterface   $validatorPool = null,
+        ?CommandManagerInterface  $commandExecutor = null,
+        ?LoggerInterface $logger = null
     ) {
         parent::__construct(
             $eventManager,
@@ -120,7 +120,7 @@ class Base extends Adapter
     /**
      * @inheritDoc
      */
-    public function isAvailable(CartInterface $quote = null)
+    public function isAvailable(?CartInterface $quote = null)
     {
         $moduleConfig = $this->_moduleConfig;
         if ($quote === null) {
@@ -141,6 +141,10 @@ class Base extends Adapter
         $hasCompany = !empty($quote->getBillingAddress()->getCompany());
 
         if (!$hasCompany && $this->isB2bOnly()) {
+            return false;
+        }
+
+        if ($hasCompany && $this->isB2cOnly()) {
             return false;
         }
 
@@ -201,7 +205,7 @@ class Base extends Adapter
      * @param string|null $storeId
      * @return bool
      */
-    public function hasMethodValidOverrideKeys(string $storeId = null): bool
+    public function hasMethodValidOverrideKeys(?string $storeId = null): bool
     {
         if (!$this->getConfigData(Config::OVERRIDE_API_KEYS, $storeId)) {
             return false;
@@ -222,7 +226,7 @@ class Base extends Adapter
      * @param string|null $storeId
      * @return string
      */
-    public function getMethodOverridePublicKey(string $storeId = null): string
+    public function getMethodOverridePublicKey(?string $storeId = null): string
     {
         return (string)$this->getConfigData(Config::KEY_PUBLIC_KEY, $storeId);
     }
@@ -233,7 +237,7 @@ class Base extends Adapter
      * @param string|null $storeId
      * @return string
      */
-    public function getMethodOverridePrivateKey(string $storeId = null): string
+    public function getMethodOverridePrivateKey(?string $storeId = null): string
     {
         return (string)$this->getConfigData(Config::KEY_PRIVATE_KEY, $storeId);
     }

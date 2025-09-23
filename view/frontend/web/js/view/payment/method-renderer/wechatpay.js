@@ -1,17 +1,16 @@
 define(
     [
-        'Unzer_PAPI/js/view/payment/method-renderer/base'
+        'Unzer_PAPI/js/view/payment/method-renderer/basev2'
     ],
-    function (Component) {
+    function (
+        Component
+    ) {
         'use strict';
 
         return Component.extend({
             defaults: {
-                template: 'Unzer_PAPI/payment/wechatpay'
-            },
-
-            initializeForm: function () {
-                this.resourceProvider = this.sdk.Wechatpay();
+                template: 'Unzer_PAPI/payment/wechatpay',
+                paymentCode: 'unzer-wechatpay',
             },
         });
     }

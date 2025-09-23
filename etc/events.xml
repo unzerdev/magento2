@@ -6,23 +6,8 @@
     <event name="payment_method_assign_data_unzer_direct_debit">
         <observer name="unzer_direct_debit_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_unzer_direct_debit_secured">
-        <observer name="unzer_direct_debit_secured_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
-    </event>
-    <event name="payment_method_assign_data_unzer_bank_transfer">
-        <observer name="unzer_bank_transfer_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
-    </event>
     <event name="payment_method_assign_data_unzer_ideal">
         <observer name="unzer_ideal_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
-    </event>
-    <event name="payment_method_assign_data_unzer_invoice">
-        <observer name="unzer_invoice_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
-    </event>
-    <event name="payment_method_assign_data_unzer_invoice_secured">
-        <observer name="unzer_invoice_secured_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
-    </event>
-    <event name="payment_method_assign_data_unzer_invoice_secured_b2b">
-        <observer name="unzer_invoice_secured_b2b_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
     <event name="payment_method_assign_data_unzer_paylater_invoice">
         <observer name="unzer_paylater_invoice_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
@@ -38,12 +23,6 @@
     </event>
     <event name="payment_method_assign_data_unzer_paypal">
         <observer name="unzer_paypal_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
-    </event>
-    <event name="payment_method_assign_data_unzer_sofort">
-        <observer name="unzer_sofort_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
-    </event>
-    <event name="payment_method_assign_data_unzer_giropay">
-        <observer name="unzer_giropay_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
     <event name="payment_method_assign_data_unzer_eps">
         <observer name="unzer_eps_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
@@ -63,9 +42,6 @@
     <event name="payment_method_assign_data_unzer_prepayment">
         <observer name="unzer_prepayment_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_unzer_applepay">
-        <observer name="unzer_applepay_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
-    </event>
     <event name="payment_method_assign_data_unzer_applepayv2">
         <observer name="unzer_applepayv2_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
@@ -77,5 +53,8 @@
     </event>
     <event name="payment_method_assign_data_unzer_open_banking">
         <observer name="unzer_open_banking_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
+    </event>
+    <event name="payment_method_assign_data_unzer_klarna">
+        <observer name="unzer_klarna_data_assign" instance="Unzer\PAPI\Model\Method\Observer\BaseDataAssignObserver" />
     </event>
 </config>

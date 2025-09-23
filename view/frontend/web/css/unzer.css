@@ -5330,3 +5330,16 @@ i.h-iconideal-van-lanschot:before {
 .unzerChoices[data-type*=select-multiple] .unzerChoices__input.is-hidden, .unzerChoices[data-type*=select-one] .unzerChoices__input.is-hidden, .unzerChoices__input.is-hidden {
     display: none
 }
+
+.unzerPlaceOrderPadding {
+    margin: 12px;
+}
+
+.unzerCompanyTypeSelect {
+    margin-bottom: 15px;
+}
+
+.apple-pay-button {
+    width: 240px;
+    height: 40px;
+}
