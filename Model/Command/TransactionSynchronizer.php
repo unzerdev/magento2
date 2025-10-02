@@ -39,7 +39,8 @@ class TransactionSynchronizer
     public function applyCaptureOnMagento(OrderInterface $order, UnzerPayment $unzer): void
     {
         $payment = $this->getOrderPayment($order);
-        $capture = array_last($unzer->getCharges());
+        $charges = $unzer->getCharges();
+        $capture = ($charges === []) ? null : $charges[\array_key_last($charges)];
 
         if (!$payment || !$capture) {
             return;
@@ -81,7 +82,9 @@ class TransactionSynchronizer
     public function applyCancellationOnMagento(OrderInterface $order, UnzerPayment $unzer): void
     {
         $payment = $this->getOrderPayment($order);
-        $cancellation = array_last($unzer->getCancellations());
+        $cancellations = $unzer->getCancellations();
+        $cancellation = ($cancellations === []) ? null : $cancellations[\array_key_last($cancellations)];
+
 
         if (!$payment || !$cancellation) {
             return;
@@ -146,7 +149,9 @@ class TransactionSynchronizer
     public function applyChargebackOnMagento(OrderInterface $order, UnzerPayment $unzer): void
     {
         $payment = $this->getOrderPayment($order);
-        $chargeback = array_last($unzer->getChargebacks());
+        $chargebacks = $unzer->getChargebacks();
+        $chargeback = ($chargebacks === []) ? null : $chargebacks[\array_key_last($chargebacks)];
+
 
         if (!$payment || !$chargeback) {
             return;
