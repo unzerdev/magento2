@@ -84,6 +84,10 @@ define(
             {
                 type: 'unzer_klarna',
                 component: 'Unzer_PAPI/js/view/payment/method-renderer/klarna'
+            },
+            {
+                type: 'unzer_wero',
+                component: 'Unzer_PAPI/js/view/payment/method-renderer/wero'
             }
         );
         return Component.extend({});

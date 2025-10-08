@@ -53,6 +53,7 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public const METHOD_TWINT = 'unzer_twint';
     public const METHOD_OPEN_BANKING = 'unzer_open_banking';
     public const METHOD_KLARNA = 'unzer_klarna';
+    public const METHOD_WERO = 'unzer_wero';
 
     /**
      * @var DebugHandler
