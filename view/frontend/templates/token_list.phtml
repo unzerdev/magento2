@@ -1,0 +1,46 @@
+<?php
+/** @var \Magento\Vault\Block\Customer\AccountTokens $block */
+$tokens = $block->getPaymentTokens();
+if (empty($tokens)) {
+    return;
+}
+
+$groups = [
+    'paypal' => [],
+    'direct_debit'   => [],
+];
+
+foreach ($tokens as $token) {
+    $code = $token->getPaymentMethodCode();
+
+    if (strpos($code, 'paypal')) {
+        $groups['paypal'][] = $token;
+    }
+
+    if (strpos($code, 'direct_debit')) {
+        $groups['direct_debit'][] = $token;
+    }
+}
+
+$titles = [
+    'paypal' => __('PayPal Account'),
+    'direct_debit'   => __('SEPA Direct Debit'),
+];
+?>
+
+<div class="table-wrapper my-credit-cards">
+    <table class="data table table-credit-cards" id="token-list-table">
+        <tbody>
+        <?php foreach (['paypal', 'direct_debit'] as $groupKey): ?>
+            <?php if (!empty($groups[$groupKey])): ?>
+                <tr class="vault-section-header <?= $block->escapeHtmlAttr($groupKey) ?>-header">
+                    <th colspan="4"><?= $block->escapeHtml($titles[$groupKey]) ?></th>
+                </tr>
+                <?php foreach ($groups[$groupKey] as $token): ?>
+                    <?= /* @noEscape */ $block->renderTokenHtml($token) ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>

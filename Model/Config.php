@@ -31,10 +31,9 @@ class Config extends \Magento\Payment\Gateway\Config\Config
 
     public const METHOD_BASE = 'unzer';
     public const METHOD_CARDS = 'unzer_cards';
-
     public const METHOD_CARDS_VAULT = 'unzer_cards_vault';
-
     public const METHOD_DIRECT_DEBIT = 'unzer_direct_debit';
+    public const METHOD_DIRECT_DEBIT_VAULT = 'unzer_direct_debit_vault';
     public const METHOD_EPS = 'unzer_eps';
     public const METHOD_IDEAL = 'unzer_ideal';
     public const METHOD_PAYLATER_INVOICE = 'unzer_paylater_invoice';

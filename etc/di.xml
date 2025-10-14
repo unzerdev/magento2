@@ -83,6 +83,7 @@
             <argument name="executors" xsi:type="array">
                 <item name="unzer_cards" xsi:type="string">UnzerCardsCommandManager</item>
                 <item name="unzer_paypal" xsi:type="string">UnzerPaypalCommandManager</item>
+                <item name="unzer_direct_debit" xsi:type="string">UnzerDirectDebitCommandManager</item>
             </argument>
         </arguments>
     </virtualType>
@@ -95,6 +96,7 @@
                 </item>
                 <item name="unzer_paypal" xsi:type="object">Unzer\PAPI\Model\Vault\Handlers\PaypalVaultDetailsHandler
                 </item>
+                <item name="unzer_direct_debit" xsi:type="object">Unzer\PAPI\Model\Vault\Handlers\DirectDebitVaultDetailsHandler</item>
             </argument>
         </arguments>
     </type>
@@ -295,6 +297,44 @@
             <argument name="commandPool" xsi:type="object">UnzerCaptureCommandPool</argument>
         </arguments>
     </type>
+
+    <!-- Configuration for Direct Debit Vault payment -->
+    <virtualType name="UnzerDirectDebitVaultPaymentConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_DIRECT_DEBIT_VAULT</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerDirectDebitVaultPaymentValueHandler" type="VaultPaymentDefaultValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerDirectDebitVaultPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerDirectDebitVaultPaymentValueHandlerPool" type="VaultPaymentValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerDirectDebitVaultPaymentValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="UnzerDirectDebitVault" type="Unzer\PAPI\Model\Method\Vault">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerDirectDebitVaultPaymentConfig</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerDirectDebitVaultPaymentValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">Unzer\PAPI\Model\Method\DirectDebit</argument>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_DIRECT_DEBIT_VAULT</argument>
+            <argument name="commandManagerPool" xsi:type="object">UnzerVaultCommandManagerPool</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Command manager for Direct Debit Vault -->
+    <virtualType name="UnzerDirectDebitCommandManager" type="Magento\Payment\Gateway\Command\CommandManager">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureVaultCommandPool</argument>
+        </arguments>
+    </virtualType>
 
     <!--    Define types for Ideal payment method  -->
     <virtualType name="UnzerIdealConfig" type="Unzer\PAPI\Model\Config">
