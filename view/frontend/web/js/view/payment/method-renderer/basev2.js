@@ -344,7 +344,15 @@ define(
                         message: error
                     });
                 });
-            }
+            },
+
+            isVaultEnabled: function () {
+                return this.vaultEnabler.isVaultEnabled();
+            },
+
+            getVaultCode: function () {
+                return window.checkoutConfig.payment[this.getCode()].vault_code;
+            },
         });
     }
 );

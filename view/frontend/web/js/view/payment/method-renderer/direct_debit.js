@@ -58,73 +58,10 @@ define(
                 return retVal;
             },
 
-            /**
-             * @returns {Boolean}
-             */
-            isVaultEnabled: function () {
-                return this.vaultEnabler.isVaultEnabled();
-            },
-
-            /**
-             * Returns vault code.
-             * @returns {String}
-             */
-            getVaultCode: function () {
-                return window.checkoutConfig.payment[this.getCode()].vault_code;
-            },
-
             getData: function () {
                 const data = this._super();
                 this.vaultEnabler.visitAdditionalData(data);
                 return data;
-            },
-
-            getPlaceOrderDeferredObject: function () {
-                const deferred = $.Deferred();
-                const self = this;
-
-                Promise.all([
-                    customElements.whenDefined('unzer-sepa-direct-debit')
-                ]).then(() => {
-                    const unzerCheckout = document.getElementById('unzer-checkout-unzer_direct_debit');
-
-                    if (!unzerCheckout) {
-                        deferred.reject($t('SEPA component not found on the page.'));
-                        return;
-                    }
-
-                    unzerCheckout.onPaymentSubmit = function (response) {
-                        const sr = response && response.submitResponse;
-
-                        if (sr && (sr.status === 'SUCCESS' || sr.success === true)) {
-                            self.resourceId = sr.data && sr.data.id;
-
-                            placeOrderAction(self.getData(), self.messageContainer)
-                                .done(function () {
-                                    deferred.resolve.apply(deferred, arguments);
-                                })
-                                .fail(function (request) {
-                                    const msg = request && request.responseJSON && request.responseJSON.message
-                                        ? request.responseJSON.message
-                                        : $t('An unknown error occurred. Please try again.');
-                                    globalMessageList.addErrorMessage({ message: msg });
-                                    deferred.reject(msg);
-                                });
-                        } else {
-                            const msg = (sr && sr.message) ? sr.message : $t('Unknown submit error.');
-                            globalMessageList.addErrorMessage({
-                                message: $t('There was an error placing your order. ') + msg
-                            });
-                            deferred.reject($t('There was an error placing your order. ') + msg);
-                        }
-                    };
-                }).catch(function (error) {
-                    deferred.reject($t('There was an error placing your order. ') + error);
-                });
-
-                return deferred.fail(function (error) {
-                    globalMessageList.addErrorMessage({ message: error });
-                });
             }
         });
     }
