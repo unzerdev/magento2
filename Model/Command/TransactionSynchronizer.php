@@ -2,7 +2,10 @@
 
 namespace Unzer\PAPI\Model\Command;
 
+use Exception;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
@@ -142,6 +145,8 @@ class TransactionSynchronizer
      * @param UnzerPayment $unzer
      *
      * @return void
+     * @throws LocalizedException
+     * @throws Exception
      */
     public function applyChargebackOnMagento(OrderInterface $order, UnzerPayment $unzer): void
     {
@@ -158,19 +163,27 @@ class TransactionSynchronizer
             return;
         }
 
-        if ($this->hasTransaction($payment, $order, $chargebackId)) {
-            return;
-        }
-
         $parent = $chargeback->getParentResource();
 
         $parentTxnId = $parent->getId();
         $chargebackTxnId = $parentTxnId . '-' . $chargebackId;
 
+        if ($this->hasTransaction($payment, $order, $chargebackTxnId)) {
+            return;
+        }
+
         $payment->setParentTransactionId($parentTxnId);
         $payment->setTransactionId($chargebackTxnId);
 
         $payment->registerRefundNotification($chargeback->getAmount());
+
+        $transaction = $payment->addTransaction(TransactionInterface::TYPE_REFUND, null, true);
+
+        if ($transaction) {
+            $transaction->setTxnId($chargebackTxnId);
+            $transaction->setParentTxnId($parentTxnId);
+            $transaction->setIsClosed(true);
+        }
 
         $this->paymentRepository->save($payment);
     }
