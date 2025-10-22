@@ -13,7 +13,7 @@ define(
             defaults: {
                 template: 'Unzer_PAPI/payment/paylater_invoice',
                 paymentCode: 'unzer-paylater-invoice',
-                customersBirthDayNeeded: true,
+                customerNeeded: true,
             }
         });
     }
