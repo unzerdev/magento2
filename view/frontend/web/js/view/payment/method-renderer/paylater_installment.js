@@ -8,7 +8,7 @@ define(
 
         return Component.extend({
             isThreatMetrixNeeded: true,
-            customersBirthDayNeeded: true,
+            customerNeeded: true,
             defaults: {
                 template: 'Unzer_PAPI/payment/paylater_installment',
                 paymentCode: 'unzer-paylater-installment'
