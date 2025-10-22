@@ -39,6 +39,7 @@ use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
 class Payment
 {
     public const STATUS_READY_TO_CAPTURE = 'unzer_ready_to_capture';
+    private const METHOD_PREPAYMENT = 'unzer_prepayment';
 
     /**
      * @var InvoiceRepositoryInterface
@@ -361,7 +362,13 @@ class Payment
         $this->transactionSynchronizer->applyCancellationOnMagento($order, $payment);
         $this->transactionSynchronizer->applyCaptureOnMagento($order, $payment);
 
-        $this->setOrderState($order, Order::STATE_PROCESSING);
+        if($order->getPayment()->getMethod() === self::METHOD_PREPAYMENT) {
+            $this->setOrderState($order, Order::STATE_PENDING_PAYMENT);
+
+            return;
+        }
+
+        $this->setOrderState($order);
     }
 
     /**
