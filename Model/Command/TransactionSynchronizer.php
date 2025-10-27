@@ -67,6 +67,7 @@ class TransactionSynchronizer
         $payment->setTransactionId($captureId);
 
         if ($capture->isSuccess()) {
+            $payment->setIsTransactionPending($unzer->isPartlyPaid());
             $payment->registerCaptureNotification($capture->getAmount(), true);
             $this->paymentRepository->save($payment);
         }
