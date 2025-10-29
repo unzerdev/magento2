@@ -5,5 +5,8 @@
         <route frontName="unzer" id="unzer">
             <module name="Unzer_PAPI"/>
         </route>
+        <route id="sales" frontName="sales">
+            <module name="Unzer_PAPI" before="Magento_Sales"/>
+        </route>
     </router>
 </config>
