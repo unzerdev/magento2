@@ -8,13 +8,9 @@ define(
         'use strict';
 
         return Component.extend({
-            isThreatMetrixNeeded: true,
-
             defaults: {
-                template: 'Unzer_PAPI/payment/paylater_invoice',
-                paymentCode: 'unzer-paylater-invoice',
-                customerNeeded: true,
+                template: 'Unzer_PAPI/payment/wero',
+                paymentCode: 'unzer-wero',
             }
         });
-    }
-);
+    });

@@ -2,25 +2,26 @@
 declare(strict_types=1);
 
 use Magento\Framework\View\Element\Template;
+use Unzer\PAPI\Block\Customer\DirectDebitRenderer;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
-use Unzer\PAPI\Block\Customer\PaypalRenderer;
 
-/** @var Template|PaypalRenderer $block */
-$payerEmail = (string)$block->escapeHtml($block->getPayerEmail());
+/** @var Template|DirectDebitRenderer $block */
+$maskedIban = (string)$block->escapeHtml($block->getMaskedIban());
+$holder = (string)$block->escapeHtml($block->getAccountHolder());
 ?>
 
-<tr class="paypal-row">
-    <td class="col paypal-email" data-th="<?= $block->escapeHtmlAttr(__('Email')) ?>">
+<tr class="sepa-row">
+    <td class="col sepa-iban" data-th="<?= $block->escapeHtmlAttr(__('IBAN')) ?>">
         <?= /* @noEscape */
-        $payerEmail ?>
+        $maskedIban ?>
     </td>
-
-    <td class="col paypal-value" data-th=""></td>
-
-    <td class="col paypal-type" data-th="<?= $block->escapeHtmlAttr(__('Type')) ?>">
-        <?= $block->escapeHtml(__('PayPal')) ?>
+    <td class="col sepa-holder" data-th="<?= $block->escapeHtmlAttr(__('Account Holder')) ?>">
+        <?= /* @noEscape */
+        $holder ?>
     </td>
-
+    <td class="col sepa-type" data-th="<?= $block->escapeHtmlAttr(__('Type')) ?>">
+        <?= $block->escapeHtml(__('SEPA Direct Debit')) ?>
+    </td>
     <td class="col actions" aria-label="<?= $block->escapeHtmlAttr(__('Actions')) ?>">
         <form class="form"
               action="<?= $block->escapeUrl($block->getUrl('vault/cards/deleteaction')) ?>"
@@ -31,8 +32,7 @@ $payerEmail = (string)$block->escapeHtml($block->getPayerEmail());
                     PaymentTokenInterface::PUBLIC_HASH ?>"
                     value="<?= /* @noEscape */
                     $block->getToken()->getPublicHash() ?>"
-                    type="hidden"
-            />
+                    type="hidden"/>
             <button type="submit"
                     class="action delete"
                     data-mage-init='{
@@ -41,8 +41,8 @@ $payerEmail = (string)$block->escapeHtml($block->getPayerEmail());
                             "modalClass": "my-credit-cards-popup",
                             "toggleEvent": "click",
                             "title": "<?= $block->escapeHtmlAttr(__('Delete')) ?>",
-                            "content": "<?= $block->escapeHtmlAttr(__('Are you sure you want to delete this PayPal account: %1?',
-                        $payerEmail)) ?>"
+                            "content": "<?= $block->escapeHtmlAttr(__('Are you sure you want to delete this SEPA mandate: %1 (%2)?',
+                        $maskedIban, $holder)) ?>"
                         }
                     }'>
                 <span><?= $block->escapeHtml(__('Delete')) ?></span>

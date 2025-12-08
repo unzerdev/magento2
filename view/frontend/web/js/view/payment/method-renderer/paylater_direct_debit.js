@@ -12,7 +12,7 @@ define(
             defaults: {
                 template: 'Unzer_PAPI/payment/paylater_direct_debit',
                 paymentCode: 'unzer-paylater-direct-debit',
-                customersBirthDayNeeded: true,
+                customerNeeded: true,
             }
         });
     }
