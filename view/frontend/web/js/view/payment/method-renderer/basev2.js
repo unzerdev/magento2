@@ -36,7 +36,7 @@ define(
             isThreatMetrixNeeded: false,
             buttonNeeded: true,
             paymentCode: null,
-            customersBirthDayNeeded: false,
+            customerNeeded: false,
             customerType: null,
             threatMetrixId: null,
             lastGrandTotal: null,
@@ -107,7 +107,7 @@ define(
                 componentContainer.append(unzerPayment);
                 componentContainer.append(unzerCheckout);
 
-                if (this.customersBirthDayNeeded) {
+                if (this.customerNeeded) {
                     this.waitForSetBasketData();
                 }
 
@@ -275,7 +275,13 @@ define(
                             zip: shipping.postcode,
                             city: shipping.city,
                             country: shipping.countryId
-                        } : {}
+                        } : {},
+                        ...(billing?.company && billing.company.trim() !== ''
+                            ? { company: billing.company.trim() }
+                            : {}),
+                        customerSettings: {
+                            type: billing?.company && billing.company.trim() !== '' ? 'B2B' : 'B2C'
+                        }
                     };
 
                     unzerPayment.setCustomerData(customer);
@@ -298,11 +304,11 @@ define(
                     const unzerCheckout = document.getElementById(unzerCheckoutElementId);
                     unzerCheckout.onPaymentSubmit = response => {
                         if (response.submitResponse && response.submitResponse.success) {
-                            this.resourceId = response.submitResponse.data.id;
 
-                            if (this.customersBirthDayNeeded) {
-                                this.customersBirthDay = document.querySelector(this.paymentCode).shadowRoot?.querySelector('uds-input-date[name="birthDate"]').value;
+                            if(response.customerResponse && response.customerResponse.success) {
+                                this.customer = response.customerResponse.data.id;
                             }
+                            this.resourceId = response.submitResponse.data.id;
 
                             if (response.threatMetrixId) {
                                 this.threatMetrixId = response.threatMetrixId;
@@ -344,7 +350,15 @@ define(
                         message: error
                     });
                 });
-            }
+            },
+
+            isVaultEnabled: function () {
+                return this.vaultEnabler.isVaultEnabled();
+            },
+
+            getVaultCode: function () {
+                return window.checkoutConfig.payment[this.getCode()].vault_code;
+            },
         });
     }
 );

@@ -1,11 +1,24 @@
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="content">
             <referenceBlock name="vault.cards.list">
-                <block class="Unzer\PAPI\Block\Customer\CardsRenderer" name="unzer.card.renderer" template="Unzer_PAPI::customer_account/credit_card.phtml"/>
+                <block class="Unzer\PAPI\Block\Customer\CardsRenderer"
+                       name="unzer.card.renderer"
+                       template="Unzer_PAPI::customer_account/credit_card.phtml"/>
             </referenceBlock>
             <referenceBlock name="vault.token.list">
-                <block class="Unzer\PAPI\Block\Customer\PaypalRenderer" name="unzer.token.renderer" template="Unzer_PAPI::customer_account/paypal.phtml"/>
+                <action method="setTemplate">
+                    <argument name="template" xsi:type="string">Unzer_PAPI::token_list.phtml</argument>
+                </action>
+                <block class="Unzer\PAPI\Block\Customer\PaypalRenderer"
+                       name="unzer.paypal.renderer"
+                       template="Unzer_PAPI::customer_account/paypal.phtml">
+                </block>
+                <block class="Unzer\PAPI\Block\Customer\DirectDebitRenderer"
+                       name="unzer.sepa.renderer"
+                       template="Unzer_PAPI::customer_account/direct_debit.phtml">
+                </block>
             </referenceBlock>
         </referenceContainer>
     </body>

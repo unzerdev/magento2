@@ -6,13 +6,12 @@ namespace Unzer\PAPI\Model\Method;
 /**
  * Direct debit payment method
  *
- * @deprecated use paylater direct debit
- *
  * @link  https://docs.unzer.com/
  */
 class DirectDebit extends Base
 {
     public const CONFIG_PATH_STORE_NAME = 'general/store_information/name';
+    public const VAULT_CODE = 'unzer_direct_debit_vault';
 
     /**
      * @inheritDoc
@@ -20,6 +19,7 @@ class DirectDebit extends Base
     public function getFrontendConfig(): array
     {
         $parentConfig = parent::getFrontendConfig();
+        $parentConfig['vault_code'] = $this->getVaultCode();
 
         $merchantName = $this->getConfigData('merchant_name');
 
@@ -30,5 +30,10 @@ class DirectDebit extends Base
         $parentConfig['merchantName'] = $merchantName;
 
         return $parentConfig;
+    }
+
+    public function getVaultCode(): ?string
+    {
+        return self::VAULT_CODE;
     }
 }

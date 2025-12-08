@@ -17,6 +17,7 @@
             <argument name="tokenUiComponentProviders" xsi:type="array">
                 <item name="unzer_cards" xsi:type="object">Unzer\PAPI\Model\Vault\Type\CardsTokenUiComponentProvider</item>
                 <item name="unzer_paypal" xsi:type="object">Unzer\PAPI\Model\Vault\Type\PaypalTokenUiComponentProvider</item>
+                <item name="unzer_direct_debit" xsi:type="object">Unzer\PAPI\Model\Vault\Type\DirectDebitTokenUiComponentProvider</item>
             </argument>
         </arguments>
     </type>

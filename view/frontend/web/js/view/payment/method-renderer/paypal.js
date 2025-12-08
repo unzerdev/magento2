@@ -56,22 +56,6 @@ define(
                 return retVal;
             },
 
-            /**
-             * @returns {Boolean}
-             */
-            isVaultEnabled: function () {
-                return this.vaultEnabler.isVaultEnabled();
-            },
-
-            /**
-             * Returns vault code.
-             *
-             * @returns {String}
-             */
-            getVaultCode: function () {
-                return window.checkoutConfig.payment[this.getCode()].vault_code;
-            },
-
             getData: function () {
                 var data = this._super();
 

@@ -67,6 +67,7 @@
                 <include path="Unzer_PAPI::system/twint.xml"/>
                 <include path="Unzer_PAPI::system/open_banking.xml"/>
                 <include path="Unzer_PAPI::system/klarna.xml"/>
+                <include path="Unzer_PAPI::system/wero.xml"/>
             </group>
         </section>
     </system>

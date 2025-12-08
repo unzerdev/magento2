@@ -40,5 +40,22 @@
             <label>Sort Order</label>
             <config_path>payment/unzer_direct_debit/sort_order</config_path>
         </field>
+        <!-- Vault -->
+        <field id="unzer_direct_debit_vault_active" translate="label" type="select"
+               sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Enable Vault for SEPA Payments</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/unzer_direct_debit_vault/active</config_path>
+            <comment>Save IBAN and account holder for registered customers</comment>
+        </field>
+        <field id="unzer_direct_debit_vault_instant_purchase_active" translate="label"
+               type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Enable Instant Purchase</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/unzer_direct_debit_vault/instant_purchase_active</config_path>
+            <depends>
+                <field id="unzer_direct_debit_vault_active">1</field>
+            </depends>
+        </field>
     </group>
 </include>
