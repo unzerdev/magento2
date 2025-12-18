@@ -28,24 +28,58 @@ use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
  */
 class DirectDebitVaultDetailsHandler implements VaultDetailsHandlerInterface
 {
+    /**
+     * @var PaymentTokenFactoryInterface
+     */
     private PaymentTokenFactoryInterface $paymentTokenFactory;
+
+    /**
+     * @var OrderPaymentExtensionInterfaceFactory
+     */
     private OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory;
+
+    /**
+     * @var Json
+     */
     private Json $serializer;
+
+    /**
+     * @var DateTimeFactory
+     */
     private DateTimeFactory $dateTimeFactory;
+
+    /**
+     * @var PaymentTokenResourceModel
+     */
     private PaymentTokenResourceModel $paymentTokenResourceModel;
 
+    /**
+     * @var VaultTokenPersister
+     */
+    private VaultTokenPersister $vaultTokenPersister;
+
+    /**
+     * @param PaymentTokenFactoryInterface $paymentTokenFactory
+     * @param OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory
+     * @param Json $serializer
+     * @param DateTimeFactory $dateTimeFactory
+     * @param PaymentTokenResourceModel $paymentTokenResourceModel
+     * @param VaultTokenPersister $vaultTokenPersister
+     */
     public function __construct(
         PaymentTokenFactoryInterface $paymentTokenFactory,
         OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory,
         Json $serializer,
         DateTimeFactory $dateTimeFactory,
-        PaymentTokenResourceModel $paymentTokenResourceModel
+        PaymentTokenResourceModel $paymentTokenResourceModel,
+        VaultTokenPersister $vaultTokenPersister
     ) {
         $this->paymentTokenFactory = $paymentTokenFactory;
         $this->paymentExtensionFactory = $paymentExtensionFactory;
         $this->serializer = $serializer;
         $this->dateTimeFactory = $dateTimeFactory;
         $this->paymentTokenResourceModel = $paymentTokenResourceModel;
+        $this->vaultTokenPersister = $vaultTokenPersister;
     }
 
     /**
@@ -77,7 +111,11 @@ class DirectDebitVaultDetailsHandler implements VaultDetailsHandlerInterface
 
         $paymentToken = $this->createVaultPaymentToken($transaction, $payment);
         if ($paymentToken !== null) {
-            $extensionAttributes = $this->getExtensionAttributes($payment->getPayment());
+            $orderPayment = $payment->getPayment();
+
+            $this->vaultTokenPersister->save($paymentToken, $orderPayment);
+
+            $extensionAttributes = $this->getExtensionAttributes($orderPayment);
             $extensionAttributes->setVaultPaymentToken($paymentToken);
         }
     }
