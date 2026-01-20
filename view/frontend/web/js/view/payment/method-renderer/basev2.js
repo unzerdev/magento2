@@ -167,7 +167,10 @@ define(
                     return overridePublicKey;
                 }
 
-                return window.checkoutConfig.payment.unzer.publicKey;
+                return (
+                    window.checkoutConfig.payment[this.getCode()]?.publicKey ||
+                    window.checkoutConfig.payment.unzer?.publicKey
+                );
             },
 
             /**
@@ -260,7 +263,7 @@ define(
                         firstname: billing ? billing.firstname : '',
                         lastname: billing ? billing.lastname : '',
                         email: quote.guestEmail ? quote.guestEmail : (window.customerData ? window.customerData.email : ''),
-                        ...(customerData?.dob ? { birthDate: customerData.dob.split('T')[0] } : {}),
+                        ...(customerData?.dob ? {birthDate: customerData.dob.split('T')[0]} : {}),
                         billingAddress: billing ? {
                             name: (billing.firstname || '') + ' ' + (billing.lastname || ''),
                             street: Array.isArray(billing.street) ? billing.street.join(' ') : billing.street,
@@ -277,7 +280,7 @@ define(
                             country: shipping.countryId
                         } : {},
                         ...(billing?.company && billing.company.trim() !== ''
-                            ? { company: billing.company.trim() }
+                            ? {company: billing.company.trim()}
                             : {}),
                         customerSettings: {
                             type: billing?.company && billing.company.trim() !== '' ? 'B2B' : 'B2C'
@@ -305,7 +308,7 @@ define(
                     unzerCheckout.onPaymentSubmit = response => {
                         if (response.submitResponse && response.submitResponse.success) {
 
-                            if(response.customerResponse && response.customerResponse.success) {
+                            if (response.customerResponse && response.customerResponse.success) {
                                 this.customer = response.customerResponse.data.id;
                             }
                             this.resourceId = response.submitResponse.data.id;
