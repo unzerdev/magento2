@@ -21,7 +21,7 @@ class ApplepayV2 extends Base
         return [
             'supportedNetworks' => $supportedNetworks,
             'merchantCapabilities' => ['supports3DS'],
-            'label' => $this->_scopeConfig->getValue('payment/unzer_applepayv2/display_name') //label
+            'label' => 'Unzer GmbH'
         ];
     }
 }

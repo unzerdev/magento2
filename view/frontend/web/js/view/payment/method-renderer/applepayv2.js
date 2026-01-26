@@ -55,14 +55,12 @@ define(
 
                 if (unzerPaymentElement && typeof unzerPaymentElement.setApplePayData === 'function') {
                     const supportedNetworks = window.checkoutConfig.payment.unzer_applepayv2.supportedNetworks.map((network) => network.toLowerCase());
-
+                    const billing = quote.billingAddress && quote.billingAddress();
                     const totals = quote.totals() ? quote.totals() : window.checkoutConfig.quoteData;
 
                     unzerPaymentElement.setApplePayData({
-                        countryCode: quote.billingAddress().countryId,
+                        countryCode: billing?.countryId,
                         currencyCode: window.checkoutConfig.quoteData.base_currency_code,
-                        totalLabel: window.checkoutConfig.payment.unzer_applepayv2.label,
-                        totalAmount: Number(totals['base_grand_total']).toFixed(2),
                         supportedNetworks: supportedNetworks,
                         merchantCapabilities: window.checkoutConfig.payment.unzer_applepayv2.merchantCapabilities,
                         requiredShippingContactFields: [],
