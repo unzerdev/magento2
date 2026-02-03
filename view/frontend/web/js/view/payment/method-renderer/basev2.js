@@ -264,8 +264,17 @@ define(
                 const methodConfig = window.checkoutConfig.payment[this.getCode()] || {};
                 const unzerCustomerId = methodConfig.unzerCustomerId || null;
 
+                const email = quote.guestEmail
+                    ? quote.guestEmail
+                    : (window.customerData ? window.customerData.email : '');
+
+                const shop = window.checkoutConfig?.quoteData.store_id || '';
+
                 const billing = quote.billingAddress();
                 const shipping = quote.shippingAddress();
+
+                const customerId = window.checkoutConfig?.customerData.id || '';
+                const uniqueCustomerId = `${customerId}_${email}_${shop}`;
 
                 if (unzerCustomerId) {
                     this.customer = unzerCustomerId;
@@ -273,10 +282,10 @@ define(
 
                 const customer = {
                     id: unzerCustomerId || '',
-                    customerId: billing?.customerId || '',
+                    customerId: uniqueCustomerId,
                     firstname: billing ? billing.firstname : '',
                     lastname: billing ? billing.lastname : '',
-                    email: quote.guestEmail ? quote.guestEmail : (window.customerData ? window.customerData.email : ''),
+                    email: email,
                     ...(customerData?.dob ? {birthDate: customerData.dob.split('T')[0]} : {}),
                     billingAddress: billing ? {
                         name: (billing.firstname || '') + ' ' + (billing.lastname || ''),

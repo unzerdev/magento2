@@ -158,7 +158,9 @@ class Provider implements ConfigProviderInterface
                 $method
             );
 
-            return $client->fetchCustomerByExtCustomerId((string)$quote->getCustomerId());
+            $customerId = $quote->getCustomerId() . '_' . $quote->getCustomerEmail() . '_' . $quote->getStore()->getId();
+
+            return $client->fetchCustomerByExtCustomerId($customerId);
         } catch (\Exception $e) {
             return null;
         }
