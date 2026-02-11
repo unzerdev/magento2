@@ -10,7 +10,7 @@
         <label class="label" data-bind="attr: {'for': getCode()}"><span data-bind="text: getTitle()"></span></label>
     </div>
     <div class="payment-method-content">
-        <div class="payment-method-billing-address" data-bind="if: isApplePayAvailable()">
+        <div class="payment-method-billing-address">
             <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->

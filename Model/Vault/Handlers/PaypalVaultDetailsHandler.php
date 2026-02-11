@@ -54,6 +54,11 @@ class PaypalVaultDetailsHandler implements VaultDetailsHandlerInterface
     private PaymentTokenResourceModel $paymentTokenResourceModel;
 
     /**
+     * @var VaultTokenPersister
+     */
+    private VaultTokenPersister $vaultTokenPersister;
+
+    /**
      * Constructor
      *
      * @param PaymentTokenFactoryInterface $paymentTokenFactory
@@ -61,19 +66,22 @@ class PaypalVaultDetailsHandler implements VaultDetailsHandlerInterface
      * @param DateTimeFactory $dateTimeFactory
      * @param Json $serializer
      * @param PaymentTokenResourceModel $paymentTokenResourceModel
+     * @param VaultTokenPersister $vaultTokenPersister
      */
     public function __construct(
         PaymentTokenFactoryInterface $paymentTokenFactory,
         OrderPaymentExtensionInterfaceFactory $paymentExtensionFactory,
         DateTimeFactory $dateTimeFactory,
         Json $serializer,
-        PaymentTokenResourceModel $paymentTokenResourceModel
+        PaymentTokenResourceModel $paymentTokenResourceModel,
+        VaultTokenPersister $vaultTokenPersister
     ) {
         $this->paymentTokenFactory = $paymentTokenFactory;
         $this->paymentExtensionFactory = $paymentExtensionFactory;
         $this->serializer = $serializer;
         $this->dateTimeFactory = $dateTimeFactory;
         $this->paymentTokenResourceModel = $paymentTokenResourceModel;
+        $this->vaultTokenPersister = $vaultTokenPersister;
     }
 
     /**
@@ -106,7 +114,11 @@ class PaypalVaultDetailsHandler implements VaultDetailsHandlerInterface
         // add vault payment token entity to extension attributes
         $paymentToken = $this->createVaultPaymentToken($transaction, $payment);
         if (null !== $paymentToken) {
-            $extensionAttributes = $this->getExtensionAttributes($payment->getPayment());
+            $orderPayment = $payment->getPayment();
+
+            $this->vaultTokenPersister->save($paymentToken, $orderPayment);
+
+            $extensionAttributes = $this->getExtensionAttributes($orderPayment);
             $extensionAttributes->setVaultPaymentToken($paymentToken);
         }
     }

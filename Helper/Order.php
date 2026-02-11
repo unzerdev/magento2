@@ -346,9 +346,9 @@ class Order
         $customer->setPhone($billingAddress->getTelephone());
         $customer->setBirthDate($quote->getCustomer()->getDob());
 
-        $customerId = (string) $quote->getCustomerId();
+        $customerId = $quote->getCustomerId() . '_' . $email . '_' . $quote->getStore()->getId();
 
-        if(!$quote->getCustomerIsGuest()) {
+        if (!$quote->getCustomerIsGuest()) {
             $customer->setCustomerId($customerId);
         }
 
@@ -431,9 +431,9 @@ class Order
             }
             $customer->setEmail($email);
 
-            $customerId = (string) $order->getCustomerId();
+            $customerId = $order->getCustomerId() . '_' . $email . '_' . $order->getStore()->getId();
 
-            if(!$order->getCustomerIsGuest()) {
+            if (!$order->getCustomerIsGuest()) {
                 $customer->setCustomerId($customerId);
             }
 

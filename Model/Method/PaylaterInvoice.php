@@ -7,7 +7,7 @@ namespace Unzer\PAPI\Model\Method;
  *
  * @link  https://docs.unzer.com/
  */
-class PaylaterInvoice extends Invoice implements OverrideApiCredentialInterface
+class PaylaterInvoice extends Base implements OverrideApiCredentialInterface
 {
     /**
      * @inheritDoc

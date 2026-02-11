@@ -7,38 +7,54 @@ if (empty($tokens)) {
 
 $groups = [
     'paypal' => [],
-    'direct_debit'   => [],
+    'direct_debit' => [],
 ];
 
 foreach ($tokens as $token) {
-    $code = $token->getPaymentMethodCode();
+    $code = (string)$token->getPaymentMethodCode();
 
-    if (strpos($code, 'paypal')) {
+    if (strpos($code, 'paypal') !== false) {
         $groups['paypal'][] = $token;
     }
 
-    if (strpos($code, 'direct_debit')) {
+    if (strpos($code, 'direct_debit') !== false) {
         $groups['direct_debit'][] = $token;
     }
 }
 
 $titles = [
     'paypal' => __('PayPal Account'),
-    'direct_debit'   => __('SEPA Direct Debit'),
+    'direct_debit' => __('SEPA Direct Debit'),
 ];
 ?>
 
 <div class="table-wrapper my-credit-cards">
     <table class="data table table-credit-cards" id="token-list-table">
+
+        <thead>
+        <tr>
+            <th scope="col" class="col card-number">&nbsp;</th>
+            <th scope="col" class="col card-expire">&nbsp;</th>
+            <th scope="col" class="col card-type">&nbsp;</th>
+            <th scope="col" class="col actions">&nbsp;</th>
+        </tr>
+        </thead>
+
         <tbody>
         <?php foreach (['paypal', 'direct_debit'] as $groupKey): ?>
             <?php if (!empty($groups[$groupKey])): ?>
+
                 <tr class="vault-section-header <?= $block->escapeHtmlAttr($groupKey) ?>-header">
-                    <th colspan="4"><?= $block->escapeHtml($titles[$groupKey]) ?></th>
+                    <th colspan="4">
+                        <?= $block->escapeHtml($titles[$groupKey]) ?>
+                    </th>
                 </tr>
+
                 <?php foreach ($groups[$groupKey] as $token): ?>
-                    <?= /* @noEscape */ $block->renderTokenHtml($token) ?>
+                    <?= /* @noEscape */
+                    $block->renderTokenHtml($token) ?>
                 <?php endforeach; ?>
+
             <?php endif; ?>
         <?php endforeach; ?>
         </tbody>
