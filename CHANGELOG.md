@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.2](https://github.com/unzerdev/magento2/compare/4.0.1..4.0.2)
+### Fixed
+*  Storing PayPal and SEPA Direct Debit on Magento 2.4.8
+*  Incorrect Invoice B2B UI component
+### Changed
+*  Unblock Apple Pay on non-Safari browsers
+*  Reorder the default payment method list on checkout
+*  Set the Wero booking method mode to Charge
+*  Improve Unzer customer initialization using unique customerId
+
 ## [4.0.1](https://github.com/unzerdev/magento2/compare/4.0.0..4.0.1)
 ### Changed
 *  Invoice B2B component on checkout page
