@@ -9,30 +9,29 @@ use Unzer\PAPI\Block\Customer\PaypalRenderer;
 $payerEmail = (string)$block->escapeHtml($block->getPayerEmail());
 ?>
 
-<tr class="paypal-row">
-    <td class="col paypal-email" data-th="<?= $block->escapeHtmlAttr(__('Email')) ?>">
-        <?= /* @noEscape */
-        $payerEmail ?>
+<tr class="vault-paypal-row">
+    <td class="col card-number" data-th="<?= $block->escapeHtml(__('Account')) ?>">
+        <?= $payerEmail ?>
     </td>
 
-    <td class="col paypal-value" data-th=""></td>
+    <td class="col card-expire" data-th="<?= $block->escapeHtml(__('Expiration Date')) ?>">
+        &nbsp;
+    </td>
 
-    <td class="col paypal-type" data-th="<?= $block->escapeHtmlAttr(__('Type')) ?>">
+    <td class="col card-type" data-th="<?= $block->escapeHtml(__('Type')) ?>">
         <?= $block->escapeHtml(__('PayPal')) ?>
     </td>
 
-    <td class="col actions" aria-label="<?= $block->escapeHtmlAttr(__('Actions')) ?>">
+    <td class="col actions" data-th="<?= $block->escapeHtml(__('Actions')) ?>">
         <form class="form"
               action="<?= $block->escapeUrl($block->getUrl('vault/cards/deleteaction')) ?>"
               method="post">
             <?= $block->getBlockHtml('formkey') ?>
-            <input
-                    name="<?= /* @noEscape */
-                    PaymentTokenInterface::PUBLIC_HASH ?>"
-                    value="<?= /* @noEscape */
-                    $block->getToken()->getPublicHash() ?>"
-                    type="hidden"
-            />
+
+            <input type="hidden"
+                   name="<?= PaymentTokenInterface::PUBLIC_HASH ?>"
+                   value="<?= $block->getToken()->getPublicHash() ?>"/>
+
             <button type="submit"
                     class="action delete"
                     data-mage-init='{
@@ -41,8 +40,9 @@ $payerEmail = (string)$block->escapeHtml($block->getPayerEmail());
                             "modalClass": "my-credit-cards-popup",
                             "toggleEvent": "click",
                             "title": "<?= $block->escapeHtmlAttr(__('Delete')) ?>",
-                            "content": "<?= $block->escapeHtmlAttr(__('Are you sure you want to delete this PayPal account: %1?',
-                        $payerEmail)) ?>"
+                            "content": "<?= $block->escapeHtmlAttr(
+                        __('Are you sure you want to delete this PayPal account: %1?', $payerEmail)
+                    ) ?>"
                         }
                     }'>
                 <span><?= $block->escapeHtml(__('Delete')) ?></span>

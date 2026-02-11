@@ -2,37 +2,37 @@
 declare(strict_types=1);
 
 use Magento\Framework\View\Element\Template;
-use Unzer\PAPI\Block\Customer\DirectDebitRenderer;
 use Magento\Vault\Api\Data\PaymentTokenInterface;
+use Unzer\PAPI\Block\Customer\DirectDebitRenderer;
 
 /** @var Template|DirectDebitRenderer $block */
-$maskedIban = (string)$block->escapeHtml($block->getMaskedIban());
-$holder = (string)$block->escapeHtml($block->getAccountHolder());
-?>
 
-<tr class="sepa-row">
-    <td class="col sepa-iban" data-th="<?= $block->escapeHtmlAttr(__('IBAN')) ?>">
-        <?= /* @noEscape */
-        $maskedIban ?>
+$maskedIban = $block->escapeHtml($block->getMaskedIban());
+$holder = $block->escapeHtml($block->getAccountHolder());
+?>
+<tr class="vault-sepa-row">
+    <td class="col card-number" data-th="<?= $block->escapeHtml(__('Account')) ?>">
+        <?= $maskedIban ?>
     </td>
-    <td class="col sepa-holder" data-th="<?= $block->escapeHtmlAttr(__('Account Holder')) ?>">
-        <?= /* @noEscape */
-        $holder ?>
+
+    <td class="col card-expire" data-th="<?= $block->escapeHtml(__('Expiration Date')) ?>">
+        <?= $holder ?>
     </td>
-    <td class="col sepa-type" data-th="<?= $block->escapeHtmlAttr(__('Type')) ?>">
+
+    <td class="col card-type" data-th="<?= $block->escapeHtml(__('Type')) ?>">
         <?= $block->escapeHtml(__('SEPA Direct Debit')) ?>
     </td>
-    <td class="col actions" aria-label="<?= $block->escapeHtmlAttr(__('Actions')) ?>">
+
+    <td class="col actions" data-th="<?= $block->escapeHtml(__('Actions')) ?>">
         <form class="form"
               action="<?= $block->escapeUrl($block->getUrl('vault/cards/deleteaction')) ?>"
               method="post">
             <?= $block->getBlockHtml('formkey') ?>
-            <input
-                    name="<?= /* @noEscape */
-                    PaymentTokenInterface::PUBLIC_HASH ?>"
-                    value="<?= /* @noEscape */
-                    $block->getToken()->getPublicHash() ?>"
-                    type="hidden"/>
+
+            <input type="hidden"
+                   name="<?= PaymentTokenInterface::PUBLIC_HASH ?>"
+                   value="<?= $block->getToken()->getPublicHash() ?>"/>
+
             <button type="submit"
                     class="action delete"
                     data-mage-init='{
@@ -41,8 +41,9 @@ $holder = (string)$block->escapeHtml($block->getAccountHolder());
                             "modalClass": "my-credit-cards-popup",
                             "toggleEvent": "click",
                             "title": "<?= $block->escapeHtmlAttr(__('Delete')) ?>",
-                            "content": "<?= $block->escapeHtmlAttr(__('Are you sure you want to delete this SEPA mandate: %1 (%2)?',
-                        $maskedIban, $holder)) ?>"
+                            "content": "<?= $block->escapeHtmlAttr(
+                        __('Are you sure you want to delete this SEPA mandate: %1 (%2)?', $maskedIban, $holder)
+                    ) ?>"
                         }
                     }'>
                 <span><?= $block->escapeHtml(__('Delete')) ?></span>
