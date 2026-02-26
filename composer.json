@@ -22,7 +22,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.15",
-        "phpunit/phpunit": "~6.2.0"
+        "phpunit/phpunit": "^9.6"
     },
     "support": {
         "email": "support@unzer.com"
