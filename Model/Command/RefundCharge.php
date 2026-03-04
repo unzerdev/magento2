@@ -12,6 +12,7 @@ use Unzer\PAPI\Helper\Order as OrderHelper;
 use Unzer\PAPI\Model\Config;
 use UnzerSDK\Constants\CancelReasonCodes;
 use UnzerSDK\Exceptions\UnzerApiException;
+use UnzerSDK\Resources\TransactionTypes\Cancellation;
 use UnzerSDK\Resources\TransactionTypes\CancellationFactory;
 
 /**
@@ -82,8 +83,10 @@ class RefundCharge extends AbstractCommand
             return;
         }
 
+        /** @var Cancellation $cancellation */
         $cancellation = $this->cancellationFactory->create(['amount' => $amount]);
         $cancellation->setReasonCode(self::REASON);
+        $cancellation->setPaymentReference($order->getIncrementId());
 
         $cancellation = $client->cancelChargedPayment($hpPayment, $cancellation);
 
