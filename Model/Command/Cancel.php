@@ -41,7 +41,7 @@ class Cancel extends AbstractCommand
             return;
         }
 
-        $cancellations = $client->cancelPayment($hpPayment, $amount, static::REASON);
+        $cancellations = $client->cancelPayment($hpPayment, $amount, static::REASON, $order->getIncrementId());
 
         if (count($cancellations) > 0) {
             $lastCancellation = end($cancellations);

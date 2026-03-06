@@ -164,12 +164,14 @@ class Capture extends AbstractCommand
     ): Charge {
         $storeId = (string)$order->getStoreId();
 
+        /** @var Charge $charge */
         $charge = $this->chargeFactory->create([
             'amount' => $amount,
             'currency' => $order->getBaseCurrencyCode(),
             'returnUrl' => $this->_getCallbackUrl()
         ]);
         $charge->setOrderId($order->getIncrementId());
+        $charge->setPaymentReference($order->getIncrementId());
 
         $unzerClient = $this->_getClient(
             $storeId,

@@ -46,7 +46,7 @@ class Refund extends AbstractCommand
         // because of the nature of Prepayment, we need to refund the whole payment,
         // otherwise refund is not possible at all for prepayment.
         if ($payment->getMethodInstance()->getCode() === self::METHOD_PREPAYMENT) {
-            $cancellations = $client->cancelPayment($hpPayment, $amount, static::REASON);
+            $cancellations = $client->cancelPayment($hpPayment, $amount, static::REASON, $order->getIncrementId());
 
             if (count($cancellations) > 0) {
                 $lastCancellation = end($cancellations);
@@ -57,7 +57,13 @@ class Refund extends AbstractCommand
 
             $chargeId = $payment->getParentTransactionId();
 
-            $cancellation = $client->cancelChargeById($hpPayment, $chargeId, $amount, self::REASON);
+            $cancellation = $client->cancelChargeById(
+                $hpPayment,
+                $chargeId,
+                $amount,
+                self::REASON,
+                $order->getIncrementId()
+            );
 
             $payment->setLastTransId($cancellation->getId());
         }

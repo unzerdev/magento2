@@ -213,12 +213,14 @@ class Authorize extends AbstractCommand
      */
     protected function createAuthorization(OrderInterface $order, float $amount): Authorization
     {
+        /** @var Authorization $authorization */
         $authorization = $this->authorizationFactory->create([
             'amount' => $amount,
             'currency' => $order->getBaseCurrencyCode(),
             'returnUrl' => $this->_getCallbackUrl()
         ]);
         $authorization->setOrderId($order->getIncrementId());
+        $authorization->setPaymentReference($order->getIncrementId());
 
         return $authorization;
     }
