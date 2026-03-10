@@ -22,7 +22,6 @@ use Unzer\PAPI\Model\Vault\VaultDetailsHandlerManager;
 use UnzerSDK\Constants\RecurrenceTypes;
 use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\AbstractUnzerResource;
-use UnzerSDK\Resources\TransactionTypes\Authorization;
 use UnzerSDK\Resources\TransactionTypes\Charge;
 use UnzerSDK\Resources\TransactionTypes\ChargeFactory;
 
@@ -134,17 +133,24 @@ class Capture extends AbstractCommand
      */
     protected function _chargeExisting(Order $order, string $paymentId, float $amount, ?string $storeId = null): Charge
     {
-        $payment = $this->_getClient($storeId, $order->getPayment()->getMethodInstance())
-            ->fetchPayment($paymentId);
+        $unzerClient = $this->_getClient(
+            $storeId,
+            $order->getPayment()->getMethodInstance()
+        );
 
-        /** @var Authorization|null $authorization */
-        $authorization = $payment->getAuthorization();
+        $payment = $unzerClient->fetchPayment($paymentId);
 
-        if ($authorization !== null) {
-            return $authorization->charge($amount);
-        }
+        /** @var Charge $charge */
+        $charge = $this->chargeFactory->create([
+            'amount' => $amount,
+            'currency' => $order->getBaseCurrencyCode(),
+            'returnUrl' => $this->_getCallbackUrl()
+        ]);
 
-        return $payment->charge($amount);
+        $charge->setOrderId($order->getIncrementId());
+        $charge->setPaymentReference($order->getIncrementId());
+
+        return $unzerClient->performChargeOnPayment($payment, $charge);
     }
 
     /**
