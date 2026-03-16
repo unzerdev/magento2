@@ -1426,4 +1426,36 @@
             <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </type>
+
+    <!-- Apple Pay V1 backward compatibility - orders placed with plugin <=3.2.2 -->
+    <virtualType name="UnzerApplepayV1Config" type="Unzer\PAPI\Model\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_APPLEPAY</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UnzerApplepayV1ConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">UnzerApplepayV1Config</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UnzerApplepayV1ValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">UnzerApplepayV1ConfigValueHandler</item>
+                <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
+                <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
+                <item name="can_void" xsi:type="string">Unzer\PAPI\Model\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Unzer\PAPI\Model\Method\ApplepayV1">
+        <arguments>
+            <argument name="code" xsi:type="const">Unzer\PAPI\Model\Config::METHOD_APPLEPAY</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">UnzerApplepayV1ValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
+        </arguments>
+    </virtualType>
 </config>

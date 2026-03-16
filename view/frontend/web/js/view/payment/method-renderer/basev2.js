@@ -303,7 +303,14 @@ define(
                         country: shipping.countryId
                     } : {},
                     ...(billing?.company && billing.company.trim() !== ''
-                        ? {company: billing.company.trim()}
+                        ? {
+                            company: billing.company.trim(),
+                            companyInfo: {
+                                companyType: methodConfig.companyType || null,
+                                function: methodConfig.function || null,
+                                commercialSector: methodConfig.commercialSector || null,
+                            }
+                        }
                         : {}),
                     customerSettings: {
                         type: billing?.company && billing.company.trim() !== '' ? 'B2B' : 'B2C'
