@@ -117,27 +117,18 @@ class Provider implements ConfigProviderInterface
 
             $methodConfig = $model->getFrontendConfig();
 
-            if (!$model->hasMethodValidOverrideKeys()) {
-                if ($baseCustomer) {
-                    $methodConfig['unzerCustomerId'] = $baseCustomer->getId();
-                }
+            $customer = $model->hasMethodValidOverrideKeys()
+                ? $this->fetchUnzerCustomer($quote, $model)
+                : $baseCustomer;
 
-                $methodConfigs[$model->getCode()] = $methodConfig;
-                continue;
-            }
-
-            $overrideCustomer = $this->fetchUnzerCustomer($quote, $model);
-
-            if ($overrideCustomer) {
-                $methodConfig['unzerCustomerId'] = $overrideCustomer->getId();
+            if ($customer) {
+                $methodConfig = $this->applyCustomerConfig($methodConfig, $customer);
             }
 
             $methodConfigs[$model->getCode()] = $methodConfig;
         }
 
-        return [
-            'payment' => array_filter($methodConfigs),
-        ];
+        return ['payment' => array_filter($methodConfigs)];
     }
 
     /**
@@ -164,5 +155,25 @@ class Provider implements ConfigProviderInterface
         } catch (\Exception $e) {
             return null;
         }
+    }
+
+    /**
+     * @param array $methodConfig
+     * @param Customer $customer
+     *
+     * @return array
+     */
+    private function applyCustomerConfig(array $methodConfig, Customer $customer): array
+    {
+        $methodConfig['unzerCustomerId'] = $customer->getId();
+
+        if ($customer->getCompany()) {
+            $companyInfo = $customer->getCompanyInfo();
+            $methodConfig['companyType'] = $companyInfo->getCompanyType();
+            $methodConfig['function'] = $companyInfo->getFunction();
+            $methodConfig['commercialSector'] = $companyInfo->getCommercialSector();
+        }
+
+        return $methodConfig;
     }
 }

@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.3](https://github.com/unzerdev/magento2/compare/4.0.2..4.0.3)
+### Fixed
+*  Initialization of the Invoice B2B component on the checkout page
+*  Apple Pay v1 backward compatibility
+*  Replace 'array_last()' with 'array_key_last()' in TransactionSynchronizer class
+### Changed
+*  Add payment reference to payment, capture, and refund requests
+*  Remove the country restriction for Direct Bank Transfer
+
 ## [4.0.2](https://github.com/unzerdev/magento2/compare/4.0.1..4.0.2)
 ### Fixed
 *  Storing PayPal and SEPA Direct Debit on Magento 2.4.8
