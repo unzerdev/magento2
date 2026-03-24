@@ -167,7 +167,7 @@ class Provider implements ConfigProviderInterface
     {
         $methodConfig['unzerCustomerId'] = $customer->getId();
 
-        if ($customer->getCompany()) {
+        if ($customer->getCompany() && $customer->getCompanyInfo()) {
             $companyInfo = $customer->getCompanyInfo();
             $methodConfig['companyType'] = $companyInfo->getCompanyType();
             $methodConfig['function'] = $companyInfo->getFunction();
