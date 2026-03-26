@@ -274,7 +274,7 @@ define(
                 const shipping = quote.shippingAddress();
 
                 const customerId = window.checkoutConfig?.customerData.id || '';
-                const uniqueCustomerId = `${customerId}_${email}_${shop}`;
+                const uniqueCustomerId = !quote.guestEmail && customerId ? `${customerId}_${email}_${shop}` : '';
 
                 if (unzerCustomerId) {
                     this.customer = unzerCustomerId;
