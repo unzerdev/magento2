@@ -280,11 +280,27 @@ define(
                     this.customer = unzerCustomerId;
                 }
 
+                const mapSalutation = (prefix) => {
+                    if (!prefix) return "unknown";
+
+                    const normalized = prefix.toLowerCase().trim();
+
+                    if (normalized.startsWith('mrs') || normalized.startsWith('ms') || normalized.startsWith('mis')) {
+                        return 'mrs';
+                    }
+                    if (normalized.startsWith('mr')) {
+                        return 'mr';
+                    }
+
+                    return "unknown";
+                };
+
                 const customer = {
                     id: unzerCustomerId || '',
                     customerId: uniqueCustomerId,
                     firstname: billing ? billing.firstname : '',
                     lastname: billing ? billing.lastname : '',
+                    salutation: billing ? mapSalutation(billing.prefix) : 'unknown',
                     email: email,
                     ...(customerData?.dob ? {birthDate: customerData.dob.split('T')[0]} : {}),
                     billingAddress: billing ? {
