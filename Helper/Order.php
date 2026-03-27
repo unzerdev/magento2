@@ -341,7 +341,11 @@ class Order
             ->setFirstname($billingAddress->getFirstname())
             ->setLastname($billingAddress->getLastname());
 
-        $customer->setSalutation($this->getSalutationFromQuote($quote));
+        $customer->setSalutation(
+            $this->getSalutationFromPrefix($billingAddress->getPrefix())
+            ?? $this->getSalutationFromQuote($quote)
+        );
+
         $customer->setEmail($email);
         $customer->setPhone($billingAddress->getTelephone());
         $customer->setBirthDate($quote->getCustomer()->getDob());
@@ -419,12 +423,12 @@ class Order
                 $customer->setCompany($company);
             }
 
-            $gender = $order->getCustomerGender();
-            if ($gender) {
-                $customer->setSalutation($this->getSalutationFromGender($gender));
-            } else {
-                $customer->setSalutation($this->getSalutationFromPayment($order->getPayment()));
-            }
+            $customer->setSalutation(
+                $this->getSalutationFromPrefix($billingAddress->getPrefix())
+                ?? $this->getSalutationFromGender($order->getCustomerGender())
+                ?? $this->getSalutationFromPayment($order->getPayment())
+            );
+
             $birthDate = $this->getBirthdateFromPayment($order->getPayment());
             if ($birthDate) {
                 $customer->setBirthDate($birthDate);
@@ -500,7 +504,7 @@ class Order
     ): void {
         $street = $this->convertStreetLinesToString($magentoAddress->getStreet());
 
-        $gatewayAddress->setName($magentoAddress->getName());
+        $gatewayAddress->setName($magentoAddress->getFirstname() . ' ' . $magentoAddress->getLastname());
         $gatewayAddress->setCity($magentoAddress->getCity());
         $gatewayAddress->setCountry($magentoAddress->getCountryId());
         $gatewayAddress->setStreet($street);
@@ -570,6 +574,11 @@ class Order
 
         $gatewayCustomer->setFirstname($billingAddress->getFirstname());
         $gatewayCustomer->setLastname($billingAddress->getLastname());
+
+        $gatewayCustomer->setSalutation(
+            $this->getSalutationFromPrefix($billingAddress->getPrefix())
+            ?? Salutations::UNKNOWN
+        );
 
         $gatewayCustomer->setCompany($billingAddress->getCompany());
         $gatewayCustomer->setEmail($billingAddress->getEmail());
@@ -659,9 +668,9 @@ class Order
      *
      * @param Quote $quote
      *
-     * @return string
+     * @return ?string
      */
-    protected function getSalutationFromQuote(Quote $quote): string
+    protected function getSalutationFromQuote(Quote $quote): ?string
     {
         return $this->getSalutationFromGender($quote->getCustomer()->getGender());
     }
@@ -671,9 +680,9 @@ class Order
      *
      * @param float|int $gender
      *
-     * @return string
+     * @return ?string
      */
-    protected function getSalutationFromGender($gender): string
+    protected function getSalutationFromGender($gender): ?string
     {
         switch ($gender) {
             case self::GENDER_MALE:
@@ -683,7 +692,7 @@ class Order
                 $salutation = Salutations::MRS;
                 break;
             default:
-                $salutation = Salutations::UNKNOWN;
+                $salutation = null;
         }
         return $salutation;
     }
@@ -698,6 +707,24 @@ class Order
     protected function getSalutationFromPayment(InfoInterface $payment): ?string
     {
         return $payment->getAdditionalInformation('salutation');
+    }
+
+    /**
+     * @param ?string $prefix
+     *
+     * @return ?string
+     */
+    protected function getSalutationFromPrefix(?string $prefix): ?string
+    {
+        $prefix = strtolower(trim($prefix ?? ''));
+        if (str_starts_with($prefix, 'mrs') || str_starts_with($prefix, 'ms') || str_starts_with($prefix, 'mis')) {
+            return Salutations::MRS;
+        }
+        if (str_starts_with($prefix, 'mr')) {
+            return Salutations::MR;
+        }
+
+        return null;
     }
 
     /**
