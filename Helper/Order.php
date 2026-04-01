@@ -171,7 +171,7 @@ class Order
         }
 
         $totalOrder = $order->getBaseGrandTotal();
-        $difference = round($totalOrder - $basketTotal, 2);
+        $difference = round($totalOrder - $basketTotal, 4);
 
         if (abs($difference) > 0) {
             $basket->addBasketItem(
