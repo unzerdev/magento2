@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.6](https://github.com/unzerdev/magento2/compare/4.0.5..4.0.6)
+### Changed
+*  Handle rounding differences in basket calculations using 4-decimal precision
+
 ## [4.0.5](https://github.com/unzerdev/magento2/compare/4.0.4..4.0.5)
 ### Fixed
 *  Fix customerId assignment for guest customers in UPL payment methods
@@ -92,7 +96,7 @@ For more information go to https://docs.unzer.com/plugins/magento-2/magento2-mig
 * TWINT payment method
 ### Changed
 * automatic fetching of Google Pay Gateway Merchant ID to manual fetching by adding a button for fetching of the ID
-* Giropay to be deactivated in checkout and marked as deprecated 
+* Giropay to be deactivated in checkout and marked as deprecated
 ### Removed
 * Discover and JCB from available Google Pay card list
 
@@ -114,7 +118,7 @@ For more information go to https://docs.unzer.com/plugins/magento-2/magento2-mig
 * **(BIC!)** The module now always uses Magento's base currency for communication with the Unzer servers, otherwise partial charge would not be possible. Please make sure your Magento Installation is configured accordingly.
 
 ## [2.5.0](https://github.com/unzerdev/magento2/compare/2.4.1..2.5.0)
-### Added 
+### Added
 * Direct Debit Secured payment method
 ### Fixed
 * active logging automatically switched to sandbox urls
@@ -131,7 +135,7 @@ For more information go to https://docs.unzer.com/plugins/magento-2/magento2-mig
 * Installment payment method
 ### Changed
 * the names (and defaults for the title settings) of the following payment methods:
-    * English 
+    * English
         * Unzer Invoice → (Deprecated) Unzer Invoice
         * Unzer Invoice secured (B2C) → (Deprecated) Unzer Invoice Secured (B2C)
         * Unzer Invoice secured (B2B) → (Deprecated) Unzer Invoice Secured (B2B)
@@ -154,7 +158,7 @@ For more information go to https://docs.unzer.com/plugins/magento-2/magento2-mig
 * correction of the return value for the success message in Unzer Prepayment.
 * missing ThreatMetrix CSP Whitelist policies
 * Unzer uiComponents are now initialized using the current store locale
-* Unzer uiComponents containing address data for Invoice and Installment are now updated, if billing or shipping addresses change 
+* Unzer uiComponents containing address data for Invoice and Installment are now updated, if billing or shipping addresses change
 ### Removed
 * license information from all code files. See LICENSE and NOTICE files now.
 
@@ -204,7 +208,7 @@ For more information go to https://docs.unzer.com/plugins/magento-2/magento2-mig
 ### Added
 * new Payment Methods Paylater Invoice B2C and Paylater Invoice B2B
 * Payment Methods Paylater Invoice B2C/B2B have a new setting to override general API Keys and use separate ones
-  * Attention! The changes we had to make here, might be backwards incompatible changes, affecting all payment methods, depending on your own extensions of this module.
+    * Attention! The changes we had to make here, might be backwards incompatible changes, affecting all payment methods, depending on your own extensions of this module.
 
 ### Fixed
 * Cancel of authorization payment methods (credit card / paypal) not being send to unzer account, resulting in an "offline" Cancel. Now "Online" Cancel is possible.
@@ -220,7 +224,7 @@ For more information go to https://docs.unzer.com/plugins/magento-2/magento2-mig
 
 ## [1.4.1](https://github.com/unzerdev/magento2/compare/1.4.0..1.4.1)
 ### Fixed
-* Prices of basket items not including tax  
+* Prices of basket items not including tax
 * basket items missing tax percent and reference id
 
 ## [1.4.0](https://github.com/unzerdev/magento2/compare/1.3.0..1.4.0)
@@ -244,14 +248,14 @@ For more information go to https://docs.unzer.com/plugins/magento-2/magento2-mig
 * Payment Method Wechat
 * Payment Method Unzer Prepayment
 
-### Fixed 
+### Fixed
 * amount and currency not matching on multistore installations with multiple currencies
 * Fix an issue where the customer form was not rendered in checkout sometimes. Invoice Secured B2C/B2B and Sepa Direct Debit B2C were affected by that.
 
 ## [1.2.0](https://github.com/unzerdev/magento2/compare/1.1.1..1.2.0)
 ### Changed
 * PHP 8.1 Compatibility
- 
+
 ## [1.1.1](https://github.com/unzerdev/magento2/compare/1.1.0..1.1.1)
 
 ### Changed
