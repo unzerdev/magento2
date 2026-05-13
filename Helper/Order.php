@@ -171,7 +171,7 @@ class Order
         }
 
         $totalOrder = $order->getBaseGrandTotal();
-        $difference = round($totalOrder - $basketTotal, 2);
+        $difference = round($totalOrder - $basketTotal, 4);
 
         if (abs($difference) > 0) {
             $basket->addBasketItem(
@@ -285,10 +285,7 @@ class Order
         }
 
         $basketVoucherItemDiscountAmount = $this->basketItemFactory->create();
-        $basketVoucherItemDiscountAmount->setAmountDiscountPerUnitGross(
-            abs(round($discount, 2, PHP_ROUND_HALF_DOWN)
-            )
-        );
+        $basketVoucherItemDiscountAmount->setAmountDiscountPerUnitGross(abs(round($discount, 4, PHP_ROUND_HALF_DOWN)));
         $basketVoucherItemDiscountAmount->setVat($vatRate);
         $basketVoucherItemDiscountAmount->setAmountPerUnitGross(0);
         $basketVoucherItemDiscountAmount->setQuantity(1);
