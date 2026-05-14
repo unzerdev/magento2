@@ -1458,4 +1458,21 @@
             <argument name="commandPool" xsi:type="object">UnzerAuthorizeAndCaptureCommandPool</argument>
         </arguments>
     </virtualType>
+
+    <!-- Unzer payment-status processor pool: maps payment method code to the status processor strategy -->
+    <virtualType name="UnzerPaymentStatusProcessorPool" type="Unzer\PAPI\Model\Payment\Status\Processor\ProcessorPool">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="default" xsi:type="object">Unzer\PAPI\Model\Payment\Status\Processor\DefaultProcessor</item>
+                <item name="unzer_open_banking" xsi:type="object">Unzer\PAPI\Model\Payment\Status\Processor\OpenBankingProcessor</item>
+                <item name="unzer_prepayment" xsi:type="object">Unzer\PAPI\Model\Payment\Status\Processor\PrepaymentProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Unzer\PAPI\Helper\Payment">
+        <arguments>
+            <argument name="processorPool" xsi:type="object">UnzerPaymentStatusProcessorPool</argument>
+        </arguments>
+    </type>
 </config>
