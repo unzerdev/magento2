@@ -18,6 +18,7 @@ use Magento\Sales\Model\Order\Item;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Tax\Model\Config as MagentoTaxConfig;
 use Unzer\PAPI\Block\System\Config\Form\Field\BirthDateFactory;
+use Unzer\PAPI\Model\PluginResolver;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Source\CreateThreatMetrixId;
 use Unzer\PAPI\Model\Source\Customer as CustomerResource;
@@ -91,6 +92,9 @@ class Order
      */
     private ResolverInterface $localeResolver;
 
+    private PluginResolver $pluginResolver;
+
+
     /**
      * Constructor
      *
@@ -103,6 +107,7 @@ class Order
      * @param BirthDateFactory $birthDateFactory
      * @param CreateThreatMetrixId $createThreatMetrixId
      * @param ResolverInterface $localeResolver
+     * @param PluginResolver $pluginResolver
      */
     public function __construct(
         Config $moduleConfig,
@@ -113,7 +118,8 @@ class Order
         BasketItemFactory $basketItemFactory,
         BirthDateFactory $birthDateFactory,
         CreateThreatMetrixId $createThreatMetrixId,
-        ResolverInterface $localeResolver
+        ResolverInterface $localeResolver,
+        PluginResolver $pluginResolver
     ) {
         $this->_moduleConfig = $moduleConfig;
         $this->_moduleList = $moduleList;
@@ -124,6 +130,7 @@ class Order
         $this->birthDateFactory = $birthDateFactory;
         $this->createThreatMetrixId = $createThreatMetrixId;
         $this->localeResolver = $localeResolver;
+        $this->pluginResolver = $pluginResolver;
     }
 
     /**
@@ -306,10 +313,17 @@ class Order
     {
         $metaData = new Metadata();
 
+        $module = $this->pluginResolver->resolve(
+            (int) $order->getStoreId()
+        );
+
         $metaData->setShopType('Magento 2')
             ->setShopVersion($this->_productMetadata->getVersion())
-            ->addMetadata('pluginType', 'unzerdev/magento2')
-            ->addMetadata('pluginVersion', $this->_moduleList->getOne('Unzer_PAPI')['setup_version']);
+            ->addMetadata('pluginType', $module['type']);
+
+        if (isset($module['version'])) {
+            $metaData->addMetadata('pluginVersion', $module['version']);
+        }
 
         return $metaData;
     }
