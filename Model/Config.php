@@ -3,14 +3,19 @@ declare(strict_types=1);
 
 namespace Unzer\PAPI\Model;
 
+use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Locale\Resolver;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Payment\Model\CcConfig;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\HTTP\PhpEnvironment\Request;
 use Unzer\PAPI\Model\Logger\DebugHandler;
 use Unzer\PAPI\Model\Method\OverrideApiCredentialInterface;
+use UnzerSDK\Adapter\HttpAdapterInterface;
+use UnzerSDK\Apis\ApiRequest;
+use UnzerSDK\Resources\Keypair;
 use UnzerSDK\Unzer;
 
 /**
@@ -28,6 +33,13 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     public const KEY_LOGGING = 'logging';
 
     public const CREATE_VAULT_TOKEN_ON_SUCCESS = 'create_vault_token_on_success';
+
+    public const MERCHANT_CONFIG_CACHE_PREFIX = 'unzer_merchant_config_';
+
+    /**
+     * Lifetime of the cached merchant config in seconds.
+     */
+    private const MERCHANT_CONFIG_CACHE_LIFETIME = 86400;
 
     public const METHOD_BASE = 'unzer';
     public const METHOD_CARDS = 'unzer_cards';
@@ -81,6 +93,16 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     private CcConfig $ccConfig;
 
     /**
+     * @var CacheInterface
+     */
+    private CacheInterface $_cache;
+
+    /**
+     * @var SerializerInterface
+     */
+    private SerializerInterface $_serializer;
+
+    /**
      * Config constructor.
      *
      * @param Resolver $localeResolver
@@ -88,6 +110,8 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      * @param DebugHandler $debugHandler
      * @param CcConfig $ccConfig
      * @param Request $request
+     * @param CacheInterface $cache
+     * @param SerializerInterface $serializer
      * @param string|null $methodCode
      * @param string $pathPattern
      */
@@ -97,6 +121,8 @@ class Config extends \Magento\Payment\Gateway\Config\Config
         DebugHandler $debugHandler,
         CcConfig $ccConfig,
         Request $request,
+        CacheInterface $cache,
+        SerializerInterface $serializer,
         ?string $methodCode = null,
         string $pathPattern = self::DEFAULT_PATH_PATTERN
     ) {
@@ -107,6 +133,8 @@ class Config extends \Magento\Payment\Gateway\Config\Config
         $this->_scopeConfig = $scopeConfig;
         $this->ccConfig = $ccConfig;
         $this->_request = $request;
+        $this->_cache = $cache;
+        $this->_serializer = $serializer;
     }
 
     /**
@@ -177,8 +205,80 @@ class Config extends \Magento\Payment\Gateway\Config\Config
      */
     public function getUnzerClient(?string $storeId = null, ?MethodInterface $paymentMethodInstance = null): Unzer
     {
-        $client = new Unzer(
+        return $this->buildUnzerClient(
             $this->getPrivateKey($storeId, $paymentMethodInstance),
+            $storeId
+        );
+    }
+
+    /**
+     * @param string|null $storeId
+     * @param MethodInterface|null $paymentMethodInstance
+     *
+     * @return array|null
+     */
+    public function getMerchantConfig(
+        ?string $storeId = null,
+        ?MethodInterface $paymentMethodInstance = null
+    ): ?array {
+        $publicKey = $this->getPublicKey($storeId, $paymentMethodInstance);
+
+        if (empty($publicKey)) {
+            return null;
+        }
+
+        $cacheKey = self::MERCHANT_CONFIG_CACHE_PREFIX . hash('sha256', $publicKey);
+        $cached = $this->_cache->load($cacheKey);
+
+        if ($cached) {
+            return $this->_serializer->unserialize($cached);
+        }
+
+        try {
+            $client = $this->buildUnzerClient($publicKey, $storeId);
+            $keypair = (new Keypair())->setParentResource($client)->setDetailed(true);
+
+            $request = new ApiRequest(
+                $keypair->getUri(),
+                $keypair,
+                HttpAdapterInterface::REQUEST_GET,
+                $keypair->getUnzerObject(),
+                $keypair->getApiVersion()
+            );
+
+            $rawResponse = $client->getHttpService()->sendRequest($request);
+
+            $config = json_decode($rawResponse, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\Exception $e) {
+            $this->_debugHandler->log('Failed to fetch Unzer merchant config: ' . $e->getMessage());
+            return null;
+        }
+
+        if (!is_array($config)) {
+            return null;
+        }
+
+        $this->_cache->save(
+            $this->_serializer->serialize($config),
+            $cacheKey,
+            [],
+            self::MERCHANT_CONFIG_CACHE_LIFETIME
+        );
+
+        return $config;
+    }
+
+
+    /**
+     * @param string|null $key
+     * @param string|null $storeId
+     *
+     * @return Unzer
+     */
+    private function buildUnzerClient(?string $key, ?string $storeId = null): Unzer
+    {
+        $client = new Unzer(
+            (string)$key,
             $this->_localeResolver->getLocale()
         );
 
