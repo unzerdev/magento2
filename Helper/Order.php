@@ -513,6 +513,10 @@ class Order
         $gatewayAddress->setName($magentoAddress->getFirstname() . ' ' . $magentoAddress->getLastname());
         $gatewayAddress->setCity($magentoAddress->getCity());
         $gatewayAddress->setCountry($magentoAddress->getCountryId());
+        $state = $magentoAddress->getRegion();
+        if (!empty($state)) {
+            $gatewayAddress->setState($state);
+        }
         $gatewayAddress->setStreet($street);
         $gatewayAddress->setZip($magentoAddress->getPostcode());
         $gatewayAddress->setCompany($magentoAddress->getCompany() ?: null);
