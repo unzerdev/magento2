@@ -40,6 +40,7 @@ define(
             customerType: null,
             threatMetrixId: null,
             lastGrandTotal: null,
+            lastBillingAddressKey: null,
 
             defaults: {
                 config: null,
@@ -87,6 +88,34 @@ define(
                             this.selectPaymentMethod();
                         }
                     }
+                });
+
+                quote.billingAddress.subscribe(function (newAddress) {
+                    if (!self.customerNeeded || !newAddress) {
+                        return;
+                    }
+
+                    if (!quote.paymentMethod() || quote.paymentMethod().method !== self.getCode()) {
+                        return;
+                    }
+
+                    let newKey = JSON.stringify({
+                        company: newAddress.company || '',
+                        prefix: newAddress.prefix || '',
+                        firstname: newAddress.firstname || '',
+                        lastname: newAddress.lastname || '',
+                        street: newAddress.street || '',
+                        postcode: newAddress.postcode || '',
+                        city: newAddress.city || '',
+                        countryId: newAddress.countryId || ''
+                    });
+
+                    if (newKey === self.lastBillingAddressKey) {
+                        return;
+                    }
+                    self.lastBillingAddressKey = newKey;
+
+                    self.waitForSetBasketData();
                 });
 
                 return this;
