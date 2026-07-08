@@ -133,6 +133,10 @@ abstract class AbstractCommand implements CommandInterface
         /** @var string|null $customerId */
         $customerType = (string)$payment->getAdditionalInformation(BaseDataAssignObserver::KEY_CUSTOMER_TYPE);
 
+        if ($this->hasVaultPaymentToken($payment)) {
+            $customerId = '';
+        }
+
         $customer = $this->getCustomer(
             $customerId,
             $order->getStore()->getCode(),
@@ -189,6 +193,24 @@ abstract class AbstractCommand implements CommandInterface
             //all other exceptions are still valid exceptions
             throw $e;
         }
+    }
+
+    /**
+     * Whether the given payment is processed with a stored vault payment token (saved card / COF flow).
+     *
+     * @param InfoInterface $payment
+     *
+     * @return bool
+     */
+    private function hasVaultPaymentToken(InfoInterface $payment): bool
+    {
+        if (!$payment instanceof OrderPayment) {
+            return false;
+        }
+
+        $extensionAttributes = $payment->getExtensionAttributes();
+
+        return $extensionAttributes !== null && $extensionAttributes->getVaultPaymentToken() !== null;
     }
 
     /**
