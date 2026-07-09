@@ -340,7 +340,7 @@ define(
                     self = this;
 
                 Promise.all([
-                    customElements.whenDefined(this.paymentCode)
+                    customElements.whenDefined('unzer-payment')
                 ]).then(() => {
                     const unzerCheckoutElementId = 'unzer-checkout-' + this.getCode();
                     const unzerCheckout = document.getElementById(unzerCheckoutElementId);
