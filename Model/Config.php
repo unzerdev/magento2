@@ -197,6 +197,20 @@ class Config extends \Magento\Payment\Gateway\Config\Config
     }
 
     /**
+     * Returns whether the configured keypair belongs to the sandbox (test) environment.
+     *
+     * Unzer sandbox keys are prefixed with "s-", production keys with "p-".
+     *
+     * @param string|null $storeId
+     * @param MethodInterface|null $paymentMethodInstance
+     * @return bool
+     */
+    public function isSandboxMode(?string $storeId = null, ?MethodInterface $paymentMethodInstance = null): bool
+    {
+        return str_starts_with((string)$this->getPublicKey($storeId, $paymentMethodInstance), 's-');
+    }
+
+    /**
      * Returns an API client using the configured private key.
      *
      * @param string|null $storeId
