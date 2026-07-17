@@ -83,7 +83,7 @@ define(
                     self = this;
 
                 Promise.all([
-                    customElements.whenDefined(this.paymentCode)
+                    customElements.whenDefined('unzer-payment')
                 ]).then(() => {
                     placeOrderAction(self.getData(), self.messageContainer)
                         .done(function () {
