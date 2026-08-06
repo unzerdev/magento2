@@ -43,7 +43,7 @@ class TransactionSynchronizer
     {
         $payment = $this->getOrderPayment($order);
         $charges = $unzer->getCharges();
-        $capture = $charges[array_key_last($charges)] ?? null;
+        $capture = $charges === [] ? null : $charges[array_key_last($charges)];
 
         if (!$payment || !$capture) {
             return;
@@ -87,8 +87,7 @@ class TransactionSynchronizer
     {
         $payment = $this->getOrderPayment($order);
         $cancellations = $unzer->getCancellations();
-        $cancellation = $cancellations[array_key_last($cancellations)] ?? null;
-
+        $cancellation = $cancellations === [] ? null : $cancellations[array_key_last($cancellations)];
         if (!$payment || !$cancellation) {
             return;
         }
@@ -155,7 +154,7 @@ class TransactionSynchronizer
     {
         $payment = $this->getOrderPayment($order);
         $chargebacks = $unzer->getChargebacks();
-        $chargeback = $chargebacks[array_key_last($chargebacks)] ?? null;
+        $chargeback = $chargebacks === [] ? null : $chargebacks[array_key_last($chargebacks)];
 
         if (!$payment || !$chargeback) {
             return;

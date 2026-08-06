@@ -13,43 +13,30 @@ use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\Lock\LockManagerInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectFactoryInterface;
 use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Api\Data\OrderPaymentInterface;
-use Magento\Sales\Api\Data\TransactionInterface;
-use Magento\Sales\Api\InvoiceRepositoryInterface;
-use Magento\Sales\Api\OrderPaymentRepositoryInterface;
-use Magento\Sales\Api\TransactionRepositoryInterface;
-use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
-use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\OrderRepository;
-use Unzer\PAPI\Model\Command\TransactionSynchronizer;
 use Unzer\PAPI\Model\Method\Base;
+use Unzer\PAPI\Model\Payment\Status\OrderStateApplier;
+use Unzer\PAPI\Model\Payment\Status\Processor\ProcessorPool;
 use Unzer\PAPI\Model\Vault\VaultDetailsHandlerManager;
 use UnzerSDK\Constants\PaymentState;
 use UnzerSDK\Exceptions\UnzerApiException;
 use UnzerSDK\Resources\Payment as PaymentResource;
-use UnzerSDK\Resources\PaymentTypes\BasePaymentType;
 use UnzerSDK\Resources\TransactionTypes\AbstractTransactionType;
 
 /**
- * Helper for cancellation state management
+ * Thin coordinator on top of the Unzer payment-status processor pool.
+ *
+ * Holds the cross-cutting concerns that aren't specific to a single
+ * Unzer state — the per-order lock, vault-token persistence, and the
+ * public {@see setOrderState} façade still consumed by
+ * Controller\Payment\Redirect — then delegates the actual state-by-state
+ * mapping to a {@see ProcessorPool}-resolved processor.
  *
  * @link  https://docs.unzer.com/
  */
 class Payment
 {
     public const STATUS_READY_TO_CAPTURE = 'unzer_ready_to_capture';
-    private const METHOD_PREPAYMENT = 'unzer_prepayment';
-
-    /**
-     * @var InvoiceRepositoryInterface
-     */
-    private InvoiceRepositoryInterface $_invoiceRepository;
-
-    /**
-     * @var InvoiceSender
-     */
-    private InvoiceSender $_invoiceSender;
 
     /**
      * @var LockManagerInterface
@@ -62,29 +49,14 @@ class Payment
     private OrderRepository $_orderRepository;
 
     /**
-     * @var OrderSender
+     * @var ProcessorPool
      */
-    private OrderSender $_orderSender;
+    private ProcessorPool $processorPool;
 
     /**
-     * @var Order\OrderStateResolverInterface
+     * @var OrderStateApplier
      */
-    private Order\OrderStateResolverInterface $_orderStateResolver;
-
-    /**
-     * @var Order\StatusResolver
-     */
-    private Order\StatusResolver $_orderStatusResolver;
-
-    /**
-     * @var OrderPaymentRepositoryInterface
-     */
-    private OrderPaymentRepositoryInterface $_paymentRepository;
-
-    /**
-     * @var TransactionRepositoryInterface
-     */
-    private TransactionRepositoryInterface $_transactionRepository;
+    private OrderStateApplier $orderStateApplier;
 
     /**
      * @var VaultDetailsHandlerManager
@@ -97,56 +69,33 @@ class Payment
     private PaymentDataObjectFactoryInterface $paymentDataObjectFactory;
 
     /**
-     * @var TransactionSynchronizer
-     */
-    private TransactionSynchronizer $transactionSynchronizer;
-
-    /**
-     * Constructor
-     *
-     * @param InvoiceRepositoryInterface $invoiceRepository
-     * @param InvoiceSender $invoiceSender
      * @param LockManagerInterface $lockManager
      * @param OrderRepository $orderRepository
-     * @param OrderSender $orderSender
-     * @param Order\OrderStateResolverInterface $orderStateResolver
-     * @param Order\StatusResolver $orderStatusResolver
-     * @param OrderPaymentRepositoryInterface $paymentRepository
-     * @param TransactionRepositoryInterface $transactionRepository
+     * @param ProcessorPool $processorPool
+     * @param OrderStateApplier $orderStateApplier
      * @param VaultDetailsHandlerManager $vaultDetailsHandlerManager
      * @param PaymentDataObjectFactoryInterface $paymentDataObjectFactory
-     * @param TransactionSynchronizer $transactionSynchronizer
      */
     public function __construct(
-        InvoiceRepositoryInterface $invoiceRepository,
-        InvoiceSender $invoiceSender,
         LockManagerInterface $lockManager,
         OrderRepository $orderRepository,
-        OrderSender $orderSender,
-        Order\OrderStateResolverInterface $orderStateResolver,
-        Order\StatusResolver $orderStatusResolver,
-        OrderPaymentRepositoryInterface $paymentRepository,
-        TransactionRepositoryInterface $transactionRepository,
+        ProcessorPool $processorPool,
+        OrderStateApplier $orderStateApplier,
         VaultDetailsHandlerManager $vaultDetailsHandlerManager,
-        PaymentDataObjectFactoryInterface $paymentDataObjectFactory,
-        TransactionSynchronizer $transactionSynchronizer
+        PaymentDataObjectFactoryInterface $paymentDataObjectFactory
     ) {
-        $this->_invoiceRepository = $invoiceRepository;
-        $this->_invoiceSender = $invoiceSender;
         $this->_lockManager = $lockManager;
         $this->_orderRepository = $orderRepository;
-        $this->_orderSender = $orderSender;
-        $this->_orderStateResolver = $orderStateResolver;
-        $this->_orderStatusResolver = $orderStatusResolver;
-        $this->_paymentRepository = $paymentRepository;
-        $this->_transactionRepository = $transactionRepository;
+        $this->processorPool = $processorPool;
+        $this->orderStateApplier = $orderStateApplier;
         $this->vaultDetailsHandlerManager = $vaultDetailsHandlerManager;
         $this->paymentDataObjectFactory = $paymentDataObjectFactory;
-        $this->transactionSynchronizer = $transactionSynchronizer;
     }
 
     /**
-     * Process state
+     * Apply the Unzer payment state to the given Magento order under a
+     * per-order lock. Vault details run once up-front, then the
+     * method-specific processor takes over the state-by-state mapping.
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
@@ -172,274 +121,38 @@ class Payment
         try {
             $this->processVaultDetails($order, $payment);
 
-            switch ($payment->getState()) {
-                case PaymentState::STATE_CANCELED:
-                    $this->processCanceledState($order, $payment);
-                    break;
-                case PaymentState::STATE_COMPLETED:
-                    $this->processCompletedState($order, $payment);
-                    break;
-                case PaymentState::STATE_CHARGEBACK:
-                    $this->processChargebackState($order, $payment);
-                    break;
-                case PaymentState::STATE_PARTLY:
-                    $this->processPartlyState($order, $payment);
-                    break;
-                case PaymentState::STATE_PAYMENT_REVIEW:
-                    $this->processPaymentReviewState($order);
-                    break;
-                case PaymentState::STATE_PENDING:
-                    $this->processPendingState($order, $payment);
-                    break;
-            }
+            $processor = $this->processorPool->get($order->getPayment()->getMethod());
+            $processor->process($order, $payment);
         } finally {
             $this->_lockManager->unlock($lockName);
         }
     }
 
     /**
-     * Process canceled state
+     * Resolve, persist, and email the order's state/status. Public for
+     * Controller\Payment\Redirect, which sets the pre-redirect state
+     * directly before sending the customer to the provider URL.
      *
      * @param OrderInterface $order
-     * @param PaymentResource $payment
+     * @param string|null $state
+     * @param string|null $status
      *
      * @return void
-     *
      * @throws AlreadyExistsException
      * @throws InputException
      * @throws LocalizedException
      * @throws NoSuchEntityException
-     * @throws UnzerApiException
-     */
-    private function processCanceledState(OrderInterface $order, PaymentResource $payment): void
-    {
-        $this->transactionSynchronizer->applyCancellationOnMagento($order, $payment);
-
-        // Orders in payment_review can't be cancelled so we must manually
-        // change the status so that we can cancel the Order.
-        if ($order->isPaymentReview()) {
-            $order->setState(Order::STATE_PROCESSING);
-        }
-
-        // if the payment was voided, we do not want to cancel the whole order and invoice
-        if (!$this->isOrderVoided($order)) {
-
-            /** @var Order\Invoice[] $invoices */
-            $invoices = $order->getInvoiceCollection()->getItems();
-
-            foreach ($invoices as $invoice) {
-                $invoice->cancel();
-                $this->_invoiceRepository->save($invoice);
-            }
-
-            if ($order->canCancel()) {
-                $order->cancel();
-                $this->_orderRepository->save($order);
-            }
-        }
-
-        if ($payment->getAmount()->getTotal() && $payment->getAmount()->getTotal() === $payment->getAmount()->getCanceled()) {
-            $this->setOrderState($order, Order::STATE_CLOSED, Order::STATE_CLOSED);
-            $this->_orderRepository->save($order);
-        }
-    }
-
-    /**
-     * Is order voided
-     *
-     * @param OrderInterface $order
-     *
-     * @return bool
-     * @throws InputException
-     */
-    private function isOrderVoided(OrderInterface $order): bool
-    {
-        $voidedPaymentTransaction = $this->_transactionRepository->getByTransactionType(
-            TransactionInterface::TYPE_VOID,
-            $order->getPayment()->getId()
-        );
-
-        return (bool)$voidedPaymentTransaction;
-    }
-
-    /**
-     * Process complete state
-     *
-     * @param OrderInterface $order
-     * @param PaymentResource $payment
-     *
-     * @return void
-     *
-     * @throws AlreadyExistsException
-     * @throws InputException
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
-     * @throws UnzerApiException
-     */
-    private function processCompletedState(OrderInterface $order, PaymentResource $payment): void
-    {
-        $this->transactionSynchronizer->applyCaptureOnMagento($order, $payment);
-
-        $orderPayment = $order->getPayment();
-
-        $transactionId = $order->getPayment()->getLastTransId();
-
-        /** @var Order\Invoice $invoice */
-        $invoice = $order->getInvoiceCollection()->getItemByColumnValue('transaction_id', $transactionId);
-
-        if ($invoice !== null && (int)$invoice->getState() === Order\Invoice::STATE_OPEN) {
-            $invoice->pay();
-
-            $order = $invoice->getOrder();
-            $orderPayment = $order->getPayment();
-
-            $this->_invoiceRepository->save($invoice);
-            $this->_orderRepository->save($order);
-            $this->_paymentRepository->save($orderPayment);
-        }
-
-        /** @var Order\Payment\Transaction $paymentTransaction */
-        $paymentTransaction = $this->_transactionRepository->getByTransactionId(
-            $transactionId,
-            $orderPayment->getId(),
-            $order->getId()
-        );
-
-        if ($paymentTransaction && !$paymentTransaction->getIsClosed()) {
-            $paymentTransaction->setIsClosed(true);
-
-            $this->_transactionRepository->save($paymentTransaction);
-
-            $parentPaymentTransaction = $paymentTransaction->getParentTransaction();
-            if (!empty($parentPaymentTransaction) &&
-                !$parentPaymentTransaction->getIsClosed()
-            ) {
-                $parentPaymentTransaction->setIsClosed(true);
-                $this->_transactionRepository->save($parentPaymentTransaction);
-            }
-        }
-
-        // Need to set to processing, otherwise the state resolver will not complete the order, when we are
-        // currently in payment review (e.g. with invoice).
-        $order->setState(Order::STATE_PROCESSING);
-
-        $this->setOrderState($order);
-    }
-
-    /**
-     * Process chargeback state
-     *
-     * @param OrderInterface $order
-     * @param PaymentResource $payment
-     *
-     * @return void
      * @throws Exception
      */
-    private function processChargebackState(OrderInterface $order, PaymentResource $payment): void
+    public function setOrderState(OrderInterface $order, ?string $state = null, ?string $status = null): void
     {
-        $this->transactionSynchronizer->applyChargebackOnMagento($order, $payment);
-        if ($order->getState() !== Order::STATE_CANCELED &&
-            $order->getState() !== Order::STATE_CLOSED) {
-            $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW, Order::STATUS_FRAUD);
-        }
+        $this->orderStateApplier->setOrderState($order, $state, $status);
     }
 
     /**
-     * Process partly state
-     *
-     * @param OrderInterface $order
-     * @param PaymentResource $payment
-     *
-     * @return void
-     * @throws AlreadyExistsException
-     * @throws InputException
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
-     * @throws UnzerApiException
-     */
-    private function processPartlyState(OrderInterface $order, PaymentResource $payment): void
-    {
-        $this->transactionSynchronizer->applyCancellationOnMagento($order, $payment);
-        $this->transactionSynchronizer->applyCaptureOnMagento($order, $payment);
-
-        if($order->getPayment()->getMethod() === self::METHOD_PREPAYMENT) {
-            $this->setOrderState($order, Order::STATE_PENDING_PAYMENT);
-
-            return;
-        }
-
-        $this->setOrderState($order);
-    }
-
-    /**
-     * Process payment review state
-     *
-     * @param OrderInterface $order
-     *
-     * @return void
-     * @throws AlreadyExistsException
-     * @throws InputException
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
-     */
-    private function processPaymentReviewState(OrderInterface $order): void
-    {
-        $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
-    }
-
-    /**
-     * Process pending state
-     *
-     * @param OrderInterface $order
-     * @param PaymentResource $payment
-     *
-     * @return void
-     * @throws AlreadyExistsException
-     * @throws InputException
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
-     * @throws UnzerApiException
-     */
-    private function processPendingState(OrderInterface $order, PaymentResource $payment): void
-    {
-        $authorization = $payment->getAuthorization();
-
-        if ($authorization !== null && $authorization->isSuccess() && $order->getState() !== Order::STATE_PROCESSING) {
-            $this->setOrderState($order, Order::STATE_PROCESSING, self::STATUS_READY_TO_CAPTURE);
-        } elseif ($payment->getPaymentType() instanceof BasePaymentType
-            && $payment->getPaymentType()->isInvoiceType()
-        ) {
-            $this->setInvoiceTypeState($order);
-        }
-    }
-
-    /**
-     * Set Invoice Type State
-     *
-     * @param OrderInterface $order
-     *
-     * @return void
-     * @throws AlreadyExistsException
-     * @throws InputException
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
-     */
-    private function setInvoiceTypeState(OrderInterface $order): void
-    {
-        // canShip returns false when the order is currently in payment_review state so we must temporarily change
-        // the state for canShip to return the desired value.
-        $order->setState(Order::STATE_PROCESSING);
-
-        // The order has not been shipped yet.
-        if ($order->canShip()) {
-            $this->setOrderState($order, Order::STATE_PROCESSING);
-        } else {
-            $this->setOrderState($order, Order::STATE_PAYMENT_REVIEW);
-        }
-    }
-
-    /**
-     * Process Vault Details
+     * Persist a vault token for the just-completed payment when the
+     * method opts into "save on success". Runs ahead of state routing
+     * since the token can be reused even for non-completed states.
      *
      * @param OrderInterface $order
      * @param PaymentResource $payment
@@ -479,77 +192,5 @@ class Payment
 
         $this->vaultDetailsHandlerManager->getHandlerByCode($paymentMethodCode)
             ->handle($paymentDataObject, $transactionType);
-    }
-
-    /**
-     * Set Order State
-     *
-     * @param OrderInterface $order
-     * @param string|null $state
-     * @param string|null $status
-     *
-     * @return void
-     * @throws AlreadyExistsException
-     * @throws InputException
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
-     * @throws Exception
-     */
-    public function setOrderState(OrderInterface $order, ?string $state = null, ?string $status = null): void
-    {
-        if ($state === null) {
-            $state = $this->_orderStateResolver->getStateForOrder($order, [
-                Order\OrderStateResolverInterface::IN_PROGRESS,
-            ]);
-        }
-
-        if ($status === null) {
-            $status = $this->_orderStatusResolver->getOrderStatusByState($order, $state);
-        }
-
-        $order->setState($state);
-        $order->setStatus($status);
-
-        if ($order->hasDataChanges()) {
-            $this->_orderRepository->save($order);
-        }
-
-        // email already sent?
-        if ($order->getEmailSent()) {
-            return;
-        }
-
-        if (in_array($state, [Order::STATE_NEW, Order::STATE_CANCELED, Order::STATE_PENDING_PAYMENT], true)) {
-            return;
-        }
-
-        $this->sendEmails($order);
-    }
-
-    /**
-     * Send Emails
-     *
-     * @param OrderInterface $order
-     *
-     * @return void
-     * @throws LocalizedException
-     * @throws Exception
-     */
-    protected function sendEmails(OrderInterface $order): void
-    {
-        // send order emails now, since we skipped them in Unzer\PAPI\Model\Command\Order
-        // which is only used for canOrder methods
-        if ($order->getPayment() instanceof OrderPaymentInterface
-            && $order->getPayment()->getMethodInstance()->canOrder()
-        ) {
-            $this->_orderSender->send($order);
-
-            foreach ($order->getInvoiceCollection() as $invoice) {
-                /** @var Order\Invoice $invoice */
-                if (!$invoice->getEmailSent()) {
-                    $this->_invoiceSender->send($invoice);
-                }
-            }
-        }
     }
 }

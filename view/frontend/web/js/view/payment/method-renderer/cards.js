@@ -89,7 +89,7 @@ define(
                     self = this;
 
                 Promise.all([
-                    customElements.whenDefined('unzer-card')
+                    customElements.whenDefined('unzer-payment')
                 ]).then(() => {
                     const unzerCheckout = document.getElementById('unzer-checkout-unzer_cards');
                     unzerCheckout.onPaymentSubmit = response => {

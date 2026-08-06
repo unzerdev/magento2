@@ -101,10 +101,13 @@ class Provider implements ConfigProviderInterface
         /** @var Customer $baseCustomer */
         $baseCustomer = $quote ? $this->fetchUnzerCustomer($quote) : null;
 
+        $storeId = $quote?->getStore()->getCode();
+
         $methodConfigs = [
             Config::METHOD_BASE => [
                 'publicKey' => $this->_moduleConfig->getPublicKey(),
-                'locale' => str_replace('_', '-', $this->scopeConfig->getValue('general/locale/code', 'store'))
+                'locale' => str_replace('_', '-', $this->scopeConfig->getValue('general/locale/code', 'store')),
+                'merchantConfig' => $this->_moduleConfig->getMerchantConfig($storeId)
             ],
         ];
 
@@ -123,6 +126,10 @@ class Provider implements ConfigProviderInterface
 
             if ($customer) {
                 $methodConfig = $this->applyCustomerConfig($methodConfig, $customer);
+            }
+
+            if ($model->hasMethodValidOverrideKeys($storeId)) {
+                $methodConfig['merchantConfig'] = $this->_moduleConfig->getMerchantConfig($storeId, $model);
             }
 
             $methodConfigs[$model->getCode()] = $methodConfig;

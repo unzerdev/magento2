@@ -18,10 +18,14 @@ use Magento\Sales\Model\Order\Item;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Tax\Model\Config as MagentoTaxConfig;
 use Unzer\PAPI\Block\System\Config\Form\Field\BirthDateFactory;
+use Unzer\PAPI\Model\PluginResolver;
 use Unzer\PAPI\Model\Config;
 use Unzer\PAPI\Model\Source\CreateThreatMetrixId;
 use Unzer\PAPI\Model\Source\Customer as CustomerResource;
 use UnzerSDK\Constants\BasketItemTypes;
+use UnzerSDK\Constants\CompanyCommercialSectorItems;
+use UnzerSDK\Constants\CompanyRegistrationTypes;
+use UnzerSDK\Constants\CompanyTypes;
 use UnzerSDK\Constants\Salutations;
 use UnzerSDK\Constants\ShippingTypes;
 use UnzerSDK\Exceptions\UnzerApiException;
@@ -92,6 +96,12 @@ class Order
     private ResolverInterface $localeResolver;
 
     /**
+     * @var PluginResolver
+     */
+    private PluginResolver $pluginResolver;
+
+
+    /**
      * Constructor
      *
      * @param Config $moduleConfig
@@ -103,6 +113,7 @@ class Order
      * @param BirthDateFactory $birthDateFactory
      * @param CreateThreatMetrixId $createThreatMetrixId
      * @param ResolverInterface $localeResolver
+     * @param PluginResolver $pluginResolver
      */
     public function __construct(
         Config $moduleConfig,
@@ -113,7 +124,8 @@ class Order
         BasketItemFactory $basketItemFactory,
         BirthDateFactory $birthDateFactory,
         CreateThreatMetrixId $createThreatMetrixId,
-        ResolverInterface $localeResolver
+        ResolverInterface $localeResolver,
+        PluginResolver $pluginResolver
     ) {
         $this->_moduleConfig = $moduleConfig;
         $this->_moduleList = $moduleList;
@@ -124,6 +136,7 @@ class Order
         $this->birthDateFactory = $birthDateFactory;
         $this->createThreatMetrixId = $createThreatMetrixId;
         $this->localeResolver = $localeResolver;
+        $this->pluginResolver = $pluginResolver;
     }
 
     /**
@@ -306,10 +319,17 @@ class Order
     {
         $metaData = new Metadata();
 
+        $module = $this->pluginResolver->resolve(
+            (int) $order->getStoreId()
+        );
+
         $metaData->setShopType('Magento 2')
             ->setShopVersion($this->_productMetadata->getVersion())
-            ->addMetadata('pluginType', 'unzerdev/magento2')
-            ->addMetadata('pluginVersion', $this->_moduleList->getOne('Unzer_PAPI')['setup_version']);
+            ->addMetadata('pluginType', $module['type']);
+
+        if (isset($module['version'])) {
+            $metaData->addMetadata('pluginVersion', $module['version']);
+        }
 
         return $metaData;
     }
@@ -447,19 +467,8 @@ class Order
             $this->updateGatewayAddressFromMagento($customer->getShippingAddress(), $shippingAddress, $shippingType);
         }
 
-        if ($customerType && $customerType !== 'b2c') {
-            $companyInfo = new CompanyInfo();
-            $companyInfo->setCompanyType($customerType);
-            $companyInfo->setRegistrationType('not_registered');
-            $companyInfo->setFunction('OWNER');
-            $owner = new CompanyOwner();
-            $owner->setFirstname($customer->getFirstname());
-            $owner->setLastname($customer->getLastname());
-            $birthDate && $owner->setBirthdate($birthDate);
-            $companyInfo->setOwner($owner);
-
-            $customer->setCompanyInfo($companyInfo);
-        }
+        $company = $billingAddress !== null ? $billingAddress->getCompany() : null;
+        $this->applyCompanyInfo($customer, $company, $customerType, $birthDate);
 
         return $createResource ? $client->createOrUpdateCustomer($customer) : $customer;
     }
@@ -504,11 +513,50 @@ class Order
         $gatewayAddress->setName($magentoAddress->getFirstname() . ' ' . $magentoAddress->getLastname());
         $gatewayAddress->setCity($magentoAddress->getCity());
         $gatewayAddress->setCountry($magentoAddress->getCountryId());
+        $state = $magentoAddress->getRegion();
+        if (!empty($state)) {
+            $gatewayAddress->setState($state);
+        }
         $gatewayAddress->setStreet($street);
         $gatewayAddress->setZip($magentoAddress->getPostcode());
+        $gatewayAddress->setCompany($magentoAddress->getCompany() ?: null);
         if ($magentoAddress->getAddressType() === Quote\Address::ADDRESS_TYPE_SHIPPING) {
             $gatewayAddress->setShippingType($shippingType);
         }
+    }
+
+    /**
+     * @param Customer $customer
+     * @param string|null $company
+     * @param string|null $customerType
+     * @param string|null $birthDate
+     */
+    private function applyCompanyInfo(
+        Customer $customer,
+        ?string $company,
+        ?string $customerType = null,
+        ?string $birthDate = null
+    ): void {
+        $isExplicitB2b = !empty($customerType) && $customerType !== 'b2c';
+
+        if (empty($company) && !$isExplicitB2b) {
+            $customer->setCompanyInfo(null);
+            return;
+        }
+
+        $companyInfo = new CompanyInfo();
+        $companyInfo->setCompanyType(CompanyTypes::OTHER);
+        $companyInfo->setRegistrationType(CompanyRegistrationTypes::REGISTRATION_TYPE_NOT_REGISTERED);
+        $companyInfo->setFunction('OWNER');
+        $companyInfo->setCommercialSector(CompanyCommercialSectorItems::OTHER);
+
+        $owner = new CompanyOwner();
+        $owner->setFirstname($customer->getFirstname());
+        $owner->setLastname($customer->getLastname());
+        $birthDate && $owner->setBirthdate($birthDate);
+        $companyInfo->setOwner($owner);
+
+        $customer->setCompanyInfo($companyInfo);
     }
 
     /**
@@ -577,8 +625,11 @@ class Order
             ?? Salutations::UNKNOWN
         );
 
-        $gatewayCustomer->setCompany($billingAddress->getCompany());
+        $company = $billingAddress->getCompany();
+        $gatewayCustomer->setCompany($company);
         $gatewayCustomer->setEmail($billingAddress->getEmail());
+
+        $this->applyCompanyInfo($gatewayCustomer, $company, null, $this->getBirthdateFromPayment($order->getPayment()));
 
         $this->updateGatewayAddressFromMagento(
             $gatewayCustomer->getBillingAddress(),
@@ -617,7 +668,10 @@ class Order
 
         // Magento's getCompany() always returns a string, but the Unzer Customer Address does not, so we must make
         // sure that both have the same type.
-        $companyValid = ($order->getBillingAddress()->getCompany() ?? '') === ($gatewayCustomer->getCompany() ?? '');
+        $company = $order->getBillingAddress()->getCompany() ?? '';
+        $companyValid = $company === ($gatewayCustomer->getCompany() ?? '');
+
+        $companyInfoValid = ($company !== '') === ($gatewayCustomer->getCompanyInfo() !== null);
         $emailValid = $order->getCustomerEmail() === $gatewayCustomer->getEmail();
 
         $billingAddressValid = $this->validateGatewayAddressAgainstOrderAddress(
@@ -634,7 +688,12 @@ class Order
             );
         }
 
-        return $nameValid && $companyValid && $billingAddressValid && $shippingAddressValid && $emailValid;
+        return $nameValid
+            && $companyValid
+            && $companyInfoValid
+            && $billingAddressValid
+            && $shippingAddressValid
+            && $emailValid;
     }
 
     /**
@@ -654,7 +713,8 @@ class Order
         return $gatewayAddress->getCity() === $magentoAddress->getCity()
             && $gatewayAddress->getCountry() === $magentoAddress->getCountryId()
             && $gatewayAddress->getStreet() === $street
-            && $gatewayAddress->getZip() === $magentoAddress->getPostcode();
+            && $gatewayAddress->getZip() === $magentoAddress->getPostcode()
+            && ($gatewayAddress->getCompany() ?? '') === ($magentoAddress->getCompany() ?? '');
     }
 
     /**
