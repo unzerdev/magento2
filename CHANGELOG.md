@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.0](https://github.com/unzerdev/magento2/compare/4.0.6..4.1.0)
+### Changed
+*  Add compatibility with Magento 2.4.9 and PHP 8.5
+*  Refactor the order status logic for Direct Bank Transfer
+*  Update metadata payloads
+*  Fix B2B customer creation for non-UPL payment methods
+*  Add state mapping for billing and shipping addresses
+*  Fix Unzer customer resolution for saved COF payments
+*  Enhance UI Components v2
+   * Update the company name after editing billing address
+   * Fetch merchant configuration using the public key
+   * Improve whenDefined usage
+
 ## [4.0.6](https://github.com/unzerdev/magento2/compare/4.0.5..4.0.6)
 ### Changed
 *  Handle rounding differences in basket calculations using 4-decimal precision
