@@ -40,6 +40,7 @@ define(
             customerType: null,
             threatMetrixId: null,
             lastGrandTotal: null,
+            lastBillingAddressKey: null,
 
             defaults: {
                 config: null,
@@ -89,6 +90,34 @@ define(
                     }
                 });
 
+                quote.billingAddress.subscribe(function (newAddress) {
+                    if (!self.customerNeeded || !newAddress) {
+                        return;
+                    }
+
+                    if (!quote.paymentMethod() || quote.paymentMethod().method !== self.getCode()) {
+                        return;
+                    }
+
+                    let newKey = JSON.stringify({
+                        company: newAddress.company || '',
+                        prefix: newAddress.prefix || '',
+                        firstname: newAddress.firstname || '',
+                        lastname: newAddress.lastname || '',
+                        street: newAddress.street || '',
+                        postcode: newAddress.postcode || '',
+                        city: newAddress.city || '',
+                        countryId: newAddress.countryId || ''
+                    });
+
+                    if (newKey === self.lastBillingAddressKey) {
+                        return;
+                    }
+                    self.lastBillingAddressKey = newKey;
+
+                    self.waitForSetBasketData();
+                });
+
                 return this;
             },
 
@@ -100,12 +129,22 @@ define(
                 const componentContainer = $('#unzer-component-' + this.getCode());
                 componentContainer.empty();
                 const unzerPayment = this.createUnzerPaymentElement();
+
+                const merchantConfig = this.getMerchantConfig();
+                if (merchantConfig) {
+                    unzerPayment.attr('skipFetchingMerchantConfig', 'true');
+                }
+
                 const specificPaymentElement = this.createSpecificPaymentElement();
                 unzerPayment.append(specificPaymentElement);
                 const unzerCheckout = this.createUnzerCheckoutPaymentElement();
 
                 componentContainer.append(unzerPayment);
                 componentContainer.append(unzerCheckout);
+
+                if (merchantConfig) {
+                    this.waitForSetMerchantConfigData(merchantConfig);
+                }
 
                 if (this.customerNeeded) {
                     this.waitForSetBasketData();
@@ -168,6 +207,30 @@ define(
                 }
 
                 return window.checkoutConfig.payment.unzer.publicKey;
+            },
+
+            getMerchantConfig: function () {
+                return this._getMethodConfig('merchantConfig')
+                    || window.checkoutConfig.payment.unzer.merchantConfig
+                    || null;
+            },
+
+            waitForSetMerchantConfigData: function (config, maxRetries = 10, interval = 500) {
+                const unzerPayment = document.getElementById('unzer-payment-' + this.getCode());
+
+                if (!unzerPayment || typeof unzerPayment.setMerchantConfigData !== 'function') {
+                    if (maxRetries > 0) {
+                        setTimeout(
+                            () => this.waitForSetMerchantConfigData(config, maxRetries - 1, interval),
+                            interval
+                        );
+                    } else {
+                        console.error('setMerchantConfigData is not available after multiple retries.');
+                    }
+                    return;
+                }
+
+                unzerPayment.setMerchantConfigData(config);
             },
 
             /**
@@ -340,7 +403,7 @@ define(
                     self = this;
 
                 Promise.all([
-                    customElements.whenDefined(this.paymentCode)
+                    customElements.whenDefined('unzer-payment')
                 ]).then(() => {
                     const unzerCheckoutElementId = 'unzer-checkout-' + this.getCode();
                     const unzerCheckout = document.getElementById(unzerCheckoutElementId);
