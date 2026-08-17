@@ -198,7 +198,6 @@
                 <min_order_total>0</min_order_total>
                 <max_order_total>0</max_order_total>
                 <currency_restrictions>EUR</currency_restrictions>
-                <country_restrictions>DE</country_restrictions>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
                 <can_capture_partial>1</can_capture_partial>
