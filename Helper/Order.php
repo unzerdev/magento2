@@ -253,7 +253,7 @@ class Order
     private function createRoundingItem(float $amount): BasketItem
     {
         $item = new BasketItem();
-        $item->setType(BasketItemTypes::VOUCHER);
+        $item->setType($amount > 0 ? BasketItemTypes::GOODS : BasketItemTypes::VOUCHER);
         $item->setTitle('Rounding Adjustment');
         $item->setQuantity(1);
         $item->setVat(0.0);
