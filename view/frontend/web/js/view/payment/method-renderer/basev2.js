@@ -302,7 +302,7 @@ define(
             initializeForm: function () {
                 // if payment method is initially selected
                 if (quote.paymentMethod() && quote.paymentMethod().method === this.getCode()) {
-                    this.selectPaymentMethod();
+                    setTimeout(() => this.selectPaymentMethod());
                 }
             },
 
