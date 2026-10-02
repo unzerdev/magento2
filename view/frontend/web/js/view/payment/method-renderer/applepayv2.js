@@ -50,26 +50,43 @@ define(
                 return retVal;
             },
 
+            createUnzerPaymentElement: function () {
+                const unzerPayment = this._super();
+
+                // UI Components keep Apple Pay data in a page-global store, and <unzer-apple-pay> only
+                // subscribes to it when it is empty on connect. Push the current totals before the
+                // element is attached, otherwise a re-rendered button keeps the previous amount.
+                if (typeof unzerPayment[0].setApplePayData === 'function') {
+                    unzerPayment[0].setApplePayData(this.getApplePayData());
+                }
+
+                return unzerPayment;
+            },
+
+            getApplePayData: function () {
+                const supportedNetworks = window.checkoutConfig.payment.unzer_applepayv2.supportedNetworks.map((network) => network.toLowerCase());
+                const billing = quote.billingAddress && quote.billingAddress();
+                const totals = quote.totals() ? quote.totals() : window.checkoutConfig.quoteData;
+
+                return {
+                    countryCode: billing?.countryId,
+                    currencyCode: window.checkoutConfig.quoteData.base_currency_code,
+                    supportedNetworks: supportedNetworks,
+                    merchantCapabilities: window.checkoutConfig.payment.unzer_applepayv2.merchantCapabilities,
+                    requiredShippingContactFields: [],
+                    requiredBillingContactFields: [],
+                    total: {
+                        label: window.checkoutConfig.payment.unzer_applepayv2.label,
+                        amount: Number(totals['base_grand_total']).toFixed(2),
+                    },
+                };
+            },
+
             waitForSetApplePayData: function (maxRetries = 10, interval = 500) {
                 const unzerPaymentElement = document.getElementById('unzer-payment-' + this.getCode());
 
                 if (unzerPaymentElement && typeof unzerPaymentElement.setApplePayData === 'function') {
-                    const supportedNetworks = window.checkoutConfig.payment.unzer_applepayv2.supportedNetworks.map((network) => network.toLowerCase());
-                    const billing = quote.billingAddress && quote.billingAddress();
-                    const totals = quote.totals() ? quote.totals() : window.checkoutConfig.quoteData;
-
-                    unzerPaymentElement.setApplePayData({
-                        countryCode: billing?.countryId,
-                        currencyCode: window.checkoutConfig.quoteData.base_currency_code,
-                        supportedNetworks: supportedNetworks,
-                        merchantCapabilities: window.checkoutConfig.payment.unzer_applepayv2.merchantCapabilities,
-                        requiredShippingContactFields: [],
-                        requiredBillingContactFields: [],
-                        total: {
-                            label: window.checkoutConfig.payment.unzer_applepayv2.label,
-                            amount: Number(totals['base_grand_total']).toFixed(2),
-                        },
-                    });
+                    unzerPaymentElement.setApplePayData(this.getApplePayData());
                 } else if (maxRetries > 0) {
                     console.log('Waiting for setApplePayData function to be available...');
                     setTimeout(() => this.waitForSetApplePayData(maxRetries - 1, interval), interval);
