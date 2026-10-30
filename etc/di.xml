@@ -1408,10 +1408,17 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="UnzerWeroValidatorCurrency" type="Unzer\PAPI\Model\Validator\CurrencyRestrictionValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">UnzerWeroConfig</argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="UnzerWeroValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="country" xsi:type="string">UnzerWeroValidatorCountry</item>
+                <item name="currency" xsi:type="string">UnzerWeroValidatorCurrency</item>
             </argument>
         </arguments>
     </virtualType>
