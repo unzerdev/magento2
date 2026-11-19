@@ -47,30 +47,46 @@ define(
                 return retVal;
             },
 
+            createUnzerPaymentElement: function () {
+                const unzerPayment = this._super();
+
+                if (typeof unzerPayment[0].setGooglePayData === 'function') {
+                    unzerPayment[0].setGooglePayData(this.getGooglePayData());
+                }
+
+                return unzerPayment;
+            },
+
+            getGooglePayData: function () {
+                const totals = quote.totals() ? quote.totals() : quote;
+
+                return {
+                    gatewayMerchantId: this._getMethodConfig('unzer_channel_id'),
+                    merchantInfo: {
+                        merchantId: this._getMethodConfig('merchant_id'),
+                        merchantName: this._getMethodConfig('merchant_name')
+                    },
+                    transactionInfo: {
+                        countryCode: this._getMethodConfig('country_code'),
+                        currencyCode: totals['base_currency_code'],
+                        totalPrice: String(totals['base_grand_total'])
+                    },
+                    buttonOptions: {
+                        buttonColor: this._getMethodConfig('button_color'),
+                        buttonRadius: this._getMethodConfig('button_border_radius'),
+                        buttonSizeMode: this._getMethodConfig('button_size_mode'),
+                    },
+                    allowedCardNetworks: this._getMethodConfig('allowed_card_networks'),
+                    allowCreditCards: this._getMethodConfig('allow_credit_cards') === "1",
+                    allowPrepaidCards: this._getMethodConfig('allow_prepaid_cards') === "1"
+                };
+            },
+
             waitForSetGooglePayData: function (maxRetries = 10, interval = 500) {
                 const unzerPaymentElement = document.getElementById('unzer-payment-unzer_googlepay');
 
                 if (unzerPaymentElement && typeof unzerPaymentElement.setGooglePayData === 'function') {
-                    unzerPaymentElement.setGooglePayData({
-                        gatewayMerchantId: this._getMethodConfig('unzer_channel_id'),
-                        merchantInfo: {
-                            merchantId: this._getMethodConfig('merchant_id'),
-                            merchantName: this._getMethodConfig('merchant_name')
-                        },
-                        transactionInfo: {
-                            countryCode: this._getMethodConfig('country_code'),
-                            currencyCode: (quote.totals() ? quote.totals() : quote)['base_currency_code'],
-                            totalPrice: String((quote.totals() ? quote.totals() : quote)['base_grand_total'])
-                        },
-                        buttonOptions: {
-                            buttonColor: this._getMethodConfig('button_color'),
-                            buttonRadius: this._getMethodConfig('button_border_radius'),
-                            buttonSizeMode: this._getMethodConfig('button_size_mode'),
-                        },
-                        allowedCardNetworks: this._getMethodConfig('allowed_card_networks'),
-                        allowCreditCards: this._getMethodConfig('allow_credit_cards') === "1",
-                        allowPrepaidCards: this._getMethodConfig('allow_prepaid_cards') === "1"
-                    });
+                    unzerPaymentElement.setGooglePayData(this.getGooglePayData());
                 } else if (maxRetries > 0) {
                     console.log('Waiting for setGooglePayData function to be available...');
                     setTimeout(() => this.waitForSetGooglePayData(maxRetries - 1, interval), interval);
