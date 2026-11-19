@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.1.1](https://github.com/unzerdev/magento2/compare/4.1.0..4.1.1)
+### Changed
+*  Display Unzer payment ID on the Order Success Page in test mode
+*  Remove the country restriction and add the missing currency validator for the Wero payment method
+*  Fix basket item type for positive rounding adjustments
+*  Fix incorrect Google Pay and Apple Pay amounts after cart total changes
+*  Fix UPL orders remaining in pending status when webhooks arrive before the redirect
+
 ## [4.1.0](https://github.com/unzerdev/magento2/compare/4.0.6..4.1.0)
 ### Changed
 *  Add compatibility with Magento 2.4.9 and PHP 8.5

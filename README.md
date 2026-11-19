@@ -1,7 +1,9 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/unzerdev/magento2.svg?style=flat-square)](https://packagist.org/packages/unzerdev/magento2)
-[![PHP 7.4](https://img.shields.io/badge/php-7.4-blue.svg)](http://www.php.net)
 [![PHP 8.1](https://img.shields.io/badge/php-8.1-blue.svg)](http://www.php.net)
 [![PHP 8.2](https://img.shields.io/badge/php-8.2-blue.svg)](http://www.php.net)
+[![PHP 8.3](https://img.shields.io/badge/php-8.3-blue.svg)](http://www.php.net)
+[![PHP 8.4](https://img.shields.io/badge/php-8.4-blue.svg)](http://www.php.net)
+[![PHP 8.5](https://img.shields.io/badge/php-8.5-blue.svg)](http://www.php.net)
 
 # Unzer Payment plugin for Magento 2
 
@@ -29,21 +31,22 @@ Unzer payment plugin includes the following payment methods:
 * Alipay
 * Apple Pay
 * Bancontact
-* Credit Card
-* Unzer Direct Bank Transfer
+* Credit Card / Debit Card
 * EPS
 * Google Pay
-* iDEAL
+* iDEAL | Wero
+* Klarna
 * PayPal
 * Prepayment
+* Przelewy24
 * SEPA Direct Debit
-* SOFORT
 * TWINT
-* Unzer Direct Debit
-* Unzer direct Debit (secured)
-* Unzer Invoice B2C / B2B (secured)
+* Unzer Direct Bank Transfer
+* Unzer Direct Debit (secured)
 * Unzer Installment (secured)
+* Unzer Invoice B2C / B2B (secured)
 * WeChat Pay
+* Wero
 
 Regarding plugin compatibility, please take a look at the release notes for more information.
 
@@ -52,7 +55,7 @@ Regarding plugin compatibility, please take a look at the release notes for more
 Please see our documentation for [how to install the plugin](https://docs.unzer.com/plugins/magento-2/magento2-install-plugin/).
 
 ## SYSTEM REQUIREMENTS
-This extension requires PHP 7.4, PHP 8.1 or PHP 8.2.
+This extension requires PHP 8.1, 8.2, 8.3, 8.4 or 8.5.
 It also depends on the unzerdev/php-sdk, which will be installed along with the plugin.
 
 Please refer to the additional requirements listed under [System Requirements](https://docs.unzer.com/server-side-integration/php-sdk-integration/php-installation/#system-requirements) (et seq.).

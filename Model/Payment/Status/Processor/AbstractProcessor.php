@@ -37,6 +37,8 @@ use UnzerSDK\Resources\PaymentTypes\BasePaymentType;
  */
 abstract class AbstractProcessor implements ProcessorInterface
 {
+    public const KEY_READY_TO_CAPTURE_APPLIED = 'unzer_ready_to_capture_applied';
+
     /**
      * @var TransactionSynchronizer
      */
@@ -326,7 +328,9 @@ abstract class AbstractProcessor implements ProcessorInterface
     {
         $authorization = $payment->getAuthorization();
 
-        if ($authorization !== null && $authorization->isSuccess() && $order->getState() !== Order::STATE_PROCESSING) {
+        if ($authorization !== null && $authorization->isSuccess() && $this->canSetReadyToCapture($order)) {
+            $order->getPayment()->setAdditionalInformation(self::KEY_READY_TO_CAPTURE_APPLIED, true);
+
             $this->_orderStateApplier->setOrderState(
                 $order,
                 Order::STATE_PROCESSING,
@@ -339,6 +343,32 @@ abstract class AbstractProcessor implements ProcessorInterface
         if ($paymentType instanceof BasePaymentType && $paymentType->isInvoiceType()) {
             $this->setInvoiceTypeState($order);
         }
+    }
+
+    /**
+     * Whether a successful authorization may move the order to
+     * ready-to-capture. Besides any non-processing state, this covers the
+     * plain processing state Magento assigns on order placement, so a
+     * webhook no longer depends on the redirect/callback resetting the
+     * order to new first. Orders that already carry a custom processing
+     * status, have invoices, or were already marked ready-to-capture once
+     * (so an admin may have changed the status on purpose) are left
+     * untouched.
+     *
+     * @param OrderInterface $order
+     *
+     * @return bool
+     */
+    protected function canSetReadyToCapture(OrderInterface $order): bool
+    {
+        if ($order->getState() !== Order::STATE_PROCESSING) {
+            return true;
+        }
+
+        /** @var Order $order */
+        return !$order->hasInvoices()
+            && !$order->getPayment()->getAdditionalInformation(self::KEY_READY_TO_CAPTURE_APPLIED)
+            && $order->getStatus() === $order->getConfig()->getStateDefaultStatus(Order::STATE_PROCESSING);
     }
 
     /**

@@ -13,7 +13,10 @@
 $unzerPaymentId = $block->getUnzerPaymentId();
 if ($unzerPaymentId !== null):
     ?>
-    <p id="UnzerPaymentId"><?php echo $block->escapeHtml(__('Your Unzer payment # is: %1.', $unzerPaymentId)) ?></p>
+    <p id="UnzerPaymentId">
+        <?php echo $block->escapeHtml(__('Your Unzer payment # is:')) ?>
+        <span data-testid="Unzer-Payment-Id"><?php echo $block->escapeHtml($unzerPaymentId) ?></span>.
+    </p>
 <?php endif; ?>
 <?php
 /** @var string $additionalInformation */
