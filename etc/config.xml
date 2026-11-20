@@ -192,7 +192,7 @@
             <unzer_wero>
                 <active>0</active>
                 <payment_action>order</payment_action>
-                <order_payment_action>authorize</order_payment_action>
+                <order_payment_action>authorize_capture</order_payment_action>
                 <title><![CDATA[Wero]]></title>
                 <allowspecific>0</allowspecific>
                 <min_order_total>0</min_order_total>

@@ -1394,6 +1394,7 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">UnzerWeroConfigValueHandler</item>
+                <item name="order_payment_action" xsi:type="string">Unzer\PAPI\Model\Config\AuthorizeCapturePaymentActionHandler</item>
                 <item name="can_cancel" xsi:type="string">Unzer\PAPI\Model\Config\CanCancelHandler</item>
                 <item name="can_refund" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
                 <item name="can_refund_partial_per_invoice" xsi:type="string">Unzer\PAPI\Model\Config\CanRefundHandler</item>
