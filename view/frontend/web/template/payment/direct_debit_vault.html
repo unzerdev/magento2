@@ -28,16 +28,6 @@
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
-        <div class="actions-toolbar">
-            <div class="primary">
-                <button class="action primary checkout"
-                        type="submit"
-                        data-bind="
-                            click: placeOrder,
-                            attr: {title: $t('Place Order')}">
-                    <span translate="'Place Order'"></span>
-                </button>
-            </div>
-        </div>
+        <div data-bind="attr: {'id': getMandateContainerId()}, afterRender: initializeForm"></div>
     </div>
 </div>
