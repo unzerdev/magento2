@@ -57,17 +57,12 @@ define(
                     const checkbox = document.getElementById('unzer-card-save-card-checkbox');
                     const checkboxLabel = document.getElementById('unzer-card-save-card-typography');
                     if (checkbox && checkboxLabel) {
-                        checkbox.removeAttribute('hidden');
-                        checkbox.addEventListener('click', () => {
-                            if (!this.isActivePaymentTokenEnabler) {
-                                this.isActivePaymentTokenEnabler = true;
-                                this.vaultEnabler.isActivePaymentTokenEnabler(true);
-
-                                return;
-                            }
-                            this.isActivePaymentTokenEnabler = false;
-                            this.vaultEnabler.isActivePaymentTokenEnabler(false);
-                        })
+                        checkbox.closest('.unzer-save-for-later').removeAttribute('hidden');
+                        checkbox.checked = !!this.isActivePaymentTokenEnabler;
+                        checkbox.onchange = () => {
+                            this.isActivePaymentTokenEnabler = checkbox.checked;
+                            this.vaultEnabler.isActivePaymentTokenEnabler(checkbox.checked);
+                        };
 
                         checkboxLabel.textContent = $t('Save for later use.');
                     }

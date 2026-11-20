@@ -17,13 +17,18 @@
         </div>
 
         <div id="unzer-component-unzer_paypal"></div>
-        <uds-checkbox id="unzer-card-save-paypal-checkbox" hidden>
-            <uds-typography id="unzer-card-save-paypal-typography"></uds-typography>
-        </uds-checkbox>
-        <div class="checkout-agreements-block">
+        <div class="field choice unzer-save-for-later" hidden>
+            <input type="checkbox" class="checkbox" id="unzer-card-save-paypal-checkbox"/>
+            <label class="label" for="unzer-card-save-paypal-checkbox">
+                <span id="unzer-card-save-paypal-typography"></span>
+            </label>
+        </div>
+        <div class="checkout-agreements-block unzer-checkout-agreements">
             <!-- ko foreach: $parent.getRegion('before-place-order') -->
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
+
+        <div id="unzer-checkout-container-unzer_paypal"></div>
     </div>
 </div>

@@ -5339,3 +5339,35 @@ i.h-iconideal-van-lanschot:before {
     width: 240px;
     height: 40px;
 }
+
+.unzer-wallet-terms-pending {
+    pointer-events: none;
+    opacity: .5;
+}
+
+.unzer-checkout-agreements {
+    margin-top: 16px;
+}
+
+.unzer-checkout-agreements .checkout-agreement.field.choice {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.unzer-save-for-later.field.choice {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+}
+
+.unzer-save-for-later.field.choice[hidden] {
+    display: none;
+}
+
+.unzer-checkout-agreements .checkout-agreement.field.choice input[type="checkbox"],
+.unzer-save-for-later.field.choice input[type="checkbox"] {
+    margin: 0;
+    top: 0;
+}

@@ -128,6 +128,8 @@ define(
 
                 const componentContainer = $('#unzer-component-' + this.getCode());
                 componentContainer.empty();
+                const checkoutContainer = this.getCheckoutContainer();
+                checkoutContainer.empty();
                 const unzerPayment = this.createUnzerPaymentElement();
 
                 const merchantConfig = this.getMerchantConfig();
@@ -140,7 +142,7 @@ define(
                 const unzerCheckout = this.createUnzerCheckoutPaymentElement();
 
                 componentContainer.append(unzerPayment);
-                componentContainer.append(unzerCheckout);
+                checkoutContainer.append(unzerCheckout);
 
                 if (merchantConfig) {
                     this.waitForSetMerchantConfigData(merchantConfig);
@@ -241,6 +243,13 @@ define(
 
                 // Clear the container div for any previous components
                 componentContainer.empty();
+                this.getCheckoutContainer().empty();
+            },
+
+            getCheckoutContainer: function () {
+                const checkoutContainer = $('#unzer-checkout-container-' + this.getCode());
+
+                return checkoutContainer.length ? checkoutContainer : $('#unzer-component-' + this.getCode());
             },
 
             _getMethodConfig: function (configFieldName) {
@@ -300,10 +309,18 @@ define(
             },
 
             initializeForm: function () {
-                // if payment method is initially selected
-                if (quote.paymentMethod() && quote.paymentMethod().method === this.getCode()) {
-                    this.selectPaymentMethod();
-                }
+                // Templates bind "afterRender: initializeForm()", which runs before Knockout binds the
+                // descendants. Selecting synchronously injects an already-bound pay button that Knockout
+                // then tries to bind again, aborting the binding of the before-place-order region.
+                setTimeout(() => {
+                    if (this.isSelectedInQuote()) {
+                        this.selectPaymentMethod();
+                    }
+                });
+            },
+
+            isSelectedInQuote: function () {
+                return !!quote.paymentMethod() && quote.paymentMethod().method === this.getCode();
             },
 
             waitForSetBasketData: function (maxRetries = 10, interval = 500) {

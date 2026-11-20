@@ -43,13 +43,12 @@ define(
                     const checkboxLabel = document.getElementById('unzer-card-save-sepa-typography');
 
                     if (checkbox && checkboxLabel) {
-                        checkbox.removeAttribute('hidden');
+                        checkbox.closest('.unzer-save-for-later').removeAttribute('hidden');
                         checkbox.checked = !!this.isActivePaymentTokenEnabler;
-
-                        checkbox.addEventListener('click', () => {
-                            this.isActivePaymentTokenEnabler = !this.isActivePaymentTokenEnabler;
-                            this.vaultEnabler.isActivePaymentTokenEnabler(this.isActivePaymentTokenEnabler);
-                        });
+                        checkbox.onchange = () => {
+                            this.isActivePaymentTokenEnabler = checkbox.checked;
+                            this.vaultEnabler.isActivePaymentTokenEnabler(checkbox.checked);
+                        };
 
                         checkboxLabel.textContent = $t('Save for later use.');
                     }
